@@ -285,7 +285,7 @@ const WebHome = () => {
 
 
 
-<h2 className="deals-heading">Product Deals</h2>
+<h2 className="deals-heading">Products</h2>
 
 <div className="products-row">
   {productDealsData.map((item, index) => (
