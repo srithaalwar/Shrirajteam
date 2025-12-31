@@ -1,0 +1,29 @@
+.categories-row {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.category-item {
+  min-width: 120px;
+  text-align: center;
+}
+
+.category-icon {
+  width: 70px;
+  height: 70px;
+  background: #f2f2f2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  font-size: 30px;
+}
+
+.category-item p {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
