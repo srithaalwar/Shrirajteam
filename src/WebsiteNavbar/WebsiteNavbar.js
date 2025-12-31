@@ -51,7 +51,7 @@ const WebsiteNavbar = () => {
       <aside className={`sidebar ${open ? "open" : ""}`}>
         {/* Header */}
         <div className="sidebar-header">
-          <div className="logo">🔒 Mystore</div>
+          <div className="logo">Shriraj </div>
           <button className="close-btn" onClick={() => setOpen(false)}>✕</button>
         </div>
 

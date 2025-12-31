@@ -1,32 +1,164 @@
 import React from "react";
 import "./WebHome.css";
 import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
-import ApartmentIcon from "@mui/icons-material/Apartment";
-import BusinessIcon from "@mui/icons-material/Business";
-import HandshakeIcon from "@mui/icons-material/Handshake";
-import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import StorefrontIcon from "@mui/icons-material/Storefront";
-import ConstructionIcon from "@mui/icons-material/Construction";
-import PublicIcon from "@mui/icons-material/Public";
-import LocationCityIcon from "@mui/icons-material/LocationCity";
-import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import Categories from "./Categories"; // Import the Categories component
 
+const WebHome = () => {
+  return (
+    <div>
+      <WebsiteNavbar />
+      <div className="webhome-container">
 
-const categories = [
-  { name: "Residential Projects", icon: <ApartmentIcon /> },
-  { name: "Commercial Projects", icon: <BusinessIcon /> },
-  { name: "Co-working Spaces", icon: <HandshakeIcon /> },
-  { name: "Office Leasing", icon: <WorkOutlineIcon /> },
-  { name: "Retail Spaces", icon: <StorefrontIcon /> },
-  { name: "Industrial Units", icon: <ConstructionIcon /> },
-  { name: "Land Investments", icon: <PublicIcon /> },
-  { name: "Smart Buildings", icon: <LocationCityIcon /> },
-  { name: "Business Assets", icon: <BusinessCenterIcon /> },
-  { name: "High-Return Deals", icon: <TrendingUpIcon /> },
-];
+        {/* Dynamic Categories - Using the separate component */}
+        <Categories />
 
+        <h2 className="section-title">Property Deals</h2>
 
+        <div className="products-row no-scrollbar" id="propertyRow">
+          {products.map((item, index) => (
+            <div className="product-card" key={index}>
+              <div className="discount-badge">{item.discount}</div>
+
+              <img src={item.image} alt={item.name} />
+
+              <button
+                className={`card-btn ${
+                  item.button === "ADD"
+                    ? "add"
+                    : item.button === "VIEW"
+                    ? "view"
+                    : "closed"
+                }`}
+              >
+                {item.button}
+              </button>
+
+              <div className="product-info">
+                <p className="product-name">{item.name}</p>
+
+                <div className="price-row">
+                  <span className="price">₹{item.price}</span>
+                  <span className="old-price">₹{item.oldPrice}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ===== HOME DEALS CAROUSEL (SAFE CSS) ===== */}
+        <div className="hdc-carousel">
+          <button className="hdc-arrow hdc-left">‹</button>
+
+          <div className="hdc-wrapper">
+            {/* LEFT CONTENT */}
+            <div className="hdc-left">
+              <h1>
+                Big Savings on <br /> Daily Deals!
+              </h1>
+
+              <p>
+                Shop Across Categories and Enjoy <br />
+                Unbeatable Prices on Your Favorite Products
+              </p>
+
+              <button className="hdc-btn">SHOP NOW</button>
+            </div>
+
+            {/* RIGHT IMAGES */}
+            <div className="hdc-right">
+              <div className="hdc-image-grid">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80" alt="Product 1" />
+                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b" alt="Product 2" />
+              </div>
+
+              <div className="hdc-off-badge">
+                UPTO <br />
+                <span>90%</span> <br />
+                OFF
+              </div>
+            </div>
+          </div>
+
+          <button className="hdc-arrow hdc-right">›</button>
+
+          <div className="hdc-dots">
+            <span className="hdc-dot active"></span>
+            <span className="hdc-dot"></span>
+            <span className="hdc-dot"></span>
+            <span className="hdc-dot"></span>
+          </div>
+        </div>
+
+        {/* Business Deals */}
+        <h2 className="section-title">Business Deals</h2>
+
+        <div className="products-row">
+          {businessDeals.map((item, index) => (
+            <div className="product-card" key={index}>
+              <div className="discount-badge">{item.discount}</div>
+
+              <img src={item.image} alt={item.name} />
+
+              <button
+                className={`card-btn ${
+                  item.button === "ADD"
+                    ? "add"
+                    : item.button === "VIEW"
+                    ? "view"
+                    : "closed"
+                }`}
+              >
+                {item.button}
+              </button>
+
+              <div className="product-info">
+                <p className="product-name">{item.name}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <h2 className="deals-heading">Products</h2>
+
+        <div className="products-row">
+          {productDealsData.map((item, index) => (
+            <div className="product-card" key={index}>
+              <div className="discount-badge">{item.discount}</div>
+
+              <img src={item.image} alt={item.name} />
+
+              <button
+                className={`card-btn ${
+                  item.button === "ADD"
+                    ? "add"
+                    : item.button === "VIEW"
+                    ? "view"
+                    : "closed"
+                }`}
+              >
+                {item.button}
+              </button>
+
+              <div className="product-info">
+                <p className="product-name">{item.name}</p>
+
+                <div className="price-row">
+                  <span className="price">₹{item.price.toLocaleString()}</span>
+                  <span className="old-price">
+                    ₹{item.oldPrice.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+// Products data
 const products = [
   {
     name: "3 BHK Luxury Apartment – Jubilee Hills",
@@ -68,7 +200,6 @@ const products = [
     button: "ADD",
     image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef",
   },
-
 ];
 
 const businessDeals = [
@@ -102,7 +233,6 @@ const businessDeals = [
     button: "VIEW",
     image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e",
   },
-
 ];
 
 const productDealsData = [
@@ -147,189 +277,5 @@ const productDealsData = [
     image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
   },
 ];
-
-
-const WebHome = () => {
-  return (
-    <div>
-      <WebsiteNavbar/>
-    <div className="webhome-container">
-
-      {/* Categories */}
-      <div className="categories-row">
-        {categories.map((cat, i) => (
-          <div className="category-item" key={i}>
-            <div className="category-icon">{cat.icon}</div>
-            <p>{cat.name}</p>
-          </div>
-        ))}
-      </div>
-
-   <h2 className="section-title">Property Deals</h2>
-
-
-  <div className="products-row no-scrollbar" id="propertyRow">
-    {products.map((item, index) => (
-      <div className="product-card" key={index}>
-        <div className="discount-badge">{item.discount}</div>
-
-        <img src={item.image} alt={item.name} />
-
-        <button
-          className={`card-btn ${
-            item.button === "ADD"
-              ? "add"
-              : item.button === "VIEW"
-              ? "view"
-              : "closed"
-          }`}
-        >
-          {item.button}
-        </button>
-
-        <div className="product-info">
-          <p className="product-name">{item.name}</p>
-
-          <div className="price-row">
-            <span className="price">₹{item.price}</span>
-            <span className="old-price">₹{item.oldPrice}</span>
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
-
- 
-
-      {/* ===== HOME DEALS CAROUSEL (SAFE CSS) ===== */}
-<div className="hdc-carousel">
-
-  <button className="hdc-arrow hdc-left">‹</button>
-
-  <div className="hdc-wrapper">
-
-    {/* LEFT CONTENT */}
-    <div className="hdc-left">
-      
-
-      <h1>
-        Big Savings on <br /> Daily Deals!
-      </h1>
-
-      <p>
-        Shop Across Categories and Enjoy <br />
-        Unbeatable Prices on Your Favorite Products
-      </p>
-
-      <button className="hdc-btn">SHOP NOW</button>
-    </div>
-
-    {/* RIGHT IMAGES */}
-    <div className="hdc-right">
-      <div className="hdc-image-grid">
-        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80" />
-        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b" />
-        
-      </div>
-
-      <div className="hdc-off-badge">
-        UPTO <br />
-        <span>90%</span> <br />
-        OFF
-      </div>
-    </div>
-
-  </div>
-
-  <button className="hdc-arrow hdc-right">›</button>
-
-  <div className="hdc-dots">
-    <span className="hdc-dot active"></span>
-    <span className="hdc-dot"></span>
-    <span className="hdc-dot"></span>
-    <span className="hdc-dot"></span>
-  </div>
-</div>
-
-
-
-{/* Bussiness */}
-
-<h2 className="section-title">Bussiness Deals</h2>
-
-<div className="products-row">
-  {businessDeals.map((item, index) => (
-    <div className="product-card" key={index}>
-      <div className="discount-badge">{item.discount}</div>
-
-      <img src={item.image} alt={item.name} />
-
-      <button
-        className={`card-btn ${
-          item.button === "ADD"
-            ? "add"
-            : item.button === "VIEW"
-            ? "view"
-            : "closed"
-        }`}
-      >
-        {item.button}
-      </button>
-
-      <div className="product-info">
-        <p className="product-name">{item.name}</p>
-      </div>
-    </div>
-  ))}
-</div>
-
-
-
-<h2 className="deals-heading">Products</h2>
-
-<div className="products-row">
-  {productDealsData.map((item, index) => (
-    <div className="product-card" key={index}>
-      <div className="discount-badge">{item.discount}</div>
-
-      <img src={item.image} alt={item.name} />
-
-      <button
-        className={`card-btn ${
-          item.button === "ADD"
-            ? "add"
-            : item.button === "VIEW"
-            ? "view"
-            : "closed"
-        }`}
-      >
-        {item.button}
-      </button>
-
-      <div className="product-info">
-        <p className="product-name">{item.name}</p>
-
-        <div className="price-row">
-          <span className="price">₹{item.price.toLocaleString()}</span>
-          <span className="old-price">
-            ₹{item.oldPrice.toLocaleString()}
-          </span>
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
-
-
-
-
-
-
-
-    </div>
-    </div>
-
-  );
-};
 
 export default WebHome;
