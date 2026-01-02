@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
+import './Categories.css'
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
