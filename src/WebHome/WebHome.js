@@ -1,72 +1,159 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./WebHome.css";
 import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
-import Categories from "./Categories"; // Import the Categories component
+import Categories from "./Categories";
+import { baseurl } from "../BaseURL/BaseURL";
 
 const WebHome = () => {
+  const [carouselImages, setCarouselImages] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch carousel images using your baseurl
+  useEffect(() => {
+    const fetchCarouselImages = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${baseurl}/carousel/`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log("Carousel API response:", data);
+        
+        if (Array.isArray(data)) {
+          setCarouselImages(data);
+        } else if (data.data && Array.isArray(data.data)) {
+          setCarouselImages(data.data);
+        } else {
+          console.warn("Unexpected API response structure:", data);
+          setCarouselImages([]);
+        }
+      } catch (err) {
+        console.error("Carousel API error:", err);
+        setError(err.message);
+        // Fallback to static images if API fails
+        setCarouselImages([
+          { image: "https://images.unsplash.com/photo-1600585154340-043cd447c909" },
+          { image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811" },
+          { image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994" }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCarouselImages();
+  }, []);
+
+  // Auto-rotate carousel every 5 seconds
+  useEffect(() => {
+    if (carouselImages.length === 0) return;
+    
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => 
+        prev === carouselImages.length - 1 ? 0 : prev + 1
+      );
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [carouselImages.length]);
+
+  // Carousel arrows
+  const handlePrev = () => {
+    if (!carouselImages.length) return;
+    setCurrentIndex((prev) =>
+      prev === 0 ? carouselImages.length - 1 : prev - 1
+    );
+  };
+
+  const handleNext = () => {
+    if (!carouselImages.length) return;
+    setCurrentIndex((prev) =>
+      prev === carouselImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  // Helper function to get image URL
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return "";
+    
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    
+    if (imagePath.startsWith('/')) {
+      return `${baseurl}${imagePath}`;
+    }
+    
+    return imagePath;
+  };
+
   return (
     <div>
       <WebsiteNavbar />
       <div className="webhome-container">
-
-        {/* Dynamic Categories - Using the separate component */}
+        {/* Dynamic Categories */}
         <Categories />
 
-       
-
-        {/* ===== HOME DEALS CAROUSEL (SAFE CSS) ===== */}
-        <div className="hdc-carousel">
-          <button className="hdc-arrow hdc-left">‹</button>
-
-          <div className="hdc-wrapper">
-            {/* LEFT CONTENT */}
-            <div className="hdc-left">
+        {/* ===== HOME DEALS CAROUSEL AS BACKGROUND BANNER ===== */}
+        <div className="hdc-carousel-banner">
+          {/* Background Image */}
+          <div className="hdc-banner-background">
+            {carouselImages.length > 0 && carouselImages[currentIndex] && (
+              <img
+                src={getImageUrl(carouselImages[currentIndex].image)}
+                alt={`Banner ${currentIndex + 1}`}
+                className="hdc-banner-image"
+                onError={(e) => {
+                  console.error("Image failed to load:", e.target.src);
+                  e.target.src = "https://images.unsplash.com/photo-1600585154340-043cd447c909";
+                  e.target.alt = "Fallback image";
+                }}
+              />
+            )}
+          </div>
+          
+          {/* Overlay with content */}
+          {/* <div className="hdc-banner-overlay">
+            <div className="hdc-banner-content">
               <h1>
                 Big Savings on <br /> Daily Deals!
               </h1>
-
               <p>
                 Shop Across Categories and Enjoy <br />
                 Unbeatable Prices on Your Favorite Products
               </p>
-
               <button className="hdc-btn">SHOP NOW</button>
             </div>
+          </div> */}
 
-            {/* RIGHT IMAGES */}
-            <div className="hdc-right">
-              <div className="hdc-image-grid">
-                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80" alt="Product 1" />
-                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b" alt="Product 2" />
-              </div>
-
-              <div className="hdc-off-badge">
-                UPTO <br />
-                <span>90%</span> <br />
-                OFF
-              </div>
-            </div>
-          </div>
-
-          <button className="hdc-arrow hdc-right">›</button>
-
+          {/* Carousel Controls */}
+          <button className="hdc-arrow hdc-left" onClick={handlePrev}>‹</button>
+          <button className="hdc-arrow hdc-right" onClick={handleNext}>›</button>
+          
+          {/* Dots indicator */}
           <div className="hdc-dots">
-            <span className="hdc-dot active"></span>
-            <span className="hdc-dot"></span>
-            <span className="hdc-dot"></span>
-            <span className="hdc-dot"></span>
+            {carouselImages.map((_, index) => (
+              <span
+                key={index}
+                className={`hdc-dot ${index === currentIndex ? "active" : ""}`}
+                onClick={() => setCurrentIndex(index)}
+              ></span>
+            ))}
           </div>
         </div>
 
-         <h2 className="section-title">Property Deals</h2>
-
+        {/* Rest of your components remain the same */}
+        <h2 className="section-title">Property Deals</h2>
         <div className="products-row no-scrollbar" id="propertyRow">
           {products.map((item, index) => (
             <div className="product-card" key={index}>
               <div className="discount-badge">{item.discount}</div>
-
               <img src={item.image} alt={item.name} />
-
               <button
                 className={`card-btn ${
                   item.button === "ADD"
@@ -78,10 +165,8 @@ const WebHome = () => {
               >
                 {item.button}
               </button>
-
               <div className="product-info">
                 <p className="product-name">{item.name}</p>
-
                 <div className="price-row">
                   <span className="price">₹{item.price}</span>
                   <span className="old-price">₹{item.oldPrice}</span>
@@ -91,28 +176,23 @@ const WebHome = () => {
           ))}
         </div>
 
-        {/* Business Deals */}
         <h2 className="section-title">Business Deals</h2>
-
         <div className="products-row">
           {businessDeals.map((item, index) => (
             <div className="product-card" key={index}>
               <div className="discount-badge">{item.discount}</div>
-
               <img src={item.image} alt={item.name} />
-
               <button
                 className={`card-btn ${
-                  item.button === "ADD"
-                    ? "add"
-                    : item.button === "VIEW"
+                  item.button === "VIEW"
                     ? "view"
+                    : item.button === "ADD"
+                    ? "add"
                     : "closed"
                 }`}
               >
                 {item.button}
               </button>
-
               <div className="product-info">
                 <p className="product-name">{item.name}</p>
               </div>
@@ -121,14 +201,11 @@ const WebHome = () => {
         </div>
 
         <h2 className="deals-heading">Products</h2>
-
         <div className="products-row">
           {productDealsData.map((item, index) => (
             <div className="product-card" key={index}>
               <div className="discount-badge">{item.discount}</div>
-
               <img src={item.image} alt={item.name} />
-
               <button
                 className={`card-btn ${
                   item.button === "ADD"
@@ -140,10 +217,8 @@ const WebHome = () => {
               >
                 {item.button}
               </button>
-
               <div className="product-info">
                 <p className="product-name">{item.name}</p>
-
                 <div className="price-row">
                   <span className="price">₹{item.price.toLocaleString()}</span>
                   <span className="old-price">
@@ -154,13 +229,12 @@ const WebHome = () => {
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );
 };
 
-// Products data
+// Products data arrays remain the same...
 const products = [
   {
     name: "3 BHK Luxury Apartment – Jubilee Hills",
