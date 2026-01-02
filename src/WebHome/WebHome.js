@@ -12,38 +12,7 @@ const WebHome = () => {
         {/* Dynamic Categories - Using the separate component */}
         <Categories />
 
-        <h2 className="section-title">Property Deals</h2>
-
-        <div className="products-row no-scrollbar" id="propertyRow">
-          {products.map((item, index) => (
-            <div className="product-card" key={index}>
-              <div className="discount-badge">{item.discount}</div>
-
-              <img src={item.image} alt={item.name} />
-
-              <button
-                className={`card-btn ${
-                  item.button === "ADD"
-                    ? "add"
-                    : item.button === "VIEW"
-                    ? "view"
-                    : "closed"
-                }`}
-              >
-                {item.button}
-              </button>
-
-              <div className="product-info">
-                <p className="product-name">{item.name}</p>
-
-                <div className="price-row">
-                  <span className="price">₹{item.price}</span>
-                  <span className="old-price">₹{item.oldPrice}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+       
 
         {/* ===== HOME DEALS CAROUSEL (SAFE CSS) ===== */}
         <div className="hdc-carousel">
@@ -87,6 +56,39 @@ const WebHome = () => {
             <span className="hdc-dot"></span>
             <span className="hdc-dot"></span>
           </div>
+        </div>
+
+         <h2 className="section-title">Property Deals</h2>
+
+        <div className="products-row no-scrollbar" id="propertyRow">
+          {products.map((item, index) => (
+            <div className="product-card" key={index}>
+              <div className="discount-badge">{item.discount}</div>
+
+              <img src={item.image} alt={item.name} />
+
+              <button
+                className={`card-btn ${
+                  item.button === "ADD"
+                    ? "add"
+                    : item.button === "VIEW"
+                    ? "view"
+                    : "closed"
+                }`}
+              >
+                {item.button}
+              </button>
+
+              <div className="product-info">
+                <p className="product-name">{item.name}</p>
+
+                <div className="price-row">
+                  <span className="price">₹{item.price}</span>
+                  <span className="old-price">₹{item.oldPrice}</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Business Deals */}
