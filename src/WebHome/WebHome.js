@@ -24,14 +24,13 @@ const WebHome = () => {
         const data = await response.json();
         console.log("Carousel API response:", data);
         
-        if (Array.isArray(data)) {
-          setCarouselImages(data);
-        } else if (data.data && Array.isArray(data.data)) {
-          setCarouselImages(data.data);
-        } else {
-          console.warn("Unexpected API response structure:", data);
-          setCarouselImages([]);
-        }
+       if (data.results && Array.isArray(data.results)) {
+  setCarouselImages(data.results);
+} else {
+  console.warn("Unexpected API response structure:", data);
+  setCarouselImages([]);
+}
+
       } catch (err) {
         console.error("Carousel API error:", err);
         setError(err.message);

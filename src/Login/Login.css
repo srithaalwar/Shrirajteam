@@ -1,0 +1,156 @@
+/* Page background */
+.shr-login-wrapper {
+  height: 100vh;
+  background-color: #eaf4ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-family: "Inter", sans-serif;
+}
+
+/* Close icon */
+.shr-login-close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  font-size: 22px;
+  cursor: pointer;
+  color: #2b2b2b;
+}
+
+/* Card */
+.shr-login-card {
+  width: 380px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 26px 24px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+/* Brand row */
+.shr-login-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.shr-login-logo {
+  width: 80px;
+}
+
+.shr-login-brand-name {
+ font-size: 25px;
+  font-weight: 600;
+  color: #2f3c7e;
+}
+
+/* Title */
+.shr-login-title {
+   font-size: 20px;
+  font-weight: 550; /* medium bold */
+  margin-bottom: 18px;
+  color: #000000;
+}
+
+/* Phone input container */
+.shr-login-phone-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+/* Country code */
+.shr-login-country-code {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  background-color: #f7f7f7;
+  font-size: 14px;
+  border-right: 1px solid #dcdfe6;
+}
+
+/* Phone input */
+.shr-login-phone-input {
+  flex: 1;
+  border: none;
+  padding: 12px;
+  outline: none;
+  font-size: 14px;
+}
+
+/* Login with email */
+.shr-login-email-link {
+  text-align: right;
+  font-size: 13px;
+  color: #2f3c7e;
+  cursor: pointer;
+  margin-bottom: 14px;
+}
+
+/* Disabled OTP button */
+.shr-login-otp-btn {
+  width: 100%;
+  background-color: #7c83a8;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: not-allowed;
+  margin-bottom: 18px;
+  transition: background-color 0.3s ease;
+}
+
+/* Enabled OTP button */
+.shr-login-otp-active {
+  background-color: #2E3C7E;
+  cursor: pointer;
+}
+
+/* Divider */
+.shr-login-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.shr-login-divider-line {
+  flex: 1;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+
+.shr-login-divider-text {
+  font-size: 13px;
+  color: #777777;
+  margin: 0;
+}
+
+/* Google button */
+.shr-login-google-btn {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.shr-login-google-icon {
+  width: 18px;
+}
