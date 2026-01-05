@@ -349,5 +349,266 @@
   font-size: 14px;
   cursor: pointer;
 }
+/* =========================
+   BUY BOX (RIGHT SIDE)
+   ========================= */
+
+.buy-box {
+  width: 320px;
+  position: sticky;          /* keeps it fixed while scrolling */
+  top: 90px;                 /* adjust based on navbar height */
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* PRICE */
+.buy-box .price-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.buy-box .price {
+  font-size: 22px;
+  font-weight: 700;
+  color: #000;
+}
+
+.buy-box .mrp {
+  font-size: 14px;
+  text-decoration: line-through;
+  color: #888;
+}
+
+.buy-box .off {
+  font-size: 13px;
+  color: #1a8f2d;
+  font-weight: 600;
+}
+
+.buy-box .unit {
+  font-size: 14px;
+  color: #555;
+  margin: 6px 0 12px;
+}
+
+/* QUANTITY */
+.buy-box .qty {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.buy-box .qty button {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.buy-box .qty span {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* ADD TO CART */
+.buy-box .cart-btn {
+  width: 100%;
+  padding: 12px;
+  background: #243b8f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.buy-box .cart-btn:hover {
+  background: #1e3276;
+}
+
+/* SELLER CARD */
+.buy-box .seller-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 16px;
+  cursor: pointer;
+}
+
+.buy-box .seller-name {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.buy-box .vendor {
+  font-size: 13px;
+  color: #666;
+}
+
+.buy-box .rating {
+  font-size: 13px;
+  color: #888;
+}
+
+/* OTHER SELLERS */
+.buy-box .other-sellers {
+  font-size: 14px;
+  color: #2563eb;
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+/* PAYMENT CARDS */
+.buy-box .payment-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 12px;
+}
+
+.buy-box .payment-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.buy-box .link {
+  color: #2563eb;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* SECURITY */
+.buy-box .secure {
+  font-size: 13px;
+  color: #444;
+  margin-top: 12px;
+}
+
+/* POLICIES */
+.buy-box .policies {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #444;
+  margin: 14px 0;
+}
+
+.buy-box hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 14px 0;
+}
+
+/* QR & SHARE */
+.buy-box .qr-actions {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #2563eb;
+  cursor: pointer;
+}
+
+
+
+/* ===============================
+   ABOUT PRODUCT & PRODUCT DETAILS
+=============================== */
+
+.product-info-row {
+  width: calc(100% - -450px);   /* excludes buy box */
+  margin-top: 32px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0 32px;
+}
+
+
+/* ACCORDION CONTAINER */
+.info-accordion {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* HEADER */
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  cursor: pointer;
+}
+
+.info-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+/* ARROW */
+.arrow {
+  font-size: 18px;
+  color: #374151;
+  transition: transform 0.25s ease;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+/* ===============================
+   PRODUCT DETAILS TABLE
+=============================== */
+
+.product-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.product-details-table tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.product-details-table td {
+  padding: 14px 16px;
+  font-size: 15px;
+  vertical-align: top;
+}
+
+/* LEFT COLUMN */
+.product-details-table td:first-child {
+  width: 30%;
+  background: #f9fafb;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* RIGHT COLUMN */
+.product-details-table td:last-child {
+  width: 70%;
+  color: #374151;
+}
+.info-body {
+  max-width: 1100px;
+  padding-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #374151;
+}
+
 
 

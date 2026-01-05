@@ -23,7 +23,7 @@ const [openDetails, setOpenDetails] = useState(false);
       <div className="product-wrapper">
         {/* Breadcrumb */}
         <div className="breadcrumb">
-          Home / Electronics / Printer
+          Home / properties /
         </div>
 
         <div className="product-layout">
@@ -88,80 +88,210 @@ const [openDetails, setOpenDetails] = useState(false);
 
             <a href="/" className="view-all">View full attributes</a>
           </div>
-
           
 
-       {/* RIGHT – BUY BOX */}
-<div className="buy-box">
+          
+ {/* FIXED BUY BOX */}
+          <div className="buy-box">
+            <div className="price-row">
+              <span className="price">₹21,199</span>
+              <span className="mrp">₹26,999</span>
+              <span className="off">21%</span>
+            </div>
 
-  {/* Price */}
-  <div className="price-row">
-    <span className="price">₹21,199</span>
-    <span className="mrp">₹26,999</span>
-    <span className="off">21%</span>
-  </div>
+            <p className="unit">1 unit</p>
 
-  <p className="unit">1 unit</p>
+            <div className="qty">
+              <button onClick={() => setQty(qty - 1)} disabled={qty === 1}>−</button>
+              <span>{qty}</span>
+              <button onClick={() => setQty(qty + 1)}>+</button>
+            </div>
 
-  {/* Quantity */}
-  <div className="qty">
-    <button onClick={() => setQty(qty - 1)} disabled={qty === 1}>−</button>
-    <span>{qty}</span>
-    <button onClick={() => setQty(qty + 1)}>+</button>
-  </div>
+            <button className="cart-btn">ADD TO CART</button>
 
-  <button className="cart-btn">ADD TO CART</button>
+            <div className="seller-card">
+              <div>
+                <p><strong>Sold By:</strong> Om Systems</p>
+                <p className="rating">★ No ratings yet</p>
+              </div>
+              <span>›</span>
+            </div>
 
-  {/* Seller Card */}
-  <div className="seller-card">
-    <div>
-      <p><strong>Sold By:</strong> <span className="seller-name">Om Systems</span></p>
-      <p className="vendor">Vendor Source: <span>Mystore</span></p>
-      <p className="rating">★ No Ratings Yet</p>
-    </div>
-    <span className="arrow">›</span>
-  </div>
+            <div className="payment-card">
+              <strong>EMI from ₹745/month</strong>
+              <span className="link">View plans</span>
+            </div>
 
-  <p className="other-sellers">Other sellers on Mystore →</p>
+            <div className="payment-card">
+              <strong>Pay later available</strong>
+              <span className="link">View options</span>
+            </div>
 
-  {/* EMI */}
-  <div className="payment-card">
-    <p><strong>EMI from ₹745/month</strong></p>
-    <div className="payment-footer">
-      <span>💳 💳 💳 & more</span>
-      <span className="link">View plans</span>
-    </div>
-  </div>
+            <p className="secure">Secured by Razorpay</p>
 
-  {/* Pay Later */}
-  <div className="payment-card">
-    <p><strong>Pay later available</strong></p>
-    <div className="payment-footer">
-      <span>▶ & more</span>
-      <span className="link">View options</span>
-    </div>
-  </div>
+            <div className="policies">
+              <span>🚚 Not cancellable</span>
+              <span>📦 Not returnable</span>
+            </div>
 
-  <p className="secure">Secured by <strong>Razorpay</strong></p>
+            <hr />
 
-  {/* Policies */}
-  <div className="policies">
-    <div>🚚 Not Cancellable</div>
-    <div>📦 Not Returnable</div>
-  </div>
-
-  <hr />
-
-  {/* QR */}
+             {/* QR */}
   <div className="qr-actions">
     <span>⬇ Download QR</span>
     <span>↗ Share</span>
   </div>
+          </div>
+
+          {/* ===============================
+    ABOUT PRODUCT & PRODUCT DETAILS
+    =============================== */}
+{/* ===============================
+   ABOUT PRODUCT & PRODUCT DETAILS
+=============================== */}
+<div className="product-info-row">
+
+  {/* ABOUT PRODUCT */}
+  <div className="info-accordion">
+    <div
+      className="info-header"
+      onClick={() => setOpenAbout(!openAbout)}
+    >
+      <h3>About Product</h3>
+      <span className={`arrow ${openAbout ? "open" : ""}`}>⌃</span>
+    </div>
+
+    {openAbout && (
+      <div className="info-body">
+        <p>
+          Presenting cost-effective borderless A4 photo printing solutions
+          perfectly suited for design drawing, stunning photos, and versatile
+          media printing, with the Epson L8050 Superb Savings and Page Yield.
+          High capacity integrated ink tanks and highly affordable genuine
+          photo ink bottles. Supports CD/DVD printing and Epson Heat-Free
+          Technology for superior performance.
+        </p>
+      </div>
+    )}
+  </div>
+
+  {/* PRODUCT DETAILS */}
+  <div className="info-accordion">
+    <div
+      className="info-header"
+      onClick={() => setOpenDetails(!openDetails)}
+    >
+      <h3>Product details</h3>
+      <span className={`arrow ${openDetails ? "open" : ""}`}>⌃</span>
+    </div>
+
+    {openDetails && (
+      <div className="info-body">
+        <table className="product-details-table">
+          <tbody>
+            <tr>
+              <td>Country Of Origin</td>
+              <td>Indonesia</td>
+            </tr>
+            <tr>
+              <td>Printer Speed</td>
+              <td>8.0 ipm / 8.0 ipm</td>
+            </tr>
+            <tr>
+              <td>Printer Output</td>
+              <td>Colour</td>
+            </tr>
+            <tr>
+              <td>Warranty</td>
+              <td>1 year</td>
+            </tr>
+            <tr>
+              <td>Includes</td>
+              <td>
+                Printer, Power Cable, USB Cable, Ink Bottles (1 Set),
+                User Manual, Warranty Card
+              </td>
+            </tr>
+            <tr>
+              <td>Special Feature</td>
+              <td>Epson Heat-Free Technology</td>
+            </tr>
+            <tr>
+              <td>Connectivity</td>
+              <td>Wi-Fi</td>
+            </tr>
+            <tr>
+              <td>Height</td>
+              <td>150 mm</td>
+            </tr>
+              <tr>
+              <td>Breadth</td>
+              <td>369 mm mm</td>
+            </tr>
+              <tr>
+              <td>Length</td>
+              <td>403 mm</td>
+            </tr>  
+            <tr>
+              <td>Weight</td>
+              <td>6 kg</td>
+            </tr>
+             <tr>
+              <td>Model</td>
+              <td>Epson EcoTank L8050</td>
+            </tr>
+             <tr>
+              <td>Brand</td>
+              <td>Epson India Pvt Ltd.</td>
+            </tr>
+             <tr>
+              <td>Common name</td>
+              <td>printer</td>
+            </tr>
+              <tr>
+              <td>Net Quantity</td>
+              <td>1 unit</td>
+            </tr>
+              <tr>
+              <td>Model number</td>
+              <td>-</td>
+            </tr>
+              <tr>
+              <td>Package Dimension</td>
+              <td>36.9L x 40.3W x 15H cm</td>
+            </tr>
+              <tr>
+              <td>Manufacturer or packer name</td>
+              <td>P.T.EPSON BATAM</td>
+            </tr>
+              <tr>
+              <td>Manufacturer or packer address</td>
+              <td>P.T.EPSON BATAM, Jl.Rambutan, Lot 504-510 & Lot 530 Batamindo Industrial Park, Muka Kuning Batam, Indonesia 29433</td>
+            </tr>
+               <tr>
+              <td>Manufacturing Date</td>
+              <td>Aug-23</td>
+            </tr>
+               <tr>
+              <td>Importer name</td>
+              <td>Epson India Pvt ltd</td>
+            </tr>
+              <tr>
+              <td>Importer address</td>
+              <td>Epson India Pvt ltd, 12 th Floor, The Millenia, Tower A, No.1 Murphy Road, Ulsoor, Bangalore - 560008</td>
+            </tr>
+          
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
+
 </div>
 
-
+</div>
         </div>
-      </div>
+      
 
 
     </>
