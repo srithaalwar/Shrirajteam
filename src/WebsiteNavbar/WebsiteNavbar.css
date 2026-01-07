@@ -15,6 +15,7 @@
   padding: 12px 16px;
   border-bottom: 1px solid #e5e7eb;
   background: #fff;
+  flex-wrap: wrap;
 }
 
 /* LEFT & RIGHT */
@@ -30,6 +31,10 @@
   background: none;
   border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
 }
 
 .wn-logo span {
@@ -44,6 +49,7 @@
   background: #fff;
   cursor: pointer;
   font-size: 14px;
+  white-space: nowrap;
 }
 
 /* ===================== SEARCH ===================== */
@@ -51,6 +57,7 @@
   flex: 1;
   display: flex;
   justify-content: center;
+  min-width: 0; /* Allow shrinking on mobile */
 }
 
 /* 🔥 FIXED SEARCH BOX */
@@ -62,7 +69,7 @@
   align-items: center;
   background: #fff;
   border-radius: 999px;
-  padding: 0 18px;
+  padding: 0 12px;
   border: 1px solid #e5e7eb;
   position: relative;
 }
@@ -72,16 +79,20 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #1f2937;
   cursor: pointer;
   position: relative;
   padding-right: 4px;
+  min-width: 80px;
 }
 
 .wn-category-text {
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
 }
 
 /* PERFECT ONDC STYLE ARROW */
@@ -93,6 +104,7 @@
   transform: rotate(45deg);
   margin-left: 6px;
   transition: transform 0.25s ease;
+  flex-shrink: 0;
 }
 
 /* Rotate on open */
@@ -144,7 +156,8 @@
   width: 1px;
   height: 24px;
   background: #e5e7eb;
-  margin: 0 14px;
+  margin: 0 10px;
+  flex-shrink: 0;
 }
 
 /* ---------- SEARCH INPUT ---------- */
@@ -152,8 +165,9 @@
   flex: 1;
   border: none;
   outline: none;
-  font-size: 16px;
+  font-size: 14px;
   color: #374151;
+  min-width: 0; /* Allow shrinking */
 }
 
 .wn-search-box input::placeholder {
@@ -165,6 +179,7 @@
   font-size: 18px;
   color: #9ca3af;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 /* ===================== RIGHT SIDE ===================== */
@@ -187,6 +202,10 @@
 
 .wn-cart {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
 }
 
 /* ===================== SIDEBAR ===================== */
@@ -321,4 +340,353 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
   z-index: 1000;
+}
+
+/* ===================== LOGO IMAGE ===================== */
+.wn-logo-img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* If you want to maintain aspect ratio and set max width */
+.wn-logo {
+  display: flex;
+  align-items: center;
+}
+
+.wn-logo img {
+  max-height: 60px;
+  max-width: 120px;
+}
+
+/* ===================== UPDATED RIGHT NAV ===================== */
+.wn-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Login Button */
+.wn-login-btn {
+  background: transparent;
+  color: #273c75;
+  border: 1px solid #273c75;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.wn-login-btn:hover {
+  background: #f0f2f5;
+}
+
+/* Updated Signup Button */
+.wn-signup-btn {
+  background: #273c75;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+  white-space: nowrap;
+}
+
+.wn-signup-btn:hover {
+  background: #1e2e5a;
+}
+
+/* Cart */
+.wn-cart {
+  cursor: pointer;
+  font-size: 16px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+      margin-right: 15px;
+}
+
+/* ===================== SIDEBAR LOGO ===================== */
+.wn-sidebar .wn-logo {
+  display: flex;
+  align-items: center;
+}
+
+.wn-sidebar .wn-logo-img {
+  max-height: 60px;
+  max-width: 100px;
+}
+
+/* ===================== RESPONSIVE ADJUSTMENTS ===================== */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+  .wn-navbar {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  
+  .wn-nav-right {
+    gap: 8px;
+  }
+
+    .wn-nav-right .wn-login-btn, .wn-nav-right .wn-signup-btn {
+        display: none;
+        width: 121px;
+    }
+  
+  /* Show login/signup buttons on iPad */
+  .wn-login-btn,
+  .wn-signup-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    display: block !important; /* Force show on iPad */
+  }
+  
+  .wn-logo-img {
+    max-height: 35px;
+    max-width: 100px;
+  }
+  
+  .wn-search-box {
+    height: 42px;
+    padding: 0 10px;
+  }
+  
+  .wn-category-text {
+    max-width: 70px;
+    font-size: 13px;
+  }
+  
+  .wn-search-box input {
+    font-size: 13px;
+  }
+  
+  .wn-location-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+}
+
+/* Mobile (600px - 768px) */
+@media (max-width: 768px) {
+  .wn-navbar {
+    flex-wrap: nowrap;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  
+  /* Adjust left section for mobile */
+  .wn-nav-left {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  
+  .wn-menu-btn {
+    font-size: 20px;
+    min-width: 28px;
+    padding: 0;
+  }
+  
+  .wn-logo-img {
+    max-height: 30px;
+    max-width: 90px;
+  }
+  
+  /* Hide location button on mobile */
+  .wn-location-btn {
+    display: none;
+  }
+  
+  /* Adjust right section for mobile */
+  .wn-nav-right {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  
+  /* Hide login/signup buttons, show only icons */
+  .wn-nav-right .wn-login-btn,
+  .wn-nav-right .wn-signup-btn {
+    display: none;
+
+  }
+  
+  .wn-cart {
+    font-size: 14px;
+    padding: 6px;
+    min-width: 28px;
+  }
+  
+  /* Search box adjustments */
+  .wn-nav-center {
+    order: 3;
+    flex: 1 0 100%;
+    margin-top: 8px;
+    min-width: 0;
+  }
+  
+  .wn-search-box {
+    height: 40px;
+    padding: 0 10px;
+  }
+  
+  .wn-category-dropdown {
+    min-width: 60px;
+  }
+  
+  .wn-category-text {
+    max-width: 50px;
+    font-size: 12px;
+  }
+  
+  .wn-search-divider {
+    margin: 0 6px;
+  }
+  
+  .wn-search-box input {
+    font-size: 12px;
+  }
+  
+  .wn-search-box input::placeholder {
+    font-size: 12px;
+  }
+  
+  .wn-search-icon {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 767px) {
+    .wn-nav-right .wn-login-btn, .wn-nav-right .wn-signup-btn {
+        display: none;
+        width: 81px;
+    }
+}
+
+/* Small Mobile (up to 600px) */
+@media (max-width: 600px) {
+  .wn-navbar {
+    padding: 6px 8px;
+  }
+  
+  .wn-menu-btn {
+    font-size: 18px;
+  }
+  
+  .wn-logo-img {
+    max-height: 25px;
+    max-width: 80px;
+  }
+  
+  .wn-search-box {
+    height: 38px;
+  }
+  
+  .wn-category-text {
+    max-width: 40px;
+    font-size: 11px;
+  }
+  
+  .wn-search-box input {
+    font-size: 11px;
+  }
+  
+  .wn-search-icon {
+    font-size: 15px;
+  }
+  
+  /* Hide category text, show only arrow on very small screens */
+  @media (max-width: 400px) {
+    .wn-category-text {
+      display: none;
+    }
+    
+    .wn-category-dropdown {
+      min-width: 24px;
+    }
+    
+    .wn-search-divider {
+      margin: 0 4px;
+    }
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 350px) {
+  .wn-nav-left {
+    gap: 4px;
+  }
+  
+  .wn-logo-img {
+    max-height: 22px;
+    max-width: 70px;
+  }
+  
+  .wn-menu-btn {
+    min-width: 24px;
+    font-size: 16px;
+  }
+  
+  .wn-cart {
+    min-width: 24px;
+    font-size: 12px;
+  }
+}
+
+/* ===================== LAYOUT FIX FOR MOBILE ===================== */
+/* Ensure proper stacking on mobile */
+@media (max-width: 768px) {
+  .wn-navbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  /* First row: left and right sections */
+  .wn-nav-left,
+  .wn-nav-right {
+    flex: 1;
+    flex-shrink: 0;
+  }
+  
+  .wn-nav-right {
+    justify-content: flex-end;
+  }
+  
+  /* Second row: search bar full width */
+  .wn-nav-center {
+    flex: 1 0 100%;
+    margin-top: 8px;
+  }
+}
+
+/* ===================== DROPDOWN MENU MOBILE FIX ===================== */
+@media (max-width: 768px) {
+  .wn-category-menu {
+    width: 200px;
+    max-height: 300px;
+    font-size: 14px;
+  }
+  
+  .wn-category-item {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+}
+
+/* ===================== SIDEBAR MOBILE FIX ===================== */
+@media (max-width: 768px) {
+  .wn-sidebar {
+    width: 280px;
+  }
 }

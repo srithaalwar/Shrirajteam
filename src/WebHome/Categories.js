@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import './Categories.css'
+import { baseurl } from "../BaseURL/BaseURL";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -10,7 +11,8 @@ const Categories = () => {
   const categoriesRowRef = useRef(null);
 
   useEffect(() => {
-    fetch("https://test.shrirajteam.com:85/categories/?level=global")
+    // Using baseurl for the API endpoint
+    fetch(`${baseurl}/categories/?level=global`)
       .then(res => res.json())
       .then(data => {
         const filtered = data.results
@@ -18,6 +20,9 @@ const Categories = () => {
           .sort((a, b) => a.display_order - b.display_order);
 
         setCategories(filtered);
+      })
+      .catch(error => {
+        console.error("Error fetching categories:", error);
       });
   }, []);
 
@@ -42,43 +47,41 @@ const Categories = () => {
     }
   };
 
-return (
-  <div className="categories-wrapper">
-    {/* LEFT ARROW */}
-    <button
-      className={`category-arrow ${currentPage === 0 ? "disabled" : ""}`}
-      onClick={handlePrev}
-      disabled={currentPage === 0}
-    >
-      ‹
-    </button>
+  return (
+    <div className="categories-wrapper">
+      {/* LEFT ARROW */}
+      <button
+        className={`category-arrow ${currentPage === 0 ? "disabled" : ""}`}
+        onClick={handlePrev}
+        disabled={currentPage === 0}
+      >
+        ‹
+      </button>
 
-    {/* CATEGORIES */}
-    <div className="categories-row" ref={categoriesRowRef}>
-      {currentCategories.map(cat => (
-        <div
-          className="category-item"
-          key={cat.category_id}
-          onClick={() => navigate(`/category/${cat.category_id}`)}
-        >
-          <div className="category-icon">
-            <BusinessCenterIcon />
+      {/* CATEGORIES */}
+      <div className="categories-row" ref={categoriesRowRef}>
+        {currentCategories.map(cat => (
+          <div
+            className="category-item"
+            key={cat.category_id}
+            onClick={() => navigate(`/w-category/${cat.category_id}`)}
+          >
+            <div className="category-icon">
+              <BusinessCenterIcon />
+            </div>
+            <p>{cat.name}</p>
           </div>
-          <p>{cat.name}</p>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
 
-    {/* RIGHT ARROW */}
-    <button
-      className={`category-arrow ${currentPage === totalPages - 1 ? "disabled" : ""}`}
-      onClick={handleNext}
-      disabled={currentPage === totalPages - 1}
-    >
-      ›
-    </button>
-  
-
+      {/* RIGHT ARROW */}
+      <button
+        className={`category-arrow ${currentPage === totalPages - 1 ? "disabled" : ""}`}
+        onClick={handleNext}
+        disabled={currentPage === totalPages - 1}
+      >
+        ›
+      </button>
 
       {/* Optional: Dots indicator - Remove if not needed */}
       {totalPages > 1 && (

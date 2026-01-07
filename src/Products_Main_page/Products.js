@@ -12,7 +12,7 @@ import {
   Filter
 } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./Filters.css";
+import "./Products.css";
 import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
 import Footer from "../Footer/Footer"
 
@@ -712,7 +712,7 @@ const ProductGrid = ({ products, viewMode }) => {
 };
 
 // ============= Main Filters Page Component =============
-const Filters = () => {
+const Products = () => {
   const [viewMode, setViewMode] = useState("grid-4");
 
       return (
@@ -773,4 +773,4 @@ const Filters = () => {
   );
 };
 
-export default Filters;
+export default Products;
