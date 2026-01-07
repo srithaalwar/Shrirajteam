@@ -62,13 +62,13 @@ const LoginWithEmail = () => {
                             >
                                 Forgot password?
                             </span>
-{/* 
+ 
                             <span
                                 className="phone-login"
                                 onClick={() => navigate("/login")}
                             >
                                 Login with phone
-                            </span> */}
+                            </span> 
 
                         </div>
 
