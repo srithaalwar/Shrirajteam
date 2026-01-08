@@ -154,3 +154,335 @@
 .shr-login-google-icon {
   width: 18px;
 }
+
+
+/* Page background */
+.shr-login-wrapper {
+  height: 100vh;
+  background-color: #eaf4ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-family: "Inter", sans-serif;
+}
+
+/* Close icon */
+.shr-login-close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  font-size: 22px;
+  cursor: pointer;
+  color: #2b2b2b;
+  z-index: 1000;
+}
+
+.shr-login-close:hover {
+  color: #000000;
+}
+
+/* Card */
+.shr-login-card {
+  width: 380px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 26px 24px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+/* Brand row */
+.shr-login-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.shr-login-logo {
+  width: 80px;
+}
+
+.shr-login-brand-name {
+  font-size: 25px;
+  font-weight: 600;
+  color: #2f3c7e;
+}
+
+/* Title */
+.shr-login-title {
+  font-size: 20px;
+  font-weight: 550;
+  margin-bottom: 18px;
+  color: #000000;
+}
+
+/* Phone input container */
+.shr-login-phone-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.shr-login-phone-box:focus-within {
+  border-color: #2f3c7e;
+}
+
+/* Country code */
+.shr-login-country-code {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  background-color: #f7f7f7;
+  font-size: 14px;
+  border-right: 1px solid #dcdfe6;
+}
+
+/* Phone input */
+.shr-login-phone-input {
+  flex: 1;
+  border: none;
+  padding: 12px;
+  outline: none;
+  font-size: 14px;
+  background: transparent;
+}
+
+.shr-login-phone-input::placeholder {
+  color: #999;
+}
+
+/* Login with email */
+.shr-login-email-link {
+  text-align: right;
+  font-size: 13px;
+  color: #2f3c7e;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.shr-login-email-link:hover {
+  color: #1a237e;
+  text-decoration: underline;
+}
+
+/* Forgot Password */
+.shr-login-forgot-link {
+  text-align: right;
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: color 0.3s ease;
+}
+
+.shr-login-forgot-link:hover {
+  color: #2f3c7e;
+  text-decoration: underline;
+}
+
+/* OTP button */
+.shr-login-otp-btn {
+  width: 100%;
+  background-color: #7c83a8;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: not-allowed;
+  margin-bottom: 18px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Enabled OTP button */
+.shr-login-otp-active {
+  background-color: #2E3C7E;
+  cursor: pointer;
+}
+
+.shr-login-otp-active:hover {
+  background-color: #1a237e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(46, 60, 126, 0.2);
+}
+
+/* Divider */
+.shr-login-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.shr-login-divider-line {
+  flex: 1;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+
+.shr-login-divider-text {
+  font-size: 13px;
+  color: #777777;
+  margin: 0;
+}
+
+/* Google button */
+.google-btn {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #dcdfe6 !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.google-btn:hover {
+  background-color: #f8f9fa;
+  border-color: #c6c9d0 !important;
+  transform: translateY(-1px);
+}
+
+.google-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Sign up link */
+.shr-login-signup {
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.shr-login-signup span {
+  color: #2f3c7e;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.shr-login-signup span:hover {
+  color: #1a237e;
+  text-decoration: underline;
+}
+
+/* Alert */
+.shr-alert {
+  padding: 8px 12px !important;
+  margin-bottom: 12px !important;
+  font-size: 13px !important;
+  border-radius: 6px !important;
+}
+
+/* Loading spinner */
+.spinner-border {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .shr-login-card {
+    width: 90%;
+    padding: 20px;
+    margin: 0 16px;
+  }
+  
+  .shr-login-close {
+    top: 12px;
+    right: 16px;
+  }
+}
+
+
+/* OTP Container */
+.shr-otp-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.shr-otp-input {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  border: 1px solid #dcdfe6;
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.shr-otp-input:focus {
+  border-color: #2f3c7e;
+  box-shadow: 0 0 0 2px rgba(47, 60, 126, 0.1);
+}
+
+/* Resend OTP */
+.shr-resend-otp {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.shr-resend-link {
+  color: #2f3c7e;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.shr-resend-link:hover {
+  text-decoration: underline;
+}
+
+.shr-timer {
+  color: #666;
+}
+
+/* Login subtitle */
+.shr-login-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Input group */
+.shr-input-group {
+  margin-bottom: 15px;
+}
+
+.shr-login-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.shr-login-input:focus {
+  border-color: #2f3c7e;
+}

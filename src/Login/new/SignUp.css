@@ -1,0 +1,340 @@
+/* SignUp.css */
+.signup-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+.signup-wrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.signup-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.signup-card:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+}
+
+.signup-form-container {
+    padding: 40px;
+}
+
+.signup-form-container h3 {
+    color: #333;
+    font-weight: 600;
+    font-size: 1.75rem;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #004080;
+    box-shadow: 0 0 0 0.2rem rgba(0, 64, 128, 0.1);
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    font-size: 0.85em;
+    margin-top: 5px;
+    color: #dc3545;
+}
+
+.input-group .btn-outline-secondary {
+    border-color: #ced4da;
+    color: #6c757d;
+    border-left: none;
+    transition: all 0.3s ease;
+}
+
+.input-group .btn-outline-secondary:hover {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.form-check {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-check-input {
+    margin-right: 10px;
+    margin-top: 0.25rem;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #004080;
+    border-color: #004080;
+}
+
+.form-check-label {
+    font-size: 0.95rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.form-check-label a {
+    color: #004080;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.form-check-label a:hover {
+    text-decoration: underline;
+    color: #003366;
+}
+
+.helpline-number {
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    margin: 1.5rem 0;
+}
+
+.helpline-number small {
+    font-size: 0.95rem;
+    color: #495057;
+}
+
+.signup-btn {
+    background: linear-gradient(45deg, #004080, #0066cc);
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.signup-btn:hover:not(:disabled) {
+    background: linear-gradient(45deg, #003366, #004080);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 64, 128, 0.2);
+}
+
+.signup-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-link {
+    color: #004080;
+    text-decoration: none;
+    padding: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-link:hover {
+    color: #003366;
+    text-decoration: underline;
+}
+
+.sponsor-info {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    border-left: 4px solid #00cc8f;
+    margin-top: 8px;
+}
+
+.sponsor-info small {
+    font-size: 0.9rem;
+}
+
+.sponsor-info strong {
+    color: #004080;
+}
+
+.signup-footer {
+    padding: 20px;
+    background: rgba(0, 64, 128, 0.9);
+    border-radius: 10px;
+    margin-top: 30px;
+}
+
+.signup-footer small {
+    color: white;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.signup-footer a {
+    color: white !important;
+    text-decoration: underline;
+    transition: all 0.3s ease;
+}
+
+.signup-footer a:hover {
+    color: #ffd700 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .signup-container {
+        padding: 15px;
+    }
+    
+    .signup-form-container {
+        padding: 30px 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .signup-wrapper {
+        width: 95%;
+    }
+    
+    .signup-form-container {
+        padding: 25px 20px;
+    }
+    
+    .signup-btn {
+        padding: 12px;
+    }
+    
+    .col-md-6 {
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .signup-form-container {
+        padding: 20px 15px;
+    }
+    
+    .signup-form-container h3 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    
+    .form-control,
+    .form-select {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+    
+    .row.g-3 > .col-md-6 {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    
+    .signup-footer {
+        padding: 15px;
+    }
+}
+
+/* Animation for form */
+.signup-form-container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom scrollbar for form if needed */
+.signup-form-container {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #004080 #f1f1f1;
+}
+
+.signup-form-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.signup-form-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.signup-form-container::-webkit-scrollbar-thumb {
+    background: #004080;
+    border-radius: 3px;
+}
+
+.signup-form-container::-webkit-scrollbar-thumb:hover {
+    background: #003366;
+}
+
+/* Spinner adjustments */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Text adjustments */
+.text-muted {
+    color: #6c757d !important;
+}
+
+.text-primary {
+    color: #004080 !important;
+}
+
+/* Links */
+.text-decoration-underline {
+    text-decoration: underline;
+}
+
+.text-decoration-underline:hover {
+    text-decoration: none;
+}
+
+/* Row spacing */
+.row.g-3 {
+    row-gap: 1rem !important;
+}

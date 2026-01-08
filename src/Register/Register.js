@@ -1,23 +1,919 @@
-import React, { useState } from "react";
-import { Container, Card, Form, Button, InputGroup } from "react-bootstrap";
+// import React, { useState, useEffect } from "react";
+// import { Container, Card, Form, Button, InputGroup, Spinner } from "react-bootstrap";
+// import { Eye, EyeSlash } from "react-bootstrap-icons";
+// import { useNavigate } from "react-router-dom";
+// import shrirajlogo from "./../Images/shrirajlogo.png";
+// import "./Register.css";
+// import { baseurl } from '../BaseURL/BaseURL';
+// import Swal from "sweetalert2";
+
+// const Register = () => {
+//   const [showPassword, setShowPassword] = useState(false);
+//   const [agree, setAgree] = useState(false);
+//   const [loading, setLoading] = useState(false);
+//   const [fetchingRoles, setFetchingRoles] = useState(true);
+//   const navigate = useNavigate();
+
+//   const [formData, setFormData] = useState({
+//     first_name: "",
+//     last_name: "",
+//     email: "",
+//     password: "",
+//     phone_number: "",
+//     role_ids: []
+//   });
+
+//   const [roles, setRoles] = useState([]);
+//   const [errors, setErrors] = useState({
+//     email: "",
+//     phone_number: ""
+//   });
+//   const [helplineNumber, setHelplineNumber] = useState("");
+
+//   // Sponsor ID states (for Agent role)
+//   const [sponsorInfo, setSponsorInfo] = useState(null);
+//   const [sponsorError, setSponsorError] = useState('');
+//   const [showSponsorField, setShowSponsorField] = useState(false);
+
+//   // Fetch roles and helpline number on component mount
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       setFetchingRoles(true);
+      
+//       try {
+//         // Fetch roles
+//         const rolesResponse = await fetch(`${baseurl}/roles/`);
+//         if (!rolesResponse.ok) {
+//           throw new Error('Failed to fetch roles');
+//         }
+//         const rolesData = await rolesResponse.json();
+//         console.log("Roles API Response:", rolesData); // Debug log
+        
+//         // Handle both array and object with results property
+//         let rolesList = [];
+//         if (Array.isArray(rolesData)) {
+//           rolesList = rolesData;
+//         } else if (rolesData.results && Array.isArray(rolesData.results)) {
+//           rolesList = rolesData.results;
+//         }
+        
+//         // Filter out admin role and sort by role name
+//         const filteredRoles = rolesList
+//           .filter(role => role.role_name.toLowerCase() !== "admin")
+//           .sort((a, b) => a.role_name.localeCompare(b.role_name));
+        
+//         console.log("Filtered roles for dropdown:", filteredRoles); // Debug log
+//         setRoles(filteredRoles);
+
+//         // Fetch helpline number
+//         const phoneResponse = await fetch(`${baseurl}/phonenumbers/`);
+//         if (phoneResponse.ok) {
+//           const phoneData = await phoneResponse.json();
+//           if (Array.isArray(phoneData) && phoneData.length > 0 && phoneData[0].phone_number) {
+//             setHelplineNumber(phoneData[0].phone_number);
+//           }
+//         }
+//       } catch (error) {
+//         console.error("Error fetching data:", error);
+//         Swal.fire({
+//           icon: "error",
+//           title: "Connection Error",
+//           text: "Failed to load registration data. Please try again later.",
+//           confirmButtonColor: "#d33"
+//         });
+//       } finally {
+//         setFetchingRoles(false);
+//       }
+//     };
+
+//     fetchData();
+//   }, []);
+
+//   // Check sponsor ID for Agent role
+//   const checkSponsorId = async (sponsorId) => {
+//     if (!sponsorId || sponsorId.trim() === "") {
+//       setSponsorInfo(null);
+//       setSponsorError('');
+//       return;
+//     }
+
+//     try {
+//       const response = await fetch(`${baseurl}/users/role/Agent/`);
+//       if (!response.ok) {
+//         throw new Error('Failed to fetch agents');
+//       }
+//       const agents = await response.json();
+//       console.log("Agents fetched for sponsor check:", agents); // Debug log
+
+//       const foundAgent = agents.find(agent => 
+//         agent.referral_id && agent.referral_id.toString() === sponsorId.toString()
+//       );
+
+//       if (foundAgent) {
+//         setSponsorInfo(foundAgent);
+//         setSponsorError('');
+//         console.log("Sponsor found:", foundAgent); // Debug log
+//       } else {
+//         setSponsorInfo(null);
+//         setSponsorError('Not a valid Sponsor ID');
+//         console.log("Sponsor not found for ID:", sponsorId); // Debug log
+//       }
+//     } catch (error) {
+//       setSponsorInfo(null);
+//       setSponsorError('Error checking sponsor ID');
+//       console.error('Error checking sponsor ID:', error);
+//     }
+//   };
+
+//   // Handle role change
+//   const handleRoleChange = (roleId) => {
+//     const selectedRole = roles.find(role => role.role_id === parseInt(roleId));
+//     console.log("Selected role:", selectedRole); // Debug log
+    
+//     setFormData({ ...formData, role_ids: [parseInt(roleId)] });
+    
+//     const isAgentRole = selectedRole?.role_name === "Agent";
+//     setShowSponsorField(isAgentRole);
+    
+//     // Clear sponsor info when role changes
+//     if (!isAgentRole) {
+//       setSponsorInfo(null);
+//       setSponsorError('');
+//     }
+//   };
+
+//   // Handle form input changes
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData({ ...formData, [name]: value });
+    
+//     // Clear error when user starts typing
+//     if (errors[name]) {
+//       setErrors({ ...errors, [name]: "" });
+//     }
+//   };
+
+//   // Handle sponsor ID change with debounce
+//   useEffect(() => {
+//     if (showSponsorField && formData.referred_by) {
+//       const timer = setTimeout(() => {
+//         checkSponsorId(formData.referred_by);
+//       }, 500);
+
+//       return () => clearTimeout(timer);
+//     }
+//   }, [formData.referred_by, showSponsorField]);
+
+//   // Handle sponsor ID input change
+//   const handleSponsorChange = (e) => {
+//     const value = e.target.value;
+//     setFormData({ ...formData, referred_by: value });
+//     setSponsorError('');
+//     setSponsorInfo(null);
+//   };
+
+//   // Handle form submission
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     // Validation
+//     const newErrors = {};
+//     if (!formData.email.trim()) newErrors.email = "Email is required";
+//     if (!formData.phone_number.trim()) newErrors.phone_number = "Phone number is required";
+//     if (!formData.role_ids.length) {
+//       Swal.fire({
+//         icon: "error",
+//         title: "Role Required",
+//         text: "Please select a role",
+//         confirmButtonColor: "#d33"
+//       });
+//       return;
+//     }
+
+//     if (Object.keys(newErrors).length > 0) {
+//       setErrors(newErrors);
+//       return;
+//     }
+
+//     if (!agree) {
+//       Swal.fire({
+//         icon: "warning",
+//         title: "Terms Required",
+//         text: "Please agree to the Terms & Conditions and Privacy Policy",
+//         confirmButtonColor: "#3085d6"
+//       });
+//       return;
+//     }
+
+//     // If Agent role and sponsor field is shown, validate sponsor
+//     if (showSponsorField) {
+//       const selectedRole = roles.find(role => role.role_id === formData.role_ids[0]);
+//       if (selectedRole?.role_name === "Agent" && (!formData.referred_by || sponsorError)) {
+//         Swal.fire({
+//           icon: "error",
+//           title: "Sponsor ID Required",
+//           text: "Please enter a valid Sponsor ID for Agent registration",
+//           confirmButtonColor: "#d33"
+//         });
+//         return;
+//       }
+//     }
+
+//     setLoading(true);
+
+//     // Prepare full form data with additional required fields
+//     const completeFormData = {
+//       ...formData,
+//       status: "active",
+//       kyc_status: "pending",
+//       referral_id: "",
+//       date_of_birth: "",
+//       gender: "",
+//       address: "",
+//       city: "",
+//       state: "",
+//       country: "",
+//       pin_code: "",
+//       pan_number: "",
+//       aadhaar_number: "",
+//       account_holder_name: "",
+//       bank_name: "",
+//       branch_name: "",
+//       account_number: "",
+//       account_type: "",
+//       ifsc_code: "",
+//       nominee_reference_to: ""
+//     };
+
+//     console.log("Submitting form data:", completeFormData); // Debug log
+
+//     try {
+//       const response = await fetch(`${baseurl}/users/`, {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(completeFormData),
+//       });
+
+//       const responseData = await response.json();
+//       console.log("Registration response:", responseData); // Debug log
+
+//       if (response.ok) {
+//         Swal.fire({
+//           icon: "success",
+//           title: "Registration Successful!",
+//           text: "You have been registered successfully!",
+//           confirmButtonColor: "#3085d6"
+//         }).then(() => {
+//           navigate("/login");
+//         });
+//       } else {
+//         // Handle backend validation errors
+//         const backendErrors = {};
+//         if (responseData.email) {
+//           backendErrors.email = Array.isArray(responseData.email) 
+//             ? responseData.email[0] 
+//             : "Email already exists";
+//         }
+//         if (responseData.phone_number) {
+//           backendErrors.phone_number = Array.isArray(responseData.phone_number)
+//             ? responseData.phone_number[0]
+//             : "Phone number already exists";
+//         }
+        
+//         if (Object.keys(backendErrors).length > 0) {
+//           setErrors(backendErrors);
+//         }
+
+//         Swal.fire({
+//           icon: "error",
+//           title: "Registration Failed",
+//           text: responseData.message || responseData.detail || "Please check the form for errors.",
+//           confirmButtonColor: "#d33"
+//         });
+//       }
+//     } catch (error) {
+//       console.error("Error submitting form:", error);
+//       Swal.fire({
+//         icon: "error",
+//         title: "Network Error",
+//         text: "An error occurred while submitting the form. Please try again.",
+//         confirmButtonColor: "#d33"
+//       });
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // Handle login navigation
+//   const handleLoginClick = () => {
+//     navigate("/login");
+//   };
+
+//   // Handle terms link click
+//   const handleTermsClick = () => {
+//     window.open("/termsandconditions", "_blank");
+//   };
+
+//   // Handle privacy policy click
+//   const handlePrivacyClick = () => {
+//     window.open("/privacypolicy", "_blank");
+//   };
+
+//   return (
+//     <div className="register-bg">
+//       <span className="register-close" onClick={() => navigate("/")}>✕</span>
+
+//       <Container className="register-container">
+//         <Card className="register-card">
+//           <Card.Body>
+//             {/* Logo + Brand */}
+//             <div className="register-brand-row">
+//               <img src={shrirajlogo} alt="Shriraj Logo" className="register-logo" />
+//               <span className="register-brand-name">Shriraj</span>
+//             </div>
+
+//             {/* Title */}
+//             <div className="register-title">Registration</div>
+
+//             <Form onSubmit={handleSubmit}>
+//               {/* First & Last Name */}
+//               <div className="register-two-col">
+//                 <Form.Control
+//                   type="text"
+//                   name="first_name"
+//                   placeholder="First Name *"
+//                   className="register-input"
+//                   value={formData.first_name}
+//                   onChange={handleChange}
+//                   required
+//                 />
+//                 <Form.Control
+//                   type="text"
+//                   name="last_name"
+//                   placeholder="Last Name *"
+//                   className="register-input"
+//                   value={formData.last_name}
+//                   onChange={handleChange}
+//                   required
+//                 />
+//               </div>
+
+//               {/* Email & Password */}
+//               <div className="register-two-col">
+//                 <Form.Control
+//                   type="email"
+//                   name="email"
+//                   placeholder="Email *"
+//                   className="register-input"
+//                   value={formData.email}
+//                   onChange={handleChange}
+//                   required
+//                   isInvalid={!!errors.email}
+//                 />
+//                 <Form.Control.Feedback type="invalid">
+//                   {errors.email}
+//                 </Form.Control.Feedback>
+
+//                 <InputGroup>
+//                   <Form.Control
+//                     type={showPassword ? "text" : "password"}
+//                     name="password"
+//                     placeholder="Password *"
+//                     className="register-input"
+//                     value={formData.password}
+//                     onChange={handleChange}
+//                     required
+//                     minLength="6"
+//                   />
+//                   <InputGroup.Text
+//                     className="register-eye"
+//                     onClick={() => setShowPassword(!showPassword)}
+//                     style={{ cursor: "pointer" }}
+//                   >
+//                     {showPassword ? <EyeSlash /> : <Eye />}
+//                   </InputGroup.Text>
+//                 </InputGroup>
+//               </div>
+
+//               {/* Phone & Role */}
+//               <div className="register-two-col">
+//                 <Form.Control
+//                   type="tel"
+//                   name="phone_number"
+//                   placeholder="Phone Number *"
+//                   className="register-input"
+//                   value={formData.phone_number}
+//                   onChange={handleChange}
+//                   required
+//                   isInvalid={!!errors.phone_number}
+//                 />
+//                 <Form.Control.Feedback type="invalid">
+//                   {errors.phone_number}
+//                 </Form.Control.Feedback>
+
+//                 {fetchingRoles ? (
+//                   <div className="register-input" style={{
+//                     display: "flex",
+//                     alignItems: "center",
+//                     justifyContent: "center",
+//                     height: "44px"
+//                   }}>
+//                     <Spinner animation="border" size="sm" />
+//                     <span className="ms-2">Loading roles...</span>
+//                   </div>
+//                 ) : (
+//                   <Form.Select 
+//                     className="register-input"
+//                     value={formData.role_ids[0] || ""}
+//                     onChange={(e) => handleRoleChange(e.target.value)}
+//                     required
+//                   >
+//                     <option value="">Select Role *</option>
+//                     {roles.length > 0 ? (
+//                       roles.map((role) => (
+//                         <option key={role.role_id} value={role.role_id}>
+//                           {role.role_name === "Agent"
+//                             ? "Team"
+//                             : role.role_name === "Client"
+//                             ? "User"
+//                             : role.role_name}
+//                         </option>
+//                       ))
+//                     ) : (
+//                       <option value="" disabled>No roles available</option>
+//                     )}
+//                   </Form.Select>
+//                 )}
+//               </div>
+
+//               {/* Sponsor ID Field (Only for Agent role) */}
+//               {showSponsorField && (
+//                 <div className="mb-3">
+//                   <Form.Control
+//                     type="text"
+//                     name="referred_by"
+//                     placeholder="Sponsor ID (Required for Team registration)"
+//                     className="register-input mb-2"
+//                     value={formData.referred_by || ""}
+//                     onChange={handleSponsorChange}
+//                     isInvalid={!!sponsorError}
+//                   />
+//                   {sponsorError && (
+//                     <Form.Control.Feedback type="invalid">
+//                       {sponsorError}
+//                     </Form.Control.Feedback>
+//                   )}
+//                   {sponsorInfo && (
+//                     <div className="text-success small mt-1">
+//                       ✓ Valid Sponsor: <strong>{sponsorInfo.first_name} {sponsorInfo.last_name}</strong>
+//                       {sponsorInfo.phone_number && ` (${sponsorInfo.phone_number})`}
+//                     </div>
+//                   )}
+//                 </div>
+//               )}
+
+//               {/* Terms */}
+//               <Form.Check
+//                 type="checkbox"
+//                 className="register-terms"
+//                 checked={agree}
+//                 onChange={() => setAgree(!agree)}
+//                 label={
+//                   <>
+//                     I agree to the{" "}
+//                     <span className="register-link" onClick={handleTermsClick}>
+//                       Terms & Conditions
+//                     </span>{" "}
+//                     and{" "}
+//                     <span className="register-link" onClick={handlePrivacyClick}>
+//                       Privacy Policy
+//                     </span>
+//                   </>
+//                 }
+//               />
+
+//               {/* Helpline */}
+//               <div className="register-helpline">
+//                 Helpline Number: <strong>{helplineNumber || "9399492809"}</strong>
+//               </div>
+
+//               {/* Register Button */}
+//               <Button 
+//                 className="register-btn" 
+//                 type="submit"
+//                 disabled={!agree || loading || fetchingRoles}
+//               >
+//                 {loading ? (
+//                   <>
+//                     <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+//                     Registering...
+//                   </>
+//                 ) : (
+//                   "Register"
+//                 )}
+//               </Button>
+
+//               {/* Login link */}
+//               <div className="register-footer">
+//                 Already registered?{" "}
+//                 <span
+//                   className="register-link"
+//                   onClick={handleLoginClick}
+//                   style={{ cursor: "pointer" }}
+//                 >
+//                   Login
+//                 </span>
+//               </div>
+//             </Form>
+//           </Card.Body>
+//         </Card>
+//       </Container>
+//     </div>
+//   );
+// };
+
+// export default Register;
+
+
+import React, { useState, useEffect } from "react";
+import { Container, Card, Form, Button, InputGroup, Spinner } from "react-bootstrap";
 import { Eye, EyeSlash } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import shrirajlogo from "./../Images/shrirajlogo.png";
 import "./Register.css";
+import { baseurl } from '../BaseURL/BaseURL';
+import Swal from "sweetalert2";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [agree, setAgree] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [fetchingRoles, setFetchingRoles] = useState(true);
   const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+    phone_number: "",
+    role_ids: [],
+    referred_by: "" // Add referred_by to formData
+  });
+
+  const [roles, setRoles] = useState([]);
+  const [errors, setErrors] = useState({
+    email: "",
+    phone_number: ""
+  });
+  const [helplineNumber, setHelplineNumber] = useState("");
+
+  // Sponsor ID states (for Agent role)
+  const [sponsorInfo, setSponsorInfo] = useState(null);
+  const [sponsorError, setSponsorError] = useState('');
+  const [showSponsorField, setShowSponsorField] = useState(false);
+
+  // Fetch roles and helpline number on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      setFetchingRoles(true);
+      
+      try {
+        // Fetch roles
+        const rolesResponse = await fetch(`${baseurl}/roles/`);
+        if (!rolesResponse.ok) {
+          throw new Error('Failed to fetch roles');
+        }
+        const rolesData = await rolesResponse.json();
+        console.log("Roles API Response:", rolesData);
+        
+        // Handle both array and object with results property
+        let rolesList = [];
+        if (Array.isArray(rolesData)) {
+          rolesList = rolesData;
+        } else if (rolesData.results && Array.isArray(rolesData.results)) {
+          rolesList = rolesData.results;
+        }
+        
+        // Filter out admin role and sort by role name
+        const filteredRoles = rolesList
+          .filter(role => role.role_name.toLowerCase() !== "admin")
+          .sort((a, b) => a.role_name.localeCompare(b.role_name));
+        
+        console.log("Filtered roles for dropdown:", filteredRoles);
+        setRoles(filteredRoles);
+
+        // Fetch helpline number
+        const phoneResponse = await fetch(`${baseurl}/phonenumbers/`);
+        if (phoneResponse.ok) {
+          const phoneData = await phoneResponse.json();
+          if (Array.isArray(phoneData) && phoneData.length > 0 && phoneData[0].phone_number) {
+            setHelplineNumber(phoneData[0].phone_number);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Connection Error",
+          text: "Failed to load registration data. Please try again later.",
+          confirmButtonColor: "#d33"
+        });
+      } finally {
+        setFetchingRoles(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Check sponsor ID for Agent role
+  const checkSponsorId = async (sponsorId) => {
+    if (!sponsorId || sponsorId.trim() === "") {
+      setSponsorInfo(null);
+      setSponsorError('');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${baseurl}/users/role/Agent/`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch agents');
+      }
+      const agents = await response.json();
+
+      const foundAgent = agents.find(agent => 
+        agent.referral_id && agent.referral_id.toString() === sponsorId.toString()
+      );
+
+      if (foundAgent) {
+        setSponsorInfo(foundAgent);
+        setSponsorError('');
+      } else {
+        setSponsorInfo(null);
+        setSponsorError('Not a valid Sponsor ID');
+      }
+    } catch (error) {
+      setSponsorInfo(null);
+      setSponsorError('Error checking sponsor ID');
+      console.error('Error checking sponsor ID:', error);
+    }
+  };
+
+  // Handle role change
+  const handleRoleChange = (roleId) => {
+    const selectedRole = roles.find(role => role.role_id === parseInt(roleId));
+    
+    setFormData({ ...formData, role_ids: [parseInt(roleId)] });
+    
+    const isAgentRole = selectedRole?.role_name === "Agent";
+    setShowSponsorField(isAgentRole);
+    
+    // Clear sponsor info when role changes
+    if (!isAgentRole) {
+      setFormData(prev => ({ ...prev, referred_by: "" }));
+      setSponsorInfo(null);
+      setSponsorError('');
+    }
+  };
+
+  // Handle form input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: "" });
+    }
+  };
+
+  // Handle sponsor ID change with debounce
+  useEffect(() => {
+    if (showSponsorField && formData.referred_by) {
+      const timer = setTimeout(() => {
+        checkSponsorId(formData.referred_by);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [formData.referred_by, showSponsorField]);
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validation
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9]{10}$/;
+
+    if (!formData.first_name.trim()) {
+      Swal.fire({
+        icon: "error",
+        title: "First Name Required",
+        text: "Please enter your first name",
+        confirmButtonColor: "#d33"
+      });
+      return;
+    }
+
+    if (!formData.last_name.trim()) {
+      Swal.fire({
+        icon: "error",
+        title: "Last Name Required",
+        text: "Please enter your last name",
+        confirmButtonColor: "#d33"
+      });
+      return;
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    if (!formData.password.trim()) {
+      Swal.fire({
+        icon: "error",
+        title: "Password Required",
+        text: "Please enter a password",
+        confirmButtonColor: "#d33"
+      });
+      return;
+    } else if (formData.password.length < 6) {
+      Swal.fire({
+        icon: "error",
+        title: "Password Too Short",
+        text: "Password must be at least 6 characters",
+        confirmButtonColor: "#d33"
+      });
+      return;
+    }
+
+    if (!formData.phone_number.trim()) {
+      newErrors.phone_number = "Phone number is required";
+    } else if (!phoneRegex.test(formData.phone_number)) {
+      newErrors.phone_number = "Please enter a valid 10-digit phone number";
+    }
+
+    if (!formData.role_ids.length) {
+      Swal.fire({
+        icon: "error",
+        title: "Role Required",
+        text: "Please select a role",
+        confirmButtonColor: "#d33"
+      });
+      return;
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    if (!agree) {
+      Swal.fire({
+        icon: "warning",
+        title: "Terms Required",
+        text: "Please agree to the Terms & Conditions and Privacy Policy",
+        confirmButtonColor: "#3085d6"
+      });
+      return;
+    }
+
+    // If Agent role and sponsor field is shown, validate sponsor
+    if (showSponsorField) {
+      const selectedRole = roles.find(role => role.role_id === formData.role_ids[0]);
+      if (selectedRole?.role_name === "Agent" && (!formData.referred_by || sponsorError)) {
+        Swal.fire({
+          icon: "error",
+          title: "Sponsor ID Required",
+          text: "Please enter a valid Sponsor ID for Team registration",
+          confirmButtonColor: "#d33"
+        });
+        return;
+      }
+    }
+
+    setLoading(true);
+
+    // Prepare form data - only send fields that are actually needed
+    const submitData = {
+      first_name: formData.first_name.trim(),
+      last_name: formData.last_name.trim(),
+      email: formData.email.trim(),
+      password: formData.password,
+      phone_number: formData.phone_number.trim(),
+      role_ids: formData.role_ids,
+      status: "active",
+      kyc_status: "pending"
+    };
+
+    // Add sponsor ID only if it exists
+    if (formData.referred_by && formData.referred_by.trim()) {
+      submitData.referred_by = formData.referred_by.trim();
+    }
+
+    console.log("Submitting form data:", submitData);
+
+    try {
+      const response = await fetch(`${baseurl}/users/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submitData),
+      });
+
+      const responseData = await response.json();
+      console.log("Registration response:", responseData);
+
+      if (response.ok) {
+        Swal.fire({
+          icon: "success",
+          title: "Registration Successful!",
+          text: "You have been registered successfully!",
+          confirmButtonColor: "#3085d6"
+        }).then(() => {
+          navigate("/login");
+        });
+      } else {
+        // Handle backend validation errors
+        const backendErrors = {};
+        if (responseData.email) {
+          backendErrors.email = Array.isArray(responseData.email) 
+            ? responseData.email[0] 
+            : "Email already exists";
+        }
+        if (responseData.phone_number) {
+          backendErrors.phone_number = Array.isArray(responseData.phone_number)
+            ? responseData.phone_number[0]
+            : "Phone number already exists";
+        }
+        
+        // Parse error message if it's a string
+        if (responseData.error && typeof responseData.error === 'string') {
+          try {
+            // Try to parse the error string as JSON
+            const parsedError = JSON.parse(responseData.error.replace(/'/g, '"'));
+            if (parsedError.date_of_birth) {
+              console.error("Date format error:", parsedError.date_of_birth);
+            }
+          } catch (parseError) {
+            console.error("Error parsing error message:", responseData.error);
+          }
+        }
+
+        if (Object.keys(backendErrors).length > 0) {
+          setErrors(backendErrors);
+        }
+
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text: responseData.message || responseData.detail || "Please check the form for errors.",
+          confirmButtonColor: "#d33"
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Network Error",
+        text: "An error occurred while submitting the form. Please try again.",
+        confirmButtonColor: "#d33"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle login navigation
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
+
+  // Handle terms link click
+  const handleTermsClick = () => {
+    window.open("/termsandconditions", "_blank");
+  };
+
+  // Handle privacy policy click
+  const handlePrivacyClick = () => {
+    window.open("/privacypolicy", "_blank");
+  };
 
   return (
     <div className="register-bg">
-      <span className="register-close">✕</span>
+      <span className="register-close" onClick={() => navigate("/")}>✕</span>
 
       <Container className="register-container">
         <Card className="register-card">
           <Card.Body>
-
             {/* Logo + Brand */}
             <div className="register-brand-row">
               <img src={shrirajlogo} alt="Shriraj Logo" className="register-logo" />
@@ -27,95 +923,189 @@ const Register = () => {
             {/* Title */}
             <div className="register-title">Registration</div>
 
-            {/* First & Last Name */}
-            <div className="register-two-col">
-              <Form.Control
-                type="text"
-                placeholder="First Name"
-                className="register-input"
-              />
-              <Form.Control
-                type="text"
-                placeholder="Last Name"
-                className="register-input"
-              />
-            </div>
-
-            {/* Email & Password */}
-            <div className="register-two-col">
-              <Form.Control
-                type="email"
-                placeholder="Email"
-                className="register-input"
-              />
-
-              <InputGroup>
+            <Form onSubmit={handleSubmit}>
+              {/* First & Last Name */}
+              <div className="register-two-col">
                 <Form.Control
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
+                  type="text"
+                  name="first_name"
+                  placeholder="First Name *"
                   className="register-input"
+                  value={formData.first_name}
+                  onChange={handleChange}
                 />
-                <InputGroup.Text
-                  className="register-eye"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeSlash /> : <Eye />}
-                </InputGroup.Text>
-              </InputGroup>
-            </div>
+                <Form.Control
+                  type="text"
+                  name="last_name"
+                  placeholder="Last Name *"
+                  className="register-input"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                />
+              </div>
 
-            {/* Phone & Role */}
-            <div className="register-two-col">
-              <Form.Control
-                type="tel"
-                placeholder="Phone Number"
-                className="register-input"
+              {/* Email & Password */}
+              <div className="register-two-col">
+                <Form.Control
+                  type="email"
+                  name="email"
+                  placeholder="Email *"
+                  className="register-input"
+                  value={formData.email}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
+
+                <InputGroup>
+                  <Form.Control
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Password * (min 6 characters)"
+                    className="register-input"
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
+                  <InputGroup.Text
+                    className="register-eye"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {showPassword ? <EyeSlash /> : <Eye />}
+                  </InputGroup.Text>
+                </InputGroup>
+              </div>
+
+              {/* Phone & Role */}
+              <div className="register-two-col">
+                <Form.Control
+                  type="tel"
+                  name="phone_number"
+                  placeholder="Phone Number * (10 digits)"
+                  className="register-input"
+                  value={formData.phone_number}
+                  onChange={handleChange}
+                  isInvalid={!!errors.phone_number}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.phone_number}
+                </Form.Control.Feedback>
+
+                {fetchingRoles ? (
+                  <div className="register-input" style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "44px"
+                  }}>
+                    <Spinner animation="border" size="sm" />
+                    <span className="ms-2">Loading roles...</span>
+                  </div>
+                ) : (
+                  <Form.Select 
+                    className="register-input"
+                    value={formData.role_ids[0] || ""}
+                    onChange={(e) => handleRoleChange(e.target.value)}
+                  >
+                    <option value="">Select Role *</option>
+                    {roles.length > 0 ? (
+                      roles.map((role) => (
+                        <option key={role.role_id} value={role.role_id}>
+                          {role.role_name === "Agent"
+                            ? "Team"
+                            : role.role_name === "Client"
+                            ? "User"
+                            : role.role_name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>No roles available</option>
+                    )}
+                  </Form.Select>
+                )}
+              </div>
+
+              {/* Sponsor ID Field (Only for Agent role) */}
+              {showSponsorField && (
+                <div className="mb-3">
+                  <Form.Control
+                    type="text"
+                    name="referred_by"
+                    placeholder="Sponsor ID (Required for Team registration)"
+                    className="register-input mb-2"
+                    value={formData.referred_by}
+                    onChange={handleChange}
+                    isInvalid={!!sponsorError}
+                  />
+                  {sponsorError && (
+                    <Form.Control.Feedback type="invalid">
+                      {sponsorError}
+                    </Form.Control.Feedback>
+                  )}
+                  {sponsorInfo && (
+                    <div className="text-success small mt-1">
+                      ✓ Valid Sponsor: <strong>{sponsorInfo.first_name} {sponsorInfo.last_name}</strong>
+                      {sponsorInfo.phone_number && ` (${sponsorInfo.phone_number})`}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Terms */}
+              <Form.Check
+                type="checkbox"
+                className="register-terms"
+                checked={agree}
+                onChange={() => setAgree(!agree)}
+                label={
+                  <>
+                    I agree to the{" "}
+                    <span className="register-link" onClick={handleTermsClick}>
+                      Terms & Conditions
+                    </span>{" "}
+                    and{" "}
+                    <span className="register-link" onClick={handlePrivacyClick}>
+                      Privacy Policy
+                    </span>
+                  </>
+                }
               />
 
-              <Form.Select className="register-input">
-                <option value="">Role *</option>
-                <option>Investor</option>
-                <option>Partner</option>
-                <option>Agent</option>
-              </Form.Select>
-            </div>
+              {/* Helpline */}
+              <div className="register-helpline">
+                Helpline Number: <strong>{helplineNumber || "9399492809"}</strong>
+              </div>
 
-            {/* Terms */}
-            <Form.Check
-              type="checkbox"
-              className="register-terms"
-              checked={agree}
-              onChange={() => setAgree(!agree)}
-              label={
-                <>
-                  I agree to the{" "}
-                  <span className="register-link">Terms & Conditions</span> and{" "}
-                  <span className="register-link">Privacy Policy</span>
-                </>
-              }
-            />
-
-            {/* Helpline */}
-            <div className="register-helpline">
-              Helpline Number: <strong>9399492809</strong>
-            </div>
-
-            {/* Register Button */}
-            <Button className="register-btn" disabled={!agree}>
-              Register
-            </Button>
-
-            {/* Login link */}
-            <div className="register-footer">
-              Already registered?{" "}
-              <span
-                className="register-link"
-                onClick={() => navigate("/login")}
+              {/* Register Button */}
+              <Button 
+                className="register-btn" 
+                type="submit"
+                disabled={!agree || loading || fetchingRoles}
               >
-                Login
-              </span>
-            </div>
+                {loading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Registering...
+                  </>
+                ) : (
+                  "Register"
+                )}
+              </Button>
 
+              {/* Login link */}
+              <div className="register-footer">
+                Already registered?{" "}
+                <span
+                  className="register-link"
+                  onClick={handleLoginClick}
+                  style={{ cursor: "pointer" }}
+                >
+                  Login
+                </span>
+              </div>
+            </Form>
           </Card.Body>
         </Card>
       </Container>

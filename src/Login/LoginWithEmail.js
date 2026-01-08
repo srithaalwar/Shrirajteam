@@ -1,96 +1,144 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Card, Form, Button, InputGroup } from "react-bootstrap";
-import { Eye, EyeSlash } from "react-bootstrap-icons";
-import shrirajlogo from "./../Images/shrirajlogo.png";
-import googleicon from "./../Images/googleicon.png";
-import "./LoginWithEmail.css";
+import { Alert, Spinner } from "react-bootstrap";
+import axios from "axios";
+import "./Login.css";
 
 const LoginWithEmail = () => {
-    const [showPassword, setShowPassword] = useState(false);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email_or_phonenumber: "",
+    password: ""
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    setError("");
+  };
 
-    return (
-        <div className="login-bg">
-            <span className="close-icon">✕</span>
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.email_or_phonenumber || !formData.password) {
+      setError("Please fill all fields");
+      return;
+    }
 
-            <Container className="login-container">
-                <Card className="login-card">
-                    <Card.Body>
+    setLoading(true);
+    setError("");
 
-                        {/* Logo + Brand */}
-                        <div className="brand-row">
-                            <img src={shrirajlogo} alt="Shriraj Logo" className="login-logo" />
-                            <span className="brand-name">Shriraj</span>
-                        </div>
+    try {
+      const response = await axios.post(
+        "https://rahul455.pythonanywhere.com/login/",
+        formData
+      );
 
-                        {/* Title */}
-                        <div className="login-title">Log in or Sign up</div>
+      // if (response.data && response.data.token) {
+      //   // Store token
+      //   localStorage.setItem("authToken", response.data.token);
+        
+      //   // Redirect based on user role or to dashboard
+      //   navigate("/dashboard");
+      // }
+      
+         if (response.data ) {
+        // Store token
+        localStorage.setItem("authToken", response.data);
+        
+        // Redirect based on user role or to dashboard
+        navigate("/a-dashboard");
+      }
+      else {
+        setError("Login failed. Please check credentials.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setError(
+        error.response?.data?.message || 
+        "Invalid credentials. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                        {/* Email */}
-                        <Form.Group className="mb-3">
-                            <Form.Control
-                                type="email"
-                                placeholder="Enter Email Id or Phone Number"
-                                className="login-input"
-                            />
-                        </Form.Group>
+  return (
+    <div className="shr-login-wrapper">
+      <div className="shr-login-close" onClick={() => navigate("/login")}>
+        ✕
+      </div>
 
-                        {/* Password */}
-                        <Form.Group className="mb-2">
-                            <InputGroup>
-                                <Form.Control
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Password"
-                                    className="login-input"
-                                />
-                                <InputGroup.Text
-                                    className="eye-icon"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                >
-                                    {showPassword ? <EyeSlash /> : <Eye />}
-                                </InputGroup.Text>
-                            </InputGroup>
-                        </Form.Group>
+      <div className="shr-login-card">
+        <h5 className="shr-login-title">Login with Email</h5>
 
-                        {/* Links */}
-                        <div className="login-links">
-                            <span
-                                className="forgot-password"
-                                onClick={() => navigate("/forgotpassword")}
-                            >
-                                Forgot password?
-                            </span>
- 
-                            <span
-                                className="phone-login"
-                                onClick={() => navigate("/login")}
-                            >
-                                Login with phone
-                            </span> 
+        {error && (
+          <Alert variant="danger" className="shr-alert">
+            {error}
+          </Alert>
+        )}
 
-                        </div>
+        <form onSubmit={handleLogin}>
+          <div className="shr-input-group">
+            <input
+              type="text"
+              name="email_or_phonenumber"
+              placeholder="Email or Phone Number"
+              className="shr-login-input"
+              value={formData.email_or_phonenumber}
+              onChange={handleChange}
+              disabled={loading}
+            />
+          </div>
 
-                        {/* Sign in */}
-                        <Button className="signin-btn">Sign in</Button>
+          <div className="shr-input-group">
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              className="shr-login-input"
+              value={formData.password}
+              onChange={handleChange}
+              disabled={loading}
+            />
+          </div>
 
-                        {/* Divider */}
-                        <div className="divider">
-                            <span>or sign in with</span>
-                        </div>
+          <button
+            type="submit"
+            className="shr-login-otp-btn shr-login-otp-active"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  className="me-2"
+                />
+                Logging in...
+              </>
+            ) : (
+              "Login"
+            )}
+          </button>
+        </form>
 
-                        {/* Google */}
-                        <Button className="google-btn" variant="light">
-                            <img src={googleicon} alt="Google" className="google-icon" />
-                            <span>Sign in with Google</span>
-                        </Button>
-
-                    </Card.Body>
-                </Card>
-            </Container>
+        <div className="shr-login-signup">
+          Don't have an account?{" "}
+          <span onClick={() => navigate("/register")}>
+            Sign up
+          </span>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default LoginWithEmail;

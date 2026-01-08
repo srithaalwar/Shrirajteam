@@ -1,0 +1,241 @@
+/* ===================== SIDEBAR CONTAINER ===================== */
+.wn-sidebar {
+  position: fixed;
+  top: 0;
+  left: -320px;
+  width: 300px;
+  height: 100vh;
+  background: #ffffff;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.08);
+  transition: left 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.wn-sidebar.open {
+  left: 0;
+}
+
+/* ===================== SIDEBAR HEADER ===================== */
+.wn-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.wn-close-btn {
+  font-size: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 4px;
+}
+
+.wn-close-btn:hover {
+  color: #333;
+}
+
+/* ===================== MENU SECTION ===================== */
+.wn-nav-section {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 12px;
+}
+
+.wn-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 16px 0 8px 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+/* ===================== MENU LIST ===================== */
+.wn-menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ===================== MENU ITEM ===================== */
+.wn-sidebar-link,
+.wn-menu-header {
+  display: flex;
+  align-items: center;
+  gap: 14px; /* Increased gap for better spacing */
+  padding: 14px 16px; /* Increased padding for better touch targets */
+  font-size: 15px; /* Slightly larger font */
+  font-weight: 500;
+  color: #374151;
+  border-radius: 8px; /* Slightly more rounded corners */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  margin: 4px 8px; /* Added margin around items */
+}
+
+.wn-sidebar-link:hover,
+.wn-menu-header:hover {
+  background: #f3f4f6;
+  color: #1e40af;
+  transform: translateX(2px); /* Subtle hover animation */
+}
+
+/* ===================== ICONS ===================== */
+.wn-sidebar-icon {
+  font-size: 18px; /* Larger icons */
+  width: 24px; /* Fixed width for alignment */
+  text-align: center;
+  color: #6b7280; /* Softer icon color */
+  transition: color 0.2s ease;
+}
+
+.wn-sidebar-link:hover .wn-sidebar-icon,
+.wn-menu-header:hover .wn-sidebar-icon {
+  color: #1e40af; /* Icon color change on hover */
+}
+
+/* ===================== SUBMENU ===================== */
+.wn-submenu {
+  list-style: none;
+  padding-left: 46px; /* Increased padding to align with parent text */
+  margin: 4px 0 8px 8px;
+  border-left: 2px solid #e5e7eb;
+}
+
+.wn-submenu-link {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Increased gap for submenu items */
+  padding: 10px 14px; /* Slightly more padding */
+  font-size: 14px;
+  color: #6b7280;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  margin: 2px 0;
+}
+
+.wn-submenu-link:hover {
+  background: #f3f4f6;
+  color: #1e40af;
+  padding-left: 16px; /* Slight padding shift on hover */
+}
+
+/* Submenu icons */
+.wn-submenu-icon {
+  font-size: 14px;
+  width: 20px;
+  text-align: center;
+  color: #9ca3af;
+}
+
+.wn-submenu-link:hover .wn-submenu-icon {
+  color: #1e40af;
+}
+
+/* Submenu text */
+.wn-submenu-text {
+  font-weight: 400;
+  letter-spacing: 0.2px;
+}
+
+/* ===================== ACTIVE STATES ===================== */
+.wn-sidebar-link.active,
+.wn-submenu-link.active {
+  background: #1e40af;
+  color: #ffffff;
+}
+
+.wn-sidebar-link.active .wn-sidebar-icon,
+.wn-submenu-link.active .wn-submenu-icon {
+  color: #ffffff;
+}
+
+/* ===================== ARROW ===================== */
+.wn-menu-arrow {
+  margin-left: auto;
+  font-size: 14px;
+  color: #9ca3af;
+  transition: transform 0.2s ease;
+}
+
+.wn-menu-header:hover .wn-menu-arrow {
+  color: #1e40af;
+}
+
+/* ===================== DIVIDER ===================== */
+.wn-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 12px 0;
+}
+
+/* ===================== LOGOUT ===================== */
+.wn-logout-section {
+  padding: 20px 16px;
+  border-top: 1px solid #eee;
+}
+
+.wn-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px; /* Increased gap */
+  width: 100%;
+  padding: 14px 16px; /* Increased padding */
+  font-size: 15px;
+  font-weight: 500;
+  color: #dc2626;
+  background: #fef2f2;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wn-logout-btn:hover {
+  background: #fee2e2;
+  transform: translateX(2px);
+}
+
+.wn-logout-icon {
+  font-size: 16px;
+}
+
+.wn-logout-text {
+  font-weight: 500;
+}
+
+/* ===================== FOR MENU ITEMS WITH SUBMENU ===================== */
+.wn-menu-item-with-submenu {
+  margin: 4px 0;
+}
+
+/* ===================== MOBILE ===================== */
+@media (max-width: 768px) {
+  .wn-sidebar {
+    width: 280px;
+  }
+  
+  .wn-sidebar-link,
+  .wn-menu-header {
+    padding: 12px 14px;
+    font-size: 14px;
+    gap: 12px;
+  }
+  
+  .wn-submenu {
+    padding-left: 42px;
+  }
+  
+  .wn-submenu-link {
+    padding: 8px 12px;
+    font-size: 13px;
+    gap: 10px;
+  }
+}

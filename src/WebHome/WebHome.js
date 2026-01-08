@@ -3,7 +3,7 @@ import "./WebHome.css";
 import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
 import Categories from "./Categories";
 import { baseurl } from "../BaseURL/BaseURL";
-
+import Footer from "../Footer/Footer";
 const WebHome = () => {
   const [carouselImages, setCarouselImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -229,6 +229,9 @@ const WebHome = () => {
           ))}
         </div>
       </div>
+    
+    
+    <Footer/>
     </div>
   );
 };

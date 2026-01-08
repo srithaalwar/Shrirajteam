@@ -7,6 +7,8 @@ import { faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free
 import { faXTwitter } from "@fortawesome/free-brands-svg-icons";
 import "./Contact.css";
 import { baseurl } from './../BaseURL/BaseURL';
+import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
+import Footer from "../Footer/Footer"
 
 const contactInfo = [
   {
@@ -61,7 +63,12 @@ const Contact = () => {
   };
 
   return (
+
+
     <div className="contact-page">
+              <WebsiteNavbar />
+
+
       {/* Hero Section */}
       <section className="contact-hero bg-primary py-5 py-md-5">
         <div className="container text-center">
@@ -254,6 +261,8 @@ const Contact = () => {
           </div>
         </div>
       </section>
+
+      <Footer/>
     </div>
   );
 };

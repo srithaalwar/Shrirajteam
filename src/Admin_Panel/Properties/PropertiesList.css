@@ -1,0 +1,148 @@
+/* Main/Filters.css */
+/* Custom Styles for the E-commerce Product Page */
+
+/* Line clamp for text truncation */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Custom cursor pointer */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Card hover effects */
+.card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Active view mode button */
+.btn-group .btn.active {
+  background-color: #273c75;
+  border-color: #273c75;
+  color: white;
+}
+
+/* Custom scrollbar */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Filter checkbox styling */
+.form-check-input:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* Badge styling for filters */
+.badge {
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+}
+
+/* Active filter badges */
+.badge .btn-close {
+  padding: 0.25rem;
+  font-size: 0.6rem;
+  margin-left: 0.25rem;
+}
+
+/* List view styling */
+.list-group-item {
+  border-radius: 0.5rem !important;
+  border: 1px solid #dee2e6;
+  margin-bottom: 1rem;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1rem !important;
+  }
+  
+  .btn-group .btn {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.875rem;
+  }
+  
+  .list-group-item .row > div {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .input-group {
+    width: 100% !important;
+  }
+  
+  .form-select {
+    width: 100% !important;
+    margin-top: 0.5rem;
+  }
+  
+  .sticky-top {
+    position: static !important;
+  }
+}
+
+/* Price range slider (if you want to add later) */
+.price-slider {
+  width: 100%;
+  height: 5px;
+  border-radius: 5px;
+  background: #ddd;
+  outline: none;
+}
+
+.price-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0d6efd;
+  cursor: pointer;
+}
+
+/* Loading animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeIn 0.3s ease-out;
+}

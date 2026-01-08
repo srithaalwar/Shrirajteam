@@ -184,10 +184,12 @@ function Footer() {
           {/* Properties */}
           <Col lg={2} md={6} className="mb-4 mb-md-4">
             <div className="footer-links">
-              <h5 className="footer-title">Properties</h5>
+              <h5 className="footer-title">Legal</h5>
               <ul className="footer-list">
-                <li><a href="/properties/residential">Residential</a></li>
-                <li><a href="/properties/commercial">Commercial</a></li>
+                <li><a href="/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
+                <li><a href="/refund-policy">Refund Policy</a></li>
+
               </ul>
             </div>
           </Col>

@@ -303,8 +303,11 @@ const PropertyDetails = () => {
               <span className={`status-badge ${isForSale ? 'sale' : 'rent'}`}>
                 {isForSale ? "FOR SALE" : "FOR RENT"}
               </span>
-              {property.is_featured && (
-                <span className="featured-badge">FEATURED</span>
+              {property.status && (
+                <span className="featured-badge">
+                        {/* {property.status} */}
+                          {property.status.toUpperCase()}
+                        </span>
               )}
             </div>
 

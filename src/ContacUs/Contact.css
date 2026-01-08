@@ -177,7 +177,7 @@
 
 /* Form validation styling */
 .form-control:invalid:not(:focus) {
-  border-color: #dc3545;
+  border-color: #198754;
 }
 
 .form-control:valid:not(:focus) {

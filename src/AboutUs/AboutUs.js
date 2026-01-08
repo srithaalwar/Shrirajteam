@@ -117,7 +117,8 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faFlag, faUserCheck, faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import "./AboutUs.css";
-
+import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
+import Footer from "../Footer/Footer"
 const AboutUs = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -125,6 +126,8 @@ const AboutUs = () => {
 
   return (
     <div className="about-us-container">
+<WebsiteNavbar />
+
       {/* Hero Section - Matching Contact Page */}
       <section className="about-hero">
         <div className="decorative-circle circle-1"></div>
@@ -278,6 +281,9 @@ const AboutUs = () => {
       >
         <FontAwesomeIcon icon={faArrowUp} />
       </button>
+
+            <Footer/>
+      
     </div>
   );
 };
