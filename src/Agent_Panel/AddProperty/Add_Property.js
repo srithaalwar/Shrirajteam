@@ -18,7 +18,6 @@ const AssetForm = ({ user, mode = 'add' }) => {
   
   const referralId = localStorage.getItem('referral_id');
   const userId = localStorage.getItem('user_id');
-    const role = localStorage.getItem('role');
   const username = localStorage.getItem('user_name');
 
   const [propertyCategories, setPropertyCategories] = useState([]);
@@ -1049,7 +1048,7 @@ const AssetForm = ({ user, mode = 'add' }) => {
               )}
 
               <div className="row">
-                <div className="col-6">
+                <div className="col-12">
                   {renderField({
                     type: 'textarea',
                     name: 'propertyUniqueness',
@@ -1058,7 +1057,10 @@ const AssetForm = ({ user, mode = 'add' }) => {
                     required: false
                   })}
                 </div>
-                     <div className="col-6">
+              </div>
+
+              <div className="row">
+                <div className="col-12">
                   {renderField({
                     type: 'textarea',
                     name: 'locationAdvantages',
@@ -1067,10 +1069,7 @@ const AssetForm = ({ user, mode = 'add' }) => {
                     required: false
                   })}
                 </div>
-
               </div>
-
-          
 
               <div className="row">
                 <div className="col-12">
@@ -1155,7 +1154,7 @@ const AssetForm = ({ user, mode = 'add' }) => {
                   </div>
 
                   <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-md-6">
                       {renderField({
                         type: 'number',
                         name: 'total_property_value',

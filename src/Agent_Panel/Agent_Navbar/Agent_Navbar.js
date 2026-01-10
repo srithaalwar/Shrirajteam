@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./Agent_Navbar.css";
 import logoImage from "../../Logos/logo1.png";
 import { Link } from "react-router-dom";
@@ -24,51 +25,48 @@ const WebsiteNavbar = () => {
   const dropdownRef = useRef(null);
   const loginUrl = "/login";
   const signupUrl = "/register";
+  
+  // Initialize navigate hook
+  const navigate = useNavigate();
 
   // Define your navigation items
   const menuItems = [
     { path: "/agent-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
     { path: "/agent-add-property", name: "Add Property", icon: <FaUsers /> },
-    { path: "/", name: "Properties", icon: <FaUserTie /> },
-    { path: "/", name: "Users", icon: <FaClipboardList /> },
+    { path: "/agent-my-properties", name: "My Properties", icon: <FaUserTie /> },
+    { path: "/agent-Properties", name: "Properties", icon: <FaClipboardList /> },
+    { path: "/agent-Business", name: "Business", icon: <FaClipboardList /> },
+      { path: "/agent-my-Business", name: "My Business", icon: <FaClipboardList /> },
     {
       name: "Operations",
       icon: <FaStar />,
       subMenu: [
-        { path: "/", name: "Company Payout", icon: <FaStar /> },
-        { path: "/", name: "Team Payout" },
-        { path: "/", name: "Subscription" },
-        { path: "/", name: "Booking Slab" },
-        { path: "/", name: "Training Material" },
-        { path: "/", name: "How it works" },
-        { path: "/", name: "Transactions" },
-        { path: "/", name: "Payout Master" },
-        { path: "/", name: "Category" },
-        { path: "/", name: "Business" },
-        { path: "/", name: "Site Visits" },
-        { path: "/", name: "Chat Bot" },
-        { path: "/", name: "Departments", icon: <FaStar /> },
+        { path: "/agent-Payout", name: "Payout", icon: <FaStar /> },
+        { path: "/agent-Plans", name: "Plans" },
+        { path: "/agent-TrainingMaterial", name: "Training Material" },
+        { path: "/agent-Transactions", name: "Transactions" },
+        { path: "/agent-Business", name: "Business" },
+        { path: "/agent-Site_Visits", name: "Site Visits" },
+        { path: "/agent-My-team", name: "My Team" },
       ],
     },
     { path: "/", name: "Meetings", icon: <FaClipboardList /> },
-    { path: "/", name: "Leads", icon: <FaClipboardList /> },
-    { path: "/", name: "Company", icon: <FaClipboardList /> },
-    { path: "/", name: "Reports", icon: <FaClipboardList /> },
-    { path: "/", name: "Prefix", icon: <FaClipboardList /> },
+    { path: "/", name: "Offers", icon: <FaClipboardList /> },
+    
     { path: "/", name: "Profile", icon: <FaClipboardList /> },
   ];
 
   // Fetch categories
-  useEffect(() => {
-    fetch("https://test.shrirajteam.com:85/categories/?level=global")
-      .then(res => res.json())
-      .then(data => {
-        const filtered = data.results
-          .filter(cat => cat.level === "global" && cat.is_active)
-          .sort((a, b) => a.display_order - b.display_order);
-        setCategories(filtered);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch("https://test.shrirajteam.com:85/categories/?level=global")
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       const filtered = data.results
+  //         .filter(cat => cat.level === "global" && cat.is_active)
+  //         .sort((a, b) => a.display_order - b.display_order);
+  //       setCategories(filtered);
+  //     });
+  // }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -106,11 +104,23 @@ const WebsiteNavbar = () => {
     }
   };
 
-  // Logout function
+  // Logout function - UPDATED with navigation
   const handleLogout = () => {
-    // Add your logout logic here
+    // Add your logout logic here (clear tokens, user data, etc.)
     console.log("User logged out");
-    setOpen(false); // Close sidebar after logout
+    
+    // Example: Clear localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("userData");
+    
+    // Example: Clear sessionStorage
+    sessionStorage.clear();
+    
+    // Close sidebar after logout
+    setOpen(false);
+    
+    // Navigate to homepage
+    navigate("/");
   };
 
   // Login/Signup buttons

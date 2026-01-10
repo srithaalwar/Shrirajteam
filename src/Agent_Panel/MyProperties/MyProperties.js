@@ -12,8 +12,8 @@ import {
   User
 } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./PropertiesList.css";
-import WebsiteNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
+import "./MyProperties.css";
+import WebsiteNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
 import { useNavigate } from "react-router-dom";
 
@@ -27,8 +27,6 @@ const formatPrice = (price) => {
   }
   return `₹${priceNum.toLocaleString()}`;
 };
-
-
 
 const getImageUrl = (images) => {
   if (images && images.length > 0) {
@@ -56,8 +54,6 @@ const getImageUrl = (images) => {
   // Fallback image
   return "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
 };
-
-
 
 // ============= Property Card Component =============
 const PropertyCard = ({ property }) => {
@@ -183,9 +179,6 @@ const FilterSection = ({
     </div>
   );
 };
-
-
-
 
 // ============= Filter Sidebar Component =============
 const FilterSidebar = ({ 
@@ -443,7 +436,7 @@ const FilterSidebar = ({
       </FilterSection>
 
       {/* Role Filter */}
-      <FilterSection
+      {/* <FilterSection
         title="User Role"
         isOpen={activeFilters.role}
         onToggle={() => toggleFilterSection('role')}
@@ -496,7 +489,7 @@ const FilterSidebar = ({
             ))
           )}
         </div>
-      </FilterSection>
+      </FilterSection> */}
 
       {/* Categories Filter */}
       <FilterSection
@@ -646,7 +639,7 @@ const FilterSidebar = ({
       </FilterSection>
 
       {/* Location Filter */}
-      <FilterSection
+      {/* <FilterSection
         title="Location"
         isOpen={activeFilters.location}
         onToggle={() => toggleFilterSection('location')}
@@ -691,7 +684,7 @@ const FilterSidebar = ({
             </div>
           ))}
         </div>
-      </FilterSection>
+      </FilterSection> */}
 
       {/* Active Filters Summary */}
       {activeFilterCount > 0 && (
@@ -767,9 +760,6 @@ const FilterSidebar = ({
     </div>
   );
 };
-
-
-
 
 // ============= Product Header Component =============
 const ProductHeader = ({
@@ -1108,67 +1098,81 @@ const Properties = () => {
 
   // Fetch properties from API with filters
   const fetchProperties = useCallback(async () => {
-    try {
-      setLoading(true);
-      
-      const params = new URLSearchParams();
-      
-      if (searchTerm.trim()) {
-        params.append('keyword', searchTerm.trim());
-      }
-      
-      if (selectedCategories.length > 0) {
-        const categoryQuery = selectedCategories.join(',');
-        params.append('category', categoryQuery);
-      }
-      
-      if (selectedTypes.length > 0) {
-        const typeQuery = selectedTypes.join(',');
-        params.append('property_type', typeQuery);
-      }
-      
-      if (selectedTransactionTypes.length > 0) {
-        const lookingToQuery = selectedTransactionTypes.join(',');
-        params.append('looking_to', lookingToQuery);
-      }
-      
-      if (selectedCities.length > 0) {
-        params.append('city', selectedCities.join(','));
-      }
-      
-      if (selectedRoles.length > 0) {
-        const roleIds = selectedRoles.join(',');
-        params.append('user_role', roleIds);
-      }
-      
-      params.append('page', currentPage);
-      
-      const queryString = params.toString();
-      const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
-      
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setProperties(data.results || []);
-      setTotalCount(data.count || 0);
-      setTotalPages(Math.ceil((data.count || 0) / 10));
-    } catch (err) {
-      setError(err.message);
-      console.error("Error fetching properties:", err);
-    } finally {
-      setLoading(false);
+  try {
+    setLoading(true);
+    
+    const params = new URLSearchParams();
+    
+    // Get user_id from local storage
+    const userId = localStorage.getItem('user_id');
+    
+    if (userId) {
+      params.append('user_id', userId);
+    } else {
+      // Handle case where user_id is not found in local storage
+      console.warn('user_id not found in local storage');
+      // Optionally, you could throw an error or handle it differently
+      // throw new Error('User ID not found in local storage');
     }
-  }, [
-    currentPage, 
-    selectedCategories, 
-    selectedTypes, 
-    selectedCities, 
-    selectedTransactionTypes,
-    selectedRoles,
-    searchTerm
-  ]);
+    
+    if (searchTerm.trim()) {
+      params.append('keyword', searchTerm.trim());
+    }
+    
+    if (selectedCategories.length > 0) {
+      const categoryQuery = selectedCategories.join(',');
+      params.append('category', categoryQuery);
+    }
+    
+    if (selectedTypes.length > 0) {
+      const typeQuery = selectedTypes.join(',');
+      params.append('property_type', typeQuery);
+    }
+    
+    if (selectedTransactionTypes.length > 0) {
+      const lookingToQuery = selectedTransactionTypes.join(',');
+      params.append('looking_to', lookingToQuery);
+    }
+    
+    if (selectedCities.length > 0) {
+      params.append('city', selectedCities.join(','));
+    }
+    
+    if (selectedRoles.length > 0) {
+      const roleIds = selectedRoles.join(',');
+      params.append('user_role', roleIds);
+    }
+    
+    params.append('page', currentPage);
+    
+    const queryString = params.toString();
+const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
+    
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    setProperties(data.results || []);
+    setTotalCount(data.count || 0);
+    setTotalPages(Math.ceil((data.count || 0) / 10));
+  } catch (err) {
+    setError(err.message);
+    console.error("Error fetching properties:", err);
+  } finally {
+    setLoading(false);
+  }
+}, [
+  currentPage, 
+  selectedCategories, 
+  selectedTypes, 
+  selectedCities, 
+  selectedTransactionTypes,
+  selectedRoles,
+  searchTerm
+  // Note: We don't need to add localStorage as a dependency
+  // since it's synchronous and not a React state/prop
+]);
 
   // Handle filter changes
   const handleFilterChange = useCallback(() => {

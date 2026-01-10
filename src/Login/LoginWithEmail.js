@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Alert, Spinner } from "react-bootstrap";
 import axios from "axios";
 import "./Login.css";
+import { baseurl } from "../BaseURL/BaseURL";
 
 const LoginWithEmail = () => {
   const navigate = useNavigate();
@@ -33,10 +34,10 @@ const LoginWithEmail = () => {
     setError("");
 
     try {
-      const response = await axios.post(
-        "https://rahul455.pythonanywhere.com/login/",
-        formData
-      );
+   const response = await axios.post(
+  `${baseurl}/login/`,
+  formData
+);
 
       // if (response.data && response.data.token) {
       //   // Store token

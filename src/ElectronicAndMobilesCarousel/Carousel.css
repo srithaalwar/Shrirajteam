@@ -1,0 +1,262 @@
+.offer-carousel-wrapper {
+  max-width: 100%;
+  margin: 40px auto;
+  padding: 0 10px;
+  position: relative;
+}
+
+/* ===== CUSTOM CAROUSEL CONTAINER ===== */
+.carousel-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  padding: 0px; /* Space for side controls */
+}
+
+/* ===== CAROUSEL VIEWPORT ===== */
+.carousel-viewport {
+  flex: 1;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.carousel-track {
+  display: flex;
+  width: 100%;
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  padding: 10px 0;
+}
+
+/* ===== CARD = FULL IMAGE BANNER ===== */
+.offer-card {
+  position: relative;
+  height: 260px;
+  
+  border-radius: 18px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.offer-card:hover {
+  transform: scale(1.02);
+}
+
+/* ===== CUSTOM CONTROLS ===== */
+.carousel-control {
+  position: static;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #004d40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.carousel-control:hover {
+  background: #004d40;
+  transform: scale(1.1);
+}
+
+.carousel-control:hover .control-icon {
+  color: white;
+}
+
+.control-icon {
+  font-size: 24px;
+  font-weight: bold;
+  color: #004d40;
+  line-height: 1;
+}
+
+.custom-prev {
+  order: 1;
+}
+
+.carousel-viewport {
+  order: 2;
+  flex: 1;
+}
+
+.custom-next {
+  order: 3;
+}
+
+/* ===== TEXT OVERLAY ===== */
+.offer-content {
+  position: absolute;
+  left: 20px;
+  top: 60%;
+  transform: translateY(-50%);
+  color: #004d40;
+  max-width: 70%;
+}
+
+.offer-content .upto {
+  font-size: 12px;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+
+.offer-content h2 {
+  font-size: 25px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.offer-content .off {
+  font-size: 14px;
+  margin-bottom: 12px;
+  width: 50px;
+}
+
+/* ===== BUTTON ===== */
+.shop-btn {
+  background: #ffffff;
+  border-radius: 30px;
+  padding: 8px 22px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.shop-btn:hover {
+  background: #004d40;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ===== INDICATORS ===== */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.indicator.active {
+  background: #004d40;
+  transform: scale(1.2);
+}
+
+/* ================================================= */
+/* ================= RESPONSIVE ==================== */
+/* ================================================= */
+
+/* ===== TABLET VIEW ===== */
+@media (max-width: 991px) {
+  .carousel-container {
+    padding: 0 40px;
+  }
+  
+  .offer-card {
+    height: 220px;
+  }
+
+  .offer-content h2 {
+    font-size: 36px;
+  }
+
+  .offer-content {
+    max-width: 80%;
+  }
+
+  .carousel-control {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ===== MOBILE VIEW ===== */
+@media (max-width: 767px) {
+  .carousel-container {
+    padding: 0 30px;
+    gap: 10px;
+  }
+  
+  .offer-card {
+    height: 200px;
+  }
+
+  .offer-content {
+    left: 16px;
+    right: 16px;
+    max-width: 100%;
+  }
+
+  .offer-content h2 {
+    font-size: 32px;
+  }
+
+  .shop-btn {
+    padding: 7px 18px;
+    font-size: 13px;
+  }
+
+  /* Only one banner visible cleanly */
+  .carousel-slide .col-md-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .carousel-control {
+    width: 35px;
+    height: 35px;
+  }
+
+  .control-icon {
+    font-size: 20px;
+  }
+}
+
+/* ===== SMALL MOBILE ===== */
+@media (max-width: 480px) {
+  .carousel-container {
+    padding: 0 20px;
+  }
+  
+  .offer-card {
+    height: 180px;
+  }
+
+  .offer-content h2 {
+    font-size: 28px;
+  }
+
+  .offer-content .off {
+    font-size: 12px;
+  }
+}
+
+/* Center alignment for slides */
+.row {
+  display: flex;
+  justify-content: center;
+}
