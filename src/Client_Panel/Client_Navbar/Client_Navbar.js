@@ -1,40 +1,48 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./Admin_Navbar.css";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import "./Client_Navbar.css";
 import logoImage from "../../Logos/logo1.png";
 import { Link } from "react-router-dom";
+
+// Import FontAwesome icons
+import { 
+  FaTachometerAlt, 
+  FaUsers, 
+  FaUserTie, 
+  FaClipboardList, 
+  FaStar,
+  FaCaretDown,
+  FaCaretRight
+} from "react-icons/fa";
 
 const WebsiteNavbar = () => {
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [showCategories, setShowCategories] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [expandedMenu, setExpandedMenu] = useState(null);
   
   const dropdownRef = useRef(null);
   const loginUrl = "/login";
   const signupUrl = "/register";
+  
+  // Initialize navigate hook
+  const navigate = useNavigate();
 
-  // Define sidebar navigation items
-  const sidebarNavItems = [
-    { name: "Home", path: "/", icon: "🏠" },
-    { name: "My Orders", path: "/orders", icon: "📦" },
-    { name: "Wishlist", path: "/wishlist", icon: "❤️" },
-    { name: "Profile", path: "/profile", icon: "👤" },
-    { name: "Notifications", path: "/notifications", icon: "🔔" },
-    { name: "Help & Support", path: "/help", icon: "❓" },
-    { name: "Settings", path: "/settings", icon: "⚙️" },
+  // Define your navigation items
+  const menuItems = [
+    { path: "/Client-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
+    { path: "/Client-add-property", name: "Add Property", icon: <FaUsers /> },
+    { path: "/Client-my-properties", name: "My Properties", icon: <FaUserTie /> },
+    { path: "/Client-Properties", name: "Properties", icon: <FaClipboardList /> },
+    { path: "/Client-Business", name: "Business", icon: <FaClipboardList /> },
+  
+    { path: "/Client-Meetings", name: "Meetings", icon: <FaClipboardList /> },
+    { path: "/Client-Transactions", name: "Transactions", icon: <FaClipboardList /> },
+    { path: "/Client-Plans", name: "Plans", icon: <FaClipboardList /> },
+
+    { path: "/Client-Profile", name: "Profile", icon: <FaClipboardList /> },
   ];
-
-  // Fetch categories
-  useEffect(() => {
-    fetch("https://test.shrirajteam.com:85/categories/?level=global")
-      .then(res => res.json())
-      .then(data => {
-        const filtered = data.results
-          .filter(cat => cat.level === "global" && cat.is_active)
-          .sort((a, b) => a.display_order - b.display_order);
-        setCategories(filtered);
-      });
-  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -63,14 +71,33 @@ const WebsiteNavbar = () => {
     setShowCategories(false);
   };
 
-  // Logout function
+  // Toggle submenu expansion
+  const toggleSubMenu = (menuName) => {
+    if (expandedMenu === menuName) {
+      setExpandedMenu(null);
+    } else {
+      setExpandedMenu(menuName);
+    }
+  };
+
+  // Logout function - UPDATED with navigation
   const handleLogout = () => {
     // Add your logout logic here
     console.log("User logged out");
-    // Example: Clear tokens, redirect to login, etc.
-    // localStorage.removeItem('authToken');
-    // window.location.href = '/login';
-    setOpen(false); // Close sidebar after logout
+    
+    // Clear client authentication data
+    localStorage.removeItem("clientToken");
+    localStorage.removeItem("clientData");
+    localStorage.removeItem("clientProperties");
+    
+    // Clear session storage
+    sessionStorage.clear();
+    
+    // Close sidebar after logout
+    setOpen(false);
+    
+    // Navigate to homepage
+    navigate("/");
   };
 
   // Login/Signup buttons
@@ -149,8 +176,10 @@ const WebsiteNavbar = () => {
         </div>
 
         <div className="wn-nav-right">
-          <LoginButtonExternal />
-          <SignupButtonExternal />
+
+          
+          {/* <LoginButtonExternal />
+          <SignupButtonExternal /> */}
           <div className="wn-cart">🛒 Cart</div>
         </div>
       </header>
@@ -158,7 +187,7 @@ const WebsiteNavbar = () => {
       {/* OVERLAY */}
       {open && <div className="wn-overlay" onClick={() => setOpen(false)} />}
 
-      {/* SIDEBAR - SIMPLIFIED VERSION */}
+      {/* SIDEBAR - UPDATED WITH YOUR MENU ITEMS */}
       <aside className={`wn-sidebar ${open ? "open" : ""}`}>
         {/* Header */}
         <div className="wn-sidebar-header">
@@ -174,21 +203,60 @@ const WebsiteNavbar = () => {
 
         <div className="wn-divider" />
 
-        {/* Navigation Items Only */}
+        {/* Navigation Items */}
         <div className="wn-nav-section">
-          <div className="wn-section-title">Menu</div>
+          <div className="wn-section-title">Client Menu</div> {/* Changed from "Admin Menu" to "Client Menu" */}
           <ul className="wn-menu-list">
-            {sidebarNavItems.map((item) => (
-              <li key={item.path}>
-                <Link 
-                  to={item.path} 
-                  className="wn-sidebar-link"
-                  onClick={() => setOpen(false)}
-                >
-                  <span className="wn-sidebar-icon">{item.icon}</span>
-                  <span className="wn-sidebar-text">{item.name}</span>
-                </Link>
-              </li>
+            {menuItems.map((item, index) => (
+              <React.Fragment key={item.name || item.path}>
+                {/* Check if item has submenu */}
+                {item.subMenu ? (
+                  <li className="wn-menu-item-with-submenu">
+                    <div 
+                      className="wn-menu-header"
+                      onClick={() => toggleSubMenu(item.name)}
+                    >
+                      <span className="wn-sidebar-icon">{item.icon}</span>
+                      <span className="wn-sidebar-text">{item.name}</span>
+                      <span className="wn-menu-arrow">
+                        {expandedMenu === item.name ? <FaCaretDown /> : <FaCaretRight />}
+                      </span>
+                    </div>
+                    
+                    {/* Submenu items */}
+                    {expandedMenu === item.name && (
+                      <ul className="wn-submenu">
+                        {item.subMenu.map((subItem, subIndex) => (
+                          <li key={`${subItem.name}-${subIndex}`}>
+                            <Link 
+                              to={subItem.path} 
+                              className="wn-submenu-link"
+                              onClick={() => setOpen(false)}
+                            >
+                              <span className="wn-submenu-icon">
+                                {subItem.icon || <FaStar />}
+                              </span>
+                              <span className="wn-submenu-text">{subItem.name}</span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ) : (
+                  // Regular menu item without submenu
+                  <li>
+                    <Link 
+                      to={item.path} 
+                      className="wn-sidebar-link"
+                      onClick={() => setOpen(false)}
+                    >
+                      <span className="wn-sidebar-icon">{item.icon}</span>
+                      <span className="wn-sidebar-text">{item.name}</span>
+                    </Link>
+                  </li>
+                )}
+              </React.Fragment>
             ))}
           </ul>
         </div>

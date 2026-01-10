@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./Admin_Navbar.css";
 import logoImage from "../../Logos/logo1.png";
 import { Link } from "react-router-dom";
@@ -24,13 +25,16 @@ const WebsiteNavbar = () => {
   const dropdownRef = useRef(null);
   const loginUrl = "/login";
   const signupUrl = "/register";
+  
+  // Initialize navigate hook
+  const navigate = useNavigate();
 
   // Define your navigation items
   const menuItems = [
     { path: "/a-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
     { path: "/add-property", name: "Add Property", icon: <FaUsers /> },
     { path: "/a-properties", name: "Properties", icon: <FaUserTie /> },
-    { path: "/", name: "Users", icon: <FaClipboardList /> },
+    { path: "/a-users", name: "Users", icon: <FaClipboardList /> },
     {
       name: "Operations",
       icon: <FaStar />,
@@ -51,14 +55,12 @@ const WebsiteNavbar = () => {
       ],
     },
     { path: "/", name: "Meetings", icon: <FaClipboardList /> },
-    { path: "/", name: "Leads", icon: <FaClipboardList /> },
-    { path: "/", name: "Company", icon: <FaClipboardList /> },
+    { path: "/a-leads", name: "Leads", icon: <FaClipboardList /> },
+    { path: "/a-company", name: "Company", icon: <FaClipboardList /> },
     { path: "/", name: "Reports", icon: <FaClipboardList /> },
     { path: "/", name: "Prefix", icon: <FaClipboardList /> },
     { path: "/", name: "Profile", icon: <FaClipboardList /> },
   ];
-
-
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -96,11 +98,24 @@ const WebsiteNavbar = () => {
     }
   };
 
-  // Logout function
+  // Logout function - UPDATED with navigation
   const handleLogout = () => {
     // Add your logout logic here
     console.log("User logged out");
-    setOpen(false); // Close sidebar after logout
+    
+    // Clear any stored authentication data
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("adminData");
+    
+    // Clear session storage
+    sessionStorage.clear();
+    
+    // Close sidebar after logout
+    setOpen(false);
+    
+    // Navigate to homepage
+    navigate("/");
   };
 
   // Login/Signup buttons
@@ -179,8 +194,8 @@ const WebsiteNavbar = () => {
         </div>
 
         <div className="wn-nav-right">
-          <LoginButtonExternal />
-          <SignupButtonExternal />
+          {/* <LoginButtonExternal />
+          <SignupButtonExternal /> */}
           <div className="wn-cart">🛒 Cart</div>
         </div>
       </header>

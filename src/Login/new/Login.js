@@ -4,7 +4,7 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import "./Login.css"; // We'll update this CSS file
 import { baseurl } from "../../BaseURL/BaseURL";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
+import logo from '../../Images/shrirajlogo.png'
 const Login = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
@@ -182,7 +182,7 @@ const Login = () => {
   const navigateToDashboard = (role) => {
     if (role === "Admin") navigate("/a-dashboard");
     else if (role === "Agent") navigate("/agent-dashboard");
-    else if (role === "Client") navigate("/investorlandingpage");
+    else if (role === "Client") navigate("/Client-dashboard");
     else if (role === "Super Admin") navigate("/s-dashboard");
     else setError("Invalid role assigned. Please contact support.");
   };
@@ -245,8 +245,10 @@ const Login = () => {
           <div className="login-form-container">
             {showForgotPassword ? (
               <div className="forgot-password-form">
-                <h3 className="text-center mb-4">Forgot Password</h3>
-                
+<div className="login-heading">
+  <img src={logo} alt="Logo" className="login-logo" />
+  <h3 className="mb-0">Forgot Password</h3>
+</div>                
                 {emailError && (
                   <div className="alert alert-danger py-1 mb-2" role="alert">
                     <small>{emailError}</small>
@@ -293,8 +295,10 @@ const Login = () => {
               </div>
             ) : showResetPassword ? (
               <div className="reset-password-form">
-                <h3 className="text-center mb-4">Reset Password</h3>
-                <div className="mb-3">
+<div className="login-heading">
+  <img src={logo} alt="Logo" className="login-logo" />
+  <h3 className="mb-0">Reset Password</h3>
+</div>                <div className="mb-3">
                   <label className="form-label">Email</label>
                   <input
                     type="email"
@@ -330,7 +334,10 @@ const Login = () => {
               </div>
             ) : (
               <div className="login-form">
-                <h3 className="text-center mb-4">Login</h3>
+<div className="login-heading">
+  <img src={logo} alt="Logo" className="login-logo" />
+  <h3 className="mb-0">Login</h3>
+</div>
 
                 <ul className="nav nav-tabs mb-4 justify-content-center">
                   <li className="nav-item">
@@ -469,7 +476,7 @@ const Login = () => {
                 <div className="text-center mt-4">
                   <small className="me-2">Don't have an account?</small>
                   <RouterLink
-                    to="/signup"
+                    to="/register"
                     className="btn btn-link p-0"
                     onClick={() => {
                       setSpinnerTarget("register");

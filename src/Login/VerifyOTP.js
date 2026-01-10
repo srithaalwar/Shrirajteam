@@ -203,6 +203,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Alert, Spinner, Modal } from "react-bootstrap";
 import axios from "axios";
 import "./Login.css";
+import { baseurl } from "../BaseURL/BaseURL";
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
@@ -286,9 +287,9 @@ const VerifyOTP = () => {
     try {
       console.log("Verifying OTP:", otpString);
       
-      const response = await axios.post(
-        "https://shrirajteam.com:81/verify-otp/",
-        {
+     const response = await axios.post(
+  `${baseurl}/verify-otp/`,
+  {
           otp: otpString
         },
         {

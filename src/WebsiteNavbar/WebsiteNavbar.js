@@ -508,7 +508,7 @@ const WebsiteNavbar = () => {
       {/* NAVBAR */}
       <header className="wn-navbar">
         <div className="wn-nav-left">
-          <button className="wn-menu-btn" onClick={() => setOpen(true)}>☰</button>
+          {/* <button className="wn-menu-btn" onClick={() => setOpen(true)}>☰</button> */}
 
           {/* Logo with imported image */}
           <div className="wn-logo">

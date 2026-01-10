@@ -278,3 +278,31 @@
 .text-decoration-underline:hover {
   text-decoration: none;
 }
+
+
+/* Login heading with logo beside text */
+.login-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.login-logo {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+}
+
+
+@media (max-width: 576px) {
+  .login-logo {
+    height: 32px;
+  }
+
+  .login-heading h3 {
+    font-size: 1.4rem;
+  }
+}
+

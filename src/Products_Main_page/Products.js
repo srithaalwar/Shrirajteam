@@ -15,6 +15,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./Products.css";
 import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
 import Footer from "../Footer/Footer"
+import ShopHeader from "./ShopHeader";
+
 
 // ============= Data =============
 const categories = [
@@ -202,6 +204,8 @@ const sampleProducts = [
     category: "Health & Wellness"
   },
 ];
+
+
 
 // ============= Product Card Component =============
 const ProductCard = ({ product }) => {
@@ -714,60 +718,79 @@ const ProductGrid = ({ products, viewMode }) => {
 // ============= Main Filters Page Component =============
 const Products = () => {
   const [viewMode, setViewMode] = useState("grid-4");
+  const [activeTab, setActiveTab] = useState("shop"); // 👈 default shop
 
-      return (
+  return (
     <div className="min-vh-100 d-flex flex-column">
-      {/* Header */}
       <WebsiteNavbar />
-      
-      {/* Main Content */}
+
+      {/* SHOP HEADER */}
+      <ShopHeader 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab} 
+      />
+
+      {/* MAIN CONTENT */}
       <main className="flex-grow-1 bg-light">
-        <div className="container py-4">
-          <ProductHeader
-            totalProducts={329}
-            showingProducts={sampleProducts.length}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-          />
+        {activeTab === "shop" && (   // 👈 IMPORTANT
+          <div className="container py-4">
+            <ProductHeader
+              totalProducts={329}
+              showingProducts={sampleProducts.length}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+            />
 
-          <div className="row">
-            {/* Filters Sidebar */}
-            <aside className="col-lg-3 mb-4 mb-lg-0">
-              <div className="sticky-top" style={{ top: '20px' }}>
-                <FilterSidebar />
+            <div className="row">
+              <aside className="col-lg-3 mb-4 mb-lg-0">
+                <div className="sticky-top" style={{ top: "20px" }}>
+                  <FilterSidebar />
+                </div>
+              </aside>
+
+              <div className="col-lg-9">
+                <ProductGrid
+                  products={sampleProducts}
+                  viewMode={viewMode}
+                />
+
+                <nav className="mt-5">
+                  <ul className="pagination justify-content-center">
+                    <li className="page-item disabled">
+                      <button className="page-link">Previous</button>
+                    </li>
+                    <li className="page-item active">
+                      <button className="page-link">1</button>
+                    </li>
+                    <li className="page-item">
+                      <button className="page-link">2</button>
+                    </li>
+                    <li className="page-item">
+                      <button className="page-link">3</button>
+                    </li>
+                    <li className="page-item">
+                      <button className="page-link">Next</button>
+                    </li>
+                  </ul>
+                </nav>
               </div>
-            </aside>
-
-            {/* Products Grid */}
-            <div className="col-lg-9">
-              <ProductGrid products={sampleProducts} viewMode={viewMode} />
-              
-              {/* Pagination */}
-              <nav aria-label="Page navigation" className="mt-5">
-                <ul className="pagination justify-content-center">
-                  <li className="page-item disabled">
-                    <button className="page-link">Previous</button>
-                  </li>
-                  <li className="page-item active">
-                    <button className="page-link">1</button>
-                  </li>
-                  <li className="page-item">
-                    <button className="page-link">2</button>
-                  </li>
-                  <li className="page-item">
-                    <button className="page-link">3</button>
-                  </li>
-                  <li className="page-item">
-                    <button className="page-link">Next</button>
-                  </li>
-                </ul>
-              </nav>
             </div>
           </div>
-        </div>
+        )}
+
+        {activeTab === "locations" && (
+          <div className="container py-5 text-center text-muted">
+            <h4>Locations coming soon</h4>
+          </div>
+        )}
+
+        {activeTab === "reviews" && (
+          <div className="container py-5 text-center text-muted">
+            <h4>Reviews coming soon</h4>
+          </div>
+        )}
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
