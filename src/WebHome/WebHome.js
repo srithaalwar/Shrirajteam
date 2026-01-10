@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./WebHome.css";
 import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
 import Categories from "./Categories";
@@ -9,6 +9,9 @@ const WebHome = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const videoRef = useRef(null);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
+  const [isVideoSlide, setIsVideoSlide] = useState(false);
 
   // Fetch carousel images using your baseurl
   useEffect(() => {
@@ -16,20 +19,20 @@ const WebHome = () => {
       try {
         setLoading(true);
         const response = await fetch(`${baseurl}/carousel/`);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        
+
         const data = await response.json();
         console.log("Carousel API response:", data);
-        
-       if (data.results && Array.isArray(data.results)) {
-  setCarouselImages(data.results);
-} else {
-  console.warn("Unexpected API response structure:", data);
-  setCarouselImages([]);
-}
+
+        if (data.results && Array.isArray(data.results)) {
+          setCarouselImages(data.results);
+        } else {
+          console.warn("Unexpected API response structure:", data);
+          setCarouselImages([]);
+        }
 
       } catch (err) {
         console.error("Carousel API error:", err);
@@ -48,18 +51,23 @@ const WebHome = () => {
     fetchCarouselImages();
   }, []);
 
-  // Auto-rotate carousel every 5 seconds
   useEffect(() => {
     if (carouselImages.length === 0) return;
-    
+
+    const currentItem = carouselImages[currentIndex];
+
+    // ❌ Do NOT auto-slide when current slide is a video
+    if (currentItem && isVideo(currentItem)) return;
+
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => 
+      setCurrentIndex((prev) =>
         prev === carouselImages.length - 1 ? 0 : prev + 1
       );
     }, 5000);
-    
+
     return () => clearInterval(interval);
-  }, [carouselImages.length]);
+  }, [carouselImages.length, currentIndex, carouselImages]);
+
 
   // Carousel arrows
   const handlePrev = () => {
@@ -79,17 +87,65 @@ const WebHome = () => {
   // Helper function to get image URL
   const getImageUrl = (imagePath) => {
     if (!imagePath) return "";
-    
+
     if (imagePath.startsWith('http')) {
       return imagePath;
     }
-    
+
     if (imagePath.startsWith('/')) {
       return `${baseurl}${imagePath}`;
     }
-    
+
     return imagePath;
   };
+
+  const isVideo = (item) => {
+    return item?.video && item.video !== "";
+  };
+
+  const toggleVideoPlay = () => {
+    if (!videoRef.current) return;
+
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+    } else {
+      videoRef.current.pause();
+    }
+  };
+  const handleVideoEnd = () => {
+    setCurrentIndex((prev) =>
+      prev === carouselImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
+
+
+  useEffect(() => {
+    setIsVideoPlaying(true);
+  }, [currentIndex]);
+
+  useEffect(() => {
+    const currentItem = carouselImages[currentIndex];
+
+    if (currentItem && isVideo(currentItem)) {
+      setIsVideoSlide(true);
+      setIsVideoPlaying(false); // show ▶ first
+    } else {
+      setIsVideoSlide(false);
+      setIsVideoPlaying(false);
+    }
+  }, [currentIndex, carouselImages]);
+
+
+  useEffect(() => {
+    if (isVideoSlide && videoRef.current) {
+      const playTimer = setTimeout(() => {
+        videoRef.current.play();
+      }, 600); // short delay so ▶ is visible first
+
+      return () => clearTimeout(playTimer);
+    }
+  }, [isVideoSlide]);
 
   return (
     <div>
@@ -103,37 +159,44 @@ const WebHome = () => {
           {/* Background Image */}
           <div className="hdc-banner-background">
             {carouselImages.length > 0 && carouselImages[currentIndex] && (
-              <img
-                src={getImageUrl(carouselImages[currentIndex].image)}
-                alt={`Banner ${currentIndex + 1}`}
-                className="hdc-banner-image"
-                onError={(e) => {
-                  console.error("Image failed to load:", e.target.src);
-                  e.target.src = "https://images.unsplash.com/photo-1600585154340-043cd447c909";
-                  e.target.alt = "Fallback image";
-                }}
-              />
+              isVideo(carouselImages[currentIndex]) ? (
+                <div className="hdc-video-wrapper" onClick={toggleVideoPlay}>
+                  <video
+                    ref={videoRef}
+                    className="hdc-banner-video"
+                    src={getImageUrl(carouselImages[currentIndex].video)}
+                    muted
+                    playsInline
+                    onPlay={() => setIsVideoPlaying(true)}
+                    onPause={() => setIsVideoPlaying(false)}
+                    onEnded={handleVideoEnd}
+                    onError={(e) => {
+                      console.error("Video failed to load:", e.target.src);
+                    }}
+                  />
+
+
+                  {/* ▶ / ❚❚ Overlay */}
+                  <div className="hdc-video-control-icon">
+                    {isVideoPlaying ? "❚❚" : "▶"}
+                  </div>
+                </div>
+              ) : (
+                <img
+                  src={getImageUrl(carouselImages[currentIndex].image)}
+                  alt={`Banner ${currentIndex + 1}`}
+                  className="hdc-banner-image"
+                />
+              )
             )}
           </div>
-          
-          {/* Overlay with content */}
-          {/* <div className="hdc-banner-overlay">
-            <div className="hdc-banner-content">
-              <h1>
-                Big Savings on <br /> Daily Deals!
-              </h1>
-              <p>
-                Shop Across Categories and Enjoy <br />
-                Unbeatable Prices on Your Favorite Products
-              </p>
-              <button className="hdc-btn">SHOP NOW</button>
-            </div>
-          </div> */}
+
+
 
           {/* Carousel Controls */}
           <button className="hdc-arrow hdc-left" onClick={handlePrev}>‹</button>
           <button className="hdc-arrow hdc-right" onClick={handleNext}>›</button>
-          
+
           {/* Dots indicator */}
           <div className="hdc-dots">
             {carouselImages.map((_, index) => (
@@ -154,13 +217,12 @@ const WebHome = () => {
               <div className="discount-badge">{item.discount}</div>
               <img src={item.image} alt={item.name} />
               <button
-                className={`card-btn ${
-                  item.button === "ADD"
+                className={`card-btn ${item.button === "ADD"
                     ? "add"
                     : item.button === "VIEW"
-                    ? "view"
-                    : "closed"
-                }`}
+                      ? "view"
+                      : "closed"
+                  }`}
               >
                 {item.button}
               </button>
@@ -182,13 +244,12 @@ const WebHome = () => {
               <div className="discount-badge">{item.discount}</div>
               <img src={item.image} alt={item.name} />
               <button
-                className={`card-btn ${
-                  item.button === "VIEW"
+                className={`card-btn ${item.button === "VIEW"
                     ? "view"
                     : item.button === "ADD"
-                    ? "add"
-                    : "closed"
-                }`}
+                      ? "add"
+                      : "closed"
+                  }`}
               >
                 {item.button}
               </button>
@@ -206,13 +267,12 @@ const WebHome = () => {
               <div className="discount-badge">{item.discount}</div>
               <img src={item.image} alt={item.name} />
               <button
-                className={`card-btn ${
-                  item.button === "ADD"
+                className={`card-btn ${item.button === "ADD"
                     ? "add"
                     : item.button === "VIEW"
-                    ? "view"
-                    : "closed"
-                }`}
+                      ? "view"
+                      : "closed"
+                  }`}
               >
                 {item.button}
               </button>
@@ -229,9 +289,9 @@ const WebHome = () => {
           ))}
         </div>
       </div>
-    
-    
-    <Footer/>
+
+
+      <Footer />
     </div>
   );
 };
