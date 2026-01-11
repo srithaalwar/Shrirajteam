@@ -1,3 +1,4 @@
+/* Register.css */
 .register-bg {
   background-color: #e9f4ff;
   min-height: 100vh;
@@ -10,6 +11,8 @@
   right: 30px;
   font-size: 22px;
   cursor: pointer;
+  z-index: 1000;
+  color: #333;
 }
 
 .register-container {
@@ -17,6 +20,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px;
 }
 
 .register-card {
@@ -24,84 +28,244 @@
   max-width: 500px;
   border-radius: 14px;
   border: none;
-  padding: 6px;
+  padding: 20px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  background-color: #fff;
 }
 
 .register-brand-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .register-logo {
-  width: 80px;
+  width: auto;
+  height: 120px;
+  object-fit: contain;
 }
 
 .register-brand-name {
-  font-size: 25px;
+  font-size: 24px;
   font-weight: 600;
   color: #2f3c7e;
 }
 
 .register-title {
   text-align: center;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
-  margin-bottom: 22px;
+  margin-bottom: 5px;
+  color: #333;
+      margin-top: -29px;
+}
+
+/* Form grid layout */
+.register-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  /* margin-bottom: 15px; */
+}
+
+.register-form-grid.full-width {
+  grid-template-columns: 1fr;
+}
+
+.form-group-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 15px; /* Fixed height for alignment */
 }
 
 .register-input {
   height: 44px;
   border-radius: 8px;
   font-size: 14px;
+  width: 100%;
+  border: 1px solid #ced4da;
+  padding: 10px 12px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.register-input:focus {
+  border-color: #2f3c7e;
+  box-shadow: 0 0 0 0.2rem rgba(47, 60, 126, 0.25);
+}
+
+.register-input.is-invalid {
+  border-color: #dc3545;
+}
+
+.register-input.is-invalid:focus {
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Input group for password */
+.input-group {
+  height: 44px;
+}
+
+.input-group .register-input {
+  height: 100%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .register-eye {
-  background: #fff;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-left: 0;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
   cursor: pointer;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.register-two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 14px;
+/* Error message styling */
+.error-feedback {
+  font-size: 12px;
+  color: #dc3545;
+  margin-top: 4px;
+  min-height: 20px;
+  line-height: 1.2;
+}
+
+/* Spinner wrapper */
+.spinner-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+/* Sponsor feedback */
+.sponsor-feedback {
+  font-size: 12px;
+  margin-top: 4px;
+  min-height: 20px;
+  line-height: 1.2;
+}
+
+.sponsor-valid {
+  color: #198754;
+}
+
+.sponsor-loading {
+  color: #6c757d;
+}
+
+/* Terms checkbox */
+.register-terms-container {
+  margin: 15px 0 20px;
 }
 
 .register-terms {
   font-size: 14px;
-  margin: 10px 0 14px;
+  color: #555;
+}
+
+.register-terms .form-check-input {
+  margin-top: 0.3em;
 }
 
 .register-link {
   color: #0d6efd;
   cursor: pointer;
+  text-decoration: none;
 }
 
+.register-link:hover {
+  text-decoration: underline;
+}
+
+/* Helpline */
 .register-helpline {
   text-align: center;
   font-size: 14px;
-  margin-bottom: 14px;
+  margin-bottom: 20px;
+  color: #555;
 }
 
+.register-helpline strong {
+  color: #2f3c7e;
+}
+
+/* Register button */
 .register-btn {
   width: 100%;
   height: 44px;
   border-radius: 22px;
   background-color: #2f3c7e;
   border: none;
-  font-size: 15px;
-  margin-bottom: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.register-btn:hover {
+  background-color: #1e2857;
+}
+
+.register-btn:active {
+  background-color: #1e2857;
 }
 
 .register-btn:disabled {
   background-color: #d9d9d9;
+  cursor: not-allowed;
 }
 
+/* Footer */
 .register-footer {
   text-align: center;
   font-size: 14px;
+  color: #666;
+}
+
+/* Responsive design */
+@media (max-width: 576px) {
+  .register-form-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .register-card {
+    margin: 10px;
+    padding: 15px;
+  }
+  
+  .register-close {
+    top: 15px;
+    right: 20px;
+    font-size: 20px;
+  }
+  
+  .register-brand-row {
+    margin-bottom: 15px;
+  }
+  
+  .register-logo {
+    /* width: 50px; */
+height: 100px;  }
+  
+  .register-brand-name {
+    font-size: 20px;
+  }
+  
+  .register-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
 }
