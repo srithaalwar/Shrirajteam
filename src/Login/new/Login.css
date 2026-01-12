@@ -285,12 +285,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 10px;
+  /* gap: 12px;
+  margin-bottom: 10px; */
 }
 
 .login-logo {
-  height: 80px;
+  height: 140px;
   width: auto;
   object-fit: contain;
 }
@@ -298,7 +298,7 @@
 
 @media (max-width: 576px) {
   .login-logo {
-    height: 32px;
+    height: 120px;
   }
 
   .login-heading h3 {

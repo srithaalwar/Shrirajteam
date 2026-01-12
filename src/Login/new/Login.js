@@ -336,7 +336,7 @@ const Login = () => {
               <div className="login-form">
 <div className="login-heading">
   <img src={logo} alt="Logo" className="login-logo" />
-  <h3 className="mb-0">Login</h3>
+  {/* <h3 className="mb-0">Login</h3> */}
 </div>
 
                 <ul className="nav nav-tabs mb-4 justify-content-center">

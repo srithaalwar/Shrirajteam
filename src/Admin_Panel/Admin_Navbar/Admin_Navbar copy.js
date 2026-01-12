@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./Admin_Navbar.css";
 import logoImage from "../../Logos/logo1.png";
 import { Link } from "react-router-dom";
@@ -7,31 +7,12 @@ import { Link } from "react-router-dom";
 // Import FontAwesome icons
 import { 
   FaTachometerAlt, 
-  FaHome, 
-  FaBuilding, 
   FaUsers, 
+  FaUserTie, 
   FaClipboardList, 
-  FaCogs,
-  FaCalendarAlt,
-  FaChartLine,
-  FaBriefcase,
-  FaFileAlt,
-  FaTag,
-  FaUserCircle,
-  FaSignOutAlt,
+  FaStar,
   FaCaretDown,
-  FaCaretRight,
-  FaMoneyBillWave,
-  FaHandHoldingUsd,
-  FaCreditCard,
-  FaLayerGroup,
-  FaGraduationCap,
-  FaQuestionCircle,
-  FaExchangeAlt,
-  FaDatabase,
-  FaSitemap,
-  FaEye,
-  FaRobot
+  FaCaretRight
 } from "react-icons/fa";
 
 const WebsiteNavbar = () => {
@@ -45,39 +26,40 @@ const WebsiteNavbar = () => {
   const loginUrl = "/login";
   const signupUrl = "/register";
   
+  // Initialize navigate hook
   const navigate = useNavigate();
 
-  // Define your navigation items with appropriate icons
+  // Define your navigation items
   const menuItems = [
     { path: "/a-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
-    { path: "/add-property", name: "Add Property", icon: <FaHome /> },
-    { path: "/a-properties", name: "Properties", icon: <FaBuilding /> },
-    { path: "/a-users", name: "Users", icon: <FaUsers /> },
+    { path: "/add-property", name: "Add Property", icon: <FaUsers /> },
+    { path: "/a-properties", name: "Properties", icon: <FaUserTie /> },
+    { path: "/a-users", name: "Users", icon: <FaClipboardList /> },
     {
       name: "Operations",
-      icon: <FaCogs />,
+      icon: <FaStar />,
       subMenu: [
-        { path: "/", name: "Company Payout", icon: <FaMoneyBillWave /> },
-        { path: "/", name: "Team Payout", icon: <FaHandHoldingUsd /> },
-        { path: "/", name: "Subscription", icon: <FaCreditCard /> },
-        { path: "/", name: "Booking Slab", icon: <FaLayerGroup /> },
-        { path: "/", name: "Training Material", icon: <FaGraduationCap /> },
-        { path: "/", name: "How it works", icon: <FaQuestionCircle /> },
-        { path: "/", name: "Transactions", icon: <FaExchangeAlt /> },
-        { path: "/", name: "Payout Master", icon: <FaDatabase /> },
-        { path: "/", name: "Category", icon: <FaTag /> },
-        { path: "/", name: "Business", icon: <FaBriefcase /> },
-        { path: "/", name: "Site Visits", icon: <FaEye /> },
-        { path: "/", name: "Chat Bot", icon: <FaRobot /> },
-        { path: "/", name: "Departments", icon: <FaSitemap /> },
+        { path: "/", name: "Company Payout", icon: <FaStar /> },
+        { path: "/", name: "Team Payout" },
+        { path: "/", name: "Subscription" },
+        { path: "/", name: "Booking Slab" },
+        { path: "/", name: "Training Material" },
+        { path: "/", name: "How it works" },
+        { path: "/", name: "Transactions" },
+        { path: "/", name: "Payout Master" },
+        { path: "/", name: "Category" },
+        { path: "/", name: "Business" },
+        { path: "/", name: "Site Visits" },
+        { path: "/", name: "Chat Bot" },
+        { path: "/", name: "Departments", icon: <FaStar /> },
       ],
     },
-    { path: "/", name: "Meetings", icon: <FaCalendarAlt /> },
-    { path: "/a-leads", name: "Leads", icon: <FaChartLine /> },
-    { path: "/a-company", name: "Company", icon: <FaBriefcase /> },
-    { path: "/", name: "Reports", icon: <FaFileAlt /> },
-    { path: "/", name: "Prefix", icon: <FaTag /> },
-    { path: "/", name: "Profile", icon: <FaUserCircle /> },
+    { path: "/", name: "Meetings", icon: <FaClipboardList /> },
+    { path: "/a-leads", name: "Leads", icon: <FaClipboardList /> },
+    { path: "/a-company", name: "Company", icon: <FaClipboardList /> },
+    { path: "/", name: "Reports", icon: <FaClipboardList /> },
+    { path: "/", name: "Prefix", icon: <FaClipboardList /> },
+    { path: "/", name: "Profile", icon: <FaClipboardList /> },
   ];
 
   // Close dropdown when clicking outside
@@ -107,6 +89,7 @@ const WebsiteNavbar = () => {
     setShowCategories(false);
   };
 
+  // Toggle submenu expansion
   const toggleSubMenu = (menuName) => {
     if (expandedMenu === menuName) {
       setExpandedMenu(null);
@@ -115,16 +98,27 @@ const WebsiteNavbar = () => {
     }
   };
 
+  // Logout function - UPDATED with navigation
   const handleLogout = () => {
+    // Add your logout logic here
     console.log("User logged out");
+    
+    // Clear any stored authentication data
     localStorage.removeItem("authToken");
     localStorage.removeItem("userRole");
     localStorage.removeItem("adminData");
+    
+    // Clear session storage
     sessionStorage.clear();
+    
+    // Close sidebar after logout
     setOpen(false);
+    
+    // Navigate to homepage
     navigate("/");
   };
 
+  // Login/Signup buttons
   const LoginButtonExternal = () => (
     <a href={loginUrl} className="wn-login-btn-link">
       <button className="wn-login-btn">Login</button>
@@ -209,7 +203,7 @@ const WebsiteNavbar = () => {
       {/* OVERLAY */}
       {open && <div className="wn-overlay" onClick={() => setOpen(false)} />}
 
-      {/* SIDEBAR - UPDATED WITH BETTER UI */}
+      {/* SIDEBAR - UPDATED WITH YOUR MENU ITEMS */}
       <aside className={`wn-sidebar ${open ? "open" : ""}`}>
         {/* Header */}
         <div className="wn-sidebar-header">
@@ -222,17 +216,6 @@ const WebsiteNavbar = () => {
           </div>
           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
         </div>
-
-        {/* User Info Section (Optional - Add if you have user data) */}
-        {/* <div className="wn-user-info">
-          <div className="wn-user-avatar">
-            <FaUserCircle size={42} color="#1e40af" />
-          </div>
-          <div className="wn-user-details">
-            <h4 className="wn-user-name">Admin User</h4>
-            <p className="wn-user-role">Administrator</p>
-          </div>
-        </div> */}
 
         <div className="wn-divider" />
 
@@ -267,9 +250,9 @@ const WebsiteNavbar = () => {
                               onClick={() => setOpen(false)}
                             >
                               <span className="wn-submenu-icon">
-                                {subItem.icon || <FaCogs />}
+                                {subItem.icon || <FaStar />}
                               </span>
-                              <span className="wn-submenu-text"style={{ marginLeft: "10px" }}>{subItem.name}</span>
+                              <span className="wn-submenu-text">{subItem.name}</span>
                             </Link>
                           </li>
                         ))}
@@ -284,8 +267,8 @@ const WebsiteNavbar = () => {
                       className="wn-sidebar-link"
                       onClick={() => setOpen(false)}
                     >
-                <span className="wn-sidebar-icon">{item.icon}</span>
-<span className="wn-sidebar-text" style={{ marginLeft: "10px" }}>{item.name}</span>
+                      <span className="wn-sidebar-icon">{item.icon}</span>
+                      <span className="wn-sidebar-text">{item.name}</span>
                     </Link>
                   </li>
                 )}
@@ -296,15 +279,13 @@ const WebsiteNavbar = () => {
 
         <div className="wn-divider" />
 
-        {/* Logout Button - Updated with better icon */}
+        {/* Logout Button */}
         <div className="wn-logout-section">
           <button 
             className="wn-logout-btn"
             onClick={handleLogout}
           >
-            <span className="wn-logout-icon">
-              <FaSignOutAlt />
-            </span>
+            <span className="wn-logout-icon">🚪</span>
             <span className="wn-logout-text">Logout</span>
           </button>
         </div>
