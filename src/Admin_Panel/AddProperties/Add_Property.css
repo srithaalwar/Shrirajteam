@@ -122,14 +122,25 @@
 }
 
 .customer-form-input {
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  padding: 8px 12px;
-  transition: all 0.3s ease;
-  width: 100%;
-  font-size: 0.95rem;
-  height: 38px;
+  border: 2px solid #198754 !important;
+  border-radius: 12px !important;
+  padding: 1rem !important;
+  transition: all 0.3s ease !important;
+  background-color: #f8f9fa !important;
+  font-size: 1rem !important;
+  height:60px !important;  
 }
+
+
+
+/* .customer-form-input{
+  border: 2px solid #dee2e6;
+    border-radius: 12px;
+    padding: 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+} */
 
 .customer-form-input:focus {
   border-color: #1890ff;
