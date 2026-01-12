@@ -174,9 +174,9 @@ function Footer() {
               <h5 className="footer-title">Quick Links</h5>
               <ul className="footer-list">
                 <li><a href="/">Home</a></li>
-                <li><a href="/why-shriraj">Why Shriraj</a></li>
-                <li><a href="/aboutus">About Us</a></li>
-                <li><a href="/contactus">Contact</a></li>
+                <li><a href="/">Why Shriraj</a></li>
+                <li><a href="/about_us">About Us</a></li>
+                <li><a href="/contact_us">Contact Us</a></li>
               </ul>
             </div>
           </Col>
@@ -189,6 +189,8 @@ function Footer() {
                 <li><a href="/privacy-policy">Privacy Policy</a></li>
                 <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                 <li><a href="/refund-policy">Refund Policy</a></li>
+                <li><a href="/faqs">FAQs</a></li>
+
 
               </ul>
             </div>
@@ -244,9 +246,9 @@ function Footer() {
           </Col>
           <Col md={6} className="text-center text-md-end">
             <div className="policy-links">
-              <a href="/privacypolicy" className="policy-link">Privacy Policy</a>
-              <a href="/termsandconditions" className="policy-link">Terms & Conditions</a>
-              <a href="/refundpolicy" className="policy-link">Refund Policy</a>
+              <a href="/privacy-policy" className="policy-link">Privacy Policy</a>
+              <a href="/terms-and-conditions" className="policy-link">Terms & Conditions</a>
+              <a href="/refund-policy" className="policy-link">Refund Policy</a>
             </div>
           </Col>
         </Row>

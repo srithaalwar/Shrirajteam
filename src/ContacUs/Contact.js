@@ -70,14 +70,14 @@ const Contact = () => {
 
 
       {/* Hero Section */}
-      <section className="contact-hero bg-primary py-5 py-md-5">
+      <section className="contact-hero bg-primary py-5 py-md-3">
         <div className="container text-center">
-          <h1 className="display-4 fw-bold text-white mb-4">
+          <h1 className="display-4 fw-bold text-white ">
             Get In Touch
           </h1>
-          <p className="lead text-white-80 mx-auto" style={{ maxWidth: "600px" }}>
+          {/* <p className="lead text-white-80 mx-auto" style={{ maxWidth: "600px" }}>
             Have questions about our services? We're here to help you with all your real estate needs.
-          </p>
+          </p> */}
         </div>
       </section>
 
@@ -250,7 +250,7 @@ const Contact = () => {
       </section>
 
       {/* Map Section */}
-      <section className="contact-map bg-light">
+      {/* <section className="contact-map bg-light">
         <div className="container-fluid p-0">
           <div className="map-placeholder d-flex align-items-center justify-content-center">
             <div className="text-center text-muted">
@@ -260,7 +260,7 @@ const Contact = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <Footer/>
     </div>

@@ -30,6 +30,7 @@ import FootWearCarousel from "./FootWearCarousel/Carousel";
 
 import AdminDashboard from "./Admin_Panel/Dashboard/Dashboard";
 import AdminLayout from "./AdminSidebar/AdminLayout";
+import AdminProducts from './Admin_Panel/Products/Products'
 import PropertiesList from './Admin_Panel/Properties/PropertiesList';
 import PropertyEditForm from './Admin_Panel/Properties/PropertyEditForm';
 import AgentDashboard from './Agent_Panel/Dashboard/Dashboard'
@@ -51,13 +52,17 @@ function App() {
         <Route path="/category/:id" element={<SubCategories />} />
         <Route path="/products" element={<Products />} />
                 <Route path="/shop-header" element={< ShopHeader/>} />
-Products
+                        <Route path="/a-products" element={<AdminProducts />} />
+
 
         <Route path="/properties" element={<Properties />} />
                 <Route path="/property/:propertyId" element={<PropertyDetails />} />
 
-<Route path="/w-productdetails" element={<ProductDetails/>} />
-<Route path="/w-category/:id" element={<SubCategories />} />
+{/* <Route path="/w-productdetails" element={<ProductDetails/>} /> */}
+<Route path="/product/:productId" element={<ProductDetails />} />
+{/* <Route path="/w-subcategory/:id" element={<SubCategories />} /> */}
+<Route path="/w-subcategory/:id" element={<SubCategories />} />
+<Route path="/products/:id" element={<AdminProducts />} />
   <Route path="/login" element={<Login />} />
         <Route path="/loginwithemail" element={<LoginWithEmail />} />
         <Route path="/forgotpassword" element={<ForgotPassword/>} />

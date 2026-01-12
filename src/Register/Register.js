@@ -1719,9 +1719,11 @@ const Register = () => {
 
               {/* Register Button */}
               <Button 
-                className="register-btn" 
+                className="register-btn " 
                 type="submit"
                 disabled={!agree || loading || fetchingRoles}
+                  style={{ backgroundColor: "#273c75", borderColor: "#273c75" }}
+
               >
                 {loading ? (
                   <>

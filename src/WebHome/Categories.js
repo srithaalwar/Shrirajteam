@@ -64,7 +64,7 @@ const Categories = () => {
           <div
             className="category-item"
             key={cat.category_id}
-            onClick={() => navigate(`/w-category/${cat.category_id}`)}
+            onClick={() => navigate(`/w-subcategory/${cat.category_id}`)}
           >
             <div className="category-icon">
               <BusinessCenterIcon />

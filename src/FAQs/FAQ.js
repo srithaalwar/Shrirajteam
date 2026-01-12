@@ -91,9 +91,9 @@ const FAQs = () => {
     <>
     <WebsiteNavbar />
       {/* Hero Section */}
-      <section className="bg text-white py-5">
+      <section className="bg text-white py-2">
         <div className="container text-center py-5">
-          <h1 className="display-4 fw-bold mb-3">Frequently Asked Questions</h1>
+          <h1 className="display-4 fw-bold ">Frequently Asked Questions</h1>
           
         </div>
       </section>

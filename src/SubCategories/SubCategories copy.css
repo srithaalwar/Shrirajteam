@@ -129,38 +129,3 @@
     margin: 0 -5px;
   }
 }
-
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: none;
-  border: none;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  color: #111;
-  margin-bottom: 10px;
-}
-
-.back-btn svg {
-  font-size: 18px;
-}
-
-.back-btn:hover {
-  color: #000;
-}
-
-
-.section-title-head {
-    margin: 25px 0 15px;
-    font-size: 22px;
-    font-weight: 600;
-}
-
-
-
-
-
-
