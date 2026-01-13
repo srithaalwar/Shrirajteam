@@ -781,7 +781,7 @@
 @media (max-width: 1024px) {
   .wn-nav-right .wn-login-btn-link,
   .wn-nav-right .wn-signup-btn-link {
-    display: none; /* Hide on tablet as per your existing CSS */
+    display: block; /* Hide on tablet as per your existing CSS */
   }
   
   /* Show login/signup buttons in sidebar on mobile/tablet */
@@ -796,7 +796,7 @@
   /* Hide login/signup buttons, show only icons */
   .wn-nav-right .wn-login-btn-link,
   .wn-nav-right .wn-signup-btn-link {
-    display: none;
+    display: block;
   }
 }
 
