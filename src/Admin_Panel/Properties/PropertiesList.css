@@ -146,3 +146,32 @@
 .card {
   animation: fadeIn 0.3s ease-out;
 }
+
+
+
+/* Verification Status Badges */
+.badge.bg-success {
+  background-color: #198754 !important;
+}
+
+.badge.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.badge.bg-warning {
+  background-color: #ffc107 !important;
+}
+
+.badge.bg-secondary {
+  background-color: #6c757d !important;
+}
+
+/* Verification dropdown */
+.verification-dropdown {
+  min-width: 150px;
+}
+
+/* Update status indicator */
+.status-updating {
+  opacity: 0.7;
+}

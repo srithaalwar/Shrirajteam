@@ -91,7 +91,7 @@ function App() {
 
 <Route path="/a-dashboard" element={<AdminDashboard />} />
 <Route path="/a-properties" element={<PropertiesList />} />
-<Route path="/a-edit-form" element={<PropertyEditForm />} />
+<Route path="/edit-property/:property_id" element={<PropertyEditForm />} />
 
 
 

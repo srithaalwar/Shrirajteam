@@ -7,7 +7,7 @@ import { baseurl } from '../../BaseURL/BaseURL';
 import WebsiteNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
 
 
-const AssetForm = ({ user, mode = 'add' }) => {  
+const AddPropertyForm = ({ user, mode = 'add' }) => {  
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('basic-details');
   const [isEditing, setIsEditing] = useState(mode === 'edit');
@@ -1544,4 +1544,4 @@ const AssetForm = ({ user, mode = 'add' }) => {
   );
 };
 
-export default AssetForm;
+export default AddPropertyForm;
