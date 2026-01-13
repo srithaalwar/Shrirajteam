@@ -519,7 +519,6 @@ const WebsiteNavbar = () => {
             />
           </div>
 
-          <button className="wn-location-btn">📍 Select Location</button>
         </div>
 
         {/* SEARCH */}

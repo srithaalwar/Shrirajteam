@@ -646,7 +646,7 @@ const FilterSidebar = ({
       </FilterSection>
 
       {/* Location Filter */}
-      <FilterSection
+      {/* <FilterSection
         title="Location"
         isOpen={activeFilters.location}
         onToggle={() => toggleFilterSection('location')}
@@ -691,7 +691,7 @@ const FilterSidebar = ({
             </div>
           ))}
         </div>
-      </FilterSection>
+      </FilterSection> */}
 
       {/* Active Filters Summary */}
       {activeFilterCount > 0 && (

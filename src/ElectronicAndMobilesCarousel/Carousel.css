@@ -1,42 +1,67 @@
 .offer-carousel-wrapper {
   max-width: 100%;
   margin: 40px auto;
-  padding: 0 10px;
+  padding: 0 20px;
   position: relative;
 }
 
-/* ===== CUSTOM CAROUSEL CONTAINER ===== */
-.carousel-container {
+/* ===== HEADER ===== */
+.carousel-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  position: relative;
-  padding: 0px; /* Space for side controls */
+  margin-bottom: 25px;
 }
 
-/* ===== CAROUSEL VIEWPORT ===== */
-.carousel-viewport {
-  flex: 1;
-  overflow: hidden;
-  border-radius: 18px;
+.category-heading {
+  font-size: 28px;
+  font-weight: 700;
+  color: #004d40;
+  margin: 0;
 }
 
-.carousel-track {
-  display: flex;
+.view-all-link {
+  text-align: right;
+}
+
+.view-all-button {
+  background: transparent;
+  border: none;
+  color: #004d40;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.view-all-button:hover {
+  background: #004d40;
+  color: white;
+  transform: translateX(5px);
+}
+
+/* ===== 3 CARDS GRID ===== */
+.three-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
   width: 100%;
 }
 
-.carousel-slide {
-  flex: 0 0 100%;
+.offer-card-item {
   width: 100%;
-  padding: 10px 0;
 }
 
 /* ===== CARD = FULL IMAGE BANNER ===== */
 .offer-card {
   position: relative;
   height: 260px;
-  
+  width: 100%;
   border-radius: 18px;
   background-size: cover;
   background-position: center;
@@ -48,52 +73,6 @@
 
 .offer-card:hover {
   transform: scale(1.02);
-}
-
-/* ===== CUSTOM CONTROLS ===== */
-.carousel-control {
-  position: static;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: white;
-  border: 2px solid #004d40;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 10;
-  flex-shrink: 0;
-}
-
-.carousel-control:hover {
-  background: #004d40;
-  transform: scale(1.1);
-}
-
-.carousel-control:hover .control-icon {
-  color: white;
-}
-
-.control-icon {
-  font-size: 24px;
-  font-weight: bold;
-  color: #004d40;
-  line-height: 1;
-}
-
-.custom-prev {
-  order: 1;
-}
-
-.carousel-viewport {
-  order: 2;
-  flex: 1;
-}
-
-.custom-next {
-  order: 3;
 }
 
 /* ===== TEXT OVERLAY ===== */
@@ -142,28 +121,32 @@
   transform: translateY(-2px);
 }
 
-/* ===== INDICATORS ===== */
-.carousel-indicators {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 20px;
+/* ===== LOADING & NO OFFERS ===== */
+.loading-text {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 18px;
 }
 
-.indicator {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: none;
-  background: #ccc;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 0;
+.no-offers-text {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 18px;
+  border: 2px dashed #ddd;
+  border-radius: 10px;
 }
 
-.indicator.active {
-  background: #004d40;
-  transform: scale(1.2);
+.loading-dots:after {
+  content: '...';
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
 }
 
 /* ================================================= */
@@ -172,8 +155,8 @@
 
 /* ===== TABLET VIEW ===== */
 @media (max-width: 991px) {
-  .carousel-container {
-    padding: 0 40px;
+  .three-cards-grid {
+    gap: 20px;
   }
   
   .offer-card {
@@ -181,28 +164,34 @@
   }
 
   .offer-content h2 {
-    font-size: 36px;
+    font-size: 22px;
   }
 
-  .offer-content {
-    max-width: 80%;
-  }
-
-  .carousel-control {
-    width: 40px;
-    height: 40px;
+  .category-heading {
+    font-size: 24px;
   }
 }
 
 /* ===== MOBILE VIEW ===== */
 @media (max-width: 767px) {
-  .carousel-container {
-    padding: 0 30px;
-    gap: 10px;
+  .three-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
   
   .offer-card {
     height: 200px;
+  }
+
+  .carousel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .view-all-link {
+    align-self: flex-end;
   }
 
   .offer-content {
@@ -212,34 +201,19 @@
   }
 
   .offer-content h2 {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .shop-btn {
     padding: 7px 18px;
     font-size: 13px;
   }
-
-  /* Only one banner visible cleanly */
-  .carousel-slide .col-md-4 {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-
-  .carousel-control {
-    width: 35px;
-    height: 35px;
-  }
-
-  .control-icon {
-    font-size: 20px;
-  }
 }
 
 /* ===== SMALL MOBILE ===== */
 @media (max-width: 480px) {
-  .carousel-container {
-    padding: 0 20px;
+  .offer-carousel-wrapper {
+    padding: 0 15px;
   }
   
   .offer-card {
@@ -247,16 +221,14 @@
   }
 
   .offer-content h2 {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .offer-content .off {
     font-size: 12px;
   }
-}
 
-/* Center alignment for slides */
-.row {
-  display: flex;
-  justify-content: center;
+  .category-heading {
+    font-size: 20px;
+  }
 }

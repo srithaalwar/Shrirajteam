@@ -1504,12 +1504,13 @@ const Register = () => {
 
   // Handle terms link click
   const handleTermsClick = () => {
-    window.open("/termsandconditions", "_blank");
+    window.open("/terms-and-conditions", "_blank");
+
   };
 
   // Handle privacy policy click
   const handlePrivacyClick = () => {
-    window.open("/privacypolicy", "_blank");
+    window.open("/privacy-policy", "_blank");
   };
 
   return (

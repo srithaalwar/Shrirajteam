@@ -529,7 +529,7 @@
 =============================== */
 
 .product-info-row {
-  width: calc(100% - -450px);   /* excludes buy box */
+  /* width: calc(100% - -450px);   */
   margin-top: 32px;
   background: #ffffff;
   border-radius: 12px;

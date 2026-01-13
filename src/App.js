@@ -77,12 +77,16 @@ function App() {
 
 
 <Route path="/faqs" element={<FAQAccordion />} />
+
+{/* website-home */}
 <Route path="/Electronics-carousel" element={<ElectronicAndMobilesCarousel />} />
 <Route path="/Clothing-carousel" element={<ClothingAndGarmentsCarousel />} />
 <Route path="/Grocery-carousel" element={<GroceryAndKiranamCarousel />} />
 <Route path="/Footwear-carousel" element={<FootWearCarousel />} />
 
 
+
+{/* Admin-panel */}
 <Route path="/add-property" element={<Add_Property />} />
 
 <Route path="/a-dashboard" element={<AdminDashboard />} />
@@ -90,6 +94,8 @@ function App() {
 <Route path="/a-edit-form" element={<PropertyEditForm />} />
 
 
+
+{/* Agent-panel */}
 
 <Route path="/agent-dashboard" element={<AgentDashboard />} />
 <Route path="/agent-add-property" element={<AgentAddProperty />} />

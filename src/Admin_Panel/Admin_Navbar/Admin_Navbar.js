@@ -150,7 +150,6 @@ const WebsiteNavbar = () => {
               className="wn-logo-img"
             />
           </div>
-          <button className="wn-location-btn">📍 Select Location</button>
         </div>
 
         {/* SEARCH */}
