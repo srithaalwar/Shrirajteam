@@ -572,7 +572,7 @@ const AssetForm = ({ user, mode = 'add' }) => {
             />
             <button 
               type="button"
-              className="btn btn-outline-secondary"
+              className="btn btn-outline-secondary media-upload-btn"
               onClick={() => document.getElementById(`${type}-upload`).click()}
               disabled={isViewing}
             >
