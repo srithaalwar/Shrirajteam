@@ -1,0 +1,80 @@
+/* ROOT SCOPE */
+.tc-root {
+  margin-top: 24px;
+}
+
+/* HEADER */
+.tc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.tc-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* BUTTON */
+.tc-add-btn {
+  text-transform: none !important;
+  border-radius: 8px !important;
+}
+
+/* TABLE CARD */
+.tc-table-card {
+  border-radius: 16px !important;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+/* TABLE HEADER */
+.tc-th {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #6b7280 !important;
+  text-transform: uppercase;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* TABLE BODY */
+.tc-td {
+  font-size: 14px !important;
+  color: #111827;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.tc-bold {
+  font-weight: 600;
+}
+
+/* ALIGNMENT */
+.tc-center {
+  text-align: center !important;
+}
+
+/* ACTION BUTTONS */
+.tc-edit-btn {
+  color: #2563eb !important;
+}
+
+.tc-delete-btn {
+  color: #dc2626 !important;
+}
+
+/* CHIP */
+.tc-chip {
+  background-color: #e0f2fe !important;
+  color: #0369a1 !important;
+  font-weight: 600 !important;
+}
+
+/* PAGINATION */
+.tc-pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  margin-bottom: 32px;
+}

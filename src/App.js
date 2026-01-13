@@ -41,77 +41,95 @@ import ClientDashboard from './Client_Panel/Dashboard/Dashboard'
 import StaffList from "./Admin_Panel/Users/Users";
 import Company from "./Admin_Panel/Company/Company";
 import Leads from "./Admin_Panel/Leads/Leads";
+
+//Admin Panel
+import AddBookingSlab from "./../src/Admin_Panel/BookingSlab/AddBookingSlab";
+import BookingSlab from "./../src/Admin_Panel/BookingSlab/BookingSlab";
+import EditBookingSlab from "./Admin_Panel/BookingSlab/EditBookingSlab";
+import TableCategory from "./Admin_Panel/TableCategory/TableCategory";
+import PropertyCategoryform from "./Admin_Panel/TableCategory/PropertyCategoryform";
+import Category from "./Admin_Panel/TableCategory/Category";
+import EditCategory from "./../src/Admin_Panel/TableCategory/EditCategory";
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-                <Route path="/admin" element={<AdminLayout />}/>
+        <Route path="/admin" element={<AdminLayout />} />
 
         <Route path="/" element={<WebHome />} />
         <Route path="/webhome" element={<WebHome />} />
         <Route path="/category/:id" element={<SubCategories />} />
         <Route path="/products" element={<Products />} />
-                <Route path="/shop-header" element={< ShopHeader/>} />
-                        <Route path="/a-products" element={<AdminProducts />} />
+        <Route path="/shop-header" element={< ShopHeader />} />
+        <Route path="/a-products" element={<AdminProducts />} />
 
 
         <Route path="/properties" element={<Properties />} />
-                <Route path="/property/:propertyId" element={<PropertyDetails />} />
+        <Route path="/property/:propertyId" element={<PropertyDetails />} />
 
-{/* <Route path="/w-productdetails" element={<ProductDetails/>} /> */}
-<Route path="/product/:productId" element={<ProductDetails />} />
-{/* <Route path="/w-subcategory/:id" element={<SubCategories />} /> */}
-<Route path="/w-subcategory/:id" element={<SubCategories />} />
-<Route path="/products/:id" element={<AdminProducts />} />
-  <Route path="/login" element={<Login />} />
+        {/* <Route path="/w-productdetails" element={<ProductDetails/>} /> */}
+        <Route path="/product/:productId" element={<ProductDetails />} />
+        {/* <Route path="/w-subcategory/:id" element={<SubCategories />} /> */}
+        <Route path="/w-subcategory/:id" element={<SubCategories />} />
+        <Route path="/products/:id" element={<AdminProducts />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/loginwithemail" element={<LoginWithEmail />} />
-        <Route path="/forgotpassword" element={<ForgotPassword/>} />
-        <Route path="/register" element={<Register/>} />
-         <Route path="/contact_us" element={<Contact/>} />
-                  <Route path="/about_us" element={<AboutUs/>} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/contact_us" element={<Contact />} />
+        <Route path="/about_us" element={<AboutUs />} />
 
-<Route path="/verify-otp" element={<VerifyOTP />} />
-<Route path="/privacy-policy" element={<PrivacyPolicy />} />
-<Route path="/refund-policy" element={<RefundPolicy />} />
-<Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-
-
-<Route path="/faqs" element={<FAQAccordion />} />
-
-{/* website-home */}
-<Route path="/Electronics-carousel" element={<ElectronicAndMobilesCarousel />} />
-<Route path="/Clothing-carousel" element={<ClothingAndGarmentsCarousel />} />
-<Route path="/Grocery-carousel" element={<GroceryAndKiranamCarousel />} />
-<Route path="/Footwear-carousel" element={<FootWearCarousel />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
 
 
+        <Route path="/faqs" element={<FAQAccordion />} />
 
-{/* Admin-panel */}
-<Route path="/add-property" element={<Add_Property />} />
-
-<Route path="/a-dashboard" element={<AdminDashboard />} />
-<Route path="/a-properties" element={<PropertiesList />} />
-<Route path="/a-edit-form" element={<PropertyEditForm />} />
+        {/* website-home */}
+        <Route path="/Electronics-carousel" element={<ElectronicAndMobilesCarousel />} />
+        <Route path="/Clothing-carousel" element={<ClothingAndGarmentsCarousel />} />
+        <Route path="/Grocery-carousel" element={<GroceryAndKiranamCarousel />} />
+        <Route path="/Footwear-carousel" element={<FootWearCarousel />} />
 
 
 
-{/* Agent-panel */}
+        {/* Admin-panel */}
+        <Route path="/add-property" element={<Add_Property />} />
 
-<Route path="/agent-dashboard" element={<AgentDashboard />} />
-<Route path="/agent-add-property" element={<AgentAddProperty />} />
+        <Route path="/a-dashboard" element={<AdminDashboard />} />
+        <Route path="/a-properties" element={<PropertiesList />} />
+        <Route path="/a-edit-form" element={<PropertyEditForm />} />
+        <Route path="/a-bookingslab" element={<BookingSlab />} />
+        <Route path="/a-add-booking-slab" element={<AddBookingSlab />} />
+        <Route path="/a-edit-booking-slab/:id" element={<EditBookingSlab />} />
 
-<Route path="/agent-my-properties" element={<AgentMyProperty />} />
+        <Route path="/tablecategory" element={<TableCategory />} />
+        <Route path="/propertycategoryform" element={<PropertyCategoryform />} />
+        <Route path="/a-category" element={<Category />} />
+         <Route path="/editcategory/:id" element={<EditCategory />} />
+     
+
+
+        {/* Agent-panel */}
+
+        <Route path="/agent-dashboard" element={<AgentDashboard />} />
+        <Route path="/agent-add-property" element={<AgentAddProperty />} />
+
+        <Route path="/agent-my-properties" element={<AgentMyProperty />} />
 
 
 
 
 
 
-<Route path="/Client-dashboard" element={<ClientDashboard />} />
+        <Route path="/Client-dashboard" element={<ClientDashboard />} />
 
-<Route path="/a-users" element={<StaffList />} />
-<Route path="/a-company" element={<Company />} />
-<Route path="/a-leads" element={<Leads />} />
+        <Route path="/a-users" element={<StaffList />} />
+        <Route path="/a-company" element={<Company />} />
+        <Route path="/a-leads" element={<Leads />} />
 
 
 
