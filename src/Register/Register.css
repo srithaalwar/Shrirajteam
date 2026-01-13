@@ -65,7 +65,7 @@
 /* Form grid layout */
 .register-form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr; */
   gap: 15px;
   /* margin-bottom: 15px; */
 }
@@ -81,13 +81,21 @@
 }
 
 .register-input {
-  height: 44px;
+  /* height: 44px;
   border-radius: 8px;
   font-size: 14px;
   width: 100%;
   border: 1px solid #ced4da;
   padding: 10px 12px;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; */
+
+  border: 2px solid #198754 !important;
+  border-radius: 12px !important;
+  padding: 1rem !important;
+  transition: all 0.3s ease !important;
+  background-color: #f8f9fa !important;
+  font-size: 1rem !important;
+  height:60px !important;
 }
 
 .register-input:focus {
@@ -104,9 +112,9 @@
 }
 
 /* Input group for password */
-.input-group {
+/* .input-group {
   height: 44px;
-}
+} */
 
 .input-group .register-input {
   height: 100%;

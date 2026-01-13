@@ -388,7 +388,7 @@ const Login = () => {
                           onChange={(e) => setPassword(e.target.value)}
                         />
                         <button
-                          className="btn btn-outline-secondary"
+                          className="eye-icon"
                           type="button"
                           onClick={handleTogglePassword}
                         >

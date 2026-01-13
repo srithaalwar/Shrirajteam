@@ -1583,7 +1583,7 @@ const Register = () => {
                       onChange={handleChange}
                     />
                     <InputGroup.Text
-                      className="register-eye"
+                      className="register-eye eye-icon"
                       onClick={() => setShowPassword(!showPassword)}
                       style={{ cursor: "pointer" }}
                     >
