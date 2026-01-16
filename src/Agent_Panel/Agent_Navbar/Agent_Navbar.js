@@ -380,7 +380,7 @@ const AgentNavbar = () => {
     },
     { path: "/", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/", name: "Offers", icon: <FaTag /> },
-    { path: "/", name: "Profile", icon: <FaUserCircle /> },
+    { path: "/agent-profile", name: "Profile", icon: <FaUserCircle /> },
   ];
 
   // Close dropdown when clicking outside

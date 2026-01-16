@@ -33,20 +33,21 @@ import AdminLayout from "./AdminSidebar/AdminLayout";
 import AdminProducts from './Admin_Panel/Products/Products'
 import PropertiesList from './Admin_Panel/Properties/PropertiesList';
 import PropertyEditForm from './Admin_Panel/Properties/PropertyEditForm';
-
+import AdminProfile from "./Admin_Panel/Profile/AdminProfile";
 import AgentDashboard from './Agent_Panel/AgentDashboard/Dashboard'
 import AgentAddProperty from './Agent_Panel/AddProperty/Add_Property'
 import AgentProperties from './Agent_Panel/AgentProperties/PropertiesList'
 import AgentMyProperty from './Agent_Panel/MyProperties/MyProperties'
 import AgentMyPropertyEditForm from "./Agent_Panel/MyProperties/MyPropertiesEditForm"
-
+import AgentProfile from './Agent_Panel/AgentProfile/AgentProfile'
+import AgentEditProfile from "./Agent_Panel/AgentProfile/AgentEditProfile";
 import ClientDashboard from './Client_Panel/Dashboard/Dashboard'
 import ClientAddPropertyForm from "./Client_Panel/ClientAddProperty/Add_Property";
 import ClientProperties from './Client_Panel/ClientProperties/PropertiesList';
 import ClientMyProperty from './Client_Panel/MyProperties/MyProperties';
 import ClientMyPropertyEditForm from './Client_Panel/MyProperties/MyPropertiesEditForm';
-
-
+import ClientProfile from "./Client_Panel/ClientProfile/ClientProfile";
+import ClientEditProfile from "./Client_Panel/ClientProfile/ClientEditProfile";
 import StaffList from "./Admin_Panel/Users/Users";
 import Company from "./Admin_Panel/Company/Company";
 import Leads from "./Admin_Panel/Leads/Leads";
@@ -124,7 +125,8 @@ function App() {
          <Route path="/editcategory/:id" element={<EditCategory />} />
           <Route path="/a-departments" element={<Departments />} />
           <Route path="/adddepartment" element={<AddDepartments />} />
-     
+               <Route path="/admin-profile" element={<AdminProfile />} />
+
         {/* Agent-panel */}
 
         <Route path="/agent-dashboard" element={<AgentDashboard />} />
@@ -133,6 +135,9 @@ function App() {
 
         <Route path="/agent-my-properties" element={<AgentMyProperty />} />
          <Route path="/myproperties/edit/:property_id" element={<AgentMyPropertyEditForm />} />
+        <Route path="/agent-profile" element={<AgentProfile />} />
+        <Route path="/agent-edit-profile" element={<AgentEditProfile />} />
+
 
 
             {/* Client-panel */}
@@ -141,6 +146,9 @@ function App() {
         <Route path="/client-Properties" element={<ClientProperties />} />
         <Route path="/client-my-properties" element={<ClientMyProperty />} />
          <Route path="/clientmyproperties/edit/:property_id" element={<ClientMyPropertyEditForm />} />
+        <Route path="/client-profile" element={<ClientProfile />} />
+         <Route path="/client-edit-profile" element={<ClientEditProfile />} />
+
 
         <Route path="/a-users" element={<StaffList />} />
         <Route path="/a-company" element={<Company />} />

@@ -77,7 +77,7 @@ const AdminNavbar = () => {
     { path: "/a-company", name: "Company", icon: <FaBriefcase /> },
     { path: "/", name: "Reports", icon: <FaFileAlt /> },
     { path: "/", name: "Prefix", icon: <FaTag /> },
-    { path: "/", name: "Profile", icon: <FaUserCircle /> },
+    { path: "/admin-profile", name: "Profile", icon: <FaUserCircle /> },
   ];
 
   // Close dropdown when clicking outside

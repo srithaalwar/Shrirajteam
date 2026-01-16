@@ -1,0 +1,174 @@
+/* ===================== */
+/* ADMIN PROFILE STYLES */
+/* ===================== */
+
+.admin-profile-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 24px;
+  padding-top: 40px;
+}
+
+.profile-container {
+  width: 100%;
+  max-width: 700px;
+}
+
+/* Profile Header */
+.profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-header h2 {
+  color: rgb(30, 10, 80);
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* Profile Card */
+.profile-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  padding: 20px;
+}
+
+/* Profile Field */
+.profile-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  font-size: 17px;
+}
+
+.profile-label {
+  color: rgb(30, 10, 80);
+  font-weight: 500;
+  flex: 1;
+  text-align: left;
+}
+
+.profile-value {
+  color: #333;
+  font-weight: 500;
+  flex: 2;
+  text-align: right;
+}
+
+/* Divider */
+.profile-divider {
+  height: 1px;
+  background-color: #ccc;
+  margin: 5px 0;
+}
+
+/* Profile Footer */
+.profile-footer {
+  text-align: center;
+  padding: 15px 0 0 0;
+  margin-top: 10px;
+}
+
+.profile-close-btn {
+  background-color: rgb(20, 5, 60);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  font-size: 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  min-width: 120px;
+}
+
+.profile-close-btn:hover {
+  background-color: rgb(15, 4, 50);
+}
+
+.profile-close-btn:active {
+  transform: scale(0.98);
+}
+
+/* Loading and Error States */
+.profile-loading,
+.profile-error {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+  font-size: 18px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-profile-page {
+    padding: 16px;
+    padding-top: 30px;
+  }
+  
+  .profile-card {
+    padding: 16px;
+    border-radius: 10px;
+  }
+  
+  .profile-header h2 {
+    font-size: 20px;
+  }
+  
+  .profile-field {
+    font-size: 15px;
+    padding: 8px 0;
+  }
+  
+  .profile-divider {
+    margin: 4px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-profile-page {
+    padding: 12px;
+    padding-top: 24px;
+  }
+  
+  .profile-card {
+    padding: 12px;
+    border-radius: 8px;
+  }
+  
+  .profile-header h2 {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+  }
+  
+  .profile-field {
+    font-size: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .profile-label {
+    font-size: 13px;
+  }
+  
+  .profile-value {
+    text-align: left;
+    width: 100%;
+  }
+  
+  .profile-close-btn {
+    width: 100%;
+    padding: 10px 20px;
+  }
+}
