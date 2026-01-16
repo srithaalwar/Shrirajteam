@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   ChevronUp,
@@ -643,7 +644,7 @@ const FilterSidebar = ({
       </FilterSection>
 
       {/* Role Filter */}
-      <FilterSection
+      {/* <FilterSection
         title="User Role"
         isOpen={activeFilters.role}
         onToggle={() => toggleFilterSection('role')}
@@ -696,7 +697,7 @@ const FilterSidebar = ({
             ))
           )}
         </div>
-      </FilterSection>
+      </FilterSection> */}
 
       {/* Categories Filter */}
       <FilterSection
@@ -1312,14 +1313,12 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
 const Properties = () => {
   const [viewMode, setViewMode] = useState("grid-4");
   const [properties, setProperties] = useState([]);
+  const [filteredProperties, setFilteredProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [loadingTypes, setLoadingTypes] = useState(true);
   const [loadingRoles, setLoadingRoles] = useState(true);
   const [error, setError] = useState(null);
-  const [totalCount, setTotalCount] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("default");
 
@@ -1336,27 +1335,38 @@ const Properties = () => {
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [roles, setRoles] = useState([]);
 
-  // Fetch roles from API
-  const fetchRoles = useCallback(async () => {
-    try {
-      setLoadingRoles(true);
-      const response = await fetch(`${baseurl}/roles/`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setRoles(data.results || []);
-    } catch (err) {
-      console.error("Error fetching roles:", err);
-      setRoles([]);
-    } finally {
-      setLoadingRoles(false);
+  // Get current user ID from localStorage
+  const currentUserId = localStorage.getItem("user_id");
+
+ // Fetch roles from API
+const fetchRoles = useCallback(async () => {
+  try {
+    setLoadingRoles(true);
+    const response = await fetch(`${baseurl}/roles/`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  }, []);
+    const data = await response.json();
+    // ✅ FIX: Access results array
+    setRoles(data.results || []);
+  } catch (err) {
+    console.error("Error fetching roles:", err);
+    setRoles([]);
+  } finally {
+    setLoadingRoles(false);
+  }
+}, []);
 
   const handleVerificationStatusUpdate = useCallback((propertyId, newStatus) => {
     // Update the property in the local state
     setProperties(prevProperties => 
+      prevProperties.map(property => 
+        property.property_id === propertyId 
+          ? { ...property, verification_status: newStatus }
+          : property
+      )
+    );
+    setFilteredProperties(prevProperties => 
       prevProperties.map(property => 
         property.property_id === propertyId 
           ? { ...property, verification_status: newStatus }
@@ -1386,9 +1396,9 @@ const Properties = () => {
       setProperties(prevProperties => 
         prevProperties.filter(property => property.property_id !== propertyId)
       );
-      
-      // Update total count
-      setTotalCount(prev => prev - 1);
+      setFilteredProperties(prevProperties => 
+        prevProperties.filter(property => property.property_id !== propertyId)
+      );
       
       return true;
     } catch (error) {
@@ -1398,159 +1408,203 @@ const Properties = () => {
   }, []);
 
   // Fetch categories from API
-  const fetchCategories = useCallback(async () => {
-    try {
-      setLoadingCategories(true);
-      const response = await fetch(`${baseurl}/property-categories/`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setCategories(data.results || []);
-    } catch (err) {
-      console.error("Error fetching categories:", err);
-      setCategories([]);
-    } finally {
-      setLoadingCategories(false);
+ const fetchCategories = useCallback(async () => {
+  try {
+    setLoadingCategories(true);
+    const response = await fetch(`${baseurl}/property-categories/`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  }, []);
+    const data = await response.json();
+    // ✅ FIX: Access results array
+    setCategories(data.results || []);
+  } catch (err) {
+    console.error("Error fetching categories:", err);
+    setCategories([]);
+  } finally {
+    setLoadingCategories(false);
+  }
+}, []);
 
   // Fetch property types from API
-  const fetchPropertyTypes = useCallback(async () => {
-    try {
-      setLoadingTypes(true);
-      const response = await fetch(`${baseurl}/property-types/`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setPropertyTypes(data.results || []);
-    } catch (err) {
-      console.error("Error fetching property types:", err);
-      setPropertyTypes([]);
-    } finally {
-      setLoadingTypes(false);
+const fetchPropertyTypes = useCallback(async () => {
+  try {
+    setLoadingTypes(true);
+    const response = await fetch(`${baseurl}/property-types/`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  }, []);
+    const data = await response.json();
+    // ✅ FIX: Access results array
+    setPropertyTypes(data.results || []);
+  } catch (err) {
+    console.error("Error fetching property types:", err);
+    setPropertyTypes([]);
+  } finally {
+    setLoadingTypes(false);
+  }
+}, []);
 
-  // Fetch properties from API with filters
-  const fetchProperties = useCallback(async () => {
-    try {
-      setLoading(true);
-      
-      const params = new URLSearchParams();
-      
-      if (searchTerm.trim()) {
-        params.append('keyword', searchTerm.trim());
-      }
-      
-      if (selectedCategories.length > 0) {
-        const categoryQuery = selectedCategories.join(',');
-        params.append('category', categoryQuery);
-      }
-      
-      if (selectedTypes.length > 0) {
-        const typeQuery = selectedTypes.join(',');
-        params.append('property_type', typeQuery);
-      }
-      
-      if (selectedTransactionTypes.length > 0) {
-        const lookingToQuery = selectedTransactionTypes.join(',');
-        params.append('looking_to', lookingToQuery);
-      }
-      
-      if (selectedCities.length > 0) {
-        params.append('city', selectedCities.join(','));
-      }
-      
-      if (selectedRoles.length > 0) {
-        const roleIds = selectedRoles.join(',');
-        params.append('user_role', roleIds);
-      }
-      
-      params.append('page', currentPage);
-      
-      const queryString = params.toString();
-      const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
-      
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setProperties(data.results || []);
-      setTotalCount(data.count || 0);
-      setTotalPages(Math.ceil((data.count || 0) / 10));
-    } catch (err) {
-      setError(err.message);
-      console.error("Error fetching properties:", err);
-    } finally {
-      setLoading(false);
+  // Fetch approved properties from API and filter out current user's properties
+  // Fetch approved properties from API and filter out current user's properties
+const fetchApprovedProperties = useCallback(async () => {
+  try {
+    setLoading(true);
+    
+    const response = await fetch(`${baseurl}/properties/?verification_status=verified`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    
+    const data = await response.json();
+    console.log('Fetched properties:', data);
+
+    // ✅ FIX: Access the results array from the API response
+    const propertiesArray = data.results || [];
+    
+    // Filter out properties where user_id matches the current user's id
+    const filteredProperties = propertiesArray.filter(
+      (property) => property.user_id?.toString() !== currentUserId
+    );
+    console.log('Filtered properties (excluding current user):', filteredProperties);
+
+    // Sort by newest first
+    const sortedProperties = filteredProperties.sort((a, b) => 
+      new Date(b.created_at) - new Date(a.created_at)
+    );
+    
+    setProperties(sortedProperties);
+    setFilteredProperties(sortedProperties);
+  } catch (err) {
+    setError(err.message);
+    console.error("Error fetching properties:", err);
+  } finally {
+    setLoading(false);
+  }
+}, [currentUserId]);
+
+  // Apply filters and search to properties
+  useEffect(() => {
+    if (properties.length === 0) return;
+    
+    let result = [...properties];
+    
+    // Apply category filter
+    if (selectedCategories.length > 0) {
+      result = result.filter(property => {
+        const categoryName = property.category_name?.toLowerCase() || '';
+        return selectedCategories.some(selectedCat => 
+          categoryName.includes(selectedCat.toLowerCase())
+        );
+      });
+    }
+    
+    // Apply type filter
+    if (selectedTypes.length > 0) {
+      result = result.filter(property => {
+        const typeName = property.property_type_name?.toLowerCase() || '';
+        return selectedTypes.some(selectedType => 
+          typeName.includes(selectedType.toLowerCase())
+        );
+      });
+    }
+    
+    // Apply transaction type filter
+    if (selectedTransactionTypes.length > 0) {
+      result = result.filter(property => 
+        selectedTransactionTypes.includes(property.looking_to)
+      );
+    }
+    
+    // Apply role filter
+    if (selectedRoles.length > 0) {
+      result = result.filter(property => {
+        const propertyRoleId = property.user_role_id;
+        return selectedRoles.includes(propertyRoleId?.toString());
+      });
+    }
+    
+    // Apply price range filter
+    if (selectedPriceRanges.length > 0) {
+      result = result.filter(property => {
+        const price = parseFloat(property.looking_to === "sell" 
+          ? (property.total_property_value || property.property_value)
+          : property.rent_amount || 0);
+        
+        return selectedPriceRanges.some(rangeLabel => {
+          switch (rangeLabel) {
+            case "Under ₹10L":
+              return price >= 0 && price <= 1000000;
+            case "₹10L - ₹25L":
+              return price >= 1000000 && price <= 2500000;
+            case "₹25L - ₹50L":
+              return price >= 2500000 && price <= 5000000;
+            case "₹50L - ₹1Cr":
+              return price >= 5000000 && price <= 10000000;
+            case "₹1Cr - ₹5Cr":
+              return price >= 10000000 && price <= 50000000;
+            case "Over ₹5Cr":
+              return price >= 50000000;
+            default:
+              return false;
+          }
+        });
+      });
+    }
+    
+    // Apply city filter
+    if (selectedCities.length > 0) {
+      result = result.filter(property => 
+        selectedCities.includes(property.city)
+      );
+    }
+    
+    // Apply search filter
+    if (searchTerm.trim()) {
+      const query = searchTerm.toLowerCase();
+      result = result.filter(property => {
+        const searchableFields = [
+          property.property_title?.toLowerCase() || '',
+          property.address?.toLowerCase() || '',
+          property.city?.toLowerCase() || '',
+          property.description?.toLowerCase() || '',
+          property.property_type_name?.toLowerCase() || '',
+          property.category_name?.toLowerCase() || ''
+        ];
+        
+        return searchableFields.some(field => field.includes(query));
+      });
+    }
+    
+    setFilteredProperties(result);
   }, [
-    currentPage, 
+    properties, 
     selectedCategories, 
     selectedTypes, 
-    selectedCities, 
     selectedTransactionTypes,
     selectedRoles,
+    selectedPriceRanges,
+    selectedCities,
     searchTerm
   ]);
-
-  // Handle filter changes
-  const handleFilterChange = useCallback(() => {
-    setCurrentPage(1);
-  }, []);
 
   // Initial data fetch
   useEffect(() => {
     fetchRoles();
     fetchCategories();
     fetchPropertyTypes();
-  }, [fetchRoles, fetchCategories, fetchPropertyTypes]);
+    fetchApprovedProperties();
+  }, [fetchRoles, fetchCategories, fetchPropertyTypes, fetchApprovedProperties]);
 
-  // Fetch properties when filters or page change
-  useEffect(() => {
-    fetchProperties();
-  }, [fetchProperties]);
+  // Handle filter changes
+  const handleFilterChange = useCallback(() => {
+    // Filtering is handled in the useEffect above
+  }, []);
 
   // Handle search
   const handleSearch = useCallback((term) => {
     setSearchTerm(term);
-    setCurrentPage(1);
   }, []);
-
-  // Filter properties based on price ranges (client-side only)
-  const filteredProperties = useMemo(() => {
-    if (selectedPriceRanges.length === 0) {
-      return properties;
-    }
-
-    return properties.filter(property => {
-      const price = parseFloat(property.looking_to === "sell" 
-        ? (property.total_property_value || property.property_value)
-        : property.rent_amount || 0);
-      
-      return selectedPriceRanges.some(rangeLabel => {
-        switch (rangeLabel) {
-          case "Under ₹10L":
-            return price >= 0 && price <= 1000000;
-          case "₹10L - ₹25L":
-            return price >= 1000000 && price <= 2500000;
-          case "₹25L - ₹50L":
-            return price >= 2500000 && price <= 5000000;
-          case "₹50L - ₹1Cr":
-            return price >= 5000000 && price <= 10000000;
-          case "₹1Cr - ₹5Cr":
-            return price >= 10000000 && price <= 50000000;
-          case "Over ₹5Cr":
-            return price >= 50000000;
-          default:
-            return false;
-        }
-      });
-    });
-  }, [properties, selectedPriceRanges]);
 
   // Sort properties
   const sortedProperties = useMemo(() => {
@@ -1569,98 +1623,6 @@ const Properties = () => {
       }
     });
   }, [filteredProperties, sortOption]);
-
-  // Handle pagination
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // Render pagination
-  const renderPagination = () => {
-    if (totalPages <= 1) return null;
-    
-    const pages = [];
-    const maxVisiblePages = 5;
-    
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-    
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(
-        <li key={i} className={`page-item ${currentPage === i ? 'active' : ''}`}>
-          <button 
-            className="page-link" 
-            onClick={() => handlePageChange(i)}
-            aria-label={`Go to page ${i}`}
-            aria-current={currentPage === i ? 'page' : undefined}
-          >
-            {i}
-          </button>
-        </li>
-      );
-    }
-
-    return (
-      <nav aria-label="Page navigation" className="mt-5">
-        <ul className="pagination justify-content-center">
-          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-            <button 
-              className="page-link" 
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              aria-label="Go to previous page"
-            >
-              Previous
-            </button>
-          </li>
-          {startPage > 1 && (
-            <>
-              <li className="page-item">
-                <button 
-                  className="page-link" 
-                  onClick={() => handlePageChange(1)}
-                  aria-label="Go to page 1"
-                >
-                  1
-                </button>
-              </li>
-              {startPage > 2 && <li className="page-item disabled"><span className="page-link">...</span></li>}
-            </>
-          )}
-          {pages}
-          {endPage < totalPages && (
-            <>
-              {endPage < totalPages - 1 && <li className="page-item disabled"><span className="page-link">...</span></li>}
-              <li className="page-item">
-                <button 
-                  className="page-link" 
-                  onClick={() => handlePageChange(totalPages)}
-                  aria-label={`Go to page ${totalPages}`}
-                >
-                  {totalPages}
-                </button>
-              </li>
-            </>
-          )}
-          <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-            <button 
-              className="page-link" 
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              aria-label="Go to next page"
-            >
-              Next
-            </button>
-          </li>
-        </ul>
-      </nav>
-    );
-  };
 
   if (loading && properties.length === 0) {
     return (
@@ -1702,7 +1664,7 @@ const Properties = () => {
       <main className="flex-grow-1 bg-light">
         <div className="container py-4">
           <ProductHeader
-            totalProducts={totalCount}
+            totalProducts={properties.length}
             showingProducts={sortedProperties.length}
             viewMode={viewMode}
             onViewModeChange={setViewMode}
@@ -1761,7 +1723,6 @@ const Properties = () => {
                     onVerificationStatusUpdate={handleVerificationStatusUpdate}
                     onDeleteProperty={handleDeleteProperty}
                   />
-                  {renderPagination()}
                 </>
               )}
             </div>

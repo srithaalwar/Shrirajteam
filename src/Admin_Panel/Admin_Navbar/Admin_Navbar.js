@@ -69,7 +69,7 @@ const AdminNavbar = () => {
         { path: "/", name: "Business", icon: <FaBriefcase /> },
         { path: "/", name: "Site Visits", icon: <FaEye /> },
         { path: "/", name: "Chat Bot", icon: <FaRobot /> },
-        { path: "/", name: "Departments", icon: <FaSitemap /> },
+        { path: "/a-departments", name: "Departments", icon: <FaSitemap /> },
       ],
     },
     { path: "/", name: "Meetings", icon: <FaCalendarAlt /> },
@@ -233,7 +233,7 @@ const AdminNavbar = () => {
           </div>
         </div> */}
 
-        <div className="wn-divider" />
+        {/* <div className="wn-divider" /> */}
 
         {/* Navigation Items */}
         <div className="wn-nav-section">

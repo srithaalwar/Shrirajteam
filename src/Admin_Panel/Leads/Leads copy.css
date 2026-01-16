@@ -17,13 +17,9 @@
   font-weight: 600;
 }
 
-.total-count {
+.welcome-text {
   color: #6b7280;
   font-size: 14px;
-  background: #f3f4f6;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-weight: 500;
 }
 
 /* Toolbar */
@@ -100,91 +96,28 @@
 }
 
 .message-cell {
-  max-width: 200px;
+  max-width: 280px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  cursor: help;
 }
 
 /* Actions */
-.actions {
-  text-align: center;
+.actions button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 .delete-btn {
-  background: #fee2e2;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.2s;
   color: #ef4444;
-}
-
-.delete-btn:hover {
-  background: #fecaca;
 }
 
 .no-data {
   text-align: center;
-  padding: 40px !important;
+  padding: 20px;
   color: #9ca3af;
-  font-style: italic;
-}
-
-/* Pagination */
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  gap: 10px;
-}
-
-.pagination-btn {
-  padding: 8px 16px;
-  border: 1px solid #ddd;
-  background: white;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s;
-}
-
-.pagination-btn:hover:not(:disabled) {
-  background-color: #f0f0f0;
-}
-
-.pagination-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.page-numbers {
-  display: flex;
-  gap: 5px;
-}
-
-.page-btn {
-  width: 36px;
-  height: 36px;
-  border: 1px solid #ddd;
-  background: white;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.page-btn.active {
-  background-color: #6C63FF;
-  color: white;
-  border-color: #6C63FF;
-}
-
-.page-btn:hover:not(.active) {
-  background-color: #f0f0f0;
 }
 
 /* ===================== */
@@ -206,28 +139,6 @@
     padding: 10px;
     font-size: 13px;
   }
-
-  .pagination-container {
-    flex-wrap: wrap;
-  }
-  
-  .page-numbers {
-    order: 1;
-    width: 100%;
-    justify-content: center;
-    margin: 10px 0;
-  }
-  
-  .pagination-btn {
-    padding: 6px 12px;
-    font-size: 13px;
-  }
-  
-  .page-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 13px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -241,8 +152,7 @@
     font-size: 20px;
   }
 
-  .total-count {
+  .welcome-text {
     font-size: 12px;
-    padding: 4px 8px;
   }
 }

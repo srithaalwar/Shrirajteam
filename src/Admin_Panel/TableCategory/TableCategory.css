@@ -1,80 +1,95 @@
-/* ROOT SCOPE */
-.tc-root {
-  margin-top: 24px;
-}
+/* ===================== */
+/* TABLE CATEGORY STYLES */
+/* ===================== */
 
-/* HEADER */
-.tc-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.tc-title {
-  margin: 0;
-  font-weight: 600;
-}
-
-/* BUTTON */
-.tc-add-btn {
-  text-transform: none !important;
-  border-radius: 8px !important;
-}
-
-/* TABLE CARD */
-.tc-table-card {
-  border-radius: 16px !important;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
-}
-
-/* TABLE HEADER */
-.tc-th {
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  color: #6b7280 !important;
-  text-transform: uppercase;
-  border-bottom: 1px solid #e5e7eb !important;
-}
-
-/* TABLE BODY */
-.tc-td {
-  font-size: 14px !important;
-  color: #111827;
-  border-bottom: 1px solid #f1f5f9 !important;
-}
-
-.tc-bold {
-  font-weight: 600;
-}
-
-/* ALIGNMENT */
-.tc-center {
-  text-align: center !important;
-}
-
-/* ACTION BUTTONS */
-.tc-edit-btn {
-  color: #2563eb !important;
-}
-
-.tc-delete-btn {
-  color: #dc2626 !important;
-}
-
-/* CHIP */
-.tc-chip {
-  background-color: #e0f2fe !important;
-  color: #0369a1 !important;
-  font-weight: 600 !important;
-}
-
-/* PAGINATION */
-.tc-pagination {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 16px;
+.section-container {
   margin-bottom: 32px;
+}
+
+.section-container:last-child {
+  margin-bottom: 0;
+}
+
+/* Category Badge */
+.category-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.actions button:hover {
+  background-color: #f3f4f6;
+}
+
+.edit-btn {
+  color: #22c55e;
+}
+
+.delete-btn {
+  color: #ef4444;
+}
+
+.name-cell {
+  font-weight: 600;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px 20px;
+  color: #9ca3af;
+  font-size: 16px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .section-container {
+    margin-bottom: 24px;
+  }
+  
+  .category-badge {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+  
+  .actions {
+    gap: 4px;
+  }
+  
+  .actions button {
+    font-size: 14px;
+    padding: 3px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-container {
+    margin-bottom: 20px;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 10px;
+    font-size: 13px;
+  }
 }

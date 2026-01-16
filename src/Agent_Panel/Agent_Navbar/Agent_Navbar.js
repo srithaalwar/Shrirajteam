@@ -536,7 +536,7 @@ const AgentNavbar = () => {
           </div>
         </div> */}
 
-        <div className="wn-divider" />
+        {/* <div className="wn-divider" /> */}
 
         {/* Navigation Items */}
         <div className="wn-nav-section">
