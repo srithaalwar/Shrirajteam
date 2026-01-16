@@ -9,9 +9,7 @@ import {
   List,
   LayoutList,
   Filter,
-  User,
-  Trash2,
-  Edit
+  User
 } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./PropertiesList.css";
@@ -19,6 +17,7 @@ import WebsiteNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+
 
 // ============= Utility Functions =============
 const formatPrice = (price) => {
@@ -30,6 +29,8 @@ const formatPrice = (price) => {
   }
   return `₹${priceNum.toLocaleString()}`;
 };
+
+
 
 const getImageUrl = (images) => {
   if (images && images.length > 0) {
@@ -58,63 +59,113 @@ const getImageUrl = (images) => {
   return "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
 };
 
+
+
 // ============= Property Card Component =============
-const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }) => {
+// const PropertyCard = ({ property }) => {
+//   const navigate = useNavigate();
+
+//   const handleViewDetails = () => {
+//     navigate(`/property/${property.property_id}`);
+//   };
+
+//   // Get the image URL
+//   const imageUrl = getImageUrl(property.images);
+  
+//   const formattedPrice = property.looking_to === "sell" 
+//     ? formatPrice(property.total_property_value || property.property_value)
+//     : `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`;
+
+//   const depositText = property.deposit_amount 
+//     ? ` | Deposit: ₹${parseFloat(property.deposit_amount).toLocaleString()}`
+//     : '';
+
+//   return (
+//     <div className="card h-100 border rounded overflow-hidden d-flex flex-column">
+//       <div className="position-relative">
+//         <div className="bg-light d-flex align-items-center justify-content-center p-4" style={{ height: '200px' }}>
+//           <img
+//             src={imageUrl}
+//             alt={property.property_title}
+//             className="img-fluid"
+//             style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'cover' }}
+//             onError={(e) => {
+//               e.target.src = "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
+//             }}
+//           />
+//         </div>
+//         <div className="position-absolute top-0 end-0 m-2">
+//           <span className="badge" style={{ backgroundColor: '#273c75', color: 'white' }}>
+//             {property.looking_to === "sell" ? "FOR SALE" : "FOR RENT"}
+//           </span>
+//         </div>
+//         {property.status && (
+//           <div className="position-absolute top-0 start-0 m-2">
+//             <span className="badge bg-warning text-dark">
+//               {property.status.toUpperCase()}
+//             </span>
+//           </div>
+//         )}
+//       </div>
+//       <div className="card-body d-flex flex-column flex-grow-1">
+//         <h6 className="card-title fw-medium mb-1 line-clamp-2" style={{ fontSize: '0.875rem' }}>
+//           {property.property_title}
+//         </h6>
+//         <p className="card-text text-muted small mb-2">
+//           <i className="bi bi-geo-alt"></i> {property.address}, {property.city}
+//         </p>
+//         <div className="d-flex flex-wrap gap-1 mb-2">
+//           {property.number_of_bedrooms && (
+//             <span className="badge bg-light text-dark border small">
+//               {property.number_of_bedrooms} BHK
+//             </span>
+//           )}
+//           {property.facing && (
+//             <span className="badge bg-light text-dark border small">
+//               {property.facing.charAt(0).toUpperCase() + property.facing.slice(1)} Facing
+//             </span>
+//           )}
+//         </div>
+//         <div className="d-flex align-items-center gap-2 mt-auto">
+//           <span className="h5 fw-bold text-dark">
+//             {formattedPrice}
+//             {property.looking_to === "rent" && (
+//               <small className="text-muted d-block">{depositText}</small>
+//             )}
+//           </span>
+//         </div>
+      
+//         <button 
+//           className="btn w-100 fw-semibold py-2 "
+//           style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
+//         >
+//           Payout
+//         </button>
+//         <button 
+//           onClick={handleViewDetails}
+//           className="btn w-100 fw-semibold py-2 mt-2"
+//           style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: '#fff' }}
+//         >
+//           {property.looking_to === "sell" ? "VIEW DETAILS" : "CONTACT OWNER"}
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// ============= Property Card Component =============
+const PropertyCard = ({ property, onVerificationStatusUpdate }) => {
   const navigate = useNavigate();
   const [isUpdating, setIsUpdating] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState(property.verification_status || 'pending');
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleViewDetails = () => {
     navigate(`/property/${property.property_id}`);
   };
 
   const handleEditProperty = () => {
-    navigate(`/edit-property/${property.property_id}`);
-  };
-
-  // Handle delete property
-  const handleDeleteProperty = async () => {
-    // Show confirmation dialog
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: `You are about to delete "${property.property_title}". This action cannot be undone!`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-      reverseButtons: true
-    });
-
-    if (result.isConfirmed) {
-      try {
-        setIsDeleting(true);
-        
-        // Call the parent component's delete handler
-        if (onDeleteProperty) {
-          await onDeleteProperty(property.property_id);
-        }
-        
-        // Show success message
-        Swal.fire(
-          'Deleted!',
-          'The property has been deleted successfully.',
-          'success'
-        );
-      } catch (error) {
-        console.error('Error deleting property:', error);
-        Swal.fire(
-          'Error!',
-          'Failed to delete the property. Please try again.',
-          'error'
-        );
-      } finally {
-        setIsDeleting(false);
-      }
-    }
-  };
+  navigate(`/edit-property/${property.property_id}`);
+};
 
   // Get the image URL
   const imageUrl = getImageUrl(property.images);
@@ -128,53 +179,54 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
     : '';
 
   // Handle verification status change
-  const handleVerificationStatusChange = async (e) => {
-    const newStatus = e.target.value;
-    const previousStatus = verificationStatus; // Store previous status for rollback
+ // Handle verification status change
+const handleVerificationStatusChange = async (e) => {
+  const newStatus = e.target.value;
+  const previousStatus = verificationStatus; // Store previous status for rollback
+  
+  setVerificationStatus(newStatus);
+  
+  try {
+    setIsUpdating(true);
     
-    setVerificationStatus(newStatus);
+    // Make API call to update verification status using the main properties endpoint
+    const response = await fetch(`${baseurl}/properties/${property.property_id}/`, {
+      method: 'PUT', // or 'PATCH' if your API supports it
+      headers: {
+        'Content-Type': 'application/json',
+        // Add authentication headers if needed
+        // 'Authorization': `Bearer ${yourToken}`,
+      },
+      body: JSON.stringify({
+        verification_status: newStatus
+      })
+    });
     
-    try {
-      setIsUpdating(true);
-      
-      // Make API call to update verification status using the main properties endpoint
-      const response = await fetch(`${baseurl}/properties/${property.property_id}/`, {
-        method: 'PUT', // or 'PATCH' if your API supports it
-        headers: {
-          'Content-Type': 'application/json',
-          // Add authentication headers if needed
-          // 'Authorization': `Bearer ${yourToken}`,
-        },
-        body: JSON.stringify({
-          verification_status: newStatus
-        })
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to update verification status: ${response.status}`);
-      }
-      
-      const result = await response.json();
-      
-      // Notify parent component about the update
-      if (onVerificationStatusUpdate) {
-        onVerificationStatusUpdate(property.property_id, newStatus);
-      }
-      
-      // Show success message
-      console.log('Verification status updated successfully:', result);
-      
-    } catch (error) {
-      console.error('Error updating verification status:', error);
-      // Revert to previous status on error
-      setVerificationStatus(previousStatus);
-      
-      // Show user-friendly error message
-      alert(`Failed to update verification status: ${error.message}. Please try again.`);
-    } finally {
-      setIsUpdating(false);
+    if (!response.ok) {
+      throw new Error(`Failed to update verification status: ${response.status}`);
     }
-  };
+    
+    const result = await response.json();
+    
+    // Notify parent component about the update
+    if (onVerificationStatusUpdate) {
+      onVerificationStatusUpdate(property.property_id, newStatus);
+    }
+    
+    // Show success message
+    console.log('Verification status updated successfully:', result);
+    
+  } catch (error) {
+    console.error('Error updating verification status:', error);
+    // Revert to previous status on error
+    setVerificationStatus(previousStatus);
+    
+    // Show user-friendly error message
+    alert(`Failed to update verification status: ${error.message}. Please try again.`);
+  } finally {
+    setIsUpdating(false);
+  }
+};
 
   // Get badge color based on verification status
   const getVerificationBadgeColor = (status) => {
@@ -293,51 +345,21 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
           </span>
         </div>
 
-        {/* Action Buttons */}
-        <div className="d-flex gap-2 mt-2">
-          {/* EDIT BUTTON */}
-          <button
-            onClick={handleEditProperty}
-            className="btn fw-semibold py-2 flex-fill d-flex align-items-center justify-content-center gap-1"
-            style={{
-              backgroundColor: "#ffc107",
-              borderColor: "#ffc107",
-              color: "#000",
-            }}
-          >
-            <Edit size={16} />
-            <span>Edit</span>
-          </button>
-          
-          {/* DELETE BUTTON */}
-          <button
-            onClick={handleDeleteProperty}
-            disabled={isDeleting}
-            className="btn fw-semibold py-2 flex-fill d-flex align-items-center justify-content-center gap-1"
-            style={{
-              backgroundColor: "#dc3545",
-              borderColor: "#dc3545",
-              color: "#fff",
-            }}
-          >
-            {isDeleting ? (
-              <>
-                <div className="spinner-border spinner-border-sm" role="status">
-                  <span className="visually-hidden">Deleting...</span>
-                </div>
-                <span>Deleting...</span>
-              </>
-            ) : (
-              <>
-                <Trash2 size={16} />
-                <span>Delete</span>
-              </>
-            )}
-          </button>
-        </div>
+        {/* EDIT BUTTON */}
+<button
+  onClick={handleEditProperty}
+  className="btn w-100 fw-semibold py-2 mt-2"
+  style={{
+    backgroundColor: "#ffc107",
+    borderColor: "#ffc107",
+    color: "#000",
+  }}
+>
+  Edit Property
+</button>
       
         <button 
-          className="btn w-100 fw-semibold py-2 mt-2"
+          className="btn w-100 fw-semibold py-2 "
           style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
         >
           Payout
@@ -386,6 +408,9 @@ const FilterSection = ({
     </div>
   );
 };
+
+
+
 
 // ============= Filter Sidebar Component =============
 const FilterSidebar = ({ 
@@ -915,7 +940,7 @@ const FilterSidebar = ({
                   {role?.role_name || 'Role'}
                   <button 
                     onClick={() => toggleRole(roleId)} 
-                  className="btn-close btn-close-sm ms-1"
+                    className="btn-close btn-close-sm ms-1"
                     aria-label={`Remove ${role?.role_name} role filter`}
                   ></button>
                 </span>
@@ -967,6 +992,9 @@ const FilterSidebar = ({
     </div>
   );
 };
+
+
+
 
 // ============= Product Header Component =============
 const ProductHeader = ({
@@ -1084,7 +1112,146 @@ const ProductHeader = ({
 };
 
 // ============= Property Grid Component =============
-const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDeleteProperty }) => {
+// const PropertyGrid = ({ properties, viewMode }) => {
+//   const getGridClasses = () => {
+//     switch (viewMode) {
+//       case "grid-2":
+//         return "row row-cols-1 row-cols-sm-2";
+//       case "grid-3":
+//         return "row row-cols-1 row-cols-sm-2 row-cols-md-3";
+//       case "grid-4":
+//         return "row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4";
+//       case "list":
+//         return "row row-cols-1";
+//       default:
+//         return "row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4";
+//     }
+//   };
+
+//   const navigate = useNavigate();
+
+//   // In list view mode, show properties differently
+//   if (viewMode === "list") {
+//     return (
+//       <div className="list-group">
+//         {properties.map((property) => {
+//           const imageUrl = getImageUrl(property.images);
+          
+//           const getPriceInfo = () => {
+//             if (property.looking_to === "sell") {
+//               const price = property.total_property_value || property.property_value;
+//               return {
+//                 price: formatPrice(price),
+//                 suffix: "",
+//                 showDeposit: false
+//               };
+//             } else {
+//               return {
+//                 price: `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`,
+//                 suffix: property.deposit_amount 
+//                   ? `Deposit: ₹${parseFloat(property.deposit_amount).toLocaleString()}`
+//                   : '',
+//                 showDeposit: true
+//               };
+//             }
+//           };
+
+//           const priceInfo = getPriceInfo();
+
+//           return (
+//             <div key={property.property_id} className="list-group-item mb-3">
+//               <div className="row g-3">
+//                 <div className="col-md-3">
+//                   <div className="bg-light d-flex align-items-center justify-content-center p-3" style={{ height: '150px' }}>
+//                     <img
+//                       src={imageUrl}
+//                       alt={property.property_title}
+//                       className="img-fluid"
+//                       style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'cover' }}
+//                       onError={(e) => {
+//                         e.target.src = "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
+//                       }}
+//                     />
+//                   </div>
+//                 </div>
+//                 <div className="col-md-6">
+//                   <div className="d-flex align-items-start gap-2 mb-2">
+//                     <h6 className="card-title fw-medium mb-0">{property.property_title}</h6>
+//                     {property.status && (
+//                       <span className="badge bg-warning text-dark small">
+//                         {property.status.toUpperCase()}
+//                       </span>
+//                     )}
+//                     <span className="badge ms-auto" style={{ backgroundColor: '#273c75', color: 'white' }}>
+//                       {property.looking_to === "sell" ? "FOR SALE" : "FOR RENT"}
+//                     </span>
+//                   </div>
+//                   <p className="card-text text-muted small mb-2">
+//                     <i className="bi bi-geo-alt"></i> {property.address}, {property.city}
+//                   </p>
+//                   <div className="d-flex flex-wrap gap-2 mb-2">
+//                     {property.area && (
+//                       <span className="badge bg-light text-dark border small">
+//                         {property.area} {property.area_unit || 'sq ft'}
+//                       </span>
+//                     )}
+//                     {property.number_of_bedrooms && (
+//                       <span className="badge bg-light text-dark border small">
+//                         {property.number_of_bedrooms} BHK
+//                       </span>
+//                     )}
+//                     {property.facing && (
+//                       <span className="badge bg-light text-dark border small">
+//                         {property.facing.charAt(0).toUpperCase() + property.facing.slice(1)} Facing
+//                       </span>
+//                     )}
+//                   </div>
+//                   <div className="d-flex align-items-center gap-2">
+//                     <span className="h5 fw-bold text-dark">
+//                       {priceInfo.price}
+//                       {priceInfo.showDeposit && priceInfo.suffix && (
+//                         <small className="text-muted d-block">{priceInfo.suffix}</small>
+//                       )}
+//                     </span>
+//                   </div>
+//                 </div>
+//                 <div className="col-md-3 d-flex flex-column gap-2">
+//                   <button 
+//                     className="btn fw-semibold py-2"
+//                     style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
+//                   >
+//                     Payout
+//                   </button>
+//                   <button 
+//                     onClick={() => navigate(`/property/${property.property_id}`)}
+//                     className="btn fw-semibold py-2"
+//                     style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: '#fff' }}
+//                   >
+//                     {property.looking_to === "sell" ? "VIEW DETAILS" : "CONTACT OWNER"}
+//                   </button>
+//                 </div>
+//               </div>
+//             </div>
+//           );
+//         })}
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className={getGridClasses()}>
+//       {properties.map((property) => (
+//         <div key={property.property_id} className="col mb-4">
+//           <PropertyCard property={property} />
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+
+// ============= Property Grid Component =============
+const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate }) => {
   const getGridClasses = () => {
     switch (viewMode) {
       case "grid-2":
@@ -1242,35 +1409,19 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                   </div>
                 </div>
                 <div className="col-md-3 d-flex flex-column gap-2">
-                  {/* Action Buttons for List View */}
-                  <div className="d-flex gap-2 mb-2">
-                    <button
-                      onClick={() => navigate(`/edit-property/${property.property_id}`)}
-                      className="btn fw-semibold flex-fill d-flex align-items-center justify-content-center gap-1"
-                      style={{
-                        backgroundColor: "#ffc107",
-                        borderColor: "#ffc107",
-                        color: "#000",
-                      }}
-                    >
-                      <Edit size={14} />
-                      <span>Edit</span>
-                    </button>
-                    
-                    <button
-                      onClick={() => onDeleteProperty && onDeleteProperty(property.property_id)}
-                      className="btn fw-semibold flex-fill d-flex align-items-center justify-content-center gap-1"
-                      style={{
-                        backgroundColor: "#dc3545",
-                        borderColor: "#dc3545",
-                        color: "#fff",
-                      }}
-                    >
-                      <Trash2 size={14} />
-                      <span>Delete</span>
-                    </button>
-                  </div>
-                  
+                         <button
+                    onClick={() =>
+                      navigate(`/edit-property/${property.property_id}`)
+                    }
+                    className="btn fw-semibold"
+                    style={{
+                      backgroundColor: "#ffc107",
+                      borderColor: "#ffc107",
+                      color: "#000",
+                    }}
+                  >
+                    Edit Property
+                  </button>
                   <button 
                     className="btn fw-semibold py-2"
                     style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
@@ -1300,7 +1451,6 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
           <PropertyCard 
             property={property} 
             onVerificationStatusUpdate={onVerificationStatusUpdate}
-            onDeleteProperty={onDeleteProperty}
           />
         </div>
       ))}
@@ -1354,7 +1504,7 @@ const Properties = () => {
     }
   }, []);
 
-  const handleVerificationStatusUpdate = useCallback((propertyId, newStatus) => {
+    const handleVerificationStatusUpdate = useCallback((propertyId, newStatus) => {
     // Update the property in the local state
     setProperties(prevProperties => 
       prevProperties.map(property => 
@@ -1363,38 +1513,6 @@ const Properties = () => {
           : property
       )
     );
-  }, []);
-
-  // Handle delete property
-  const handleDeleteProperty = useCallback(async (propertyId) => {
-    try {
-      // Make API call to delete property
-      const response = await fetch(`${baseurl}/properties/${propertyId}/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add authentication headers if needed
-          // 'Authorization': `Bearer ${yourToken}`,
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to delete property: ${response.status}`);
-      }
-      
-      // Remove property from local state
-      setProperties(prevProperties => 
-        prevProperties.filter(property => property.property_id !== propertyId)
-      );
-      
-      // Update total count
-      setTotalCount(prev => prev - 1);
-      
-      return true;
-    } catch (error) {
-      console.error('Error deleting property:', error);
-      throw error;
-    }
   }, []);
 
   // Fetch categories from API
@@ -1758,8 +1876,8 @@ const Properties = () => {
                   <PropertyGrid 
                     properties={sortedProperties} 
                     viewMode={viewMode}
-                    onVerificationStatusUpdate={handleVerificationStatusUpdate}
-                    onDeleteProperty={handleDeleteProperty}
+                          onVerificationStatusUpdate={handleVerificationStatusUpdate}
+
                   />
                   {renderPagination()}
                 </>
@@ -1773,3 +1891,6 @@ const Properties = () => {
 };
 
 export default Properties;
+
+
+

@@ -4,10 +4,10 @@ import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { baseurl } from '../../BaseURL/BaseURL';
-import WebsiteNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+import WebsiteNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
 
 
-const AgentAddPropertyForm = ({ user, mode = 'add' }) => {  
+const ClientAddPropertyForm = ({ user, mode = 'add' }) => {  
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('basic-details');
   const [isEditing, setIsEditing] = useState(mode === 'edit');
@@ -1386,7 +1386,7 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
         text: isEditing ? 'Property Updated Successfully!' : 'Property Added Successfully!',
         confirmButtonColor: '#3085d6',
       });
-      navigate("/agent-my-properties");
+      navigate("/p-myassets");
 
     } catch (error) {
       console.error('Detailed submission error:', error);
@@ -1543,4 +1543,4 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
   );
 };
 
-export default AgentAddPropertyForm;
+export default ClientAddPropertyForm;

@@ -1,5 +1,291 @@
+// import React, { useState, useEffect, useRef } from "react";
+// import { useNavigate } from "react-router-dom"; // Import useNavigate
+// import "./Client_Navbar.css";
+// import logoImage from "../../Logos/logo1.png";
+// import { Link } from "react-router-dom";
+
+// // Import FontAwesome icons
+// import { 
+//   FaTachometerAlt, 
+//   FaUsers, 
+//   FaUserTie, 
+//   FaClipboardList, 
+//   FaStar,
+//   FaCaretDown,
+//   FaCaretRight
+// } from "react-icons/fa";
+
+// const ClientNavbar = () => {
+//   const [open, setOpen] = useState(false);
+//   const [categories, setCategories] = useState([]);
+//   const [showCategories, setShowCategories] = useState(false);
+//   const [selectedCategory, setSelectedCategory] = useState("All");
+//   const [expandedMenu, setExpandedMenu] = useState(null);
+  
+//   const dropdownRef = useRef(null);
+//   const loginUrl = "/login";
+//   const signupUrl = "/register";
+  
+//   // Initialize navigate hook
+//   const navigate = useNavigate();
+
+//   // Define your navigation items
+//   const menuItems = [
+//     { path: "/client-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
+//     { path: "/client-add-property-form", name: "Add Property", icon: <FaUsers /> },
+//     { path: "/client-Properties", name: "Properties", icon: <FaClipboardList /> },
+//     { path: "/client-my-properties", name: "My Properties", icon: <FaUserTie /> },
+//     { path: "/client-Business", name: "Business", icon: <FaClipboardList /> },
+  
+//     { path: "/client-Meetings", name: "Meetings", icon: <FaClipboardList /> },
+//     { path: "/client-Transactions", name: "Transactions", icon: <FaClipboardList /> },
+//     { path: "/client-Plans", name: "Plans", icon: <FaClipboardList /> },
+
+//     { path: "/client-Profile", name: "Profile", icon: <FaClipboardList /> },
+//   ];
+
+//   // Close dropdown when clicking outside
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+//         setShowCategories(false);
+//       }
+//     };
+
+//     if (showCategories) {
+//       document.addEventListener("mousedown", handleClickOutside);
+//     }
+
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, [showCategories]);
+
+//   const handleDropdownToggle = (event) => {
+//     event.stopPropagation();
+//     setShowCategories(!showCategories);
+//   };
+
+//   const handleCategorySelect = (categoryName) => {
+//     setSelectedCategory(categoryName);
+//     setShowCategories(false);
+//   };
+
+//   // Toggle submenu expansion
+//   const toggleSubMenu = (menuName) => {
+//     if (expandedMenu === menuName) {
+//       setExpandedMenu(null);
+//     } else {
+//       setExpandedMenu(menuName);
+//     }
+//   };
+
+//   // Logout function - UPDATED with navigation
+//   const handleLogout = () => {
+//     // Add your logout logic here
+//     console.log("User logged out");
+    
+//     // Clear client authentication data
+//     localStorage.removeItem("clientToken");
+//     localStorage.removeItem("clientData");
+//     localStorage.removeItem("clientProperties");
+    
+//     // Clear session storage
+//     sessionStorage.clear();
+    
+//     // Close sidebar after logout
+//     setOpen(false);
+    
+//     // Navigate to homepage
+//     navigate("/");
+//   };
+
+//   // Login/Signup buttons
+//   const LoginButtonExternal = () => (
+//     <a href={loginUrl} className="wn-login-btn-link">
+//       <button className="wn-login-btn">Login</button>
+//     </a>
+//   );
+
+//   const SignupButtonExternal = () => (
+//     <a href={signupUrl} className="wn-signup-btn-link">
+//       <button className="wn-signup-btn">Sign Up</button>
+//     </a>
+//   );
+
+//   return (
+//     <>
+//       {/* NAVBAR */}
+//       <header className="wn-navbar">
+//         <div className="wn-nav-left">
+//           <button className="wn-menu-btn" onClick={() => setOpen(true)}>☰</button>
+//           <div className="wn-logo">
+//             <img 
+//               src={logoImage} 
+//               alt="Shriraj Logo" 
+//               className="wn-logo-img"
+//             />
+//           </div>
+//                     {/* <button className="wn-location-btn">📍 Select Location</button> */}
+
+//         </div>
+
+//         {/* SEARCH */}
+//         <div className="wn-nav-center">
+//           <div className="wn-search-box">
+//             <div className="wn-category-dropdown" ref={dropdownRef}>
+//               <div 
+//                 className="wn-dropdown-toggle-area"
+//                 onClick={handleDropdownToggle}
+//                 style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+//               >
+//                 <span className="wn-category-text">{selectedCategory}</span>
+//                 <span className={`wn-dropdown-arrow ${showCategories ? "open" : ""}`} />
+//               </div>
+
+//               {showCategories && (
+//                 <div className="wn-category-menu">
+//                   <div
+//                     className="wn-category-item"
+//                     onClick={() => handleCategorySelect("All")}
+//                   >
+//                     <span>All Categories</span>
+//                   </div>
+
+//                   {categories.map((cat) => (
+//                     <div
+//                       key={cat.category_id}
+//                       className="wn-category-item"
+//                       onClick={() => handleCategorySelect(cat.name)}
+//                     >
+//                       <span>{cat.name}</span>
+//                     </div>
+//                   ))}
+//                 </div>
+//               )}
+//             </div>
+
+//             <div className="wn-search-divider" />
+
+//             <input
+//               type="text"
+//               placeholder="What are you looking for?"
+//             />
+
+//             <span className="wn-search-icon">🔍</span>
+//           </div>
+//         </div>
+
+//         <div className="wn-nav-right">
+
+          
+//           {/* <LoginButtonExternal />
+//           <SignupButtonExternal /> */}
+//           <div className="wn-cart">🛒 Cart</div>
+//         </div>
+//       </header>
+
+//       {/* OVERLAY */}
+//       {open && <div className="wn-overlay" onClick={() => setOpen(false)} />}
+
+//       {/* SIDEBAR - UPDATED WITH YOUR MENU ITEMS */}
+//       <aside className={`wn-sidebar ${open ? "open" : ""}`}>
+//         {/* Header */}
+//         <div className="wn-sidebar-header">
+//           <div className="wn-logo">
+//             <img 
+//               src={logoImage} 
+//               alt="Shriraj Logo" 
+//               className="wn-logo-img"
+//             />
+//           </div>
+//           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
+//         </div>
+
+//         <div className="wn-divider" />
+
+//         {/* Navigation Items */}
+//         <div className="wn-nav-section">
+//           <div className="wn-section-title">Client Menu</div> {/* Changed from "Admin Menu" to "Client Menu" */}
+//           <ul className="wn-menu-list">
+//             {menuItems.map((item, index) => (
+//               <React.Fragment key={item.name || item.path}>
+//                 {/* Check if item has submenu */}
+//                 {item.subMenu ? (
+//                   <li className="wn-menu-item-with-submenu">
+//                     <div 
+//                       className="wn-menu-header"
+//                       onClick={() => toggleSubMenu(item.name)}
+//                     >
+//                       <span className="wn-sidebar-icon">{item.icon}</span>
+//                       <span className="wn-sidebar-text">{item.name}</span>
+//                       <span className="wn-menu-arrow">
+//                         {expandedMenu === item.name ? <FaCaretDown /> : <FaCaretRight />}
+//                       </span>
+//                     </div>
+                    
+//                     {/* Submenu items */}
+//                     {expandedMenu === item.name && (
+//                       <ul className="wn-submenu">
+//                         {item.subMenu.map((subItem, subIndex) => (
+//                           <li key={`${subItem.name}-${subIndex}`}>
+//                             <Link 
+//                               to={subItem.path} 
+//                               className="wn-submenu-link"
+//                               onClick={() => setOpen(false)}
+//                             >
+//                               <span className="wn-submenu-icon">
+//                                 {subItem.icon || <FaStar />}
+//                               </span>
+//                               <span className="wn-submenu-text">{subItem.name}</span>
+//                             </Link>
+//                           </li>
+//                         ))}
+//                       </ul>
+//                     )}
+//                   </li>
+//                 ) : (
+//                   // Regular menu item without submenu
+//                   <li>
+//                     <Link 
+//                       to={item.path} 
+//                       className="wn-sidebar-link"
+//                       onClick={() => setOpen(false)}
+//                     >
+//                       <span className="wn-sidebar-icon">{item.icon}</span>
+//                       <span className="wn-sidebar-text">{item.name}</span>
+//                     </Link>
+//                   </li>
+//                 )}
+//               </React.Fragment>
+//             ))}
+//           </ul>
+//         </div>
+
+//         <div className="wn-divider" />
+
+//         {/* Logout Button */}
+//         <div className="wn-logout-section">
+//           <button 
+//             className="wn-logout-btn"
+//             onClick={handleLogout}
+//           >
+//             <span className="wn-logout-icon">🚪</span>
+//             <span className="wn-logout-text">Logout</span>
+//           </button>
+//         </div>
+//       </aside>
+//     </>
+//   );
+// };
+
+// export default ClientNavbar;
+
+
+
+
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import "./Client_Navbar.css";
 import logoImage from "../../Logos/logo1.png";
 import { Link } from "react-router-dom";
@@ -7,15 +293,36 @@ import { Link } from "react-router-dom";
 // Import FontAwesome icons
 import { 
   FaTachometerAlt, 
+  FaHome, 
+  FaBuilding, 
   FaUsers, 
-  FaUserTie, 
   FaClipboardList, 
-  FaStar,
+  FaCogs,
+  FaCalendarAlt,
+  FaChartLine,
+  FaBriefcase,
+  FaFileAlt,
+  FaTag,
+  FaUserCircle,
+  FaSignOutAlt,
   FaCaretDown,
-  FaCaretRight
+  FaCaretRight,
+  FaMoneyBillWave,
+  FaHandHoldingUsd,
+  FaCreditCard,
+  FaLayerGroup,
+  FaGraduationCap,
+  FaQuestionCircle,
+  FaExchangeAlt,
+  FaDatabase,
+  FaSitemap,
+  FaEye,
+  FaRobot,
+  FaUserTie,
+  FaStar
 } from "react-icons/fa";
 
-const WebsiteNavbar = () => {
+const ClientNavbar = () => {
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [showCategories, setShowCategories] = useState(false);
@@ -26,22 +333,19 @@ const WebsiteNavbar = () => {
   const loginUrl = "/login";
   const signupUrl = "/register";
   
-  // Initialize navigate hook
   const navigate = useNavigate();
 
-  // Define your navigation items
+  // Define your navigation items with appropriate icons
   const menuItems = [
-    { path: "/Client-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
-    { path: "/Client-add-property", name: "Add Property", icon: <FaUsers /> },
-    { path: "/Client-my-properties", name: "My Properties", icon: <FaUserTie /> },
-    { path: "/Client-Properties", name: "Properties", icon: <FaClipboardList /> },
-    { path: "/Client-Business", name: "Business", icon: <FaClipboardList /> },
-  
-    { path: "/Client-Meetings", name: "Meetings", icon: <FaClipboardList /> },
-    { path: "/Client-Transactions", name: "Transactions", icon: <FaClipboardList /> },
-    { path: "/Client-Plans", name: "Plans", icon: <FaClipboardList /> },
-
-    { path: "/Client-Profile", name: "Profile", icon: <FaClipboardList /> },
+    { path: "/client-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
+    { path: "/client-add-property-form", name: "Add Property", icon: <FaHome /> },
+    { path: "/client-properties", name: "Properties", icon: <FaBuilding /> },
+    { path: "/client-my-properties", name: "My Properties", icon: <FaClipboardList /> },
+    { path: "/client-business", name: "Business", icon: <FaBriefcase /> },
+    { path: "/client-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
+    { path: "/client-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
+    { path: "/client-plans", name: "Plans", icon: <FaCreditCard /> },
+    { path: "/client-profile", name: "Profile", icon: <FaUserCircle /> },
   ];
 
   // Close dropdown when clicking outside
@@ -71,7 +375,6 @@ const WebsiteNavbar = () => {
     setShowCategories(false);
   };
 
-  // Toggle submenu expansion
   const toggleSubMenu = (menuName) => {
     if (expandedMenu === menuName) {
       setExpandedMenu(null);
@@ -80,27 +383,16 @@ const WebsiteNavbar = () => {
     }
   };
 
-  // Logout function - UPDATED with navigation
   const handleLogout = () => {
-    // Add your logout logic here
-    console.log("User logged out");
-    
-    // Clear client authentication data
-    localStorage.removeItem("clientToken");
+    console.log("Client logged out");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userRole");
     localStorage.removeItem("clientData");
-    localStorage.removeItem("clientProperties");
-    
-    // Clear session storage
     sessionStorage.clear();
-    
-    // Close sidebar after logout
     setOpen(false);
-    
-    // Navigate to homepage
     navigate("/");
   };
 
-  // Login/Signup buttons
   const LoginButtonExternal = () => (
     <a href={loginUrl} className="wn-login-btn-link">
       <button className="wn-login-btn">Login</button>
@@ -126,7 +418,6 @@ const WebsiteNavbar = () => {
               className="wn-logo-img"
             />
           </div>
-          <button className="wn-location-btn">📍 Select Location</button>
         </div>
 
         {/* SEARCH */}
@@ -176,8 +467,6 @@ const WebsiteNavbar = () => {
         </div>
 
         <div className="wn-nav-right">
-
-          
           {/* <LoginButtonExternal />
           <SignupButtonExternal /> */}
           <div className="wn-cart">🛒 Cart</div>
@@ -187,7 +476,7 @@ const WebsiteNavbar = () => {
       {/* OVERLAY */}
       {open && <div className="wn-overlay" onClick={() => setOpen(false)} />}
 
-      {/* SIDEBAR - UPDATED WITH YOUR MENU ITEMS */}
+      {/* SIDEBAR - UPDATED WITH BETTER UI */}
       <aside className={`wn-sidebar ${open ? "open" : ""}`}>
         {/* Header */}
         <div className="wn-sidebar-header">
@@ -201,11 +490,22 @@ const WebsiteNavbar = () => {
           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
         </div>
 
+        {/* User Info Section (Optional - Add if you have user data) */}
+        {/* <div className="wn-user-info">
+          <div className="wn-user-avatar">
+            <FaUserCircle size={42} color="#1e40af" />
+          </div>
+          <div className="wn-user-details">
+            <h4 className="wn-user-name">Client User</h4>
+            <p className="wn-user-role">Client</p>
+          </div>
+        </div> */}
+
         <div className="wn-divider" />
 
         {/* Navigation Items */}
         <div className="wn-nav-section">
-          <div className="wn-section-title">Client Menu</div> {/* Changed from "Admin Menu" to "Client Menu" */}
+          <div className="wn-section-title">Client Menu</div>
           <ul className="wn-menu-list">
             {menuItems.map((item, index) => (
               <React.Fragment key={item.name || item.path}>
@@ -217,7 +517,7 @@ const WebsiteNavbar = () => {
                       onClick={() => toggleSubMenu(item.name)}
                     >
                       <span className="wn-sidebar-icon">{item.icon}</span>
-                      <span className="wn-sidebar-text">{item.name}</span>
+                      <span className="wn-sidebar-text" style={{ marginLeft: "10px" }}>{item.name}</span>
                       <span className="wn-menu-arrow">
                         {expandedMenu === item.name ? <FaCaretDown /> : <FaCaretRight />}
                       </span>
@@ -234,9 +534,9 @@ const WebsiteNavbar = () => {
                               onClick={() => setOpen(false)}
                             >
                               <span className="wn-submenu-icon">
-                                {subItem.icon || <FaStar />}
+                                {subItem.icon || <FaCogs />}
                               </span>
-                              <span className="wn-submenu-text">{subItem.name}</span>
+                              <span className="wn-submenu-text" style={{ marginLeft: "10px" }}>{subItem.name}</span>
                             </Link>
                           </li>
                         ))}
@@ -252,7 +552,7 @@ const WebsiteNavbar = () => {
                       onClick={() => setOpen(false)}
                     >
                       <span className="wn-sidebar-icon">{item.icon}</span>
-                      <span className="wn-sidebar-text">{item.name}</span>
+                      <span className="wn-sidebar-text" style={{ marginLeft: "10px" }}>{item.name}</span>
                     </Link>
                   </li>
                 )}
@@ -263,13 +563,15 @@ const WebsiteNavbar = () => {
 
         <div className="wn-divider" />
 
-        {/* Logout Button */}
+        {/* Logout Button - Updated with better icon */}
         <div className="wn-logout-section">
           <button 
             className="wn-logout-btn"
             onClick={handleLogout}
           >
-            <span className="wn-logout-icon">🚪</span>
+            <span className="wn-logout-icon">
+              <FaSignOutAlt />
+            </span>
             <span className="wn-logout-text">Logout</span>
           </button>
         </div>
@@ -278,4 +580,4 @@ const WebsiteNavbar = () => {
   );
 };
 
-export default WebsiteNavbar;
+export default ClientNavbar;

@@ -34,7 +34,7 @@ import {
   FaRobot
 } from "react-icons/fa";
 
-const WebsiteNavbar = () => {
+const AdminNavbar = () => {
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [showCategories, setShowCategories] = useState(false);
@@ -49,9 +49,9 @@ const WebsiteNavbar = () => {
 
   // Define your navigation items with appropriate icons
   const menuItems = [
-    { path: "/a-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
-    { path: "/add-property", name: "Add Property", icon: <FaHome /> },
-    { path: "/a-properties", name: "Properties", icon: <FaBuilding /> },
+    { path: "/admin-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
+    { path: "/admin-add-property", name: "Add Property", icon: <FaHome /> },
+    { path: "/admin-properties", name: "Properties", icon: <FaBuilding /> },
     { path: "/a-users", name: "Users", icon: <FaUsers /> },
     {
       name: "Operations",
@@ -312,4 +312,4 @@ const WebsiteNavbar = () => {
   );
 };
 
-export default WebsiteNavbar;
+export default AdminNavbar;

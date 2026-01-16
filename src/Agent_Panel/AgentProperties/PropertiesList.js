@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./PropertiesList.css";
-import WebsiteNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
+import WebsiteNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
