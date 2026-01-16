@@ -58,6 +58,8 @@ import TableCategory from "./Admin_Panel/TableCategory/TableCategory";
 import PropertyCategoryform from "./Admin_Panel/TableCategory/PropertyCategoryform";
 import Category from "./Admin_Panel/TableCategory/Category";
 import EditCategory from "./../src/Admin_Panel/TableCategory/EditCategory";
+import Departments from "./../src/Admin_Panel/Departments/Departments";
+import AddDepartments from "./../src/Admin_Panel/Departments/AddDepartments";
 
 function App() {
   return (
@@ -120,6 +122,8 @@ function App() {
         <Route path="/propertycategoryform" element={<PropertyCategoryform />} />
         <Route path="/a-category" element={<Category />} />
          <Route path="/editcategory/:id" element={<EditCategory />} />
+          <Route path="/a-departments" element={<Departments />} />
+          <Route path="/adddepartment" element={<AddDepartments />} />
      
         {/* Agent-panel */}
 
