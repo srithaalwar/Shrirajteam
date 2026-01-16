@@ -2033,7 +2033,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
         </div>
         
         {/* Verification Status Section */}
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <div className="d-flex align-items-center justify-content-between mb-2">
             <span className="small fw-semibold">Verification Status:</span>
             <span className={`badge ${getVerificationBadgeColor(verificationStatus)} small`}>
@@ -2061,7 +2061,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
               </span>
             )}
           </div>
-        </div>
+        </div> */}
         
         <div className="d-flex align-items-center gap-2 mt-auto">
           <span className="h5 fw-bold text-dark">
@@ -2073,8 +2073,8 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
         </div>
 
         {/* Action Buttons */}
-        <div className="d-flex gap-2 mt-2">
-          {/* EDIT BUTTON */}
+        {/* <div className="d-flex gap-2 mt-2">
+        
           <button
             onClick={handleEditProperty}
             className="btn fw-semibold py-2 flex-fill d-flex align-items-center justify-content-center gap-1"
@@ -2088,7 +2088,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
             <span>Edit</span>
           </button>
           
-          {/* DELETE BUTTON */}
+          
           <button
             onClick={handleDeleteProperty}
             disabled={isDeleting}
@@ -2113,7 +2113,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
               </>
             )}
           </button>
-        </div>
+        </div> */}
       
         <button 
           className="btn w-100 fw-semibold py-2 mt-2"

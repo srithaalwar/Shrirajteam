@@ -180,7 +180,7 @@ const Login = () => {
   };
 
   const navigateToDashboard = (role) => {
-    if (role === "Admin") navigate("/a-dashboard");
+    if (role === "Admin") navigate("/admin-dashboard");
     else if (role === "Agent") navigate("/agent-dashboard");
     else if (role === "Client") navigate("/Client-dashboard");
     else if (role === "Super Admin") navigate("/s-dashboard");
