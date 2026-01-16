@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import WebsiteNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar"; 
+import WebsiteNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const EditMyProperty = () => { // Changed component name for clarity
+const PropertyEditForm = () => {
   const { property_id } = useParams();
   const navigate = useNavigate();
 
@@ -31,17 +31,22 @@ const EditMyProperty = () => { // Changed component name for clarity
     facing: "",
     listing_days: "",
     amenities: [],
-    looking_to: "", // Added missing field
-    number_of_bedrooms: "", // Added missing field
-    rent_amount: "", // Added missing field
-    deposit_amount: "", // Added missing field
   });
 
   const [amenities, setAmenities] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
+  const [existingVideos, setExistingVideos] = useState([]);
+  const [existingFiles, setExistingFiles] = useState([]);
+  const [existingAgreementVideo, setExistingAgreementVideo] = useState("");
+  const [existingAgreementFile, setExistingAgreementFile] = useState("");
+  
   const [newImages, setNewImages] = useState([]);
+  const [newVideos, setNewVideos] = useState([]);
+  const [newFiles, setNewFiles] = useState([]);
+  const [newAgreementVideo, setNewAgreementVideo] = useState(null);
+  const [newAgreementFile, setNewAgreementFile] = useState(null);
+  
   const [loading, setLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   /* ================= FETCH AMENITIES ================= */
   useEffect(() => {
@@ -80,19 +85,18 @@ const EditMyProperty = () => { // Changed component name for clarity
           owner_email: data.owner_email || "",
           facing: data.facing || "",
           listing_days: data.listing_days || "",
-          looking_to: data.looking_to || "",
-          number_of_bedrooms: data.number_of_bedrooms || "",
-          rent_amount: data.rent_amount || "",
-          deposit_amount: data.deposit_amount || "",
           amenities: Array.isArray(data.amenities)
             ? data.amenities.map(a => a.amenity_id || a)
             : [],
         });
 
         setExistingImages(Array.isArray(data.images) ? data.images : []);
+        setExistingVideos(Array.isArray(data.videos) ? data.videos : []);
+        setExistingFiles(Array.isArray(data.files) ? data.files : []);
+        setExistingAgreementVideo(data.agreement_video || "");
+        setExistingAgreementFile(data.agreement_file || "");
       } catch (err) {
         console.error("Failed to load property", err);
-        Swal.fire("Error", "Failed to load property details", "error");
       } finally {
         setLoading(false);
       }
@@ -103,54 +107,22 @@ const EditMyProperty = () => { // Changed component name for clarity
 
   /* ================= INPUT CHANGE ================= */
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-
-    if (type === 'checkbox') {
-      // Handle checkboxes
-      setFormData(prev => ({
-        ...prev,
-        [name]: checked
-      }));
-    } else if (name === "property_value" || name === "agent_commission" || name === "company_commission") {
-      // Handle commission calculations
-      const propertyValue = name === "property_value" ? parseFloat(value || 0) : parseFloat(formData.property_value || 0);
-      const agentCommission = name === "agent_commission" ? parseFloat(value || 0) : parseFloat(formData.agent_commission || 0);
-      const companyCommission = name === "company_commission" ? parseFloat(value || 0) : parseFloat(formData.company_commission || 0);
-      const distributionCommission = parseFloat(formData.distribution_commission || 0);
-      
-      setFormData(prev => ({
-        ...prev,
-        [name]: value,
-        total_property_value: propertyValue + agentCommission + companyCommission + distributionCommission,
-      }));
-    } else if (name === "distribution_commission") {
-      // Handle distribution commission separately
-      const distributionCommission = parseFloat(value || 0);
-      const propertyValue = parseFloat(formData.property_value || 0);
-      const agentCommission = parseFloat(formData.agent_commission || 0);
-      const companyCommission = parseFloat(formData.company_commission || 0);
-      
-      setFormData(prev => ({
-        ...prev,
-        [name]: value,
-        total_property_value: propertyValue + agentCommission + companyCommission + distributionCommission,
-      }));
-    } else {
-      // Handle all other fields
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
-  };
-
-  /* ================= SELECT CHANGE ================= */
-  const handleSelectChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+
+    setFormData(prev => {
+      const propertyValue =
+        name === "property_value" ? parseFloat(value || 0) : parseFloat(prev.property_value || 0);
+      const agent =
+        name === "agent_commission" ? parseFloat(value || 0) : parseFloat(prev.agent_commission || 0);
+      const company =
+        name === "company_commission" ? parseFloat(value || 0) : parseFloat(prev.company_commission || 0);
+
+      return {
+        ...prev,
+        [name]: value,
+        total_property_value: propertyValue + agent + company,
+      };
+    });
   };
 
   /* ================= AMENITY TOGGLE ================= */
@@ -163,158 +135,92 @@ const EditMyProperty = () => { // Changed component name for clarity
     }));
   };
 
-  /* ================= IMAGE UPLOAD ================= */
+  /* ================= FILE UPLOAD HANDLERS ================= */
   const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    setNewImages([...newImages, ...files]);
+    setNewImages([...e.target.files]);
   };
 
-  /* ================= REMOVE EXISTING IMAGE ================= */
-  const removeExistingImage = async (imageId) => {
-    try {
-      const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: "This image will be removed from the property!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, remove it!'
-      });
+  const handleVideoUpload = (e) => {
+    setNewVideos([...e.target.files]);
+  };
 
-      if (result.isConfirmed) {
-        const response = await fetch(`${baseurl}/property-images/${imageId}/`, {
-          method: 'DELETE',
-        });
+  const handleFileUpload = (e) => {
+    setNewFiles([...e.target.files]);
+  };
 
-        if (response.ok) {
-          setExistingImages(prev => prev.filter(img => img.id !== imageId));
-          Swal.fire('Removed!', 'Image has been removed.', 'success');
-        } else {
-          Swal.fire('Error!', 'Failed to remove image.', 'error');
-        }
-      }
-    } catch (error) {
-      console.error('Error removing image:', error);
-      Swal.fire('Error!', 'Failed to remove image.', 'error');
+  const handleAgreementVideoUpload = (e) => {
+    if (e.target.files[0]) {
+      setNewAgreementVideo(e.target.files[0]);
     }
   };
 
-  /* ================= REMOVE NEW IMAGE ================= */
-  const removeNewImage = (index) => {
-    setNewImages(prev => prev.filter((_, i) => i !== index));
+  const handleAgreementFileUpload = (e) => {
+    if (e.target.files[0]) {
+      setNewAgreementFile(e.target.files[0]);
+    }
   };
 
   /* ================= SUBMIT ================= */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Basic validation
-    if (!formData.property_title || !formData.city || !formData.address) {
-      Swal.fire('Error', 'Please fill in all required fields', 'error');
-      return;
-    }
-
-    setIsSubmitting(true);
-
+  const handleSubmit = async () => {
     try {
       const fd = new FormData();
 
-      // Append all form data
       Object.entries(formData).forEach(([key, value]) => {
-        if (key !== "amenities" && key !== "images") {
-          if (value !== null && value !== undefined) {
-            fd.append(key, value);
-          }
-        }
+        if (key !== "amenities") fd.append(key, value);
       });
 
-      // Append amenities
       formData.amenities.forEach(a => fd.append("amenities", a));
       
-      // Append new images
       newImages.forEach(img => fd.append("images", img));
+      newVideos.forEach(video => fd.append("videos", video));
+      newFiles.forEach(file => fd.append("files", file));
+      
+      if (newAgreementVideo) {
+        fd.append("agreement_video", newAgreementVideo);
+      }
+      
+      if (newAgreementFile) {
+        fd.append("agreement_file", newAgreementFile);
+      }
 
       const res = await fetch(`${baseurl}/properties/${property_id}/`, {
         method: "PUT",
         body: fd,
       });
 
-      const responseData = await res.json();
-
       if (res.ok) {
-        Swal.fire({
-          title: "Success!",
-          text: "Property updated successfully",
-          icon: "success",
-          confirmButtonText: "OK"
-        }).then(() => {
-          navigate("/agent-my-properties"); // Navigate back to my properties list
-        });
+        Swal.fire("Success", "Property updated successfully", "success");
+        navigate("/Client-properties");
       } else {
-        console.error("Update failed:", responseData);
-        Swal.fire("Error", `Update failed: ${JSON.stringify(responseData)}`, "error");
+        Swal.fire("Error", "Update failed", "error");
       }
     } catch (err) {
-      console.error("Update error:", err);
-      Swal.fire("Error", "Something went wrong. Please try again.", "error");
-    } finally {
-      setIsSubmitting(false);
+      console.error(err);
+      Swal.fire("Error", "Something went wrong", "error");
     }
   };
 
-  /* ================= CANCEL ================= */
-  const handleCancel = () => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "Any unsaved changes will be lost!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, cancel!',
-      cancelButtonText: 'No, keep editing'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate("/agent-my-properties");
-      }
-    });
-  };
-
-  /* ================= FIELD CONFIG ================= */
-  const basicFields = [
-    { name: "property_title", label: "Property Title", required: true },
-    { name: "description", label: "Description", type: "textarea" },
-    { name: "address", label: "Address", required: true },
-    { name: "city", label: "City", required: true },
-    { name: "state", label: "State" },
-    { name: "country", label: "Country" },
-    { name: "pin_code", label: "PIN Code" },
-  ];
-
-  const propertyDetails = [
-    { name: "area", label: "Area (sq ft)" },
-    { name: "builtup_area", label: "Built-up Area (sq ft)" },
-    { name: "number_of_bedrooms", label: "Bedrooms", type: "select", options: ["", "1", "2", "3", "4", "5+"] },
-    { name: "facing", label: "Facing", type: "select", options: ["", "North", "South", "East", "West", "North-East", "North-West", "South-East", "South-West"] },
-    { name: "listing_days", label: "Listing Days" },
-  ];
-
-  const transactionFields = [
-    { name: "looking_to", label: "Looking To", type: "select", options: ["", "sell", "rent"], required: true },
-    { name: "property_value", label: "Property Value (₹)" },
-    { name: "rent_amount", label: "Rent Amount (₹/month)" },
-    { name: "deposit_amount", label: "Deposit Amount (₹)" },
-    { name: "agent_commission", label: "Agent Commission (₹)" },
-    { name: "company_commission", label: "Company Commission (₹)" },
-    { name: "distribution_commission", label: "Distribution Commission (₹)" },
-    { name: "total_property_value", label: "Total Property Value (₹)", readOnly: true },
-  ];
-
-  const ownerDetails = [
-    { name: "owner_name", label: "Owner Name" },
-    { name: "owner_contact", label: "Owner Contact" },
-    { name: "owner_email", label: "Owner Email" },
+  /* ================= FIELD CONFIG (MATCHES OLD FORM) ================= */
+  const fields = [
+    "property_title",
+    "city",
+    "state",
+    "country",
+    "pin_code",
+    "area",
+    "builtup_area",
+    "owner_name",
+    "owner_contact",
+    "owner_email",
+    "address",
+    "facing",
+    "property_value",
+    "agent_commission",
+    "company_commission",
+    "distribution_commission",
+    "total_property_value",
+    "description",
+    "listing_days",
   ];
 
   if (loading) {
@@ -322,10 +228,8 @@ const EditMyProperty = () => { // Changed component name for clarity
       <>
         <WebsiteNavbar />
         <div className="container py-5 text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-          <p className="mt-3">Loading property details...</p>
+          <div className="spinner-border text-primary" />
+          <p className="mt-3">Loading property...</p>
         </div>
       </>
     );
@@ -337,263 +241,166 @@ const EditMyProperty = () => { // Changed component name for clarity
 
       <div className="container py-4">
         <div className="d-flex align-items-center mb-4">
-          <button 
-            className="btn btn-outline-secondary me-3" 
-            onClick={() => navigate("/agent-my-properties")}
-          >
-            ← Back to My Properties
+          <button className="btn btn-outline-secondary" onClick={() => navigate(-1)}>
+            ← Back
           </button>
-          <h4 className="mx-auto fw-bold">Edit My Property</h4>
+          <h4 className="mx-auto fw-bold">Edit Property</h4>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => e.preventDefault()}>
           <div className="row g-3">
-            
-            {/* BASIC INFORMATION */}
-            <div className="col-12">
-              <h5 className="fw-bold border-bottom pb-2 mb-3">Basic Information</h5>
-            </div>
-            {basicFields.map((field) => (
-              <div className="col-md-4" key={field.name}>
-                <label className="form-label fw-semibold">
-                  {field.label} {field.required && <span className="text-danger">*</span>}
+
+            {/* FORM FIELDS */}
+            {fields.map((field) => (
+              <div className="col-md-4" key={field}>
+                <label className="form-label text-capitalize">
+                  {field.replaceAll("_", " ")}
                 </label>
-                {field.type === "textarea" ? (
-                  <textarea
-                    className="form-control"
-                    name={field.name}
-                    value={formData[field.name] || ""}
-                    onChange={handleChange}
-                    rows="3"
-                  />
-                ) : (
-                  <input
-                    className="form-control"
-                    name={field.name}
-                    value={formData[field.name] || ""}
-                    onChange={handleChange}
-                    required={field.required}
-                  />
-                )}
-              </div>
-            ))}
-
-            {/* PROPERTY DETAILS */}
-            <div className="col-12 mt-4">
-              <h5 className="fw-bold border-bottom pb-2 mb-3">Property Details</h5>
-            </div>
-            {propertyDetails.map((field) => (
-              <div className="col-md-4" key={field.name}>
-                <label className="form-label fw-semibold">{field.label}</label>
-                {field.type === "select" ? (
-                  <select
-                    className="form-control"
-                    name={field.name}
-                    value={formData[field.name] || ""}
-                    onChange={handleSelectChange}
-                  >
-                    {field.options.map(option => (
-                      <option key={option} value={option}>
-                        {option === "" ? `Select ${field.label}` : option}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    className="form-control"
-                    name={field.name}
-                    value={formData[field.name] || ""}
-                    onChange={handleChange}
-                  />
-                )}
-              </div>
-            ))}
-
-            {/* TRANSACTION DETAILS */}
-            <div className="col-12 mt-4">
-              <h5 className="fw-bold border-bottom pb-2 mb-3">Transaction Details</h5>
-            </div>
-            {transactionFields.map((field) => (
-              <div className="col-md-4" key={field.name}>
-                <label className="form-label fw-semibold">
-                  {field.label} {field.required && <span className="text-danger">*</span>}
-                </label>
-                {field.type === "select" ? (
-                  <select
-                    className="form-control"
-                    name={field.name}
-                    value={formData[field.name] || ""}
-                    onChange={handleSelectChange}
-                    required={field.required}
-                  >
-                    {field.options.map(option => (
-                      <option key={option} value={option}>
-                        {option === "" ? `Select ${field.label}` : option}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    className="form-control"
-                    name={field.name}
-                    value={formData[field.name] || ""}
-                    onChange={handleChange}
-                    readOnly={field.readOnly}
-                    required={field.required}
-                  />
-                )}
-              </div>
-            ))}
-
-            {/* OWNER DETAILS */}
-            <div className="col-12 mt-4">
-              <h5 className="fw-bold border-bottom pb-2 mb-3">Owner Details</h5>
-            </div>
-            {ownerDetails.map((field) => (
-              <div className="col-md-4" key={field.name}>
-                <label className="form-label fw-semibold">{field.label}</label>
                 <input
                   className="form-control"
-                  name={field.name}
-                  value={formData[field.name] || ""}
+                  name={field}
+                  value={formData[field] || ""}
                   onChange={handleChange}
                 />
               </div>
             ))}
 
             {/* AMENITIES */}
-            <div className="col-12 mt-4">
-              <h5 className="fw-bold border-bottom pb-2 mb-3">Amenities</h5>
+            <div className="col-12">
+              <h6 className="fw-semibold mt-3">Amenities</h6>
               <div className="row">
-                {amenities.length > 0 ? (
-                  amenities.map(a => (
-                    <div className="col-md-3 mb-2" key={a.amenity_id}>
-                      <div className="form-check">
-                        <input
-                          type="checkbox"
-                          className="form-check-input"
-                          id={`amenity-${a.amenity_id}`}
-                          checked={formData.amenities.includes(a.amenity_id)}
-                          onChange={() => toggleAmenity(a.amenity_id)}
-                        />
-                        <label className="form-check-label" htmlFor={`amenity-${a.amenity_id}`}>
-                          {a.name}
-                        </label>
-                      </div>
+                {amenities.map(a => (
+                  <div className="col-md-3" key={a.amenity_id}>
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        checked={formData.amenities.includes(a.amenity_id)}
+                        onChange={() => toggleAmenity(a.amenity_id)}
+                      />
+                      <label className="form-check-label">{a.name}</label>
                     </div>
-                  ))
-                ) : (
-                  <div className="col-12">
-                    <p className="text-muted">No amenities available</p>
                   </div>
-                )}
+                ))}
               </div>
             </div>
 
             {/* IMAGES */}
-            <div className="col-12 mt-4">
-              <h5 className="fw-bold border-bottom pb-2 mb-3">Property Images</h5>
-              
-              <div className="mb-3">
-                <label className="form-label fw-semibold">Add New Images</label>
-                <input 
-                  type="file" 
-                  multiple 
-                  className="form-control" 
-                  onChange={handleImageUpload}
-                  accept="image/*"
-                />
-                <small className="text-muted">You can select multiple images</small>
+            <div className="col-12">
+              <h6 className="fw-semibold mt-3">Property Images</h6>
+              <input type="file" multiple className="form-control" onChange={handleImageUpload} accept="image/*" />
+
+              <div className="d-flex gap-2 mt-2 flex-wrap">
+                {existingImages.map((img, i) => (
+                  <img
+                    key={i}
+                    src={`${baseurl}${img.image}`}
+                    alt=""
+                    style={{
+                      width: 80,
+                      height: 80,
+                      objectFit: "cover",
+                      borderRadius: 6,
+                    }}
+                  />
+                ))}
               </div>
-
-              {/* Existing Images */}
-              {existingImages.length > 0 && (
-                <div className="mb-4">
-                  <h6 className="fw-semibold">Existing Images</h6>
-                  <div className="d-flex gap-2 mt-2 flex-wrap">
-                    {existingImages.map((img, i) => (
-                      <div key={i} className="position-relative">
-                        <img
-                          src={img.image.startsWith('http') ? img.image : `${baseurl}${img.image}`}
-                          alt={`Property ${i + 1}`}
-                          style={{
-                            width: 100,
-                            height: 100,
-                            objectFit: "cover",
-                            borderRadius: 6,
-                          }}
-                          className="border"
-                        />
-                        <button
-                          type="button"
-                          className="btn btn-danger btn-sm position-absolute top-0 end-0"
-                          style={{ transform: 'translate(30%, -30%)' }}
-                          onClick={() => removeExistingImage(img.id)}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* New Images Preview */}
-              {newImages.length > 0 && (
-                <div className="mb-4">
-                  <h6 className="fw-semibold">New Images to Upload</h6>
-                  <div className="d-flex gap-2 mt-2 flex-wrap">
-                    {newImages.map((img, i) => (
-                      <div key={i} className="position-relative">
-                        <img
-                          src={URL.createObjectURL(img)}
-                          alt={`New ${i + 1}`}
-                          style={{
-                            width: 100,
-                            height: 100,
-                            objectFit: "cover",
-                            borderRadius: 6,
-                          }}
-                          className="border"
-                        />
-                        <button
-                          type="button"
-                          className="btn btn-danger btn-sm position-absolute top-0 end-0"
-                          style={{ transform: 'translate(30%, -30%)' }}
-                          onClick={() => removeNewImage(i)}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
-            {/* ACTION BUTTONS */}
-            <div className="col-12 text-center mt-5">
+            {/* VIDEOS */}
+            <div className="col-12">
+              <h6 className="fw-semibold mt-3">Property Videos</h6>
+              <input type="file" multiple className="form-control" onChange={handleVideoUpload} accept="video/*" />
+
+              <div className="d-flex gap-2 mt-2 flex-wrap">
+                {existingVideos.map((video, i) => (
+                  <div key={i} className="card p-2">
+                    <small className="text-muted">Video {i + 1}</small>
+                    <a 
+                      href={`${baseurl}${video.video}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary"
+                    >
+                      View Video
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* FILES */}
+            <div className="col-12">
+              <h6 className="fw-semibold mt-3">Property Files</h6>
+              <input type="file" multiple className="form-control" onChange={handleFileUpload} accept=".pdf,.doc,.docx,.xls,.xlsx" />
+
+              <div className="d-flex gap-2 mt-2 flex-wrap">
+                {existingFiles.map((file, i) => (
+                  <div key={i} className="card p-2">
+                    <small className="text-muted">File {i + 1}</small>
+                    <a 
+                      href={`${baseurl}${file.file}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary"
+                    >
+                      View/Download File
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* AGREEMENT VIDEO */}
+            {/* <div className="col-12">
+              <h6 className="fw-semibold mt-3">Agreement Video</h6>
+              <input type="file" className="form-control" onChange={handleAgreementVideoUpload} accept="video/*" />
+
+              <div className="d-flex gap-2 mt-2 flex-wrap">
+                {existingAgreementVideo && (
+                  <div className="card p-2">
+                    <a 
+                      href={`${baseurl}${existingAgreementVideo}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary"
+                    >
+                      View Agreement Video
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div> */}
+
+            {/* AGREEMENT FILE */}
+            {/* <div className="col-12">
+              <h6 className="fw-semibold mt-3">Agreement File</h6>
+              <input type="file" className="form-control" onChange={handleAgreementFileUpload} accept=".pdf,.doc,.docx" />
+
+              <div className="d-flex gap-2 mt-2 flex-wrap">
+                {existingAgreementFile && (
+                  <div className="card p-2">
+                    <a 
+                      href={`${baseurl}${existingAgreementFile}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary"
+                    >
+                      View/Download Agreement File
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div> */}
+
+            {/* SUBMIT */}
+            <div className="col-12 text-center mt-4">
               <button
                 type="button"
-                className="btn btn-outline-danger px-4 py-2 fw-semibold me-3"
-                onClick={handleCancel}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
                 className="btn btn-success px-5 py-2 fw-semibold"
-                disabled={isSubmitting}
+                onClick={handleSubmit}
               >
-                {isSubmitting ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    Updating...
-                  </>
-                ) : (
-                  'Update Property'
-                )}
+                Update Property
               </button>
             </div>
 
@@ -604,4 +411,4 @@ const EditMyProperty = () => { // Changed component name for clarity
   );
 };
 
-export default EditMyProperty;
+export default PropertyEditForm;

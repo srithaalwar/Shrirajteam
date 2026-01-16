@@ -202,7 +202,7 @@ const PartnerProfile = () => {
             <div className="profile-actions">
               <button 
                 className="profile-close-btn"
-                onClick={() => navigate("/p-dashboard")}
+                onClick={() => navigate("/agent-dashboard")}
               >
                 Close
               </button>

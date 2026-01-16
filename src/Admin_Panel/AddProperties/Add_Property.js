@@ -1387,7 +1387,7 @@ const AddPropertyForm = ({ user, mode = 'add' }) => {
         text: isEditing ? 'Property Updated Successfully!' : 'Property Added Successfully!',
         confirmButtonColor: '#3085d6',
       });
-      navigate("/p-myassets");
+      navigate("/admin-properties");
 
     } catch (error) {
       console.error('Detailed submission error:', error);
@@ -1437,7 +1437,7 @@ const AddPropertyForm = ({ user, mode = 'add' }) => {
                     <button 
                       type="button" 
                       className="btn btn-secondary me-2"
-                      onClick={() => navigate('/p-myassets')}
+                      onClick={() => navigate('/admin-properties')}
                       disabled={isSubmitting}
                     >
                       Cancel
@@ -1456,7 +1456,7 @@ const AddPropertyForm = ({ user, mode = 'add' }) => {
                   <button 
                     type="button" 
                     className="btn btn-secondary"
-                    onClick={() => navigate('/p-myassets')}
+                    onClick={() => navigate('/admin-properties')}
                   >
                     Back to List
                   </button>
