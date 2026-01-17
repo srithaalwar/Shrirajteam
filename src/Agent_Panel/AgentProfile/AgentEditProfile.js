@@ -219,7 +219,7 @@ const AgentEditProfile = () => {
         text: "Profile updated successfully",
         confirmButtonColor: "#6C63FF",
       }).then(() => {
-        navigate("/p-profile");
+        navigate("/agent-profile");
       });
     } catch (error) {
       console.error("Update failed:", error.response?.data || error.message);
@@ -343,9 +343,9 @@ const AgentEditProfile = () => {
                     className={`form-input form-select ${errors.gender ? 'error' : ''}`}
                   >
                     <option value="">Select Gender</option>
-                    <option value="Female">Female</option>
-                    <option value="Male">Male</option>
-                    <option value="Other">Other</option>
+                    <option value="female">Female</option>
+                    <option value="male">Male</option>
+                    <option value="other">Other</option>
                   </select>
                   {errors.gender && <div className="error-message">{errors.gender}</div>}
                 </div>
@@ -361,10 +361,10 @@ const AgentEditProfile = () => {
                     className={`form-input form-select ${errors.marital_status ? 'error' : ''}`}
                   >
                     <option value="">Select Status</option>
-                    <option value="Single">Single</option>
-                    <option value="Married">Married</option>
-                    <option value="Divorced">Divorced</option>
-                    <option value="Widowed">Widowed</option>
+                    <option value="single">Single</option>
+                    <option value="married">Married</option>
+                    <option value="divorced">Divorced</option>
+                    <option value="widowed">Widowed</option>
                   </select>
                   {errors.marital_status && <div className="error-message">{errors.marital_status}</div>}
                 </div>
