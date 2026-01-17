@@ -363,8 +363,11 @@ const AgentNavbar = () => {
     { path: "/agent-add-property", name: "Add Property", icon: <FaHome /> },
     { path: "/agent-my-properties", name: "My Properties", icon: <FaBuilding /> },
     { path: "/agent-properties", name: "Properties", icon: <FaClipboardList /> },
-    { path: "/agent-business", name: "Business", icon: <FaBriefcase /> },
+    { path: "/agent-add-business-form", name: "Business", icon: <FaBriefcase /> },
     { path: "/agent-my-business", name: "My Business", icon: <FaUserTie /> },
+    { path: "/agent-busineess-category", name: "Products", icon: <FaUserTie /> },
+
+
     {
       name: "Operations",
       icon: <FaCogs />,

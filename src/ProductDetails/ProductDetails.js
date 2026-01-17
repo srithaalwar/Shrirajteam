@@ -303,47 +303,823 @@
 
 
 
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+// import React, { useEffect, useState } from "react";
+// import { useParams } from "react-router-dom";
+// import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
+// import "./ProductDetails.css";
+// import { baseurl } from "../BaseURL/BaseURL";
+// import ShopHeader from "./ProductsDetailsHeader/ProductHeader";
+// const ProductDetails = () => {
+//   const { id } = useParams(); // product_id from URL
+
+//   const [product, setProduct] = useState(null);
+//   const [selectedImage, setSelectedImage] = useState("");
+//   const [qty, setQty] = useState(1);
+//   const [openAbout, setOpenAbout] = useState(false);
+//   const [openDetails, setOpenDetails] = useState(false);
+//   const [loading, setLoading] = useState(true);
+
+//   /* ================= FETCH PRODUCT ================= */
+//   useEffect(() => {
+//     setLoading(true);
+
+//     fetch(`${baseurl}/products/?product_id=${id}`)
+//       .then(res => res.json())
+//       .then(data => {
+//         const prod = data.results?.[0];
+//         setProduct(prod);
+
+//         // Set primary image
+//         if (prod?.media?.length > 0) {
+//           const primary =
+//             prod.media.find(m => m.is_primary) || prod.media[0];
+//           setSelectedImage(`${baseurl}${primary.file}`);
+//         }
+
+//         setLoading(false);
+//       })
+//       .catch(err => {
+//         console.error("Error fetching product:", err);
+//         setLoading(false);
+//       });
+//   }, [id]);
+
+//   if (loading) {
+//     return (
+//       <>
+//         <WebsiteNavbar />
+//         <div className="text-center py-5">Loading product...</div>
+//       </>
+//     );
+//   }
+
+//   if (!product) {
+//     return (
+//       <>
+//         <WebsiteNavbar />
+//         <div className="text-center py-5">Product not found</div>
+//       </>
+//     );
+//   }
+
+//   const variant = product.variants?.[0];
+//   const mrp = parseFloat(variant?.mrp || 0);
+//   const price = parseFloat(variant?.selling_price || 0);
+//   const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+
+//   return (
+//     <>
+//       <WebsiteNavbar />
+
+//       <ShopHeader/>
+
+//       <div className="product-wrapper">
+
+//         {/* Breadcrumb */}
+//         {/* <div className="breadcrumb">
+//           Home / Products / {product.product_name}
+//         </div> */}
+
+//         <div className="product-layout">
+
+//           {/* LEFT – IMAGE SECTION */}
+//           <div className="image-section">
+//             <div className="thumbnail-list">
+//               {product.media?.map((img, index) => (
+//                 <div
+//                   key={index}
+//                   className={`thumb-box ${
+//                     selectedImage === `${baseurl}${img.file}` ? "active" : ""
+//                   }`}
+//                   onClick={() => setSelectedImage(`${baseurl}${img.file}`)}
+//                 >
+//                   <img src={`${baseurl}${img.file}`} alt="thumb" />
+//                 </div>
+//               ))}
+//             </div>
+
+//             <div className="main-image-box">
+//               <img src={selectedImage} alt={product.product_name} />
+//             </div>
+//           </div>
+
+//           {/* MIDDLE – DETAILS */}
+//           <div className="details-section">
+//             <p className="store-link">
+//               Visit the {product.brand || "Store"}
+//             </p>
+
+//             <h1>{product.product_name}</h1>
+
+//             <p className="desc">
+//               {product.description}
+//             </p>
+
+//             <h3>Key Attributes</h3>
+
+//             <div className="attributes">
+//               {product.attributes &&
+//                 Object.entries(product.attributes).map(([key, value]) => (
+//                   <div key={key}>
+//                     <span>{key.replace("_", " ")}</span>
+//                     <span>{value}</span>
+//                   </div>
+//                 ))}
+//             </div>
+//           </div>
+
+//           {/* RIGHT – BUY BOX */}
+//           <div className="buy-box">
+//             <div className="price-row">
+//               <span className="price">₹{price}</span>
+//               {mrp > price && (
+//                 <>
+//                   <span className="mrp">₹{mrp}</span>
+//                   <span className="off">{discount}%</span>
+//                 </>
+//               )}
+//             </div>
+
+//             <p className="unit">1 unit</p>
+
+//             <div className="qty">
+//               <button onClick={() => setQty(qty - 1)} disabled={qty === 1}>
+//                 −
+//               </button>
+//               <span>{qty}</span>
+//               <button
+//                 onClick={() => setQty(qty + 1)}
+//                 disabled={qty >= variant?.stock}
+//               >
+//                 +
+//               </button>
+//             </div>
+
+//             <button className="cart-btn">ADD TO CART</button>
+
+//             <p className="secure">
+//               Stock Available: {variant?.stock || 0}
+//             </p>
+//           </div>
+//         </div>
+
+//         {/* ================= ABOUT & DETAILS ================= */}
+//         <div className="product-info-row">
+
+//           {/* ABOUT PRODUCT */}
+//           <div className="info-accordion">
+//             <div
+//               className="info-header"
+//               onClick={() => setOpenAbout(!openAbout)}
+//             >
+//               <h3>About Product</h3>
+//               <span className={`arrow ${openAbout ? "open" : ""}`}>⌃</span>
+//             </div>
+
+//             {openAbout && (
+//               <div className="info-body">
+//                 <p>{product.description}</p>
+//               </div>
+//             )}
+//           </div>
+
+//           {/* PRODUCT DETAILS */}
+//           <div className="info-accordion">
+//             <div
+//               className="info-header"
+//               onClick={() => setOpenDetails(!openDetails)}
+//             >
+//               <h3>Product details</h3>
+//               <span className={`arrow ${openDetails ? "open" : ""}`}>⌃</span>
+//             </div>
+
+//             {openDetails && (
+//               <div className="info-body">
+//                 <table className="product-details-table">
+//                   <tbody>
+//                     {variant &&
+//                       Object.entries(variant.attributes || {}).map(
+//                         ([key, value]) => (
+//                           <tr key={key}>
+//                             <td>{key}</td>
+//                             <td>{value}</td>
+//                           </tr>
+//                         )
+//                       )}
+//                   </tbody>
+//                 </table>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default ProductDetails;
+
+
+
+
+// import React, { useEffect, useState, useMemo } from "react";
+// import { useParams, useSearchParams } from "react-router-dom";
+// import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
+// import "./ProductDetails.css";
+// import { baseurl } from "../BaseURL/BaseURL";
+// import ShopHeader from "./ProductsDetailsHeader/ProductHeader";
+
+// const ProductDetails = () => {
+//   const { id } = useParams(); // product_id
+//   const [searchParams] = useSearchParams();
+//   const variantId = searchParams.get("variant"); // ✅ GET VARIANT ID
+
+//   const [product, setProduct] = useState(null);
+//   const [selectedVariant, setSelectedVariant] = useState(null);
+//   const [selectedImage, setSelectedImage] = useState("");
+//   const [qty, setQty] = useState(1);
+//   const [openAbout, setOpenAbout] = useState(false);
+//   const [openDetails, setOpenDetails] = useState(false);
+//   const [loading, setLoading] = useState(true);
+
+//   /* ================= FETCH PRODUCT ================= */
+//   useEffect(() => {
+//     setLoading(true);
+
+//     fetch(`${baseurl}/products/?product_id=${id}`)
+//       .then(res => res.json())
+//       .then(data => {
+//         const prod = data.results?.[0];
+//         if (!prod) {
+//           setLoading(false);
+//           return;
+//         }
+
+//         setProduct(prod);
+
+//         // ✅ SELECT VARIANT
+//         let variant =
+//           prod.variants?.find(v => String(v.id) === String(variantId)) ||
+//           prod.variants?.[0] ||
+//           null;
+
+//         setSelectedVariant(variant);
+
+//         // ✅ SET IMAGE (VARIANT → PRODUCT → FALLBACK)
+//         if (variant?.media?.length > 0) {
+//           setSelectedImage(`${baseurl}${variant.media[0].file}`);
+//         } else if (prod.media?.length > 0) {
+//           const primary =
+//             prod.media.find(m => m.is_primary) || prod.media[0];
+//           setSelectedImage(`${baseurl}${primary.file}`);
+//         } else {
+//           setSelectedImage(
+//             "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600"
+//           );
+//         }
+
+//         setLoading(false);
+//       })
+//       .catch(err => {
+//         console.error("Error fetching product:", err);
+//         setLoading(false);
+//       });
+//   }, [id, variantId]);
+
+//   /* ================= PRICING ================= */
+//   const pricing = useMemo(() => {
+//     const mrp = parseFloat(selectedVariant?.mrp || 0);
+//     const price = parseFloat(selectedVariant?.selling_price || 0);
+//     const discount =
+//       mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+
+//     return { mrp, price, discount };
+//   }, [selectedVariant]);
+
+//   if (loading) {
+//     return (
+//       <>
+//         <WebsiteNavbar />
+//         <div className="text-center py-5">Loading product...</div>
+//       </>
+//     );
+//   }
+
+//   if (!product || !selectedVariant) {
+//     return (
+//       <>
+//         <WebsiteNavbar />
+//         <div className="text-center py-5">Product not found</div>
+//       </>
+//     );
+//   }
+
+//   return (
+//     <>
+//       <WebsiteNavbar />
+//       <ShopHeader />
+
+//       <div className="product-wrapper">
+//         <div className="product-layout">
+
+//           {/* ================= LEFT – IMAGE ================= */}
+//           <div className="image-section">
+//             <div className="thumbnail-list">
+//               {(selectedVariant.media?.length > 0
+//                 ? selectedVariant.media
+//                 : product.media || []
+//               ).map((img, index) => (
+//                 <div
+//                   key={index}
+//                   className={`thumb-box ${
+//                     selectedImage === `${baseurl}${img.file}` ? "active" : ""
+//                   }`}
+//                   onClick={() =>
+//                     setSelectedImage(`${baseurl}${img.file}`)
+//                   }
+//                 >
+//                   <img src={`${baseurl}${img.file}`} alt="thumb" />
+//                 </div>
+//               ))}
+//             </div>
+
+//             <div className="main-image-box">
+//               <img src={selectedImage} alt={product.product_name} />
+//             </div>
+//           </div>
+
+//           {/* ================= MIDDLE – DETAILS ================= */}
+//           <div className="details-section">
+//             <p className="store-link">
+//               Visit the {product.brand || "Store"}
+//             </p>
+
+//             <h1>{product.product_name}</h1>
+
+//             <p className="desc">{product.description}</p>
+
+//             {selectedVariant.attributes && (
+//               <>
+//                 <h3>Key Attributes</h3>
+//                 <div className="attributes">
+//                   {Object.entries(selectedVariant.attributes).map(
+//                     ([key, value]) => (
+//                       <div key={key}>
+//                         <span>{key.replace(/_/g, " ")}</span>
+//                         <span>{value}</span>
+//                       </div>
+//                     )
+//                   )}
+//                 </div>
+//               </>
+//             )}
+//           </div>
+
+//           {/* ================= RIGHT – BUY BOX ================= */}
+//           <div className="buy-box">
+//             <div className="price-row">
+//               <span className="price">₹{pricing.price.toFixed(2)}</span>
+//               {pricing.mrp > pricing.price && (
+//                 <>
+//                   <span className="mrp">₹{pricing.mrp.toFixed(2)}</span>
+//                   <span className="off">{pricing.discount}% OFF</span>
+//                 </>
+//               )}
+//             </div>
+
+//             <p className="unit">SKU: {selectedVariant.sku}</p>
+
+//             <div className="qty">
+//               <button onClick={() => setQty(q => q - 1)} disabled={qty === 1}>
+//                 −
+//               </button>
+//               <span>{qty}</span>
+//               <button
+//                 onClick={() => setQty(q => q + 1)}
+//                 disabled={qty >= (selectedVariant.stock || 1)}
+//               >
+//                 +
+//               </button>
+//             </div>
+
+//             <button className="cart-btn">
+//               ADD TO CART
+//             </button>
+
+//             <p className="secure">
+//               Stock Available: {selectedVariant.stock || 0}
+//             </p>
+//           </div>
+//         </div>
+
+//         {/* ================= ABOUT & DETAILS ================= */}
+//         <div className="product-info-row">
+
+//           {/* ABOUT PRODUCT */}
+//           <div className="info-accordion">
+//             <div
+//               className="info-header"
+//               onClick={() => setOpenAbout(!openAbout)}
+//             >
+//               <h3>About Product</h3>
+//               <span className={`arrow ${openAbout ? "open" : ""}`}>⌃</span>
+//             </div>
+
+//             {openAbout && (
+//               <div className="info-body">
+//                 <p>{product.description}</p>
+//               </div>
+//             )}
+//           </div>
+
+//           {/* PRODUCT DETAILS */}
+//           <div className="info-accordion">
+//             <div
+//               className="info-header"
+//               onClick={() => setOpenDetails(!openDetails)}
+//             >
+//               <h3>Product details</h3>
+//               <span className={`arrow ${openDetails ? "open" : ""}`}>⌃</span>
+//             </div>
+
+//             {openDetails && (
+//               <div className="info-body">
+//                 <table className="product-details-table">
+//                   <tbody>
+//                     {Object.entries(
+//                       selectedVariant.attributes || {}
+//                     ).map(([key, value]) => (
+//                       <tr key={key}>
+//                         <td>{key.replace(/_/g, " ")}</td>
+//                         <td>{value}</td>
+//                       </tr>
+//                     ))}
+//                   </tbody>
+//                 </table>
+//               </div>
+//             )}
+//           </div>
+
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default ProductDetails;
+
+
+
+
+
+// import React, { useEffect, useState, useMemo } from "react";
+// import { useParams, useSearchParams } from "react-router-dom";
+// import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
+// import "./ProductDetails.css";
+// import { baseurl } from "../BaseURL/BaseURL";
+// import ShopHeader from "./ProductsDetailsHeader/ProductHeader";
+
+// const ProductDetails = () => {
+//   const { id } = useParams(); // product_id
+//   const [searchParams] = useSearchParams();
+//   const variantId = searchParams.get("variant");
+
+//   const [product, setProduct] = useState(null);
+//   const [selectedVariant, setSelectedVariant] = useState(null);
+//   const [selectedImage, setSelectedImage] = useState("");
+//   const [qty, setQty] = useState(1);
+//   const [openAbout, setOpenAbout] = useState(false);
+//   const [openDetails, setOpenDetails] = useState(false);
+//   const [loading, setLoading] = useState(true);
+
+//   /* ================= FETCH PRODUCT (NEW API) ================= */
+//   useEffect(() => {
+//     if (!id) return;
+
+//     setLoading(true);
+
+//     fetch(`${baseurl}/products/${id}/?variant_id=${variantId || ""}`)
+//       .then(res => res.json())
+//       .then(data => {
+//         if (!data || !data.product_id) {
+//           setLoading(false);
+//           return;
+//         }
+
+//         setProduct(data);
+
+//         // ✅ Select variant (priority: URL → first variant)
+//         const variant =
+//           data.variants?.find(v => String(v.id) === String(variantId)) ||
+//           data.variants?.[0] ||
+//           null;
+
+//         setSelectedVariant(variant);
+
+//         // ✅ Image selection (variant media only)
+//         if (variant?.media?.length > 0) {
+//           setSelectedImage(`${baseurl}${variant.media[0].file}`);
+//         } else {
+//           setSelectedImage(
+//             "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600"
+//           );
+//         }
+
+//         setLoading(false);
+//       })
+//       .catch(err => {
+//         console.error("Product fetch error:", err);
+//         setLoading(false);
+//       });
+//   }, [id, variantId]);
+
+//   /* ================= PRICING ================= */
+//   const pricing = useMemo(() => {
+//     const mrp = parseFloat(selectedVariant?.mrp || 0);
+//     const price = parseFloat(selectedVariant?.selling_price || 0);
+//     const discount =
+//       mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+
+//     return { mrp, price, discount };
+//   }, [selectedVariant]);
+
+//   if (loading) {
+//     return (
+//       <>
+//         <WebsiteNavbar />
+//         <div className="text-center py-5">Loading product...</div>
+//       </>
+//     );
+//   }
+
+//   if (!product || !selectedVariant) {
+//     return (
+//       <>
+//         <WebsiteNavbar />
+//         <div className="text-center py-5">Product not found</div>
+//       </>
+//     );
+//   }
+
+//   return (
+//     <>
+//       <WebsiteNavbar />
+//       <ShopHeader />
+
+//       <div className="product-wrapper">
+//         <div className="product-layout">
+
+//           {/* ================= LEFT – IMAGES ================= */}
+//           <div className="image-section">
+//             <div className="thumbnail-list">
+//               {(selectedVariant.media || []).map((img, index) => (
+//                 <div
+//                   key={index}
+//                   className={`thumb-box ${
+//                     selectedImage === `${baseurl}${img.file}` ? "active" : ""
+//                   }`}
+//                   onClick={() => setSelectedImage(`${baseurl}${img.file}`)}
+//                 >
+//                   <img src={`${baseurl}${img.file}`} alt="thumb" />
+//                 </div>
+//               ))}
+//             </div>
+
+//             <div className="main-image-box">
+//               <img src={selectedImage} alt={product.product_name} />
+//             </div>
+//           </div>
+
+//           {/* ================= MIDDLE – DETAILS ================= */}
+//           <div className="details-section">
+//             <p className="store-link">
+//               Visit the {product.brand || "Store"}
+//             </p>
+
+//             <h1>{product.product_name}</h1>
+
+//             {product.description && (
+//               <p className="desc">{product.description}</p>
+//             )}
+
+//             {/* PRODUCT ATTRIBUTES */}
+//             {product.attributes && (
+//               <>
+//                 <h3>Product Attributes</h3>
+//                 <div className="attributes">
+//                   {Object.entries(product.attributes).map(([k, v]) => (
+//                     <div key={k}>
+//                       <span>{k.replace(/_/g, " ")}</span>
+//                       <span>{v}</span>
+//                     </div>
+//                   ))}
+//                 </div>
+//               </>
+//             )}
+
+//             {/* VARIANT ATTRIBUTES */}
+//             {selectedVariant.attributes && (
+//               <>
+//                 <h3>Variant Details</h3>
+//                 <div className="attributes">
+//                   {Object.entries(selectedVariant.attributes).map(([k, v]) => (
+//                     <div key={k}>
+//                       <span>{k.replace(/_/g, " ")}</span>
+//                       <span>{v}</span>
+//                     </div>
+//                   ))}
+//                 </div>
+//               </>
+//             )}
+//           </div>
+
+//           {/* ================= RIGHT – BUY BOX ================= */}
+//           <div className="buy-box">
+//             <div className="price-row">
+//               <span className="price">₹{pricing.price.toFixed(2)}</span>
+//               {pricing.mrp > pricing.price && (
+//                 <>
+//                   <span className="mrp">₹{pricing.mrp.toFixed(2)}</span>
+//                   <span className="off">{pricing.discount}% OFF</span>
+//                 </>
+//               )}
+//             </div>
+
+//             <p className="unit">SKU: {selectedVariant.sku}</p>
+
+//             <div className="qty">
+//               <button onClick={() => setQty(q => q - 1)} disabled={qty === 1}>
+//                 −
+//               </button>
+//               <span>{qty}</span>
+//               <button
+//                 onClick={() => setQty(q => q + 1)}
+//                 disabled={qty >= selectedVariant.stock}
+//               >
+//                 +
+//               </button>
+//             </div>
+
+//             <button className="cart-btn">ADD TO CART</button>
+
+//             <p className="secure">
+//               Stock Available: {selectedVariant.stock}
+//             </p>
+//           </div>
+//         </div>
+
+//         {/* ================= ABOUT & DETAILS ================= */}
+//         <div className="product-info-row">
+
+//           <div className="info-accordion">
+//             <div
+//               className="info-header"
+//               onClick={() => setOpenAbout(!openAbout)}
+//             >
+//               <h3>About Product</h3>
+//               <span className={`arrow ${openAbout ? "open" : ""}`}>⌃</span>
+//             </div>
+
+//             {openAbout && (
+//               <div className="info-body">
+//                 <p>{product.description || "No description available."}</p>
+//               </div>
+//             )}
+//           </div>
+
+//           <div className="info-accordion">
+//             <div
+//               className="info-header"
+//               onClick={() => setOpenDetails(!openDetails)}
+//             >
+//               <h3>Product details</h3>
+//               <span className={`arrow ${openDetails ? "open" : ""}`}>⌃</span>
+//             </div>
+
+//             {openDetails && (
+//               <div className="info-body">
+//                 <table className="product-details-table">
+//                   <tbody>
+//                     {Object.entries(selectedVariant.attributes || {}).map(
+//                       ([key, value]) => (
+//                         <tr key={key}>
+//                           <td>{key.replace(/_/g, " ")}</td>
+//                           <td>{value}</td>
+//                         </tr>
+//                       )
+//                     )}
+//                   </tbody>
+//                 </table>
+//               </div>
+//             )}
+//           </div>
+
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default ProductDetails;
+
+
+
+
+import React, { useEffect, useState, useMemo } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
+import ShopHeader from "./ProductsDetailsHeader/ProductHeader";
 import "./ProductDetails.css";
 import { baseurl } from "../BaseURL/BaseURL";
 
 const ProductDetails = () => {
-  const { id } = useParams(); // product_id from URL
+  /* ================= ROUTE PARAMS ================= */
+  const { productId } = useParams(); // MUST MATCH App.js
+  const [searchParams] = useSearchParams();
+  const variantId = searchParams.get("variant");
 
+  /* ================= STATE ================= */
   const [product, setProduct] = useState(null);
+  const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
   const [qty, setQty] = useState(1);
   const [openAbout, setOpenAbout] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   /* ================= FETCH PRODUCT ================= */
   useEffect(() => {
+    console.log("📌 productId:", productId);
+    console.log("📌 variantId:", variantId);
+
+    if (!productId) {
+      setError("Invalid product");
+      setLoading(false);
+      return;
+    }
+
+    const apiUrl = `${baseurl}/products/${productId}/?variant_id=${variantId || ""}`;
+    console.log("🚀 API URL:", apiUrl);
+
     setLoading(true);
+    setError("");
 
-    fetch(`${baseurl}/products/?product_id=${id}`)
-      .then(res => res.json())
+    fetch(apiUrl)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error("API failed");
+        }
+        return res.json();
+      })
       .then(data => {
-        const prod = data.results?.[0];
-        setProduct(prod);
+        console.log("✅ API Response:", data);
 
-        // Set primary image
-        if (prod?.media?.length > 0) {
-          const primary =
-            prod.media.find(m => m.is_primary) || prod.media[0];
-          setSelectedImage(`${baseurl}${primary.file}`);
+        if (!data || !data.product_id) {
+          throw new Error("Product not found");
+        }
+
+        setProduct(data);
+
+        const variant =
+          data.variants?.find(v => String(v.id) === String(variantId)) ||
+          data.variants?.[0] ||
+          null;
+
+        if (!variant) {
+          throw new Error("Variant not found");
+        }
+
+        setSelectedVariant(variant);
+
+        if (variant.media?.length > 0) {
+          setSelectedImage(`${baseurl}${variant.media[0].file}`);
+        } else {
+          setSelectedImage(
+            "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600"
+          );
         }
 
         setLoading(false);
       })
       .catch(err => {
-        console.error("Error fetching product:", err);
+        console.error("❌ ProductDetails error:", err);
+        setError(err.message || "Something went wrong");
         setLoading(false);
       });
-  }, [id]);
+  }, [productId, variantId]);
 
+  /* ================= PRICING ================= */
+  const pricing = useMemo(() => {
+    const mrp = parseFloat(selectedVariant?.mrp || 0);
+    const price = parseFloat(selectedVariant?.selling_price || 0);
+    const discount =
+      mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+
+    return { mrp, price, discount };
+  }, [selectedVariant]);
+
+  /* ================= LOADING ================= */
   if (loading) {
     return (
       <>
@@ -353,47 +1129,42 @@ const ProductDetails = () => {
     );
   }
 
-  if (!product) {
+  /* ================= ERROR ================= */
+  if (error) {
     return (
       <>
         <WebsiteNavbar />
-        <div className="text-center py-5">Product not found</div>
+        <div className="text-center py-5 text-danger">{error}</div>
       </>
     );
   }
 
-  const variant = product.variants?.[0];
-  const mrp = parseFloat(variant?.mrp || 0);
-  const price = parseFloat(variant?.selling_price || 0);
-  const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
-
+  /* ================= UI ================= */
   return (
     <>
       <WebsiteNavbar />
+      {/* <ShopHeader /> */}
+      <ShopHeader businessId={product.business} />
+
 
       <div className="product-wrapper">
-
-        {/* Breadcrumb */}
-        <div className="breadcrumb">
-          Home / Products / {product.product_name}
-        </div>
-
         <div className="product-layout">
 
-          {/* LEFT – IMAGE SECTION */}
+          {/* ========== LEFT : IMAGES ========== */}
           <div className="image-section">
             <div className="thumbnail-list">
-              {product.media?.map((img, index) => (
-                <div
-                  key={index}
-                  className={`thumb-box ${
-                    selectedImage === `${baseurl}${img.file}` ? "active" : ""
-                  }`}
-                  onClick={() => setSelectedImage(`${baseurl}${img.file}`)}
-                >
-                  <img src={`${baseurl}${img.file}`} alt="thumb" />
-                </div>
-              ))}
+              {(selectedVariant.media || []).map((img, index) => {
+                const imgUrl = `${baseurl}${img.file}`;
+                return (
+                  <div
+                    key={index}
+                    className={`thumb-box ${selectedImage === imgUrl ? "active" : ""}`}
+                    onClick={() => setSelectedImage(imgUrl)}
+                  >
+                    <img src={imgUrl} alt="thumb" />
+                  </div>
+                );
+              })}
             </div>
 
             <div className="main-image-box">
@@ -401,7 +1172,7 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          {/* MIDDLE – DETAILS */}
+          {/* ========== MIDDLE : DETAILS ========== */}
           <div className="details-section">
             <p className="store-link">
               Visit the {product.brand || "Store"}
@@ -409,45 +1180,63 @@ const ProductDetails = () => {
 
             <h1>{product.product_name}</h1>
 
-            <p className="desc">
-              {product.description}
-            </p>
+            {product.description && (
+              <p className="desc">{product.description}</p>
+            )}
 
-            <h3>Key Attributes</h3>
+            {/* PRODUCT ATTRIBUTES */}
+            {product.attributes && (
+              <>
+                <h3>Product Attributes</h3>
+                <div className="attributes">
+                  {Object.entries(product.attributes).map(([k, v]) => (
+                    <div key={k}>
+                      <span>{k.replace(/_/g, " ")}</span>
+                      <span>{v}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
 
-            <div className="attributes">
-              {product.attributes &&
-                Object.entries(product.attributes).map(([key, value]) => (
-                  <div key={key}>
-                    <span>{key.replace("_", " ")}</span>
-                    <span>{value}</span>
-                  </div>
-                ))}
-            </div>
+            {/* VARIANT ATTRIBUTES */}
+            {selectedVariant.attributes && (
+              <>
+                <h3>Variant Details</h3>
+                <div className="attributes">
+                  {Object.entries(selectedVariant.attributes).map(([k, v]) => (
+                    <div key={k}>
+                      <span>{k.replace(/_/g, " ")}</span>
+                      <span>{v}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
 
-          {/* RIGHT – BUY BOX */}
+          {/* ========== RIGHT : BUY BOX ========== */}
           <div className="buy-box">
             <div className="price-row">
-              <span className="price">₹{price}</span>
-              {mrp > price && (
+              <span className="price">₹{pricing.price.toFixed(2)}</span>
+              {pricing.mrp > pricing.price && (
                 <>
-                  <span className="mrp">₹{mrp}</span>
-                  <span className="off">{discount}%</span>
+                  <span className="mrp">₹{pricing.mrp.toFixed(2)}</span>
+                  <span className="off">{pricing.discount}% OFF</span>
                 </>
               )}
             </div>
 
-            <p className="unit">1 unit</p>
+            <p className="unit">SKU: {selectedVariant.sku}</p>
 
             <div className="qty">
-              <button onClick={() => setQty(qty - 1)} disabled={qty === 1}>
+              <button onClick={() => setQty(q => q - 1)} disabled={qty === 1}>
                 −
               </button>
               <span>{qty}</span>
               <button
-                onClick={() => setQty(qty + 1)}
-                disabled={qty >= variant?.stock}
+                onClick={() => setQty(q => q + 1)}
+                disabled={qty >= selectedVariant.stock}
               >
                 +
               </button>
@@ -456,15 +1245,14 @@ const ProductDetails = () => {
             <button className="cart-btn">ADD TO CART</button>
 
             <p className="secure">
-              Stock Available: {variant?.stock || 0}
+              Stock Available: {selectedVariant.stock}
             </p>
           </div>
         </div>
 
-        {/* ================= ABOUT & DETAILS ================= */}
+        {/* ========== ABOUT & DETAILS ========== */}
         <div className="product-info-row">
 
-          {/* ABOUT PRODUCT */}
           <div className="info-accordion">
             <div
               className="info-header"
@@ -476,12 +1264,11 @@ const ProductDetails = () => {
 
             {openAbout && (
               <div className="info-body">
-                <p>{product.description}</p>
+                <p>{product.description || "No description available."}</p>
               </div>
             )}
           </div>
 
-          {/* PRODUCT DETAILS */}
           <div className="info-accordion">
             <div
               className="info-header"
@@ -495,20 +1282,20 @@ const ProductDetails = () => {
               <div className="info-body">
                 <table className="product-details-table">
                   <tbody>
-                    {variant &&
-                      Object.entries(variant.attributes || {}).map(
-                        ([key, value]) => (
-                          <tr key={key}>
-                            <td>{key}</td>
-                            <td>{value}</td>
-                          </tr>
-                        )
-                      )}
+                    {Object.entries(selectedVariant.attributes || {}).map(
+                      ([key, value]) => (
+                        <tr key={key}>
+                          <td>{key.replace(/_/g, " ")}</td>
+                          <td>{value}</td>
+                        </tr>
+                      )
+                    )}
                   </tbody>
                 </table>
               </div>
             )}
           </div>
+
         </div>
       </div>
     </>

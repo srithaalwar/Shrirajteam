@@ -1,0 +1,167 @@
+.shop-header {
+  background: #fff;
+  border-bottom: 1px solid #eaeaea;
+}
+
+/* Logo */
+.shop-logo {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+.shop-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Title & Location */
+.shop-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.shop-location {
+  color: #777;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Info Row */
+.shop-info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.info-box {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.label {
+  color: #999;
+  font-size: 13px;
+}
+
+.value {
+  font-weight: 500;
+}
+
+.green {
+  color: #1a9c2c;
+}
+
+.divider {
+  height: 30px;
+  width: 1px;
+  background: #ddd;
+}
+
+/* Stars */
+.stars {
+  display: flex;
+  gap: 4px;
+  color: #f5b400;
+}
+
+.stars .inactive {
+  color: #ddd;
+}
+
+/* Tabs */
+.shop-tabs {
+  display: flex;
+  gap: 30px;
+  border-top: 1px solid #eee;
+  padding: 14px 0;
+}
+
+.shop-tabs span {
+  font-weight: 500;
+  cursor: pointer;
+  color: #666;
+}
+
+.shop-tabs .active {
+  color: #ff2f6d;
+  border-bottom: 2px solid #ff2f6d;
+  padding-bottom: 6px;
+}
+
+
+.shop-logo {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  overflow: hidden;
+}
+
+.shop-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shop-tabs {
+  display: flex;
+  gap: 30px;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+}
+
+.shop-tab {
+  background: none;
+  border: none;
+  font-weight: 500;
+  color: #666;
+  padding-bottom: 8px;
+  cursor: pointer;
+}
+
+.shop-tab.active {
+  color: #ff2f6d;
+  border-bottom: 2px solid #ff2f6d;
+}
+
+.shop-logo {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+.shop-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shop-tabs {
+  display: flex;
+  gap: 30px;
+  border-top: 1px solid #eee;
+  padding-top: 14px;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  font-weight: 500;
+  color: #666;
+  padding-bottom: 8px;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  color: #ff2f6d;
+  border-bottom: 2px solid #ff2f6d;
+}
