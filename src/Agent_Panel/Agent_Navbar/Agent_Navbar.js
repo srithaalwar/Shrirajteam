@@ -367,6 +367,7 @@ const AgentNavbar = () => {
     { path: "/agent-my-business", name: "My Business", icon: <FaUserTie /> },
     { path: "/agent-busineess-category", name: "Products", icon: <FaUserTie /> },
 
+    { path: "/agent-add-product-form", name: "Add Product", icon: <FaUserTie /> },
 
     {
       name: "Operations",

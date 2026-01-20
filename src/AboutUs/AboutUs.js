@@ -149,7 +149,7 @@ const AboutUs = () => {
       <section className="values-section">
         <div className="container">
           <div className="section-header">
-            <h2 className="section-title">Our Core Principles</h2>
+            <h1 className="section-title sec-aboutus-title">Our Core Principles</h1>
             <p className="section-subtitle">
               Building success through vision, mission, and shared values
             </p>

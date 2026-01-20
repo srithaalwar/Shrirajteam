@@ -111,7 +111,7 @@ const FAQs = () => {
                     <button
                       key={category.id}
                       onClick={() => setActiveCategory(category.id)}
-                      className={`list-group-item list-group-item-action ${
+                      className={`list-group-item list-group-item-action hoveringeffect ${
                         activeCategory === category.id ? "active" : ""
                       }`}
                     >

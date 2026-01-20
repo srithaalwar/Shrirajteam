@@ -213,10 +213,11 @@
     height: auto;
   }
   
-  .admin-dashboard-stats-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
+    .admin-dashboard-stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
   
   .admin-dashboard-greeting {
     font-size: 24px;

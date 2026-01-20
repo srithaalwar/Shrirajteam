@@ -61,7 +61,7 @@ const AdminNavbar = () => {
         { path: "/", name: "Team Payout", icon: <FaHandHoldingUsd /> },
         { path: "/", name: "Subscription", icon: <FaCreditCard /> },
         { path: "/a-bookingslab", name: "Booking Slab", icon: <FaLayerGroup /> },
-        { path: "/", name: "Training Material", icon: <FaGraduationCap /> },
+        { path: "/admin-trainingmaterial", name: "Training Material", icon: <FaGraduationCap /> },
         { path: "/", name: "How it works", icon: <FaQuestionCircle /> },
         { path: "/", name: "Transactions", icon: <FaExchangeAlt /> },
         { path: "/", name: "Payout Master", icon: <FaDatabase /> },
@@ -201,7 +201,7 @@ const AdminNavbar = () => {
         <div className="wn-nav-right">
           {/* <LoginButtonExternal />
           <SignupButtonExternal /> */}
-          <div className="wn-cart">🛒 Cart</div>
+          <div className="wn-cart admin-cart">🛒 Cart</div>
         </div>
       </header>
 

@@ -341,7 +341,6 @@ const ClientNavbar = () => {
     { path: "/client-add-property-form", name: "Add Property", icon: <FaHome /> },
     { path: "/client-properties", name: "Properties", icon: <FaBuilding /> },
     { path: "/client-my-properties", name: "My Properties", icon: <FaClipboardList /> },
-    { path: "/client-business", name: "Business", icon: <FaBriefcase /> },
     { path: "/client-busineess-category", name: "Products", icon: <FaBriefcase /> },
     { path: "/client-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/client-transactions", name: "Transactions", icon: <FaExchangeAlt /> },

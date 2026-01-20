@@ -438,6 +438,9 @@
   
   .wn-nav-right {
     gap: 8px;
+ 
+    margin-left: 300px;
+
   }
 
     .wn-nav-right .wn-login-btn, .wn-nav-right .wn-signup-btn {
@@ -512,6 +515,10 @@
   .wn-nav-right {
     gap: 6px;
     flex-shrink: 0;
+    
+        margin-left: 0px; 
+    
+
   }
   
   /* Hide login/signup buttons, show only icons */
@@ -648,7 +655,7 @@
 @media (max-width: 768px) {
   .wn-navbar {
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     align-items: center;
   }
   

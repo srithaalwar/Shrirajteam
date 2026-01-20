@@ -1,0 +1,42 @@
+/* EditSitevisit.css */
+.card {
+  border: none;
+  border-radius: 10px;
+}
+
+.card-header {
+  border-radius: 10px 10px 0 0 !important;
+  padding: 1.5rem;
+}
+
+.existing-photo {
+  text-align: center;
+}
+
+.existing-image {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 5px;
+  border: 2px solid #dee2e6;
+  object-fit: cover;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #212529;
+  transition: all 0.3s;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.2);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #ffc107;
+  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+}

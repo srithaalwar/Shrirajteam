@@ -207,6 +207,10 @@ import AdminProducts from './Admin_Panel/Products/Products'
 import PropertiesList from './Admin_Panel/Properties/PropertiesList';
 import PropertyEditForm from './Admin_Panel/Properties/PropertyEditForm';
 import AdminProfile from "./Admin_Panel/Profile/AdminProfile";
+import AdminAddTrainingMaterial from "./Admin_Panel/Admin_TrainingMaterial/AddTrainingMaterial";
+import AdminTrainingMaterial from "./Admin_Panel/Admin_TrainingMaterial/TrainingMaterial";
+import AdminEditTrainingMaterial from './Admin_Panel/Admin_TrainingMaterial/EditTrainingMaterial';
+
 import AgentDashboard from './Agent_Panel/AgentDashboard/Dashboard'
 import AgentAddProperty from './Agent_Panel/AddProperty/Add_Property'
 import AgentProperties from './Agent_Panel/AgentProperties/PropertiesList'
@@ -219,6 +223,12 @@ import AgentBusinesslist from './Agent_Panel/AgentMyBusiness/MyBusiness'
 import AgentbusinessCategory from './Agent_Panel/AgentBusinessProducts/AgentBusinessProductsCategories'
 import AgentSubCategory from './Agent_Panel/AgentBusinessProducts/SubCategories'
 import AgentProductDetails from './Agent_Panel/AgentBusinessProducts/ProductDetails/ProductDetails'
+import AgentAddProductForm from './Agent_Panel/AgentAddProduct/AddProductForm'
+import MyTeam from './Agent_Panel/Agent_MyTeam/MyTeam';
+import Sitevisit from './Agent_Panel/Agent_SiteVisits/Site_Visits'
+import AddSitevisit from './Agent_Panel/Agent_SiteVisits/Add_SiteVisitForm'
+import EditSitevisit from './Agent_Panel/Agent_SiteVisits/Edit_SiteVisitForm'
+import TrainingMaterial from "./Agent_Panel/Agent_TrainingMaterial/Training_Material";
 
 
 import ClientDashboard from './Client_Panel/Dashboard/Dashboard'
@@ -317,6 +327,9 @@ function App() {
         <Route path="/adddepartment" element={<AddDepartments />} />
         <Route path="/admin-profile" element={<AdminProfile />} />
 
+       <Route path="/admin-trainingmaterial" element={<AdminTrainingMaterial />} />
+        <Route path="/admin-addtrainingmaterial" element={<AdminAddTrainingMaterial />} />
+       <Route path="/admin-edittrainingmaterial" element={<AdminEditTrainingMaterial />} />
         {/* Agent-panel */}
 
         <Route path="/agent-dashboard" element={<AgentDashboard />} />
@@ -339,9 +352,15 @@ function App() {
         <Route path="/view-business/:id" element={<AddBusinessForm mode="view" />} />
         <Route path="/agent-busineess-category" element={<AgentbusinessCategory />} />
         <Route path="/Agent-subcategory/:id" element={<AgentSubCategory />} />
-          <Route path="/agent-business-product-details/:productId" element={<AgentProductDetails />} />
+       <Route path="/agent-business-product-details/:productId" element={<AgentProductDetails />} />
+        <Route path="/agent-add-product-form" element={<AgentAddProductForm />} />
 
+        <Route path="/agent-my-team" element={<MyTeam />} />
 
+         <Route path="/agent-site-visits" element={<Sitevisit />} />
+          <Route path="/agent-addsitevisit" element={<AddSitevisit />} />
+          <Route path="/agent-editsitevisit/:id" element={<EditSitevisit />} />
+          <Route path="/agent-training-material" element={<TrainingMaterial />} />
 
         {/* Client-panel */}
         <Route path="/client-dashboard" element={<ClientDashboard />} />

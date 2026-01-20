@@ -228,7 +228,7 @@
 
 /* Values Section */
 .values-section {
-  padding: 5rem 0;
+  padding: 1rem 0;
   background-color: #ffffff;
 }
 
@@ -236,6 +236,11 @@
   text-align: center;
   margin-bottom: 3rem;
 }
+.section-header .sec-aboutus-title {
+font-size: 2.2rem;
+}
+
+
 
 .section-title {
   font-size: 2.5rem;
@@ -250,9 +255,9 @@
   content: '';
   position: absolute;
   bottom: -10px;
-  left: 50%;
+  left: 13%;
   transform: translateX(-50%);
-  width: 80px;
+  width: 333px;
   height: 4px;
   background: linear-gradient(90deg, #2e166d, #3d1e9e);
   border-radius: 2px;
@@ -446,6 +451,22 @@
   .section-title {
     font-size: 2rem;
   }
+
+  .section-header .sec-aboutus-title {
+    font-size: 1.5rem;
+}
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 17%;
+    transform: translateX(-50%);
+    width: 233px;
+    height: 4px;
+    background: linear-gradient(90deg, #2e166d, #3d1e9e);
+    border-radius: 2px;
+}
 }
 
 @media (max-width: 768px) {
@@ -479,6 +500,18 @@
   .value-title {
     font-size: 1.5rem;
   }
+
+  /* .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 3%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #2e166d, #3d1e9e);
+    border-radius: 2px;
+} */
 }
 
 @media (max-width: 576px) {
@@ -497,6 +530,18 @@
   .section-title {
     font-size: 1.75rem;
   }
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 31%;
+    transform: translateX(-50%);
+    width: 229px;
+    height: 4px;
+    background: linear-gradient(90deg, #2e166d, #3d1e9e);
+    border-radius: 2px;
+}
 }
 
 /* Animation for cards */

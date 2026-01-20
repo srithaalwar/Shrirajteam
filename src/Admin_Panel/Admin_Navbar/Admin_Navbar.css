@@ -556,6 +556,22 @@
     padding: 12px 16px;
     font-size: 14px;
   }
+
+   .wn-nav-right {
+    gap: 6px;
+    flex-shrink: 0;
+    
+        margin-left: 325px; 
+    
+
+  }
+
+  
+  .admin-cart{
+
+    margin-left: 180px;
+  }
+  
 }
 
 /* ===================== ANIMATIONS ===================== */
@@ -583,3 +599,20 @@
 .wn-sidebar-link:nth-child(4) { animation-delay: 0.25s; }
 .wn-sidebar-link:nth-child(5) { animation-delay: 0.3s; }
 /* Add more as needed */
+
+@media (max-width: 767px) {
+
+ .wn-nav-right {
+    gap: 6px;
+    flex-shrink: 0;
+    
+        margin-left: 0px; 
+    
+
+  }
+
+  .admin-cart{
+
+    margin-left: 130px;
+  }
+}

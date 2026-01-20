@@ -1,0 +1,112 @@
+/* ================= TEAM WRAPPER ================= */
+
+.team-wrapper {
+  width: 100%;
+  position: relative;
+  padding: 0 40px;
+}
+
+/* ================= SCROLL ================= */
+
+.team-scroll {
+  display: flex;
+  gap: 30px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-top: 20px;
+}
+
+.team-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.team-scroll::-webkit-scrollbar-thumb {
+  background: #999;
+  border-radius: 10px;
+}
+
+/* ================= MEMBER ================= */
+
+.team-member {
+  min-width: 120px;
+  cursor: pointer;
+  position: relative;
+}
+
+/* ================= AVATAR ================= */
+
+.avatar-circle {
+  width: 60px;
+  height: 60px;
+  background: #28a745;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+  margin: auto;
+  transition: transform 0.2s;
+}
+
+.avatar-circle.main {
+  width: 80px;
+  height: 80px;
+  font-size: 26px;
+  background: #dc3545;
+}
+
+.avatar-circle:hover {
+  transform: scale(1.1);
+}
+
+/* ================= CONNECTOR LINES ================= */
+
+/* Parent → children vertical */
+.parent-line {
+  width: 2px;
+  height: 40px;
+  background: black;
+  margin: 0 auto;
+}
+
+/* Horizontal line */
+.horizontal-line {
+  width: 100%;
+  height: 2px;
+  background: black;
+  margin-bottom: 20px;
+}
+
+/* Child vertical line */
+.child-line {
+  width: 2px;
+  height: 25px;
+  background: black;
+  margin: 0 auto 5px auto;
+}
+
+/* ================= SCROLL BUTTONS ================= */
+
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  border: 1px solid #ccc;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.scroll-btn.left {
+  left: 0;
+}
+
+.scroll-btn.right {
+  right: 0;
+}
