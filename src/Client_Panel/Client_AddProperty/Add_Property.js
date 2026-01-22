@@ -1233,14 +1233,14 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
                     required: false
                   })}
                 </div>
-                <div className="col-md-6">
+                {/* <div className="col-md-6">
                   {renderField({
                     type: 'checkbox',
                     name: 'isFeatured',
                     label: 'Mark as Featured',
                     required: false
                   })}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -1435,7 +1435,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
                     <button 
                       type="button" 
                       className="btn btn-secondary me-2"
-                      onClick={() => navigate('/admin-properties')}
+                      onClick={() => navigate('/client-properties')}
                       disabled={isSubmitting}
                     >
                       Cancel

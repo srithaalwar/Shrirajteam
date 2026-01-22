@@ -1233,14 +1233,14 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
                     required: false
                   })}
                 </div>
-                <div className="col-md-6">
+                {/* <div className="col-md-6">
                   {renderField({
                     type: 'checkbox',
                     name: 'isFeatured',
                     label: 'Mark as Featured',
                     required: false
                   })}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

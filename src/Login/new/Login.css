@@ -76,7 +76,7 @@
   font-size: 0.95rem;
 }
 
-.form-control,.eye-icon{
+.form-control{
   /* border: 1px solid #ced4da;
   border-radius: 8px;
   padding: 12px 15px;
@@ -88,7 +88,18 @@
   transition: all 0.3s ease !important;
   background-color: #f8f9fa !important;
   font-size: 1rem !important;
-  height:60px !important;
+  height:45px !important;
+}
+
+.eye-icon{
+  
+  border: 2px solid #198754 !important;
+  border-radius: 12px !important;
+  padding: 10px !important;
+  transition: all 0.3s ease !important;
+  background-color: #f8f9fa !important;
+  font-size: 1rem !important;
+  height:45px !important;
 }
 
 /* .form-control:focus {
@@ -106,7 +117,8 @@
 }
 
 .login-btn {
-  background: linear-gradient(45deg, #004080, #0066cc);
+  /* background: linear-gradient(45deg, #004080, #0066cc); */
+  background: #273c75 !important;
   border: none;
   border-radius: 8px;
   padding: 14px;

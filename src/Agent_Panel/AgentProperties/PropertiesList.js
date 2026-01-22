@@ -2760,7 +2760,7 @@ const ProductHeader = ({
   onSearch
 }) => {
   const viewButtons = [
-    { mode: "grid-2", icon: Grid2X2, label: "2 Columns" },
+    // { mode: "grid-2", icon: Grid2X2, label: "2 Columns" },
     { mode: "grid-3", icon: Grid3X3, label: "3 Columns" },
     { mode: "list", icon: List, label: "List" },
     { mode: "grid-4", icon: LayoutList, label: "4 Columns" },
@@ -2854,7 +2854,7 @@ const ProductHeader = ({
             <option value="default">Sort By</option>
             <option value="price-low">Price: Low to High</option>
             <option value="price-high">Price: High to Low</option>
-            <option value="newest">Newest First</option>
+            {/* <option value="newest">Newest First</option> */}
           </select>
         </div>
       </div>
@@ -2866,8 +2866,8 @@ const ProductHeader = ({
 const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDeleteProperty }) => {
   const getGridClasses = () => {
     switch (viewMode) {
-      case "grid-2":
-        return "row row-cols-1 row-cols-sm-2";
+      // case "grid-2":
+      //   return "row row-cols-1 row-cols-sm-2";
       case "grid-3":
         return "row row-cols-1 row-cols-sm-2 row-cols-md-3";
       case "grid-4":

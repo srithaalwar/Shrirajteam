@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Swal from 'sweetalert2';
-import ClientNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
+import AgentNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Subcrptionplan.css';
 
-const Subcrptionplan = () => {
+const AgentSubcrptionplan = () => {
   const [variantData, setVariantData] = useState([]);
   const [planDataMap, setPlanDataMap] = useState({});
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,14 @@ const Subcrptionplan = () => {
 
   const userId = localStorage.getItem('user_id');
   const hasPostedStatus = useRef(false);
- const redirecturl = "http://localhost:3000";
+  const redirecturl = "http://localhost:3000";
+
+  /* ================= NORMALIZERS ================= */
+  const normalizeList = (data) =>
+    Array.isArray(data) ? data : data?.results || [];
+
+  const normalizeObject = (data) =>
+    data?.results?.[0] || data;
 
   /* ================= FETCH USER SUBSCRIPTION ================= */
   const fetchUserSubscription = async () => {
@@ -47,28 +54,41 @@ const Subcrptionplan = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
+        // 1️⃣ Fetch variants (FIXED)
         const variantRes = await fetch(
-          `${baseurl}/subscription/plan-variants/agent/`
+          `${baseurl}/subscription/plan-variants/client/`
         );
-        const variants = await variantRes.json();
+        const variantJson = await variantRes.json();
+
+        const variants = normalizeList(variantJson);
         setVariantData(variants);
 
+        // 2️⃣ Collect unique plan IDs
         const planIds = [...new Set(variants.map((v) => v.plan_id))];
         const planMap = {};
 
+        // 3️⃣ Fetch plans safely (FIXED)
         await Promise.all(
           planIds.map(async (id) => {
-            const res = await fetch(
-              `${baseurl}/subscription/plans/${id}/`
-            );
-            const plan = await res.json();
-            planMap[id] = plan;
+            try {
+              const res = await fetch(
+                `${baseurl}/subscription/plans/${id}/`
+              );
+              const planJson = await res.json();
+
+              const plan = normalizeObject(planJson);
+              planMap[id] = plan;
+            } catch (err) {
+              console.error(`Error fetching plan ${id}`, err);
+            }
           })
         );
 
         setPlanDataMap(planMap);
       } catch (err) {
         console.error('Error:', err);
+        setVariantData([]);
+        setPlanDataMap({});
       } finally {
         setLoading(false);
       }
@@ -89,7 +109,7 @@ const Subcrptionplan = () => {
     setSelectedPlan({
       name: planName,
       duration: durationText,
-      price,
+      price: Number(price),
     });
   };
 
@@ -113,9 +133,10 @@ const Subcrptionplan = () => {
 
     acc[variant.plan_id].options.push({
       duration: `${variant.duration_in_days} Days`,
-      price: variant.price,
+      price: Number(variant.price),
       perMonth: `₹${Math.round(
-        variant.price / (variant.duration_in_days / 30)
+        Number(variant.price) /
+          (variant.duration_in_days / 30)
       )}/month`,
       variant_id: variant.variant_id,
     });
@@ -163,7 +184,6 @@ const Subcrptionplan = () => {
 
   /* ================= CONFIRM PAYMENT ================= */
   useEffect(() => {
-    const userId = localStorage.getItem('user_id');
     const merchant_order_id =
       localStorage.getItem('merchant_order_id');
     const variant_id =
@@ -220,7 +240,7 @@ const Subcrptionplan = () => {
 
   return (
     <>
-      <ClientNavbar />
+      <AgentNavbar />
 
       <div className="plans-page-container">
         <h2 className="plans-title">
@@ -380,4 +400,4 @@ const Subcrptionplan = () => {
   );
 };
 
-export default Subcrptionplan;
+export default AgentSubcrptionplan;
