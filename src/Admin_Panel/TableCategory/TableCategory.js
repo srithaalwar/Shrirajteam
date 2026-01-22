@@ -348,6 +348,11 @@ function TableCategory() {
             
             <button 
               className="primary-btn"
+              style={{
+    backgroundColor: '#273c75',
+    borderColor: '#273c75',
+    color: 'white'
+  }}
               onClick={() => navigate("/propertycategoryform")}
             >
               Add Category
@@ -414,6 +419,11 @@ function TableCategory() {
             
             <button 
               className="primary-btn"
+              style={{
+    backgroundColor: '#273c75',
+    borderColor: '#273c75',
+    color: 'white'
+  }}
               onClick={() => navigate("/a-category")}
             >
               Add Property Type

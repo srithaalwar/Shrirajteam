@@ -363,7 +363,9 @@ const AgentNavbar = () => {
     { path: "/agent-add-property", name: "Add Property", icon: <FaHome /> },
     { path: "/agent-my-properties", name: "My Properties", icon: <FaBuilding /> },
     { path: "/agent-properties", name: "Properties", icon: <FaClipboardList /> },
-    { path: "/agent-add-business-form", name: "Business", icon: <FaBriefcase /> },
+    // { path: "/agent-add-business-form", name: "Business", icon: <FaBriefcase /> },
+        { path: "/agent-my-products", name: "My Products", icon: <FaBriefcase /> },
+
     { path: "/agent-my-business", name: "My Business", icon: <FaUserTie /> },
     { path: "/agent-busineess-category", name: "Products", icon: <FaUserTie /> },
 
@@ -374,7 +376,7 @@ const AgentNavbar = () => {
       icon: <FaCogs />,
       subMenu: [
         { path: "/agent-payout", name: "Payout", icon: <FaMoneyBillWave /> },
-        { path: "/agent-plans", name: "Plans", icon: <FaCreditCard /> },
+        { path: "/agent-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
         { path: "/agent-training-material", name: "Training Material", icon: <FaGraduationCap /> },
         { path: "/agent-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
         { path: "/agent-business", name: "Business", icon: <FaBriefcase /> },

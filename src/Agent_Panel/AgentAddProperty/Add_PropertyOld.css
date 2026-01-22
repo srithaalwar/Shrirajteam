@@ -63,15 +63,15 @@
 }
 
 .form-tabs .nav-link:hover {
-  color: #1890ff;
+  color: #273c75;
   background: #f0f7ff;
-  border-color: #e8e8e8 #e8e8e8 #1890ff #e8e8e8;
+  border-color: #e8e8e8 #e8e8e8 #273c75 #e8e8e8;
 }
 
 .form-tabs .nav-link.active {
-  color: #1890ff;
+  color: #273c75;
   background: #fff;
-  border-color: #e8e8e8 #e8e8e8 #1890ff #e8e8e8;
+  border-color: #e8e8e8 #e8e8e8 #273c75 #e8e8e8;
   border-bottom-width: 3px;
   font-weight: 600;
 }
@@ -90,7 +90,7 @@
 .form-section-title {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #262626;
+  color: #273c75;
   margin-bottom: 24px;
   padding-bottom: 12px;
   border-bottom: 2px solid #f0f0f0;
@@ -121,14 +121,23 @@
   color: #ff4d4f;
 }
 
-.customer-form-input {
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  padding: 8px 12px;
-  transition: all 0.3s ease;
-  width: 100%;
-  font-size: 0.95rem;
-  height: 38px;
+/* .customer-form-input{
+  border: 2px solid #dee2e6;
+    border-radius: 12px;
+    padding: 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+} */
+
+.customer-form-input,.media-upload-btn {
+  border: 2px solid #198754 !important;
+  border-radius: 12px !important;
+  padding: 1rem !important;
+  transition: all 0.3s ease !important;
+  background-color: #f8f9fa !important;
+  font-size: 1rem !important;
+  height:60px !important;  
 }
 
 .customer-form-input:focus {

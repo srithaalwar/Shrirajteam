@@ -1,4 +1,4 @@
-.training-card {
+/* .training-card {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -18,4 +18,56 @@
 
 .btn {
   border-radius: 20px;
+} */
+
+
+
+/* Training_Material.css */
+.training-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.training-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.training-video {
+  height: 180px;
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* Custom button styles */
+.custom-btn {
+  border-radius: 30px !important;
+  padding: 6px 20px !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+  border: 1px solid #273c75 !important;
+}
+
+.custom-btn-filled {
+  background-color: #273c75 !important;
+  color: white !important;
+}
+
+.custom-btn-outline {
+  background-color: transparent !important;
+  color: #273c75 !important;
+}
+
+.custom-btn-filled:hover {
+  background-color: #1e2f5d !important;
+  border-color: #1e2f5d !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(39, 60, 117, 0.2);
+}
+
+.custom-btn-outline:hover {
+  background-color: #273c75 !important;
+  color: white !important;
 }

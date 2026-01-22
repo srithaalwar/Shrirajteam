@@ -210,9 +210,12 @@ import AdminProfile from "./Admin_Panel/Profile/AdminProfile";
 import AdminAddTrainingMaterial from "./Admin_Panel/Admin_TrainingMaterial/AddTrainingMaterial";
 import AdminTrainingMaterial from "./Admin_Panel/Admin_TrainingMaterial/TrainingMaterial";
 import AdminEditTrainingMaterial from './Admin_Panel/Admin_TrainingMaterial/EditTrainingMaterial';
+import AdminAddSubscription from "./Admin_Panel/Admin_Subscription/AddSubscription";
+import AdminEditSubscription from "./Admin_Panel/Admin_Subscription/EditSubscription";
+import AdminSubscription from "./Admin_Panel/Admin_Subscription/Subscription";
 
 import AgentDashboard from './Agent_Panel/AgentDashboard/Dashboard'
-import AgentAddProperty from './Agent_Panel/AddProperty/Add_Property'
+import AgentAddProperty from './Agent_Panel/AgentAddProperty/Add_Property'
 import AgentProperties from './Agent_Panel/AgentProperties/PropertiesList'
 import AgentMyProperty from './Agent_Panel/MyProperties/MyProperties'
 import AgentMyPropertyEditForm from "./Agent_Panel/MyProperties/MyPropertiesEditForm"
@@ -229,10 +232,12 @@ import Sitevisit from './Agent_Panel/Agent_SiteVisits/Site_Visits'
 import AddSitevisit from './Agent_Panel/Agent_SiteVisits/Add_SiteVisitForm'
 import EditSitevisit from './Agent_Panel/Agent_SiteVisits/Edit_SiteVisitForm'
 import TrainingMaterial from "./Agent_Panel/Agent_TrainingMaterial/Training_Material";
+import AgentMyProducts from "./Agent_Panel/Agent_My_Products/My_Products";
+import AgentSubscriptionPlan from './Agent_Panel/Agent_SubscriptionPlan/Subcrptionplan';
 
 
 import ClientDashboard from './Client_Panel/Dashboard/Dashboard'
-import ClientAddPropertyForm from "./Client_Panel/ClientAddProperty/Add_Property";
+import ClientAddPropertyForm from "./Client_Panel/Client_AddProperty/Add_Property";
 import ClientProperties from './Client_Panel/ClientProperties/PropertiesList';
 import ClientMyProperty from './Client_Panel/MyProperties/MyProperties';
 import ClientMyPropertyEditForm from './Client_Panel/MyProperties/MyPropertiesEditForm';
@@ -241,6 +246,7 @@ import ClientEditProfile from "./Client_Panel/ClientProfile/ClientEditProfile";
 import ClientbusinessCategory from './Client_Panel/ClientBusinessProducts/ClientBusinessProductsCategories'
 import ClientSubCategory from './Client_Panel/ClientBusinessProducts/SubCategories'
 import ClientProductDetails from './Client_Panel/ClientBusinessProducts/ProductDetails/ProductDetails'
+import ClientSubscriptionPlan from './Client_Panel/Client_SubscriptionPlan/Subcrptionplan';
 
 
 import StaffList from "./Admin_Panel/Users/Users";
@@ -330,6 +336,10 @@ function App() {
        <Route path="/admin-trainingmaterial" element={<AdminTrainingMaterial />} />
         <Route path="/admin-addtrainingmaterial" element={<AdminAddTrainingMaterial />} />
        <Route path="/admin-edittrainingmaterial" element={<AdminEditTrainingMaterial />} />
+
+        <Route path="/admin-subscriptions" element={<AdminSubscription />} />
+          <Route path="/admin-addsubscriptions" element={<AdminAddSubscription />} />
+          <Route path="/admin-edit-subscription/:id" element={<AdminEditSubscription />} />
         {/* Agent-panel */}
 
         <Route path="/agent-dashboard" element={<AgentDashboard />} />
@@ -344,7 +354,8 @@ function App() {
         {/* Business Routes - Updated to use the new components */}
         <Route path="/agent-add-business-form" element={<AgentAddBusinessForm />} />
         <Route path="/agent-my-business" element={<AgentBusinesslist />} />
-        
+        <Route path="/agent-subscription-plan" element={<AgentSubscriptionPlan />} />
+
         {/* New Business Routes for general use */}
         <Route path="/businesses" element={<BusinessList />} />
         <Route path="/add-business" element={<AddBusinessForm mode="add" />} />
@@ -361,6 +372,8 @@ function App() {
           <Route path="/agent-addsitevisit" element={<AddSitevisit />} />
           <Route path="/agent-editsitevisit/:id" element={<EditSitevisit />} />
           <Route path="/agent-training-material" element={<TrainingMaterial />} />
+          <Route path="/agent-my-products" element={<AgentMyProducts />} />
+
 
         {/* Client-panel */}
         <Route path="/client-dashboard" element={<ClientDashboard />} />
@@ -373,6 +386,7 @@ function App() {
          <Route path="/client-busineess-category" element={<ClientbusinessCategory />} />
         <Route path="/client-subcategory/:id" element={<ClientSubCategory />} />
         <Route path="/client-business-product-details/:productId" element={<ClientProductDetails />} />
+        <Route path="/client-subscription-plan" element={<ClientSubscriptionPlan />} />
 
         <Route path="/a-users" element={<StaffList />} />
         <Route path="/a-company" element={<Company />} />

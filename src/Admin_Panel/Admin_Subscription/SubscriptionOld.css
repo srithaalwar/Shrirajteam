@@ -1,0 +1,81 @@
+.subscription-container {
+  margin-top: 120px;
+}
+
+.subscription-title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Top Bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.user-type-select {
+  max-width: 220px;
+}
+
+/* Table */
+.subscription-table th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid #000;
+}
+
+.subscription-table td {
+  text-align: center;
+  border: 1px solid #000;
+  vertical-align: middle;
+}
+
+/* Actions */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Loader */
+.loader-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+/* No Data */
+.no-data {
+  text-align: center;
+  padding: 15px;
+  font-weight: 500;
+}
+
+/* Pagination */
+.pagination-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.pagination .page-link {
+  border-radius: 0 !important;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .top-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .user-type-select {
+    max-width: 100%;
+  }
+}

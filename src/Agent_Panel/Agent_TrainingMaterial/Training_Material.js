@@ -69,7 +69,7 @@ function TrainingVideos() {
         {/* -----------------------------
             Department Filter Buttons
         ------------------------------*/}
-        <div className="d-flex flex-wrap gap-2 mb-4">
+        {/* <div className="d-flex flex-wrap gap-2 mb-4">
           <button
             className={`btn ${
               selectedDept === "all" ? "btn-primary" : "btn-outline-primary"
@@ -92,7 +92,27 @@ function TrainingVideos() {
               {dept.name}
             </button>
           ))}
-        </div>
+        </div> */}
+
+        {/* Department Filter Buttons */}
+<div className="d-flex flex-wrap gap-2 mb-4">
+  <button
+    className={`custom-btn ${selectedDept === "all" ? "custom-btn-filled" : "custom-btn-outline"}`}
+    onClick={() => setSelectedDept("all")}
+  >
+    All
+  </button>
+
+  {departments.map((dept) => (
+    <button
+      key={dept.id}
+      className={`custom-btn ${selectedDept === dept.id ? "custom-btn-filled" : "custom-btn-outline"}`}
+      onClick={() => setSelectedDept(dept.id)}
+    >
+      {dept.name}
+    </button>
+  ))}
+</div>
 
         {/* -----------------------------
             Loading State

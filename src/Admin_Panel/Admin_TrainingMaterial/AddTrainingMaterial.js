@@ -51,63 +51,109 @@ function AddTrainingMaterial() {
       <AdminNavbar />
       <div className="container my-4">
         <div className="card p-4">
-          <h4 className="text-center mb-3">Add Training Material</h4>
+          <h4 className="text-center mb-4">Add Training Material</h4>
 
           <form onSubmit={handleSubmit}>
-            <input
-              className="form-control mb-3"
-              placeholder="Title"
-              required
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-            />
+            {/* First Row: Title and Department in two columns */}
+            <div className="row mb-3">
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">Title *</label>
+                  <input
+                    className="form-control"
+                    placeholder="Enter title"
+                    required
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+              
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">Department *</label>
+                  <select
+                    className="form-select"
+                    required
+                    value={formData.department}
+                    onChange={(e) =>
+                      setFormData({ ...formData, department: e.target.value })
+                    }
+                  >
+                    <option value="">Select Department</option>
+                    {departments.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
 
-            <select
-              className="form-select mb-3"
-              required
-              onChange={(e) =>
-                setFormData({ ...formData, department: e.target.value })
-              }
-            >
-              <option value="">Select Department</option>
-              {departments.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
+            {/* Second Row: Description (full width) */}
+            <div className="row mb-3">
+              <div className="col-12">
+                <div className="mb-3">
+                  <label className="form-label">Description *</label>
+                  <textarea
+                    className="form-control"
+                    rows="4"
+                    placeholder="Enter description"
+                    required
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
 
-            <textarea
-              className="form-control mb-3"
-              rows="4"
-              placeholder="Description"
-              required
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-            />
+            {/* Third Row: Video Upload (full width) */}
+            <div className="row mb-4">
+              <div className="col-12">
+                <div className="mb-3">
+                  <label className="form-label">Video File *</label>
+                  <input
+                    type="file"
+                    accept="video/mp4"
+                    className="form-control"
+                    required
+                    onChange={(e) => setVideoFile(e.target.files[0])}
+                  />
+                  <small className="text-muted">Only MP4 files are allowed</small>
+                </div>
+              </div>
+            </div>
 
-            <input
-              type="file"
-              accept="video/mp4"
-              className="form-control mb-3"
-              required
-              onChange={(e) => setVideoFile(e.target.files[0])}
-            />
+            {/* Fourth Row: Buttons */}
+            <div className="row">
+              <div className="col-12">
+                <div className="d-flex justify-content-between">
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => navigate(-1)}
+                  >
+                    Back
+                  </button>
 
-            <div className="d-flex justify-content-between">
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => navigate(-1)}
-              >
-                Back
-              </button>
-
-              <button className="btn btn-primary" disabled={loading}>
-                {loading ? "Uploading..." : "Submit"}
-              </button>
+                  <button 
+                    className="btn"
+                    style={{
+                      backgroundColor: '#273c75',
+                      borderColor: '#273c75',
+                      color: 'white'
+                    }}
+                    disabled={loading}
+                  >
+                    {loading ? "Uploading..." : "Submit"}
+                  </button>
+                </div>
+              </div>
             </div>
           </form>
         </div>

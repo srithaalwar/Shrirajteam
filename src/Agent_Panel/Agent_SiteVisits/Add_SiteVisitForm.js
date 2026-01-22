@@ -121,9 +121,9 @@ function AddSitevisit() {
       <AgentNavbar />
       <div className="container mt-4">
         <div className="row justify-content-center">
-          <div className="col-lg-10">
+          <div className="col-lg-12">
             <div className="card shadow">
-              <div className="card-header bg-primary text-white">
+              <div className="card-header ">
                 <h2 className="mb-0 text-center">Add Site Visit</h2>
               </div>
               
@@ -325,20 +325,26 @@ function AddSitevisit() {
 
                   {/* Submit Button */}
                   <div className="text-center mt-4">
-                    <button
-                      type="submit"
-                      className="btn btn-primary px-5 py-2"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                          Submitting...
-                        </>
-                      ) : (
-                        "Submit"
-                      )}
-                    </button>
+                   <button
+  type="submit"
+  className="btn px-5 py-2"
+  disabled={isSubmitting}
+  style={{
+    backgroundColor: '#273c75',
+    borderColor: '#273c75',
+        color: 'white'
+
+  }}
+>
+  {isSubmitting ? (
+    <>
+      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      Submitting...
+    </>
+  ) : (
+    "Submit"
+  )}
+</button>
                     <button
                       type="button"
                       className="btn btn-outline-secondary ms-3 px-5 py-2"

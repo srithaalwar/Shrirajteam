@@ -308,6 +308,12 @@ function BookingSlab() {
           
           <button 
             className="primary-btn"
+style={{
+    backgroundColor: '#273c75',
+    borderColor: '#273c75',
+    color: 'white'
+  }}
+
             onClick={() => navigate('/a-add-booking-slab')}
           >
             Add Slab

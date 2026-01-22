@@ -344,7 +344,7 @@ const ClientNavbar = () => {
     { path: "/client-busineess-category", name: "Products", icon: <FaBriefcase /> },
     { path: "/client-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/client-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
-    { path: "/client-plans", name: "Plans", icon: <FaCreditCard /> },
+    { path: "/client-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
     { path: "/client-profile", name: "Profile", icon: <FaUserCircle /> },
   ];
 

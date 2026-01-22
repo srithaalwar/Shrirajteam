@@ -65,8 +65,14 @@ function TrainingMaterial() {
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h3 className="fw-bold">Training Materials</h3>
           <button
-            className="btn btn-primary"
+            className="btn "
             onClick={() => navigate("/admin-addtrainingmaterial")}
+style={{
+    backgroundColor: '#273c75',
+    borderColor: '#273c75',
+    color: 'white'
+  }}
+
           >
             + Add Video
           </button>

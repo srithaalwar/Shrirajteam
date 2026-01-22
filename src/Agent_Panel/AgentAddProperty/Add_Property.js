@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { baseurl } from '../../BaseURL/BaseURL';
-import WebsiteNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
+import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 
 
 const AdminAddPropertyForm = ({ user, mode = 'add' }) => {  
@@ -1110,14 +1110,14 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
                 </div>
               </div>
 
-              <div className="row">
+              {/* <div className="row">
                 <div className="col-md-6">
                   {renderFileUploadField('agreement_video', 'Agreement Video', 'video/*', false)}
                 </div>
                 <div className="col-md-6">
                   {renderFileUploadField('agreement_file', 'Agreement File', '.pdf,.doc,.docx,.xls,.xlsx,.txt', false)}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         );
@@ -1418,7 +1418,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
   return (
 
     <>
-    <WebsiteNavbar/>
+    <AgentNavbar/>
 
     <div className="container-fluid admin-add-property-main-div">
 

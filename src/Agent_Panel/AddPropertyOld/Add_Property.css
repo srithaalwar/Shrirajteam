@@ -504,10 +504,3 @@ input[type="number"]::-webkit-outer-spin-button {
 .text-end {
   text-align: right !important;
 }
-
-
-.sticky-top {
-    position: sticky;
-    top: 0;
-    z-index: 999;
-}

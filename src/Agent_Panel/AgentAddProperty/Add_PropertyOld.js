@@ -391,7 +391,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
       
       return (
         <div className="mb-3">
-          <label className="admin-customer-form-label view-mode-label">{label}</label>
+          <label className="customer-form-label view-mode-label">{label}</label>
           <div className="view-mode-value">{displayValue}</div>
         </div>
       );
@@ -400,7 +400,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
     if (type === 'select') {
       return (
         <div className="mb-3">
-          <label className="admin-customer-form-label">{label}{required && '*'}</label>
+          <label className="customer-form-label">{label}{required && '*'}</label>
           <select 
             className={getSelectClass(name)} 
             name={name} 
@@ -425,7 +425,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
     if (type === 'textarea') {
       return (
         <div className="mb-3">
-          <label className="admin-customer-form-label">{label}{required && '*'}</label>
+          <label className="customer-form-label">{label}{required && '*'}</label>
           <textarea 
             name={name} 
             value={formData[name] || ''} 
@@ -461,7 +461,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
 
     return (
       <div className="mb-3">
-        <label className="admin-customer-form-label">{label}{required && '*'}</label>
+        <label className="customer-form-label">{label}{required && '*'}</label>
         <input 
           type={type} 
           name={name} 
@@ -488,7 +488,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
       
       return (
         <div className="mb-3">
-          <label className="admin-customer-form-label view-mode-label">Amenities</label>
+          <label className="customer-form-label view-mode-label">Amenities</label>
           <div className="view-mode-value">
             {selectedAmenities.length > 0 ? selectedAmenities.join(', ') : 'None'}
           </div>
@@ -498,7 +498,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
 
     return (
       <div className="mb-3">
-        <label className="admin-customer-form-label">Amenities</label>
+        <label className="customer-form-label">Amenities</label>
         <div className="amenities-checkbox-group">
           {Array.isArray(amenities) && amenities.map(amenity => (
             <div className="form-check form-check-inline" key={amenity.amenity_id}>
@@ -525,7 +525,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
       const files = formData[type] || [];
       return (
         <div className="mb-3">
-          <label className="admin-customer-form-label view-mode-label">{label}</label>
+          <label className="customer-form-label view-mode-label">{label}</label>
           <div className="view-mode-value">
             {files.length > 0 ? (
               <div className="uploaded-files-view">
@@ -541,7 +541,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
 
     return (
       <div className="mb-3">
-        <label className="admin-customer-form-label">{label}{required && '*'}</label>
+        <label className="customer-form-label">{label}{required && '*'}</label>
         <div className="file-upload-container">
           <div className="input-group">
             <input
@@ -692,7 +692,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
       case 'basic-details':
         return (
           <div className="form-section">
-            {/* <h3 className="form-section-title">Basic Details</h3> */}
+            <h3 className="form-section-title">Basic Details</h3>
             <div className="form-section-content">
               <div className="row">
                 <div className="col-md-6">
@@ -762,7 +762,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
       case 'location-details':
         return (
           <div className="form-section">
-            {/* <h3 className="form-section-title">Location Details</h3> */}
+            <h3 className="form-section-title">Location Details</h3>
             <div className="form-section-content">
               <div className="row">
                 <div className="col-md-6">
@@ -822,7 +822,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
       case 'property-profile':
         return (
           <div className="form-section">
-            {/* <h3 className="form-section-title">Property Profile</h3> */}
+            <h3 className="form-section-title">Property Profile</h3>
             <div className="form-section-content">
               {showResidentialFields && (
                 <>
@@ -1092,7 +1092,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
       case 'media-upload':
         return (
           <div className="form-section">
-            {/* <h3 className="form-section-title">Media Upload</h3> */}
+            <h3 className="form-section-title">Media Upload</h3>
             <div className="form-section-content">
               <div className="row">
                 <div className="col-12">
@@ -1101,11 +1101,13 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
               </div>
 
               <div className="row">
-                <div className="col-md-6">
+                <div className="col-12">
                   {renderFileUploadField('videos', 'Property Videos', 'video/*', false)}
                 </div>
-            
-                <div className="col-md-6">
+              </div>
+
+              <div className="row">
+                <div className="col-12">
                   {renderFileUploadField('files', 'Property Documents', '.pdf,.doc,.docx,.xls,.xlsx,.txt', false)}
                 </div>
               </div>
@@ -1125,7 +1127,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
       case 'pricing-ownership':
         return (
           <div className="form-section">
-            {/* <h3 className="form-section-title">Pricing & Ownership</h3> */}
+            <h3 className="form-section-title">Pricing & Ownership</h3>
             <div className="form-section-content">
               {formData.lookingTo === 'sell' ? (
                 <>
@@ -1420,16 +1422,16 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
     <>
     <WebsiteNavbar/>
 
-    <div className="container-fluid admin-add-property-main-div">
+    <div className="container-fluid">
 
        
 
       <div className="row">
         <div className="col-12">
           <div className="property-form-container">
-            <div className="admin-form-header">
+            <div className="form-header">
               <h2 className="form-title">{getTitle()}</h2>
-              <div className="admin-form-actions">
+              <div className="form-actions">
                 {!isViewing && (
                   <>
                     <button 
@@ -1468,8 +1470,8 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
               </div>
             </div>
 
-            <div className="admin-form-tabs-container">
-              <ul className="nav nav-tabs admin-form-tabs">
+            <div className="form-tabs-container">
+              <ul className="nav nav-tabs form-tabs">
                 {tabs.map((tab) => (
                   <li className="nav-item" key={tab.id}>
                     <button
@@ -1484,12 +1486,12 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
               </ul>
             </div>
 
-            <div className="admin-form-body">
+            <div className="form-body">
               <form onSubmit={handleSubmit}>
                 {renderActiveTab()}
                 
                 {!isViewing && (
-                  <div className="admin-form-navigation">
+                  <div className="form-navigation">
                     <div className="row">
                       <div className="col-md-6">
                         {activeTab !== 'information' && (

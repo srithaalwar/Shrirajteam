@@ -62,15 +62,15 @@
 }
 
 .form-tabs .nav-link:hover {
-  color: #1890ff;
+  color: #273c75;
   background: #f0f7ff;
-  border-color: #e8e8e8 #e8e8e8 #1890ff #e8e8e8;
+  border-color: #e8e8e8 #e8e8e8 #273c75 #e8e8e8;
 }
 
 .form-tabs .nav-link.active {
-  color: #1890ff;
+  color: #273c75;
   background: #fff;
-  border-color: #e8e8e8 #e8e8e8 #1890ff #e8e8e8;
+  border-color: #e8e8e8 #e8e8e8 #273c75 #e8e8e8;
   border-bottom-width: 3px;
   font-weight: 600;
 }
