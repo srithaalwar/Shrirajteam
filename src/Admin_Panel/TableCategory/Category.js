@@ -332,6 +332,230 @@
 
 
 
+// import React, { useState, useEffect } from "react";
+// import axios from "axios";
+// import Swal from "sweetalert2";
+// import { useNavigate } from "react-router-dom";
+// import AdminNavbar from "../Admin_Navbar/Admin_Navbar";
+// import { baseurl } from "../../BaseURL/BaseURL";
+// import "bootstrap/dist/css/bootstrap.min.css";
+
+// const Category = () => {
+//   const [formData, setFormData] = useState({
+//     selectedCategory: "",
+//     typeName: "",
+//   });
+
+//   const [allCategories, setAllCategories] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [initialLoading, setInitialLoading] = useState(true);
+
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     fetchCategories();
+//   }, []);
+
+//   const fetchCategories = async () => {
+//     setInitialLoading(true);
+//     try {
+//       const res = await axios.get(`${baseurl}/property-categories/`);
+//       const categories = Array.isArray(res.data)
+//         ? res.data
+//         : res.data.results || [];
+//       setAllCategories(categories);
+//     } catch (error) {
+//       console.error("Error fetching categories:", error);
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: "Failed to load categories",
+//         confirmButtonColor: "#6C63FF",
+//       });
+//     } finally {
+//       setInitialLoading(false);
+//     }
+//   };
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData({ ...formData, [name]: value });
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     if (!formData.selectedCategory.trim()) {
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: "Please select a category",
+//         confirmButtonColor: "#6C63FF",
+//       });
+//       return;
+//     }
+
+//     if (!formData.typeName.trim()) {
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: "Please enter type name",
+//         confirmButtonColor: "#6C63FF",
+//       });
+//       return;
+//     }
+
+//     setLoading(true);
+
+//     try {
+//       await axios.post(`${baseurl}/property-types/`, {
+//         category: formData.selectedCategory,
+//         name: formData.typeName.trim(),
+//       });
+
+//       // SUCCESS SWEETALERT
+//       Swal.fire({
+//         icon: "success",
+//         title: "Success",
+//         text: "Type created successfully",
+//         confirmButtonColor: "#6C63FF",
+//         confirmButtonText: "OK",
+//       }).then(() => navigate("/tablecategory"));
+//     } catch (err) {
+//       console.error("Error posting:", err);
+
+//       // ERROR SWEETALERT
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: err.response?.data?.detail || "Failed to create type",
+//         confirmButtonColor: "#6C63FF",
+//       });
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   if (initialLoading) {
+//     return (
+//       <>
+//         <AdminNavbar />
+//         <div className="container my-4">
+//           <div className="card p-4 text-center">
+//             <h4 className="mb-3">Create Property Type</h4>
+//             <div className="text-muted">Loading...</div>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   return (
+//     <>
+//       <AdminNavbar />
+
+//       <div className="container my-4">
+//         <div className="card p-4">
+//           <h4 className="text-center mb-4">Create Property Type</h4>
+
+//           <form onSubmit={handleSubmit}>
+//             {/* Category Select */}
+//             <div className="row mb-3">
+//               <div className="col-12">
+//                 <div className="mb-3">
+//                   <label className="form-label">
+//                     Select Category <span className="text-danger">*</span>
+//                   </label>
+//                   <select
+//                     name="selectedCategory"
+//                     value={formData.selectedCategory}
+//                     onChange={handleChange}
+//                     className="form-control"
+//                     required
+//                     disabled={loading || allCategories.length === 0}
+//                   >
+//                     <option value="">Select a category</option>
+//                     {Array.isArray(allCategories) &&
+//                       allCategories.map((cat) => (
+//                         <option
+//                           key={cat.property_category_id}
+//                           value={cat.property_category_id}
+//                         >
+//                           {cat.name}
+//                         </option>
+//                       ))}
+//                   </select>
+
+//                   {allCategories.length === 0 && (
+//                     <small className="text-muted">
+//                       No categories available. Please create categories first.
+//                     </small>
+//                   )}
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Type Name */}
+//             <div className="row mb-3">
+//               <div className="col-12">
+//                 <div className="mb-3">
+//                   <label className="form-label">
+//                     Type Name <span className="text-danger">*</span>
+//                   </label>
+//                   <input
+//                     type="text"
+//                     name="typeName"
+//                     value={formData.typeName}
+//                     onChange={handleChange}
+//                     className="form-control"
+//                     placeholder="Enter property type name"
+//                     required
+//                     disabled={loading}
+//                   />
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Buttons */}
+//             <div className="row">
+//               <div className="col-12">
+//                 <div className="d-flex justify-content-between">
+//                   <button
+//                     type="button"
+//                     className="btn btn-outline-secondary"
+//                     onClick={() => navigate("/tablecategory")}
+//                     disabled={loading}
+//                   >
+//                     Cancel
+//                   </button>
+
+//                   <button
+//                     type="submit"
+//                     className="btn"
+//                     style={{
+//                       backgroundColor: "#273c75",
+//                       borderColor: "#273c75",
+//                       color: "white",
+//                       minWidth: "180px",
+//                     }}
+//                     disabled={loading || allCategories.length === 0}
+//                   >
+//                     {loading ? "Creating..." : "Create Type"}
+//                   </button>
+//                 </div>
+//               </div>
+//             </div>
+//           </form>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default Category;
+
+
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -339,7 +563,7 @@ import { useNavigate } from "react-router-dom";
 import AdminNavbar from "../Admin_Navbar/Admin_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import './Category.css'
 const Category = () => {
   const [formData, setFormData] = useState({
     selectedCategory: "",
@@ -459,9 +683,10 @@ const Category = () => {
           <h4 className="text-center mb-4">Create Property Type</h4>
 
           <form onSubmit={handleSubmit}>
-            {/* Category Select */}
+            {/* Category + Type Name in One Row */}
             <div className="row mb-3">
-              <div className="col-12">
+              {/* Category Select */}
+              <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">
                     Select Category <span className="text-danger">*</span>
@@ -493,11 +718,9 @@ const Category = () => {
                   )}
                 </div>
               </div>
-            </div>
 
-            {/* Type Name */}
-            <div className="row mb-3">
-              <div className="col-12">
+              {/* Type Name */}
+              <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">
                     Type Name <span className="text-danger">*</span>

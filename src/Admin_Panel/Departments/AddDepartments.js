@@ -343,7 +343,7 @@ import { useNavigate } from "react-router-dom";
 import AdminNavbar from "../Admin_Navbar/Admin_Navbar";
 import { baseurl } from '../../BaseURL/BaseURL';
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import './Departments.css'
 const AddDepartments = () => {
   const [formData, setFormData] = useState({ 
     deptName: "" 
@@ -404,7 +404,7 @@ const AddDepartments = () => {
     <>
       <AdminNavbar />
       
-      <div className="container my-4">
+      <div className="container my-4 department-div">
         <div className="card p-4">
           <h4 className="text-center mb-4">Add Department</h4>
 

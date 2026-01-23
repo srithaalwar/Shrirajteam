@@ -293,7 +293,7 @@ function MyTeam() {
         )}
 
         {/* CURRENT AGENT */}
-        <div className="text-center mb-4">
+        <div className="text-center ">
           <div className="avatar-circle main mx-auto">
             {currentAgent?.first_name?.charAt(0)?.toUpperCase()}
           </div>

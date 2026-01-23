@@ -2390,7 +2390,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
       <div className="product-form-container">
         <div className="product-form-header">
           <h2>Add New Product</h2>
-          <p className="text-muted">Fill in the details below to add a new product to your business</p>
+          {/* <p className="text-muted">Fill in the details below to add a new product to your business</p> */}
         </div>
 
         <form onSubmit={handleSubmit} className="product-form">
@@ -2411,7 +2411,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
             <div className="row">
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label htmlFor="business" className="form-label">
+                  <label htmlFor="business" className="agent-form-label">
                     Business <span className="text-danger">*</span>
                   </label>
                   <select
@@ -2436,7 +2436,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
               
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label htmlFor="product_name" className="form-label">
+                  <label htmlFor="product_name" className="agent-form-label">
                     Product Name <span className="text-danger">*</span>
                   </label>
                   <input
@@ -2458,7 +2458,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
             <div className="row">
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label htmlFor="brand" className="form-label">Brand</label>
+                  <label htmlFor="brand" className="agent-form-label">Brand</label>
                   <input
                     type="text"
                     className="form-control"
@@ -2473,7 +2473,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
               
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label htmlFor="model_no" className="form-label">Model Number</label>
+                  <label htmlFor="model_no" className="agent-form-label">Model Number</label>
                   <input
                     type="text"
                     className="form-control"
@@ -2488,7 +2488,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
             </div>
             
             <div className="mb-3">
-              <label htmlFor="description" className="form-label">Description</label>
+              <label htmlFor="description" className="agent-form-label">Description</label>
               <textarea
                 className="form-control"
                 id="description"
@@ -2503,7 +2503,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
             <div className="row">
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label htmlFor="category" className="form-label">
+                  <label htmlFor="category" className="agent-form-label">
                     Category <span className="text-danger">*</span>
                   </label>
                   <select
@@ -2555,11 +2555,11 @@ const ProductForm = ({ onSuccess, onCancel }) => {
 
             {/* Product Attributes Section */}
             <div className="mb-3">
-              <label className="form-label">Product Attributes</label>
+              <label className="agent-form-label">Product Attributes</label>
               <div className="attributes-section">
                 {productAttributes.map((attr, attrIndex) => (
                   <div key={attrIndex} className="row g-2 mb-2 align-items-center">
-                    <div className="col-md-4">
+                    <div className="col-md-6">
                       <input
                         type="text"
                         className="form-control"
@@ -2569,7 +2569,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
                         onChange={(e) => handleProductAttributeChange(attrIndex, e)}
                       />
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-6">
                       <input
                         type="text"
                         className="form-control"
@@ -2630,7 +2630,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
                 <div className="row">
                   <div className="col-md-4">
                     <div className="mb-3">
-                      <label htmlFor={`sku_${variantIndex}`} className="form-label">
+                      <label htmlFor={`sku_${variantIndex}`} className="agent-form-label">
                         SKU <span className="text-danger">*</span>
                       </label>
                       <input
@@ -2650,7 +2650,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
                   
                   <div className="col-md-4">
                     <div className="mb-3">
-                      <label htmlFor={`mrp_${variantIndex}`} className="form-label">
+                      <label htmlFor={`mrp_${variantIndex}`} className="agent-form-label">
                         MRP <span className="text-danger">*</span>
                       </label>
                       <div className="input-group">
@@ -2675,7 +2675,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
                   
                   <div className="col-md-4">
                     <div className="mb-3">
-                      <label htmlFor={`stock_${variantIndex}`} className="form-label">
+                      <label htmlFor={`stock_${variantIndex}`} className="agent-form-label">
                         Stock Quantity
                       </label>
                       <input
@@ -2696,11 +2696,11 @@ const ProductForm = ({ onSuccess, onCancel }) => {
                 
                 {/* Variant Attributes Section */}
                 <div className="mb-3">
-                  <label className="form-label">Variant Attributes</label>
+                  <label className="agent-form-label">Variant Attributes</label>
                   <div className="attributes-section">
                     {variantAttributes[variantIndex]?.map((attr, attrIndex) => (
                       <div key={attrIndex} className="row g-2 mb-2 align-items-center">
-                        <div className="col-md-4">
+                        <div className="col-md-6">
                           <input
                             type="text"
                             className="form-control"
@@ -2710,7 +2710,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
                             onChange={(e) => handleVariantAttributeChange(variantIndex, attrIndex, e)}
                           />
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-6">
                           <input
                             type="text"
                             className="form-control"
@@ -2748,14 +2748,14 @@ const ProductForm = ({ onSuccess, onCancel }) => {
                 
                 {/* Media Upload Section for each variant */}
                 <div className="media-upload-section">
-                  <label className="form-label">Product Media (Images & Videos)</label>
+                  <label className="agent-form-label">Product Media (Images & Videos)</label>
                   
                   {variant.media.map((media, mediaIndex) => (
                     <div key={mediaIndex} className="media-item-card mb-3 p-3 border rounded">
                       <div className="row align-items-center">
                         <div className="col-md-5">
                           <div className="mb-2">
-                            <label className="form-label small">Media File</label>
+                            <label className="agent-form-label small">Media File</label>
                             <input
                               type="file"
                               className="form-control form-control-sm"
@@ -2772,7 +2772,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
                         
                         <div className="col-md-3">
                           <div className="mb-2">
-                            <label className="form-label small">Media Type</label>
+                            <label className="agent-form-label small">Media Type</label>
                             <select
                               className="form-select form-select-sm"
                               value={media.media_type || 'image'}
@@ -2846,7 +2846,13 @@ const ProductForm = ({ onSuccess, onCancel }) => {
             </button>
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn "
+                                         style={{
+    backgroundColor: '#273c75',
+    borderColor: '#273c75',
+    color: 'white'
+  }}
+
               disabled={loading || !productData.business || categories.length === 0}
             >
               {loading ? (
