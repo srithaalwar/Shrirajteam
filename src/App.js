@@ -213,6 +213,11 @@ import AdminEditTrainingMaterial from './Admin_Panel/Admin_TrainingMaterial/Edit
 import AdminAddSubscription from "./Admin_Panel/Admin_Subscription/AddSubscription";
 import AdminEditSubscription from "./Admin_Panel/Admin_Subscription/EditSubscription";
 import AdminSubscription from "./Admin_Panel/Admin_Subscription/Subscription";
+import SettingsMain from './Admin_Panel/Admin_Prefix/SettingsMain';
+import ReferralPrefix from './Admin_Panel/Admin_Prefix/ReferralPrefix';
+import AddReferralPrefix from './Admin_Panel/Admin_Prefix/AddReferralPrefix';
+import EditReferralPrefix from './Admin_Panel/Admin_Prefix/EditReferralPrefix';
+
 
 import AgentDashboard from './Agent_Panel/AgentDashboard/Dashboard'
 import AgentAddProperty from './Agent_Panel/AgentAddProperty/Add_Property'
@@ -249,7 +254,9 @@ import ClientProductDetails from './Client_Panel/ClientBusinessProducts/ProductD
 import ClientSubscriptionPlan from './Client_Panel/Client_SubscriptionPlan/Subcrptionplan';
 
 
-import StaffList from "./Admin_Panel/Users/Users";
+import UserList from "./Admin_Panel/Users/Users";
+import EditUser from "./Admin_Panel/Users/EditUsers";
+import ViewUser from "./Admin_Panel/Users/ViewUser";
 import Company from "./Admin_Panel/Company/Company";
 import Leads from "./Admin_Panel/Leads/Leads";
 
@@ -340,6 +347,11 @@ function App() {
         <Route path="/admin-subscriptions" element={<AdminSubscription />} />
           <Route path="/admin-addsubscriptions" element={<AdminAddSubscription />} />
           <Route path="/admin-edit-subscription/:id" element={<AdminEditSubscription />} />
+
+            <Route path="/a-settings" element={<SettingsMain />} />
+        <Route path="/referral-prefix" element={<ReferralPrefix />} />
+        <Route path="/add-referral-prefix" element={<AddReferralPrefix />} />
+        <Route path="/edit-referral-prefix/:id" element={<EditReferralPrefix />} />
         {/* Agent-panel */}
 
         <Route path="/agent-dashboard" element={<AgentDashboard />} />
@@ -388,7 +400,9 @@ function App() {
         <Route path="/client-business-product-details/:productId" element={<ClientProductDetails />} />
         <Route path="/client-subscription-plan" element={<ClientSubscriptionPlan />} />
 
-        <Route path="/a-users" element={<StaffList />} />
+        <Route path="/admin-users" element={<UserList />} />
+          <Route path="/admin-view-user/:id" element={<ViewUser />} />
+        <Route path="/admin-edit-user/:id" element={<EditUser />} />
         <Route path="/a-company" element={<Company />} />
         <Route path="/a-leads" element={<Leads />} />
       </Routes>

@@ -1014,6 +1014,501 @@
 
 
 
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import Swal from "sweetalert2";
+// import { useNavigate } from "react-router-dom";
+// import WebsiteNavbar from "../Admin_Navbar/Admin_Navbar";
+// import { baseurl } from "../../BaseURL/BaseURL";
+// import "./Users.css";
+
+// // ✅ Format date for display (dd/mm/yyyy)
+// const formatDateForDisplay = (dateTimeString) => {
+//   if (!dateTimeString) return "";
+//   try {
+//     const datePart = dateTimeString.split(" ")[0];
+//     const [day, month, year] = datePart.split("-");
+//     return `${day}/${month}/${year}`;
+//   } catch (error) {
+//     console.error("Error formatting date:", error);
+//     return "";
+//   }
+// };
+
+// // ✅ Format date for search (convert to dd-mm-yyyy for searching)
+// const formatDateForSearch = (dateTimeString) => {
+//   if (!dateTimeString) return "";
+//   try {
+//     const datePart = dateTimeString.split(" ")[0];
+//     const [day, month, year] = datePart.split("-");
+//     return `${day}-${month}-${year}`;
+//   } catch (error) {
+//     console.error("Error formatting date for search:", error);
+//     return "";
+//   }
+// };
+
+// // ✅ Normalize search query to handle different date formats
+// const normalizeSearchQuery = (query) => {
+//   if (!query) return "";
+  
+//   // Convert dd/mm/yyyy to dd-mm-yyyy for searching
+//   const datePattern1 = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+//   const datePattern2 = /^(\d{1,2})-(\d{1,2})-(\d{4})$/;
+  
+//   if (datePattern1.test(query)) {
+//     return query.replace(/\//g, '-');
+//   } else if (datePattern2.test(query)) {
+//     return query;
+//   }
+  
+//   return query;
+// };
+
+// // ✅ ROLE MAPPING FUNCTION
+// const mapRole = (role) => {
+//   if (role === "Agent") return "Team";
+//   if (role === "Client") return "User";
+//   return role;
+// };
+
+// const UserList = () => {
+//   const navigate = useNavigate();
+//   const [staff, setStaff] = useState([]);
+//   const [filteredStaff, setFilteredStaff] = useState([]);
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [selectedRole, setSelectedRole] = useState("All");
+//   const [page, setPage] = useState(1);
+//   const [loading, setLoading] = useState(true);
+//   const rowsPerPage = 5;
+
+//   useEffect(() => {
+//     fetchStaff();
+//   }, []);
+
+//   const fetchStaff = async () => {
+//     setLoading(true);
+//     try {
+//       const res = await axios.get(`${baseurl}/users/`);
+//       const data = res.data.results || res.data || [];
+      
+//       const transformed = data.map((user) => ({
+//         id: user.user_id,
+//         first_name: user.first_name,
+//         last_name: user.last_name,
+//         name: `${user.first_name} ${user.last_name}`,
+//         email: user.email,
+//         phone: user.phone_number,
+//         status: user.status,
+//         role: mapRole(user.roles?.[0]?.role_name || ""),
+//         referralId: user.referral_id,
+//         kycStatus: user.kyc_status,
+//         fullData: user,
+//         created_at: user.created_at,
+//         displayDate: formatDateForDisplay(user.created_at),
+//         searchDate: formatDateForSearch(user.created_at),
+//         last_login: user.last_login || "Never"
+//       }));
+      
+//       setStaff(transformed);
+//       setFilteredStaff(transformed);
+//     } catch (err) {
+//       console.error("Error fetching staff:", err);
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: "Failed to load staff data",
+//         confirmButtonColor: "#6C63FF",
+//       });
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // Get unique roles for filter
+//   const uniqueRoles = ["All", ...new Set(staff.map((user) => user.role).filter(Boolean))];
+
+//   // Apply filters and search
+//   useEffect(() => {
+//     let result = [...staff];
+    
+//     // Apply role filter
+//     if (selectedRole !== "All") {
+//       result = result.filter(user => user.role === selectedRole);
+//     }
+    
+//     // Apply search filter
+//     if (searchQuery.trim()) {
+//       const normalizedQuery = normalizeSearchQuery(searchQuery.toLowerCase());
+      
+//       result = result.filter((user) => {
+//         const searchableFields = [
+//           user.id?.toString() || "",
+//           user.first_name?.toLowerCase() || "",
+//           user.last_name?.toLowerCase() || "",
+//           user.name?.toLowerCase() || "",
+//           user.email?.toLowerCase() || "",
+//           user.phone?.toString() || "",
+//           user.role?.toLowerCase() || "",
+//           user.referralId?.toString() || "",
+//           user.displayDate?.toLowerCase() || "",
+//           user.searchDate?.toLowerCase() || "",
+//           user.status?.toLowerCase() || ""
+//         ];
+        
+//         const searchableText = searchableFields.join(" ");
+//         return searchableText.includes(normalizedQuery);
+//       });
+//     }
+    
+//     // Sort by ID (newest first)
+//     result = result.sort((a, b) => b.id - a.id);
+//     setFilteredStaff(result);
+//     setPage(1); // Reset to first page on filter change
+//   }, [staff, selectedRole, searchQuery]);
+
+//   // Pagination
+//   const startIndex = (page - 1) * rowsPerPage;
+//   const paginatedData = filteredStaff.slice(startIndex, startIndex + rowsPerPage);
+//   const pageCount = Math.ceil(filteredStaff.length / rowsPerPage);
+
+//   const getSerialNumber = (index) => startIndex + index + 1;
+
+//   // Export to Excel (CSV)
+//   const exportToExcel = () => {
+//     if (filteredStaff.length === 0) {
+//       Swal.fire({
+//         icon: "warning",
+//         title: "No Data",
+//         text: "There is no data to export.",
+//       });
+//       return;
+//     }
+
+//     const headers = [
+//       "S.No",
+//       "User ID",
+//       "First Name",
+//       "Last Name",
+//       "Email",
+//       "Phone",
+//       "Role",
+//       "Referral ID",
+//       "Created At",
+//       "Status",
+    
+//     ];
+
+//     const csvContent = [
+//       headers.join(","),
+//       ...filteredStaff.map((user, index) =>
+//         [
+//           index + 1,
+//           user.id,
+//           `"${user.first_name}"`,
+//           `"${user.last_name}"`,
+//           `"${user.email}"`,
+//           `"${user.phone}"`,
+//           `"${user.role}"`,
+//           `"${user.referralId}"`,
+//           `"${user.displayDate}"`,
+//           `"${user.status}"`,
+//         ].join(",")
+//       )
+//     ].join("\n");
+
+//     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+//     const link = document.createElement("a");
+//     const url = URL.createObjectURL(blob);
+//     const timestamp = new Date().toISOString().split("T")[0];
+
+//     link.setAttribute("href", url);
+//     link.setAttribute("download", `users_${timestamp}.csv`);
+//     link.style.visibility = "hidden";
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+
+//     Swal.fire({
+//       icon: "success",
+//       title: "Export Successful",
+//       text: `Exported ${filteredStaff.length} users to CSV file.`,
+//       timer: 2000,
+//       showConfirmButton: false
+//     });
+//   };
+
+//   // Handle Actions
+//   const handleView = (user) => {
+//     navigate("/View_Tmanagement", { state: { user } });
+//   };
+
+//   const handleEdit = (user) => {
+//     navigate("/Edit_Tmanagement", { state: { user } });
+//   };
+
+//   const handleDelete = (user_id) => {
+//     Swal.fire({
+//       title: "Are you sure?",
+//       text: "Do you really want to delete this user?",
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonColor: "#d33",
+//       cancelButtonColor: "#3085d6",
+//       confirmButtonText: "Yes, delete it!"
+//     }).then((result) => {
+//       if (result.isConfirmed) {
+//         axios.delete(`${baseurl}/users/${user_id}/`)
+//           .then((res) => {
+//             if (res.status === 204 || res.status === 200) {
+//               setStaff(prev => prev.filter(user => user.id !== user_id));
+//               Swal.fire({
+//                 icon: "success",
+//                 title: "Deleted!",
+//                 text: "User has been deleted.",
+//                 timer: 2000,
+//                 showConfirmButton: false
+//               });
+//             } else {
+//               Swal.fire({
+//                 icon: "error",
+//                 title: "Failed",
+//                 text: "Failed to delete user."
+//               });
+//             }
+//           })
+//           .catch((err) => {
+//             Swal.fire({
+//               icon: "error",
+//               title: "Error",
+//               text: "Error deleting user, please try again."
+//             });
+//           });
+//       }
+//     });
+//   };
+
+//   const handleStatusChange = async (userId, newStatus) => {
+//     try {
+//       await axios.put(`${baseurl}/users/${userId}/`, { status: newStatus });
+//       setStaff(prev => prev.map(user => 
+//         user.id === userId 
+//           ? { ...user, status: newStatus, fullData: { ...user.fullData, status: newStatus } }
+//           : user
+//       ));
+//       Swal.fire({
+//         icon: "success",
+//         title: "Updated!",
+//         text: "Status updated successfully.",
+//         timer: 1500,
+//         showConfirmButton: false
+//       });
+//     } catch (err) {
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: "Failed to update status."
+//       });
+//     }
+//   };
+
+//   return (
+//     <>
+//       <WebsiteNavbar />
+
+//       <div className="staff-page">
+//         {/* Header */}
+//         <div className="staff-header">
+//           <h2>Users</h2>
+//         </div>
+
+//         {/* Toolbar - Fixed layout: left=search/filter, right=button */}
+//         <div className="staff-toolbar">
+//           {/* Left Side: Search and Filter */}
+//           <div className="toolbar-left">
+//             {/* Role Filter */}
+//             <div className="filter-container">
+//               <select 
+//                 className="role-filter"
+//                 value={selectedRole}
+//                 onChange={(e) => setSelectedRole(e.target.value)}
+//               >
+//                 {uniqueRoles.map((role) => (
+//                   <option key={role} value={role}>
+//                     {mapRole(role)}
+//                   </option>
+//                 ))}
+//               </select>
+//             </div>
+
+//             {/* Search Box */}
+//             <div className="search-box">
+//               <input
+//                 type="text"
+//                 placeholder="Search by name, email, phone, role, date..."
+//                 value={searchQuery}
+//                 onChange={(e) => setSearchQuery(e.target.value)}
+//               />
+//               <span className="search-icon">🔍</span>
+//             </div>
+//           </div>
+
+//           {/* Right Side: Export Button */}
+//           <div className="toolbar-right">
+//             <button 
+//               className="export-btn"
+//                style={{
+//                       backgroundColor: '#273c75',
+//                       borderColor: '#273c75',
+//                       color: 'white'
+//                     }}
+
+              
+//               onClick={exportToExcel}
+//             >
+//               Export Excel
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* Table */}
+//         <div className="staff-table-wrapper">
+//           <table className="staff-table">
+//             <thead>
+//               <tr>
+//                 <th>S.No.</th>
+//                 <th>User ID</th>
+//                 <th>NAME</th>
+//                 <th>EMAIL</th>
+//                 <th>MOBILE</th>
+//                 <th>ROLE</th>
+//                 <th>REFERRAL ID</th>
+//                 <th>CREATED AT</th>
+//                 <th>STATUS</th>
+//                 <th>ACTIONS</th>
+//               </tr>
+//             </thead>
+
+//             <tbody>
+//               {loading ? (
+//                 <tr>
+//                   <td colSpan="11" className="no-data">
+//                     Loading...
+//                   </td>
+//                 </tr>
+//               ) : paginatedData.length > 0 ? (
+//                 paginatedData.map((user, index) => (
+//                   <tr key={user.id}>
+//                     <td>{getSerialNumber(index)}</td>
+//                     <td>{user.id}</td>
+//                     <td className="name-cell">{user.name}</td>
+//                     <td className="email-cell">{user.email}</td>
+//                     <td>{user.phone}</td>
+//                     <td>
+//                       <span className="role-badge">{user.role}</span>
+//                     </td>
+//                     <td>{user.referralId}</td>
+//                     <td>{user.displayDate}</td>
+//                     <td>
+//                       <select 
+//                         className="status-select"
+//                         value={user.status}
+//                         onChange={(e) => handleStatusChange(user.id, e.target.value)}
+//                         style={{
+//                           color: user.status === "active" ? "#10b981" : "#ef4444",
+//                           fontWeight: "bold"
+//                         }}
+//                       >
+//                         <option value="active" style={{ color: "#10b981" }}>Active</option>
+//                         <option value="inactive" style={{ color: "#ef4444" }}>Inactive</option>
+//                       </select>
+//                     </td>
+//                     <td className="actions">
+//                       <button 
+//                         className="view-btn action-btn"
+//                         onClick={() => handleView(user.fullData)}
+//                         title="View"
+//                       >
+//                         👁️
+//                       </button>
+//                       <button 
+//                         className="edit-btn action-btn"
+//                         onClick={() => handleEdit(user.fullData)}
+//                         title="Edit"
+//                       >
+//                         ✏️
+//                       </button>
+//                       <button 
+//                         className="delete-btn action-btn"
+//                         onClick={() => handleDelete(user.id)}
+//                         title="Delete"
+//                       >
+//                         🗑️
+//                       </button>
+//                     </td>
+//                   </tr>
+//                 ))
+//               ) : (
+//                 <tr>
+//                   <td colSpan="11" className="no-data">
+//                     No users found
+//                   </td>
+//                 </tr>
+//               )}
+//             </tbody>
+//           </table>
+//         </div>
+
+//         {/* Pagination */}
+//         {pageCount > 1 && (
+//           <div className="pagination-container">
+//             <button
+//               className="pagination-btn"
+//               disabled={page === 1}
+//               onClick={() => setPage(page - 1)}
+//             >
+//               ← Previous
+//             </button>
+            
+//             <div className="page-numbers">
+//               {[...Array(pageCount)].map((_, i) => {
+//                 const pageNum = i + 1;
+//                 if (pageNum === page || pageNum === page - 1 || pageNum === page + 1) {
+//                   return (
+//                     <button
+//                       key={pageNum}
+//                       className={`page-btn ${page === pageNum ? 'active' : ''}`}
+//                       onClick={() => setPage(pageNum)}
+//                     >
+//                       {pageNum}
+//                     </button>
+//                   );
+//                 }
+//                 return null;
+//               })}
+//             </div>
+            
+//             <button
+//               className="pagination-btn"
+//               disabled={page === pageCount}
+//               onClick={() => setPage(page + 1)}
+//             >
+//               Next →
+//             </button>
+//           </div>
+//         )}
+//       </div>
+//     </>
+//   );
+// };
+
+// export default UserList;
+
+
+
+//=====================================================================
+
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -1196,7 +1691,6 @@ const UserList = () => {
       "Referral ID",
       "Created At",
       "Status",
-      "Last Login"
     ];
 
     const csvContent = [
@@ -1213,7 +1707,6 @@ const UserList = () => {
           `"${user.referralId}"`,
           `"${user.displayDate}"`,
           `"${user.status}"`,
-          `"${user.last_login}"`
         ].join(",")
       )
     ].join("\n");
@@ -1239,13 +1732,13 @@ const UserList = () => {
     });
   };
 
-  // Handle Actions
+  // Handle Actions - Updated to use URL parameters
   const handleView = (user) => {
-    navigate("/View_Tmanagement", { state: { user } });
+    navigate(`/admin-view-user/${user.user_id}`, { state: { user } });
   };
 
   const handleEdit = (user) => {
-    navigate("/Edit_Tmanagement", { state: { user } });
+    navigate(`/admin-edit-user/${user.user_id}`, { state: { user } });
   };
 
   const handleDelete = (user_id) => {
@@ -1358,13 +1851,11 @@ const UserList = () => {
           <div className="toolbar-right">
             <button 
               className="export-btn"
-               style={{
-                      backgroundColor: '#273c75',
-                      borderColor: '#273c75',
-                      color: 'white'
-                    }}
-
-              
+              style={{
+                backgroundColor: '#273c75',
+                borderColor: '#273c75',
+                color: 'white'
+              }}
               onClick={exportToExcel}
             >
               Export Excel
@@ -1386,7 +1877,6 @@ const UserList = () => {
                 <th>REFERRAL ID</th>
                 <th>CREATED AT</th>
                 <th>STATUS</th>
-                <th>LAST LOGIN</th>
                 <th>ACTIONS</th>
               </tr>
             </thead>
@@ -1425,7 +1915,6 @@ const UserList = () => {
                         <option value="inactive" style={{ color: "#ef4444" }}>Inactive</option>
                       </select>
                     </td>
-                    <td>{user.last_login}</td>
                     <td className="actions">
                       <button 
                         className="view-btn action-btn"

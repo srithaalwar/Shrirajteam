@@ -52,7 +52,7 @@ const AdminNavbar = () => {
     { path: "/admin-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
     { path: "/admin-add-property", name: "Add Property", icon: <FaHome /> },
     { path: "/admin-properties", name: "Properties", icon: <FaBuilding /> },
-    { path: "/a-users", name: "Users", icon: <FaUsers /> },
+    { path: "/admin-users", name: "Users", icon: <FaUsers /> },
     {
       name: "Operations",
       icon: <FaCogs />,
@@ -76,7 +76,7 @@ const AdminNavbar = () => {
     { path: "/a-leads", name: "Leads", icon: <FaChartLine /> },
     { path: "/a-company", name: "Company", icon: <FaBriefcase /> },
     { path: "/", name: "Reports", icon: <FaFileAlt /> },
-    { path: "/", name: "Prefix", icon: <FaTag /> },
+    { path: "/a-settings", name: "Prefix", icon: <FaTag /> },
     { path: "/admin-profile", name: "Profile", icon: <FaUserCircle /> },
   ];
 

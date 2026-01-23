@@ -576,9 +576,10 @@ const EditCategory = () => {
           <h4 className="text-center mb-4">Edit Property Type</h4>
 
           <form onSubmit={handleSubmit}>
-            {/* Category Select */}
+            {/* Both fields in one row */}
             <div className="row mb-3">
-              <div className="col-12">
+              {/* Category Select - 6 columns */}
+              <div className="col-md-6 mb-3">
                 <div className="mb-3">
                   <label className="form-label">
                     Select Category <span className="text-danger">*</span>
@@ -609,11 +610,9 @@ const EditCategory = () => {
                   )}
                 </div>
               </div>
-            </div>
 
-            {/* Type Name */}
-            <div className="row mb-3">
-              <div className="col-12">
+              {/* Type Name - 6 columns */}
+              <div className="col-md-6 mb-3">
                 <div className="mb-3">
                   <label className="form-label">
                     Type Name <span className="text-danger">*</span>
