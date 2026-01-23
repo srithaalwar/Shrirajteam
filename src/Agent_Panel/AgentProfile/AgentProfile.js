@@ -142,13 +142,14 @@ const PartnerProfile = () => {
             <div className="profile-field">
               <span className="profile-label">Date of Birth:</span>
               <span className="profile-value">
-                {userData.date_of_birth
+                {/* {userData.date_of_birth
                   ? new Date(userData.date_of_birth).toLocaleDateString("en-IN", {
                       day: "2-digit",
                       month: "short",
                       year: "numeric",
                     })
-                  : "N/A"}
+                  : "N/A"} */}
+                  {userData.date_of_birth}
               </span>
             </div>
             
