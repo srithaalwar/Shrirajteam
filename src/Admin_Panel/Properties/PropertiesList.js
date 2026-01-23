@@ -547,11 +547,11 @@ const FilterSidebar = ({
     });
   }, [setSelectedTransactionTypes, onFilterChange]);
 
-  const toggleRole = useCallback((roleId) => {
+   const toggleRole = useCallback((roleName) => {
     setSelectedRoles((prev) => {
-      const newSelection = prev.includes(roleId)
-        ? prev.filter((r) => r !== roleId)
-        : [...prev, roleId];
+      const newSelection = prev.includes(roleName)
+        ? prev.filter((r) => r !== roleName)
+        : [...prev, roleName];
       
       if (onFilterChange) {
         setTimeout(() => onFilterChange(), 0);
@@ -674,21 +674,21 @@ const FilterSidebar = ({
                 key={role.role_id}
                 className="d-flex justify-content-between align-items-center mb-2 cursor-pointer"
                 style={{ cursor: 'pointer' }}
-                onClick={() => toggleRole(role.role_id)}
-                onKeyPress={(e) => e.key === 'Enter' && toggleRole(role.role_id)}
+                onClick={() => toggleRole(role.role_name)}  // Pass role name, not ID
+                onKeyPress={(e) => e.key === 'Enter' && toggleRole(role.role_name)}
                 tabIndex={0}
                 role="checkbox"
-                aria-checked={selectedRoles.includes(role.role_id)}
+                aria-checked={selectedRoles.includes(role.role_name)}  // Check by name
               >
                 <div className="d-flex align-items-center gap-2">
                   <input
                     type="checkbox"
                     className="form-check-input"
-                    checked={selectedRoles.includes(role.role_id)}
+                    checked={selectedRoles.includes(role.role_name)}  // Check by name
                     readOnly
                     tabIndex={-1}
                   />
-                  <span className={`small ${selectedRoles.includes(role.role_id) ? 'fw-semibold text-dark' : 'text-muted'}`}>
+                  <span className={`small ${selectedRoles.includes(role.role_name) ? 'fw-semibold text-dark' : 'text-muted'}`}>
                     {role.role_name}
                   </span>
                 </div>
@@ -908,19 +908,17 @@ const FilterSidebar = ({
                 ></button>
               </span>
             ))}
-            {selectedRoles.map(roleId => {
-              const role = roles.find(r => r.role_id === roleId);
-              return (
-                <span key={roleId} className="badge bg-purple-subtle text-purple border border-purple d-flex align-items-center">
-                  {role?.role_name || 'Role'}
-                  <button 
-                    onClick={() => toggleRole(roleId)} 
+                      {selectedRoles.map(roleName => (
+              <span key={roleName} className="badge bg-purple-subtle text-purple border border-purple d-flex align-items-center">
+                {roleName}
+                <button 
+                  onClick={() => toggleRole(roleName)} 
                   className="btn-close btn-close-sm ms-1"
-                    aria-label={`Remove ${role?.role_name} role filter`}
-                  ></button>
-                </span>
-              );
-            })}
+                  aria-label={`Remove ${roleName} role filter`}
+                ></button>
+              </span>
+            ))}
+
             {selectedCategories.map(catName => (
               <span key={catName} className="badge bg-primary-subtle text-primary border border-primary d-flex align-items-center">
                 {catName.charAt(0).toUpperCase() + catName.slice(1)}
@@ -1337,22 +1335,23 @@ const Properties = () => {
   const [roles, setRoles] = useState([]);
 
   // Fetch roles from API
-  const fetchRoles = useCallback(async () => {
-    try {
-      setLoadingRoles(true);
-      const response = await fetch(`${baseurl}/roles/`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setRoles(data.results || []);
-    } catch (err) {
-      console.error("Error fetching roles:", err);
-      setRoles([]);
-    } finally {
-      setLoadingRoles(false);
+  // The fetchRoles function should look like this:
+const fetchRoles = useCallback(async () => {
+  try {
+    setLoadingRoles(true);
+    const response = await fetch(`${baseurl}/roles/`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  }, []);
+    const data = await response.json();
+    setRoles(data.results || []);
+  } catch (err) {
+    console.error("Error fetching roles:", err);
+    setRoles([]);
+  } finally {
+    setLoadingRoles(false);
+  }
+}, []);
 
   const handleVerificationStatusUpdate = useCallback((propertyId, newStatus) => {
     // Update the property in the local state
@@ -1434,68 +1433,133 @@ const Properties = () => {
   }, []);
 
   // Fetch properties from API with filters
-  const fetchProperties = useCallback(async () => {
-    try {
-      setLoading(true);
+  // const fetchProperties = useCallback(async () => {
+  //   try {
+  //     setLoading(true);
       
-      const params = new URLSearchParams();
+  //     const params = new URLSearchParams();
       
-      if (searchTerm.trim()) {
-        params.append('keyword', searchTerm.trim());
-      }
+  //     if (searchTerm.trim()) {
+  //       params.append('keyword', searchTerm.trim());
+  //     }
       
-      if (selectedCategories.length > 0) {
-        const categoryQuery = selectedCategories.join(',');
-        params.append('category', categoryQuery);
-      }
+  //     if (selectedCategories.length > 0) {
+  //       const categoryQuery = selectedCategories.join(',');
+  //       params.append('category', categoryQuery);
+  //     }
       
-      if (selectedTypes.length > 0) {
-        const typeQuery = selectedTypes.join(',');
-        params.append('property_type', typeQuery);
-      }
+  //     if (selectedTypes.length > 0) {
+  //       const typeQuery = selectedTypes.join(',');
+  //       params.append('property_type', typeQuery);
+  //     }
       
-      if (selectedTransactionTypes.length > 0) {
-        const lookingToQuery = selectedTransactionTypes.join(',');
-        params.append('looking_to', lookingToQuery);
-      }
+  //     if (selectedTransactionTypes.length > 0) {
+  //       const lookingToQuery = selectedTransactionTypes.join(',');
+  //       params.append('looking_to', lookingToQuery);
+  //     }
       
-      if (selectedCities.length > 0) {
-        params.append('city', selectedCities.join(','));
-      }
+  //     if (selectedCities.length > 0) {
+  //       params.append('city', selectedCities.join(','));
+  //     }
       
-      if (selectedRoles.length > 0) {
-        const roleIds = selectedRoles.join(',');
-        params.append('user_role', roleIds);
-      }
+  //     if (selectedRoles.length > 0) {
+  //       const roleIds = selectedRoles.join(',');
+  //       params.append('user_role', roleIds);
+  //     }
       
-      params.append('page', currentPage);
+  //     params.append('page', currentPage);
       
-      const queryString = params.toString();
-      const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
+  //     const queryString = params.toString();
+  //     const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
       
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setProperties(data.results || []);
-      setTotalCount(data.count || 0);
-      setTotalPages(Math.ceil((data.count || 0) / 10));
-    } catch (err) {
-      setError(err.message);
-      console.error("Error fetching properties:", err);
-    } finally {
-      setLoading(false);
+  //     const response = await fetch(url);
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
+  //     const data = await response.json();
+  //     setProperties(data.results || []);
+  //     setTotalCount(data.count || 0);
+  //     setTotalPages(Math.ceil((data.count || 0) / 10));
+  //   } catch (err) {
+  //     setError(err.message);
+  //     console.error("Error fetching properties:", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [
+  //   currentPage, 
+  //   selectedCategories, 
+  //   selectedTypes, 
+  //   selectedCities, 
+  //   selectedTransactionTypes,
+  //   selectedRoles,
+  //   searchTerm
+  // ]);
+
+const fetchProperties = useCallback(async () => {
+  try {
+    setLoading(true);
+    
+    const params = new URLSearchParams();
+    
+    if (searchTerm.trim()) {
+      params.append('keyword', searchTerm.trim());
     }
-  }, [
-    currentPage, 
-    selectedCategories, 
-    selectedTypes, 
-    selectedCities, 
-    selectedTransactionTypes,
-    selectedRoles,
-    searchTerm
-  ]);
+    
+    if (selectedCategories.length > 0) {
+      const categoryQuery = selectedCategories.join(',');
+      params.append('category', categoryQuery);
+    }
+    
+    if (selectedTypes.length > 0) {
+      const typeQuery = selectedTypes.join(',');
+      params.append('property_type', typeQuery);
+    }
+    
+    if (selectedTransactionTypes.length > 0) {
+      const lookingToQuery = selectedTransactionTypes.join(',');
+      params.append('looking_to', lookingToQuery);
+    }
+    
+    if (selectedCities.length > 0) {
+      params.append('city', selectedCities.join(','));
+    }
+    
+    if (selectedRoles.length > 0) {
+      // FIX: Changed from 'user_role' to 'role'
+      // Using role names instead of IDs
+      params.append('role', selectedRoles.join(','));
+    }
+    
+    params.append('page', currentPage);
+    
+    const queryString = params.toString();
+    const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
+    
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    setProperties(data.results || []);
+    setTotalCount(data.count || 0);
+    setTotalPages(Math.ceil((data.count || 0) / 10));
+  } catch (err) {
+    setError(err.message);
+    console.error("Error fetching properties:", err);
+  } finally {
+    setLoading(false);
+  }
+}, [
+  currentPage, 
+  selectedCategories, 
+  selectedTypes, 
+  selectedCities, 
+  selectedTransactionTypes,
+  selectedRoles,
+  searchTerm
+]);
+
 
   // Handle filter changes
   const handleFilterChange = useCallback(() => {
