@@ -934,7 +934,7 @@ const Login = () => {
                         id="email"
                         value={email}
                         onChange={handleEmailChange}
-                        placeholder="Email, Mobile, or Referral ID (SRP000001)"
+                        placeholder="Email, Mobile, or Referral ID"
                       />
                       <div className="form-text">
                         Referral ID should start with SRP or SRT

@@ -239,7 +239,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
           {property.property_title}
         </h6>
         <p className="card-text text-muted small mb-2">
-          <i className="bi bi-geo-alt"></i> {property.address}, {property.city}
+          <i className="bi bi-geo-alt"></i> {property.city}
         </p>
         <div className="d-flex flex-wrap gap-1 mb-2">
           {property.number_of_bedrooms && (
