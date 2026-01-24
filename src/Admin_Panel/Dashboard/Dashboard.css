@@ -143,7 +143,6 @@
 }
 
 .form-select {
-  width: 180px;
   border: 1px solid #dce1e6;
   border-radius: 8px;
   padding: 8px 12px;
@@ -152,6 +151,13 @@
   background-color: white;
   cursor: pointer;
   transition: all 0.2s;
+}
+
+
+.form-select-dashboard{
+    width: 180px !important;
+
+
 }
 
 .form-select:focus {

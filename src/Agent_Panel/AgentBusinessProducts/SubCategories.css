@@ -1,0 +1,33 @@
+/* Filter Dropdown Styles */
+.hover-bg-light:hover {
+  background-color: #f8f9fa !important;
+}
+
+/* Active filter badges */
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Ensure dropdown appears above other content */
+.position-relative {
+  z-index: 1000;
+}
+
+/* Adjust the header layout for mobile */
+@media (max-width: 768px) {
+  .d-flex.justify-content-between.align-items-center {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  
+  .d-flex.align-items-center.gap-2.flex-wrap {
+    margin-top: 1rem;
+    width: 100%;
+  }
+  
+  .input-group {
+    width: 100% !important;
+    max-width: 100%;
+  }
+}

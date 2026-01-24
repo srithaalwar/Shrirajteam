@@ -451,7 +451,7 @@ const AdminDashboard = () => {
                     <div className="filter-control">
                       <label className="filter-label">Filter by Status:</label>
                       <select 
-                        className="form-select"
+                        className="form-select form-select-dashboard"
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                       >
