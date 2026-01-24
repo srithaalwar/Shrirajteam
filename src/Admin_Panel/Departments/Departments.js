@@ -166,7 +166,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import AdminNavbar from "./../Admin_Navbar/Admin_Navbar";
 import { baseurl } from './../../BaseURL/BaseURL';
-
+import './Departments.css'
 const Departments = () => {
   const [departments, setDepartments] = useState([]);
   const [filteredDepartments, setFilteredDepartments] = useState([]);
@@ -290,8 +290,8 @@ const Departments = () => {
         </div>
 
         {/* Table */}
-        <div className="table-card">
-          <table className="data-table">
+        <div className="table-card card-department">
+          <table className="data-table data-table-department">
             <thead>
               <tr>
                 <th>S.No.</th>

@@ -58,3 +58,26 @@
 
   width: 60%;
 }
+
+
+
+.card-department{
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: auto !important;
+}
+
+
+@media (max-width: 767px) {
+   
+.data-table-department{
+  width:fit-content;
+  min-width: 400px !important;
+}
+.department-div {
+    width: 100%;
+}
+}
+
+

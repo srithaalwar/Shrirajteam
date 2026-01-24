@@ -379,7 +379,7 @@ const AgentNavbar = () => {
         { path: "/agent-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
         { path: "/agent-training-material", name: "Training Material", icon: <FaGraduationCap /> },
         { path: "/agent-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
-        { path: "/agent-business", name: "Business", icon: <FaBriefcase /> },
+        // { path: "/agent-business", name: "Business", icon: <FaBriefcase /> },
         { path: "/agent-site-visits", name: "Site Visits", icon: <FaEye /> },
         { path: "/agent-my-team", name: "My Team", icon: <FaUsers /> },
       ],

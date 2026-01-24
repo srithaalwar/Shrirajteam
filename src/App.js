@@ -241,7 +241,7 @@ import AgentMyProducts from "./Agent_Panel/Agent_My_Products/My_Products";
 import AgentSubscriptionPlan from './Agent_Panel/Agent_SubscriptionPlan/Subcrptionplan';
 
 
-import ClientDashboard from './Client_Panel/Dashboard/Dashboard'
+import ClientDashboard from './Client_Panel/Client_Dashboard/Dashboard'
 import ClientAddPropertyForm from "./Client_Panel/Client_AddProperty/Add_Property";
 import ClientProperties from './Client_Panel/ClientProperties/PropertiesList';
 import ClientMyProperty from './Client_Panel/MyProperties/MyProperties';

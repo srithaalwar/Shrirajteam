@@ -16,7 +16,7 @@ import {
 } from "chart.js";
 import { useNavigate } from "react-router-dom";
 import { baseurl } from "../../BaseURL/BaseURL";
-import AgentNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
+import ClientNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
 import "./Dashboard.css";
 
 // Font Awesome Icons
@@ -207,7 +207,7 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <AgentNavbar />
+      <ClientNavbar />
       <div className="dashboard-container">
         <div className="dashboard-content">
           {loading ? (
