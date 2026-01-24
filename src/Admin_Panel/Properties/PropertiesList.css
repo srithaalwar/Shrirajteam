@@ -110,6 +110,12 @@
   .sticky-top {
     position: static !important;
   }
+.btn-group {
+  display: none;
+
+}
+
+
 }
 
 /* Price range slider (if you want to add later) */

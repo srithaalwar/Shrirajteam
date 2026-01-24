@@ -16,7 +16,7 @@ import {
 } from "chart.js";
 import { useNavigate } from "react-router-dom";
 import { baseurl } from "../../BaseURL/BaseURL";
-import AgentNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
+import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import "./Dashboard.css";
 
 // Font Awesome Icons
