@@ -217,7 +217,9 @@ import SettingsMain from './Admin_Panel/Admin_Prefix/SettingsMain';
 import ReferralPrefix from './Admin_Panel/Admin_Prefix/ReferralPrefix';
 import AddReferralPrefix from './Admin_Panel/Admin_Prefix/AddReferralPrefix';
 import EditReferralPrefix from './Admin_Panel/Admin_Prefix/EditReferralPrefix';
-
+import CommissionLevels from './Admin_Panel/Admin_PayOut_Master/CommissionLevels';
+import AddCommissionLevels from './Admin_Panel/Admin_PayOut_Master/AddCommissionLevels';
+import EditCommissionLevels from './Admin_Panel/Admin_PayOut_Master/EditCommissionLevels';
 
 import AgentDashboard from './Agent_Panel/AgentDashboard/Dashboard'
 import AgentAddProperty from './Agent_Panel/AgentAddProperty/Add_Property'
@@ -352,6 +354,10 @@ function App() {
         <Route path="/referral-prefix" element={<ReferralPrefix />} />
         <Route path="/add-referral-prefix" element={<AddReferralPrefix />} />
         <Route path="/edit-referral-prefix/:id" element={<EditReferralPrefix />} />
+
+          <Route path="/admin-commissionmaster" element={<CommissionLevels />} />
+          <Route path="/admin-add-commissionmaster" element={<AddCommissionLevels />} />
+          <Route path="/admin-edit-commissionmaster/:id" element={<EditCommissionLevels />} />
         {/* Agent-panel */}
 
         <Route path="/agent-dashboard" element={<AgentDashboard />} />

@@ -1,0 +1,77 @@
+.container {
+  max-width: 1100px;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.form-control {
+  padding: 12px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #1f2937;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-control::placeholder {
+  color: #9ca3af;
+}
+
+.text-muted {
+  font-size: 12px;
+}
+
+/* Buttons */
+.btn-outline-secondary {
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 14px;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #e5e7eb;
+}
+
+.btn {
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    padding: 16px !important;
+  }
+
+  .row.mb-3 > div {
+    margin-bottom: 12px;
+  }
+
+  .d-flex.justify-content-between {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .d-flex.justify-content-between .btn {
+    width: 100%;
+  }
+}
