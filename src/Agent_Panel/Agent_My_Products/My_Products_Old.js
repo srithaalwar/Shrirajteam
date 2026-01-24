@@ -1,3 +1,518 @@
+// import React, { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import WebsiteNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+// import {
+//   Search,
+//   X,
+//   Grid2X2,
+//   Grid3X3,
+//   LayoutList,
+// } from "lucide-react";
+// import { baseurl } from "../../BaseURL/BaseURL";
+
+// /* ================= PRODUCT CARD COMPONENT ================= */
+// const ProductCard = ({ product, variant, baseurl }) => {
+//   const navigate = useNavigate();
+  
+//   // Get image for specific variant
+//   const getProductImage = () => {
+//     // Check if this variant has media images
+//     if (variant.media && variant.media.length > 0) {
+//       // Find an image (not video) from variant's media
+//       const imageMedia = variant.media.find(m => m.media_type === "image");
+//       if (imageMedia) {
+//         return `${baseurl}${imageMedia.file}`;
+//       }
+//       // If no image but has video, use video thumbnail or skip
+//       return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//     }
+    
+//     // If no media for this variant, check other variants in the product
+//     if (product.variants && product.variants.length > 0) {
+//       // Find any variant that has image media
+//       for (const v of product.variants) {
+//         if (v.media && v.media.length > 0) {
+//           const imageMedia = v.media.find(m => m.media_type === "image");
+//           if (imageMedia) {
+//             return `${baseurl}${imageMedia.file}`;
+//           }
+//         }
+//       }
+//     }
+    
+//     // Fallback to default image
+//     return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//   };
+
+//   // Calculate discount percentage for variant
+//   const calculateDiscount = () => {
+//     const mrp = parseFloat(variant.mrp);
+//     const sellingPrice = parseFloat(variant.selling_price);
+//     if (mrp > 0 && sellingPrice < mrp) {
+//       return Math.round(((mrp - sellingPrice) / mrp) * 100);
+//     }
+//     return 0;
+//   };
+
+//   const discount = calculateDiscount();
+  
+//   // Create variant name
+//   const getVariantName = () => {
+//     if (variant.attributes && variant.attributes.display) {
+//       return `${product.product_name} - ${variant.attributes.display}`;
+//     } else if (variant.attributes) {
+//       // Create display from attributes if no display field
+//       const attrDisplay = Object.entries(variant.attributes)
+//         .filter(([key]) => key !== 'unit' && key !== 'value')
+//         .map(([key, value]) => value)
+//         .join(" ");
+//       if (attrDisplay.trim()) {
+//         return `${product.product_name} - ${attrDisplay}`;
+//       }
+//     }
+//     return product.product_name;
+//   };
+
+//   // Get variant display text from attributes
+//   const getVariantDisplay = () => {
+//     if (variant.attributes) {
+//       // Show key attributes in a readable format
+//       const displayAttrs = [];
+      
+//       if (variant.attributes.display) {
+//         displayAttrs.push(variant.attributes.display);
+//       }
+      
+//       if (variant.attributes.packaging) {
+//         displayAttrs.push(variant.attributes.packaging);
+//       }
+      
+//       if (variant.attributes.milk_type) {
+//         displayAttrs.push(variant.attributes.milk_type);
+//       }
+      
+//       if (variant.attributes.fat_content) {
+//         displayAttrs.push(variant.attributes.fat_content);
+//       }
+      
+//       if (variant.attributes.quantity) {
+//         displayAttrs.push(variant.attributes.quantity);
+//       }
+      
+//       return displayAttrs.join(" • ");
+//     }
+//     return "";
+//   };
+  
+//   return (
+//     <div className="card h-100 shadow-sm border-0">
+//       <div className="bg-light p-3 text-center position-relative" style={{ height: 200, cursor: "pointer" }}
+//            onClick={() => navigate(`/agent-business-product-details/${product.product_id}?variant=${variant.id}`)}>
+//         <img
+//           src={getProductImage()}
+//           alt={getVariantName()}
+//           className="img-fluid"
+//           style={{ maxHeight: "100%", objectFit: "contain" }}
+//           onError={(e) => {
+//             e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//           }}
+//         />
+//         {discount > 0 && (
+//           <span className="badge bg-danger position-absolute top-0 end-0 m-2">
+//             {discount}% OFF
+//           </span>
+//         )}
+//       </div>
+
+//       <div className="card-body d-flex flex-column p-3">
+//         <h6 className="line-clamp-2 mb-2" style={{ cursor: "pointer", minHeight: "48px" }}
+//             onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}>
+//           {getVariantName()}
+//         </h6>
+//         <small className="text-muted">{product.brand || "No Brand"}</small>
+        
+//         {/* Variant attributes */}
+//         {getVariantDisplay() && (
+//           <small className="text-info mb-2 d-block">
+//             {getVariantDisplay()}
+//           </small>
+//         )}
+
+//         {/* Stock status */}
+//         <small className={`mb-2 ${variant.stock > 0 ? "text-success" : "text-danger"}`}>
+//           {variant.stock > 0 ? `In Stock (${variant.stock})` : "Out of Stock"}
+//         </small>
+
+//         <div className="mt-auto">
+//           <div className="d-flex align-items-center gap-2 mb-2">
+//             <strong className="h5 mb-0">₹{parseFloat(variant.selling_price).toFixed(2)}</strong>
+//             {parseFloat(variant.mrp) > parseFloat(variant.selling_price) && (
+//               <small className="text-muted text-decoration-line-through">
+//                 ₹{parseFloat(variant.mrp).toFixed(2)}
+//               </small>
+//             )}
+//           </div>
+
+//           {/* VIEW DETAILS BUTTON */}
+//           <button 
+//             className="btn w-100 mb-2 text-white" 
+//             style={{ background: "#6c757d", fontSize: "14px" }}
+//             onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}
+//           >
+//             VIEW DETAILS
+//           </button>
+
+//           {/* ADD TO CART BUTTON */}
+//           <button 
+//             className="btn w-100 text-white" 
+//             style={{ background: "#273c75", fontSize: "14px" }}
+//             onClick={(e) => {
+//               e.stopPropagation();
+//               // Add to cart logic here with variant.id
+//               console.log("Add to cart:", variant.id, variant.sku);
+//             }}
+//             disabled={variant.stock <= 0}
+//           >
+//             {variant.stock > 0 ? "ADD TO CART" : "OUT OF STOCK"}
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// /* ================= PRODUCT HEADER COMPONENT ================= */
+// const ProductHeader = ({ viewMode, onViewModeChange, search, setSearch, totalProducts }) => {
+//   const views = [
+//     { mode: "grid-2", icon: Grid2X2 },
+//     { mode: "grid-3", icon: Grid3X3 },
+//     { mode: "grid-4", icon: LayoutList },
+//   ];
+
+//   return (
+//     <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+//       <div>
+//         <h4 className="fw-bold mb-0">My Products</h4>
+//         <small className="text-muted">{totalProducts} products found</small>
+//       </div>
+
+//       <div className="d-flex align-items-center gap-2">
+//         <div className="input-group input-group-sm" style={{ width: 220 }}>
+//           <span className="input-group-text bg-transparent border-end-0">
+//             <Search size={16} />
+//           </span>
+//           <input
+//             className="form-control border-start-0"
+//             placeholder="Search products..."
+//             value={search}
+//             onChange={(e) => setSearch(e.target.value)}
+//           />
+//           {search && (
+//             <button className="btn btn-outline-secondary border-start-0" onClick={() => setSearch("")}>
+//               <X size={14} />
+//             </button>
+//           )}
+//         </div>
+
+//         <div className="btn-group">
+//           {views.map(({ mode, icon: Icon }) => (
+//             <button
+//               key={mode}
+//               className={`btn btn-outline-secondary ${viewMode === mode ? "active" : ""}`}
+//               onClick={() => onViewModeChange(mode)}
+//               title={`${mode.replace('grid-', '')} columns`}
+//             >
+//               <Icon size={16} />
+//             </button>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// /* ================= PRODUCT GRID COMPONENT ================= */
+// const ProductGrid = ({ products, viewMode, baseurl }) => {
+//   const gridClass = {
+//     "grid-2": "row row-cols-1 row-cols-sm-2",
+//     "grid-3": "row row-cols-1 row-cols-sm-2 row-cols-md-3",
+//     "grid-4": "row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4",
+//   }[viewMode];
+
+//   return (
+//     <div className={gridClass}>
+//       {products.map((item) => (
+//         <div key={`${item.product.product_id}-${item.variant.id}`} className="col mb-4">
+//           <ProductCard 
+//             product={item.product} 
+//             variant={item.variant} 
+//             baseurl={baseurl} 
+//           />
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+// /* ================= MAIN PRODUCTS COMPONENT ================= */
+// const MyProducts = () => {
+//   const navigate = useNavigate();
+
+//   const [products, setProducts] = useState([]);
+//   const [loading, setLoading] = useState(true);
+  
+//   // Products grid states
+//   const [viewMode, setViewMode] = useState("grid-4");
+//   const [search, setSearch] = useState("");
+//   const [currentPage, setCurrentPage] = useState(1);
+
+//   // Get user_id from localStorage
+//   const getUserIdFromLocalStorage = () => {
+//     try {
+//       // Try to get user_id from different possible keys in localStorage
+//       const userData = localStorage.getItem('user');
+//       if (userData) {
+//         const user = JSON.parse(userData);
+//         if (user.user_id) return user.user_id;
+//         if (user.id) return user.id;
+//       }
+      
+//       // Try other possible keys
+//       const userId = localStorage.getItem('user_id') || 
+//                     localStorage.getItem('userId') ||
+//                     localStorage.getItem('id');
+      
+//       if (userId) return parseInt(userId);
+      
+//       // Return default user_id if none found
+//       console.warn("No user_id found in localStorage, using default 2");
+//       return 2;
+//     } catch (error) {
+//       console.error("Error getting user_id from localStorage:", error);
+//       return 2; // Default fallback
+//     }
+//   };
+
+//   // Fetch products for the user
+//   useEffect(() => {
+//     setLoading(true);
+    
+//     const userId = getUserIdFromLocalStorage();
+//     console.log("Fetching products for user_id:", userId);
+    
+//     fetch(`${baseurl}/products/?user_id=${userId}`)
+//       .then(res => {
+//         if (!res.ok) {
+//           throw new Error(`HTTP error! status: ${res.status}`);
+//         }
+//         return res.json();
+//       })
+//       .then(data => {
+//         console.log("Products data received:", data);
+        
+//         // Transform products to include each variant as a separate item
+//         const allProductItems = [];
+//         (data.results || []).forEach(product => {
+//           if (product.variants && product.variants.length > 0) {
+//             // Add each variant as a separate product item
+//             product.variants.forEach(variant => {
+//               allProductItems.push({
+//                 product: product,
+//                 variant: variant
+//               });
+//             });
+//           } else {
+//             // If no variants, add the product as is
+//             allProductItems.push({
+//               product: product,
+//               variant: {
+//                 id: product.product_id,
+//                 sku: product.product_id,
+//                 mrp: "0.00",
+//                 selling_price: "0.00",
+//                 stock: 0,
+//                 attributes: {},
+//                 media: []
+//               }
+//             });
+//           }
+//         });
+        
+//         setProducts(allProductItems);
+//         setLoading(false);
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching products:", error);
+//         setLoading(false);
+//         setProducts([]);
+//       });
+//   }, []);
+
+//   /* ===== Filter products based on search ===== */
+//   const filteredProducts = products.filter((item) => {
+//     const searchTerm = search.toLowerCase();
+//     if (!searchTerm) return true;
+    
+//     return (
+//       item.product.product_name.toLowerCase().includes(searchTerm) ||
+//       (item.product.brand && item.product.brand.toLowerCase().includes(searchTerm)) ||
+//       item.variant.sku.toLowerCase().includes(searchTerm) ||
+//       (item.variant.attributes && 
+//         JSON.stringify(item.variant.attributes).toLowerCase().includes(searchTerm))
+//     );
+//   });
+
+//   /* ===== Pagination ===== */
+//   const itemsPerPage = {
+//     "grid-2": 8,
+//     "grid-3": 9,
+//     "grid-4": 12,
+//   }[viewMode];
+
+//   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+//   const paginatedProducts = filteredProducts.slice(
+//     (currentPage - 1) * itemsPerPage,
+//     currentPage * itemsPerPage
+//   );
+
+//   // Reset page on view/search change
+//   useEffect(() => {
+//     setCurrentPage(1);
+//   }, [viewMode, search]);
+
+//   return (
+//     <>
+//       <WebsiteNavbar />
+
+//       <div className="webhome-container" style={{ padding: "20px" }}>
+//         {/* 🔙 BACK BUTTON */}
+//         <button
+//           className="back-btn"
+//           onClick={() => navigate(-1)}
+//           style={{
+//             background: "none",
+//             border: "none",
+//             display: "flex",
+//             alignItems: "center",
+//             gap: "8px",
+//             color: "#333",
+//             marginBottom: "20px",
+//             cursor: "pointer",
+//             fontSize: "16px"
+//           }}
+//         >
+//           <ArrowBackIosNewIcon fontSize="small" />
+//           <span>Back</span>
+//         </button>
+
+//         {/* PRODUCTS SECTION */}
+//         <div className="products-section">
+//           <ProductHeader
+//             viewMode={viewMode}
+//             onViewModeChange={setViewMode}
+//             search={search}
+//             setSearch={setSearch}
+//             totalProducts={filteredProducts.length}
+//           />
+
+//           {loading ? (
+//             <div className="text-center py-5">
+//               <div className="spinner-border text-primary" role="status">
+//                 <span className="visually-hidden">Loading...</span>
+//               </div>
+//               <p className="mt-2">Loading products...</p>
+//             </div>
+//           ) : filteredProducts.length === 0 ? (
+//             <div className="text-center py-5">
+//               <h5>No products found</h5>
+//               <p className="text-muted">
+//                 {search ? `No products match "${search}"` : "You haven't added any products yet"}
+//               </p>
+//             </div>
+//           ) : (
+//             <>
+//               <ProductGrid 
+//                 products={paginatedProducts} 
+//                 viewMode={viewMode} 
+//                 baseurl={baseurl}
+//               />
+
+//               {/* PRODUCTS PAGINATION */}
+//               {totalPages > 1 && (
+//                 <nav className="mt-5">
+//                   <ul className="pagination justify-content-center">
+//                     <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+//                       <button
+//                         className="page-link"
+//                         onClick={() => setCurrentPage(p => p - 1)}
+//                         disabled={currentPage === 1}
+//                       >
+//                         Previous
+//                       </button>
+//                     </li>
+
+//                     {Array.from({ length: totalPages }).map((_, i) => {
+//                       // Show only limited page numbers
+//                       if (
+//                         i === 0 || // First page
+//                         i === totalPages - 1 || // Last page
+//                         (i >= currentPage - 2 && i <= currentPage + 2) // Pages around current
+//                       ) {
+//                         return (
+//                           <li
+//                             key={i}
+//                             className={`page-item ${currentPage === i + 1 && "active"}`}
+//                           >
+//                             <button
+//                               className="page-link"
+//                               onClick={() => setCurrentPage(i + 1)}
+//                             >
+//                               {i + 1}
+//                             </button>
+//                           </li>
+//                         );
+//                       }
+                      
+//                       // Show ellipsis
+//                       if (i === 1 || i === totalPages - 2) {
+//                         return (
+//                           <li key={i} className="page-item disabled">
+//                             <span className="page-link">...</span>
+//                           </li>
+//                         );
+//                       }
+                      
+//                       return null;
+//                     })}
+
+//                     <li className={`page-item ${currentPage === totalPages && "disabled"}`}>
+//                       <button
+//                         className="page-link"
+//                         onClick={() => setCurrentPage(p => p + 1)}
+//                         disabled={currentPage === totalPages}
+//                       >
+//                         Next
+//                       </button>
+//                     </li>
+//                   </ul>
+//                 </nav>
+//               )}
+//             </>
+//           )}
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default MyProducts;
+
+
+
+
+
 //===============================================================================
 
 
@@ -24,8 +539,7 @@ import {
   Image as ImageIcon,
   DollarSign,
   PackageOpen,
-  AlertCircle,
-  ArrowLeft
+  AlertCircle
 } from "lucide-react";
 import { baseurl } from "../../BaseURL/BaseURL";
 
@@ -592,6 +1106,268 @@ const ManageMediaModal = ({ product, variant, isOpen, onClose, onDeleteMedia, ba
   );
 };
 
+/* ================= PRODUCT CARD COMPONENT ================= */
+// const ProductCard = ({ 
+//   product, 
+//   variant, 
+//   baseurl,
+//   onEditProduct,
+//   onEditVariant,
+//   onAddVariant,
+//   onManageMedia
+// }) => {
+//   const navigate = useNavigate();
+  
+//   // Get image for specific variant
+//   const getProductImage = () => {
+//     if (variant.media && variant.media.length > 0) {
+//       const imageMedia = variant.media.find(m => m.media_type === "image");
+//       if (imageMedia) {
+//         return `${baseurl}${imageMedia.file}`;
+//       }
+//       return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//     }
+    
+//     if (product.variants && product.variants.length > 0) {
+//       for (const v of product.variants) {
+//         if (v.media && v.media.length > 0) {
+//           const imageMedia = v.media.find(m => m.media_type === "image");
+//           if (imageMedia) {
+//             return `${baseurl}${imageMedia.file}`;
+//           }
+//         }
+//       }
+//     }
+    
+//     return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//   };
+
+//   // Calculate discount percentage for variant
+//   const calculateDiscount = () => {
+//     const mrp = parseFloat(variant.mrp);
+//     const sellingPrice = parseFloat(variant.selling_price);
+//     if (mrp > 0 && sellingPrice < mrp) {
+//       return Math.round(((mrp - sellingPrice) / mrp) * 100);
+//     }
+//     return 0;
+//   };
+
+//   const discount = calculateDiscount();
+  
+//   // Create variant name
+//   const getVariantName = () => {
+//     if (variant.attributes && variant.attributes.display) {
+//       return `${product.product_name} - ${variant.attributes.display}`;
+//     } else if (variant.attributes) {
+//       const attrDisplay = Object.entries(variant.attributes)
+//         .filter(([key]) => key !== 'unit' && key !== 'value')
+//         .map(([key, value]) => value)
+//         .join(" ");
+//       if (attrDisplay.trim()) {
+//         return `${product.product_name} - ${attrDisplay}`;
+//       }
+//     }
+//     return product.product_name;
+//   };
+
+//   // Get variant display text from attributes
+//   const getVariantDisplay = () => {
+//     if (variant.attributes) {
+//       const displayAttrs = [];
+      
+//       if (variant.attributes.display) {
+//         displayAttrs.push(variant.attributes.display);
+//       }
+      
+//       if (variant.attributes.packaging) {
+//         displayAttrs.push(variant.attributes.packaging);
+//       }
+      
+//       if (variant.attributes.milk_type) {
+//         displayAttrs.push(variant.attributes.milk_type);
+//       }
+      
+//       if (variant.attributes.fat_content) {
+//         displayAttrs.push(variant.attributes.fat_content);
+//       }
+      
+//       if (variant.attributes.quantity) {
+//         displayAttrs.push(variant.attributes.quantity);
+//       }
+      
+//       return displayAttrs.join(" • ");
+//     }
+//     return "";
+//   };
+  
+//   return (
+//     <div className="card h-100 shadow-sm border-0">
+//       {/* Action buttons overlay */}
+//       <div className="position-absolute top-0 start-0 p-2 z-1">
+//         {/* <div className="btn-group">
+//           <button 
+//             className="btn btn-sm btn-outline-primary"
+//             onClick={(e) => {
+//               e.stopPropagation();
+//               onEditProduct(product);
+//             }}
+//             title="Edit Product"
+//           >
+//             <Edit size={14} />
+//           </button>
+//           <button 
+//             className="btn btn-sm btn-outline-info"
+//             onClick={(e) => {
+//               e.stopPropagation();
+//               onEditVariant(product, variant);
+//             }}
+//             title="Edit Variant"
+//           >
+//             <Package size={14} />
+//           </button>
+//           <button 
+//             className="btn btn-sm btn-outline-warning"
+//             onClick={(e) => {
+//               e.stopPropagation();
+//               onManageMedia(product, variant);
+//             }}
+//             title="Manage Media"
+//           >
+//             <ImageIcon size={14} />
+//           </button>
+//         </div> */}
+
+//         <div className="btn-group">
+//   <button 
+//     className="btn btn-sm btn-outline-primary"
+//     onClick={(e) => {
+//       e.stopPropagation();
+//       onEditProduct(product);
+//     }}
+//   >
+//     Edit Product
+//   </button>
+//   <button 
+//     className="btn btn-sm btn-outline-info"
+//     onClick={(e) => {
+//       e.stopPropagation();
+//       onEditVariant(product, variant);
+//     }}
+//   >
+//     Edit Variant
+//   </button>
+//   <button 
+//     className="btn btn-sm btn-outline-warning"
+//     onClick={(e) => {
+//       e.stopPropagation();
+//       onManageMedia(product, variant);
+//     }}
+//   >
+//     Media
+//   </button>
+// </div>
+//       </div>
+
+//       <div className="bg-light p-3 text-center position-relative" style={{ height: 150, cursor: "pointer" }}
+//            onClick={() => navigate(`/agent-business-product-details/${product.product_id}?variant=${variant.id}`)}>
+//         <img
+//           src={getProductImage()}
+//           alt={getVariantName()}
+//           className="img-fluid mt-4"
+//           style={{ maxHeight: "100%", objectFit: "contain" }}
+//           onError={(e) => {
+//             e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//           }}
+//         />
+//         {discount > 0 && (
+//           <span className="badge bg-danger position-absolute top-0 end-0 m-2">
+//             {discount}% OFF
+//           </span>
+//         )}
+//       </div>
+
+//       <div className="card-body d-flex flex-column p-3">
+//         <h6 className="line-clamp-2 mb-2" style={{ cursor: "pointer", minHeight: "30px" }}
+//             onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}>
+//           {getVariantName()}
+//         </h6>
+        
+//         <div className="d-flex justify-content-between align-items-center mb-2">
+//           <small className="text-muted">{product.brand || "No Brand"}</small>
+//           <span className={`badge ${variant.is_active ? 'bg-success' : 'bg-danger'}`}>
+//             {variant.is_active ? 'Active' : 'Inactive'}
+//           </span>
+//         </div>
+        
+//         {/* Variant attributes */}
+//         {getVariantDisplay() && (
+//           <small className="text-info mb-2 d-block">
+//             {getVariantDisplay()}
+//           </small>
+//         )}
+
+//         {/* Stock status */}
+//         <small className={`mb-2 ${variant.stock > 0 ? "text-success" : "text-danger"}`}>
+//           {variant.stock > 0 ? `In Stock (${variant.stock})` : "Out of Stock"}
+//         </small>
+
+//         {/* Verification Status */}
+//         <small className={`badge mb-2 ${variant.verification_status === 'verified' ? 'bg-success' : variant.verification_status === 'rejected' ? 'bg-danger' : 'bg-warning'}`}>
+//           {variant.verification_status || 'pending'}
+//         </small>
+
+//         <div className="mt-auto">
+//           <div className="d-flex align-items-center gap-2 mb-2">
+//             <strong className="h5 mb-0">₹{parseFloat(variant.selling_price).toFixed(2)}</strong>
+//             {parseFloat(variant.mrp) > parseFloat(variant.selling_price) && (
+//               <small className="text-muted text-decoration-line-through">
+//                 ₹{parseFloat(variant.mrp).toFixed(2)}
+//               </small>
+//             )}
+//           </div>
+
+//           <div className="d-grid gap-2">
+//             {/* VIEW DETAILS BUTTON */}
+//             <button 
+//               className="btn w-100 text-white" 
+//               style={{ background: "#6c757d", fontSize: "14px" }}
+//               onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}
+//             >
+//               <Eye size={14} /> VIEW DETAILS
+//             </button>
+
+//               <button 
+//               className="btn w-100 text-white" 
+//               style={{ background: "#273c75", fontSize: "14px" }}
+//               onClick={(e) => {
+//                 e.stopPropagation();
+//                 console.log("Add to cart:", variant.id, variant.sku);
+//               }}
+//               disabled={variant.stock <= 0}
+//             >
+// PAYOUT
+//             </button>
+
+//             {/* ADD TO CART BUTTON */}
+//             <button 
+//               className="btn w-100 text-white" 
+//               style={{ background: "#273c75", fontSize: "14px" }}
+//               onClick={(e) => {
+//                 e.stopPropagation();
+//                 console.log("Add to cart:", variant.id, variant.sku);
+//               }}
+//               disabled={variant.stock <= 0}
+//             >
+//                {variant.stock > 0 ? "ADD TO CART" : "OUT OF STOCK"}
+//             </button>
+//           </div>
+//         </div>
+
+        
+//       </div>
+//     </div>
+//   );
+// };
 
 
 /* ================= PRODUCT CARD COMPONENT ================= */
@@ -837,7 +1613,6 @@ const ProductHeader = ({
   totalProducts,
   onAddVariant
 }) => {
-  const navigate = useNavigate();
   const views = [
     // { mode: "grid-2", icon: Grid2X2 },
     { mode: "grid-3", icon: Grid3X3 },
@@ -846,9 +1621,7 @@ const ProductHeader = ({
 
   return (
     <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-      
       <div>
-
         <h4 className="fw-bold mb-0">My Products</h4>
         <small className="text-muted">{totalProducts} products found</small>
       </div>
@@ -1219,11 +1992,24 @@ const MyProducts = () => {
       <WebsiteNavbar />
 
       <div className="webhome-container" style={{ padding: "20px" }}>
+        {/* 🔙 BACK BUTTON */}
         <button
-          className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
+          className="back-btn"
           onClick={() => navigate(-1)}
+          style={{
+            background: "none",
+            border: "none",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            color: "#333",
+            marginBottom: "20px",
+            cursor: "pointer",
+            fontSize: "16px"
+          }}
         >
-          <ArrowLeft size={16} /> Back
+          <ArrowBackIosNewIcon fontSize="small" />
+          <span>Back</span>
         </button>
 
         {/* PRODUCTS SECTION */}

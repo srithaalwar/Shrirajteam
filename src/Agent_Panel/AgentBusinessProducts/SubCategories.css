@@ -10,9 +10,9 @@
 }
 
 /* Ensure dropdown appears above other content */
-.position-relative {
+/* .position-relative {
   z-index: 1000;
-}
+} */
 
 /* Adjust the header layout for mobile */
 @media (max-width: 768px) {

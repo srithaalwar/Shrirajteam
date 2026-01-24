@@ -9,6 +9,7 @@ import {
   Grid2X2,
   Grid3X3,
   LayoutList,
+  ArrowLeft,
 } from "lucide-react";
 // import "./SubCategories.css";
 import { baseurl } from "../../BaseURL/BaseURL";
@@ -147,7 +148,7 @@ const ProductCard = ({ product, variant, baseurl }) => {
 /* ================= PRODUCT HEADER COMPONENT ================= */
 const ProductHeader = ({ viewMode, onViewModeChange, search, setSearch }) => {
   const views = [
-    { mode: "grid-2", icon: Grid2X2 },
+    // { mode: "grid-2", icon: Grid2X2 },
     { mode: "grid-3", icon: Grid3X3 },
     { mode: "grid-4", icon: LayoutList },
   ];
@@ -193,7 +194,7 @@ const ProductHeader = ({ viewMode, onViewModeChange, search, setSearch }) => {
 /* ================= PRODUCT GRID COMPONENT ================= */
 const ProductGrid = ({ products, viewMode, baseurl }) => {
   const gridClass = {
-    "grid-2": "row row-cols-1 row-cols-sm-2",
+    // "grid-2": "row row-cols-1 row-cols-sm-2",
     "grid-3": "row row-cols-1 row-cols-sm-2 row-cols-md-3",
     "grid-4": "row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4",
   }[viewMode];
@@ -308,7 +309,7 @@ const SubCategories = () => {
 
   /* ===== Products Pagination ===== */
   const productsItemsPerPage = {
-    "grid-2": 4,
+    // "grid-2": 4,
     "grid-3": 6,
     "grid-4": 8,
   }[productsViewMode];
@@ -341,12 +342,19 @@ const SubCategories = () => {
 
       <div className="webhome-container">
         {/* 🔙 BACK BUTTON */}
-        <button
+        {/* <button
           className="back-btn"
           onClick={() => navigate(-1)}
         >
           <ArrowBackIosNewIcon />
           <span>Back</span>
+        </button> */}
+
+        <button
+          className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft size={16} /> Back
         </button>
 
         <h2 className="section-title-head">Sub Categories</h2>
