@@ -221,6 +221,13 @@ import CommissionLevels from './Admin_Panel/Admin_PayOut_Master/CommissionLevels
 import AddCommissionLevels from './Admin_Panel/Admin_PayOut_Master/AddCommissionLevels';
 import EditCommissionLevels from './Admin_Panel/Admin_PayOut_Master/EditCommissionLevels';
 import AdminBusiness from './Admin_Panel/Admin_Business/MyBusiness'
+import Chatbot from "./Admin_Panel/Admin_ChatBot/ChatBot";
+import CreateQA from "./Admin_Panel/Admin_ChatBot/CreateQA";
+import EditQA from "./Admin_Panel/Admin_ChatBot/EditQA";
+import AdminSitevisit from "./Admin_Panel/Admin_SiteVisits/SiteVisits";
+import AdminEditSitevisit from "./Admin_Panel/Admin_SiteVisits/EditSitevisit";
+
+
 import AgentDashboard from './Agent_Panel/AgentDashboard/Dashboard'
 import AgentAddProperty from './Agent_Panel/AgentAddProperty/Add_Property'
 import AgentProperties from './Agent_Panel/AgentProperties/PropertiesList'
@@ -359,6 +366,14 @@ function App() {
           <Route path="/admin-add-commissionmaster" element={<AddCommissionLevels />} />
           <Route path="/admin-edit-commissionmaster/:id" element={<EditCommissionLevels />} />
            <Route path="/admin-business" element={<AdminBusiness />} />
+
+
+           <Route path="/admin-chatbot" element={<Chatbot />} />
+           <Route path="/admin-createq&a" element={<CreateQA />} />
+           <Route path="/admin-editqa/:id" element={<EditQA />} />
+
+            <Route path="/admin-sitevisit" element={<AdminSitevisit />} />
+          <Route path="/admin-admiteditsite/:id" element={<AdminEditSitevisit />} />
 
 
         {/* Agent-panel */}

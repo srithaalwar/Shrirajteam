@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { baseurl } from '../../BaseURL/BaseURL';
 import './MyBusiness.css';
-import AgentNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
+import AdminNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
 
 const BusinessList = () => {
   const [businesses, setBusinesses] = useState([]);
@@ -255,7 +255,7 @@ const BusinessList = () => {
 
   return (
     <>
-      <AgentNavbar/>
+      <AdminNavbar/>
       <div className="container-fluid business-list-container">
         {/* Header */}
         <div className="row mb-4">

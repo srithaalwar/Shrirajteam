@@ -843,7 +843,12 @@ const BusinessList = () => {
           </div>
           <div className="col-md-4 text-end">
             <button 
-              className="btn btn-primary btn-add-business"
+              className="btn  btn-add-business"
+               style={{
+    backgroundColor: '#273c75',
+    borderColor: '#273c75',
+    color: 'white'
+  }}
               onClick={handleAddNew}
             >
               <i className="bi bi-plus-circle me-2"></i>

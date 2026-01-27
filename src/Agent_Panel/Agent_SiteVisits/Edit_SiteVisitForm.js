@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { baseurl } from "../../BaseURL/BaseURL";
 import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
-import "./Edit_SiteVisitForm.css"; // Create this CSS file
+import "./Edit_SiteVisitForm.css";
 
 function EditSitevisit() {
   const navigate = useNavigate();
@@ -23,23 +23,30 @@ function EditSitevisit() {
     customer_mobile_number: "",
     remarks: "",
     site_photo: null,
+    existing_photo_url: "", // Add this to track existing photo URL separately
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // FIX: Convert date_of_birth from DD-MM-YYYY to YYYY-MM-DD
+  // FIX: Convert date from DD-MM-YYYY to YYYY-MM-DD for input
   const formatDateForInput = (dateStr) => {
-        if (!dateStr) return "";
-        try {
-          const [day, month, year] = dateStr.split("-");
-          return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-        } catch (error) {
-          console.error("Error formatting date:", error);
-          return "";
-        }
-      };
+    if (!dateStr) return "";
+    try {
+      // Check if date is already in YYYY-MM-DD format
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        return dateStr;
+      }
+      
+      // Convert from DD-MM-YYYY to YYYY-MM-DD
+      const [day, month, year] = dateStr.split("-");
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return "";
+    }
+  };
 
   const fetchSiteVisit = async () => {
     try {
@@ -47,9 +54,11 @@ function EditSitevisit() {
       const response = await axios.get(`${baseurl}/site-visits/${id}/`);
       const data = response.data;
       
+      // Store the existing photo URL separately
+      const photoUrl = data.site_photo || null;
+      
       setFormData({
-        // date: data.date || "",
-        date:formatDateForInput(data.date),
+        date: formatDateForInput(data.date),
         time: data.time || "",
         user_id: agentId,
         site_name: data.site_name || "",
@@ -60,7 +69,8 @@ function EditSitevisit() {
         customer_name: data.customer_name || "",
         customer_mobile_number: data.customer_mobile_number || "",
         remarks: data.remarks || "",
-        site_photo: data.site_photo || null,
+        site_photo: null, // Start with null for file upload
+        existing_photo_url: photoUrl, // Store URL separately
       });
     } catch (error) {
       console.error("Error fetching site visit:", error);
@@ -87,7 +97,8 @@ function EditSitevisit() {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (files) {
+    if (name === "site_photo" && files && files[0]) {
+      // When a new file is selected
       setFormData({ ...formData, [name]: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -96,6 +107,19 @@ function EditSitevisit() {
     if (errors[name]) {
       setErrors({ ...errors, [name]: "" });
     }
+  };
+
+  const handleRemovePhoto = () => {
+    // Set site_photo to null and clear existing_photo_url
+    setFormData({ 
+      ...formData, 
+      site_photo: null,
+      existing_photo_url: "" 
+    });
+    
+    // Clear the file input
+    const fileInput = document.getElementById('site_photo');
+    if (fileInput) fileInput.value = '';
   };
 
   const handleSubmit = async (e) => {
@@ -110,25 +134,57 @@ function EditSitevisit() {
     try {
       const payload = new FormData();
       
+      // Add all fields to FormData
       Object.entries(formData).forEach(([key, value]) => {
-        if (value !== null && value !== "") {
-          if (key === "user_id") {
-            payload.append("agent_id", parseInt(value));
-          } else {
+        if (key === "user_id") {
+          // Map user_id to agent_id for backend
+          payload.append("agent_id", parseInt(value));
+        } 
+        else if (key === "site_photo") {
+          // Only append site_photo if it's a File object (new photo selected)
+          if (value instanceof File) {
             payload.append(key, value);
           }
+          // If site_photo is null and existing_photo_url is empty, send empty string to clear photo
+          else if (value === null && !formData.existing_photo_url) {
+            payload.append(key, "");
+          }
+          // If site_photo is null but we have existing_photo_url, don't append anything
+          // (Django will keep the existing photo)
+        }
+        else if (key !== "existing_photo_url" && value !== null && value !== "") {
+          payload.append(key, value);
         }
       });
 
+      console.log("Submitting data...");
+      
+      // Debug: Log FormData contents
+      for (let [key, val] of payload.entries()) {
+        console.log(key, val);
+      }
+
       await axios.put(`${baseurl}/site-visits/${id}/`, payload, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { 
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       alert("Site Visit updated successfully!");
       navigate("/agent-site-visits");
     } catch (error) {
       console.error("Error updating site visit:", error.response?.data || error);
-      alert("Failed to update site visit. Please try again.");
+      
+      if (error.response?.data) {
+        // Display specific field errors
+        let errorMessage = "Update failed:\n";
+        Object.entries(error.response.data).forEach(([field, errors]) => {
+          errorMessage += `${field}: ${Array.isArray(errors) ? errors.join(', ') : errors}\n`;
+        });
+        alert(errorMessage);
+      } else {
+        alert("Failed to update site visit. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -331,62 +387,107 @@ function EditSitevisit() {
                       <label htmlFor="site_photo" className="form-label fw-bold">
                         Site Photo
                       </label>
-                      <div className="d-flex align-items-start gap-3">
-                        <input
-                          type="file"
-                          className="form-control"
-                          id="site_photo"
-                          name="site_photo"
-                          onChange={handleChange}
-                          accept="image/*"
-                          style={{ maxWidth: "300px" }}
-                        />
+                      
+                      <div className="d-flex align-items-start gap-3 flex-wrap mb-3">
+                        {/* File input */}
+                        <div className="d-flex flex-column">
+                          <input
+                            type="file"
+                            className="form-control"
+                            id="site_photo"
+                            name="site_photo"
+                            onChange={handleChange}
+                            accept="image/*"
+                            style={{ maxWidth: "300px" }}
+                          />
+                          
+                          {/* Show new file info */}
+                          {formData.site_photo && formData.site_photo instanceof File && (
+                            <small className="text-muted mt-1">
+                              New file: {formData.site_photo.name} 
+                              ({(formData.site_photo.size / 1024).toFixed(2)} KB)
+                            </small>
+                          )}
+                        </div>
                         
-                        {/* Show existing image */}
-                        {formData.site_photo && typeof formData.site_photo === "string" && (
-                          <div className="existing-photo">
+                        {/* Show existing photo */}
+                        {formData.existing_photo_url && (
+                          <div className="existing-photo d-flex flex-column align-items-center">
                             <p className="mb-1"><small>Current Photo:</small></p>
                             <img
-                              src={formData.site_photo.startsWith("http")
-                                ? formData.site_photo
-                                : `${baseurl}${formData.site_photo}`}
+                              src={formData.existing_photo_url.startsWith("http")
+                                ? formData.existing_photo_url
+                                : `${baseurl}${formData.existing_photo_url}`}
                               alt="Site"
-                              className="existing-image"
+                              className="existing-image img-thumbnail"
+                              style={{ width: "120px", height: "120px", objectFit: "cover" }}
                             />
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-danger mt-2"
+                              onClick={handleRemovePhoto}
+                            >
+                              Remove Photo
+                            </button>
+                          </div>
+                        )}
+                        
+                        {/* Show preview of new selected image */}
+                        {formData.site_photo && formData.site_photo instanceof File && (
+                          <div className="new-photo-preview d-flex flex-column align-items-center">
+                            <p className="mb-1"><small>New Photo Preview:</small></p>
+                            <img
+                              src={URL.createObjectURL(formData.site_photo)}
+                              alt="Preview"
+                              className="preview-image img-thumbnail"
+                              style={{ width: "120px", height: "120px", objectFit: "cover" }}
+                            />
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-warning mt-2"
+                              onClick={() => {
+                                setFormData({ ...formData, site_photo: null });
+                                const fileInput = document.getElementById('site_photo');
+                                if (fileInput) fileInput.value = '';
+                              }}
+                            >
+                              Clear New Photo
+                            </button>
                           </div>
                         )}
                       </div>
                       
-                      {/* Show new file name */}
-                      {formData.site_photo && typeof formData.site_photo === "object" && (
-                        <small className="text-muted mt-1 d-block">
-                          New file: {formData.site_photo.name}
-                        </small>
+                      {/* Show warning if photo was removed */}
+                      {!formData.existing_photo_url && !formData.site_photo && (
+                        <div className="alert alert-warning p-2" style={{ fontSize: "0.9rem" }}>
+                          <i className="bi bi-exclamation-triangle me-2"></i>
+                          No photo selected. Previous photo will be removed.
+                        </div>
                       )}
                     </div>
                   </div>
 
                   {/* Submit Button */}
                   <div className="text-center mt-4">
-                   <button
-  type="submit"
-  className="btn btn-warning px-5 py-2"
-  disabled={isSubmitting}
-  style={{
-    backgroundColor: '#273c75',
-    borderColor: '#273c75',
-    color: 'white'
-  }}
->
-  {isSubmitting ? (
-    <>
-      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-      Updating...
-    </>
-  ) : (
-    "Update"
-  )}
-</button>
+                    <button
+                      type="submit"
+                      className="btn btn-warning px-5 py-2"
+                      disabled={isSubmitting}
+                      style={{
+                        backgroundColor: '#273c75',
+                        borderColor: '#273c75',
+                        color: 'white'
+                      }}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                          Updating...
+                        </>
+                      ) : (
+                        "Update"
+                      )}
+                    </button>
                     <button
                       type="button"
                       className="btn btn-outline-secondary ms-3 px-5 py-2"
