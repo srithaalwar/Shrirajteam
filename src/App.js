@@ -226,6 +226,7 @@ import CreateQA from "./Admin_Panel/Admin_ChatBot/CreateQA";
 import EditQA from "./Admin_Panel/Admin_ChatBot/EditQA";
 import AdminSitevisit from "./Admin_Panel/Admin_SiteVisits/SiteVisits";
 import AdminEditSitevisit from "./Admin_Panel/Admin_SiteVisits/EditSitevisit";
+import AdminBusinessProductsDetails from "./Admin_Panel/Admin_Business/Business_Products"
 
 
 import AgentDashboard from './Agent_Panel/AgentDashboard/Dashboard'
@@ -366,6 +367,8 @@ function App() {
           <Route path="/admin-add-commissionmaster" element={<AddCommissionLevels />} />
           <Route path="/admin-edit-commissionmaster/:id" element={<EditCommissionLevels />} />
            <Route path="/admin-business" element={<AdminBusiness />} />
+           <Route path="/admin-my-products" element={<AdminBusinessProductsDetails />} />
+
 
 
            <Route path="/admin-chatbot" element={<Chatbot />} />

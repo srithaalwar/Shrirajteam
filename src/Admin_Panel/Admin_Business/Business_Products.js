@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import WebsiteNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+import AdminNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
 import {
   Search,
   X,
@@ -1545,7 +1545,7 @@ const MyProducts = () => {
 
   return (
     <>
-      <WebsiteNavbar />
+      <AdminNavbar />
 
       <div className="webhome-container" style={{ padding: "20px" }}>
         <button

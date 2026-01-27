@@ -229,7 +229,7 @@ const BusinessList = () => {
 
   // New function to handle View Products navigation
   const handleViewProducts = (businessId) => {
-    navigate(`/my-products?business=${businessId}`);
+    navigate(`/admin-my-products?business=${businessId}`);
   };
 
 
