@@ -380,7 +380,7 @@ function App() {
         <Route path="/edit-business/:id" element={<AddBusinessForm mode="edit" />} />
         <Route path="/view-business/:id" element={<AddBusinessForm mode="view" />} />
         <Route path="/agent-busineess-category" element={<AgentbusinessCategory />} />
-        <Route path="/Agent-subcategory/:id" element={<AgentSubCategory />} />
+        <Route path="/agent-subcategory/:id" element={<AgentSubCategory />} />
        <Route path="/agent-business-product-details/:productId" element={<AgentProductDetails />} />
         <Route path="/agent-add-product-form" element={<AgentAddProductForm />} />
 
