@@ -66,7 +66,7 @@ const AdminNavbar = () => {
         { path: "/", name: "Transactions", icon: <FaExchangeAlt /> },
         { path: "/admin-commissionmaster", name: "Payout Master", icon: <FaDatabase /> },
         { path: "/tablecategory", name: "Category", icon: <FaTag /> },
-        { path: "/", name: "Business", icon: <FaBriefcase /> },
+        { path: "/admin-business", name: "Business", icon: <FaBriefcase /> },
         { path: "/", name: "Site Visits", icon: <FaEye /> },
         { path: "/", name: "Chat Bot", icon: <FaRobot /> },
         { path: "/a-departments", name: "Departments", icon: <FaSitemap /> },

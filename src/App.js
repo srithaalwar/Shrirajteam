@@ -220,7 +220,7 @@ import EditReferralPrefix from './Admin_Panel/Admin_Prefix/EditReferralPrefix';
 import CommissionLevels from './Admin_Panel/Admin_PayOut_Master/CommissionLevels';
 import AddCommissionLevels from './Admin_Panel/Admin_PayOut_Master/AddCommissionLevels';
 import EditCommissionLevels from './Admin_Panel/Admin_PayOut_Master/EditCommissionLevels';
-
+import AdminBusiness from './Admin_Panel/Admin_Business/MyBusiness'
 import AgentDashboard from './Agent_Panel/AgentDashboard/Dashboard'
 import AgentAddProperty from './Agent_Panel/AgentAddProperty/Add_Property'
 import AgentProperties from './Agent_Panel/AgentProperties/PropertiesList'
@@ -241,7 +241,7 @@ import EditSitevisit from './Agent_Panel/Agent_SiteVisits/Edit_SiteVisitForm'
 import TrainingMaterial from "./Agent_Panel/Agent_TrainingMaterial/Training_Material";
 import AgentMyProducts from "./Agent_Panel/Agent_My_Products/My_Products";
 import AgentSubscriptionPlan from './Agent_Panel/Agent_SubscriptionPlan/Subcrptionplan';
-
+import AgentBusinessProductsDetails from "./Agent_Panel/AgentMyBusiness/Business_Products"
 
 import ClientDashboard from './Client_Panel/Client_Dashboard/Dashboard'
 import ClientAddPropertyForm from "./Client_Panel/Client_AddProperty/Add_Property";
@@ -358,6 +358,9 @@ function App() {
           <Route path="/admin-commissionmaster" element={<CommissionLevels />} />
           <Route path="/admin-add-commissionmaster" element={<AddCommissionLevels />} />
           <Route path="/admin-edit-commissionmaster/:id" element={<EditCommissionLevels />} />
+           <Route path="/admin-business" element={<AdminBusiness />} />
+
+
         {/* Agent-panel */}
 
         <Route path="/agent-dashboard" element={<AgentDashboard />} />
@@ -391,6 +394,10 @@ function App() {
           <Route path="/agent-editsitevisit/:id" element={<EditSitevisit />} />
           <Route path="/agent-training-material" element={<TrainingMaterial />} />
           <Route path="/agent-my-products" element={<AgentMyProducts />} />
+            {/* <Route path="/agent-my-business-products/" element={<AgentBusinessProductsDetails />} /> */}
+            <Route path="/my-products" element={<AgentBusinessProductsDetails />} />
+
+
 
 
         {/* Client-panel */}
