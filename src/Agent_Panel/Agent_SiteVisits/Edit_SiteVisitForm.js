@@ -29,6 +29,18 @@ function EditSitevisit() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // FIX: Convert date_of_birth from DD-MM-YYYY to YYYY-MM-DD
+  const formatDateForInput = (dateStr) => {
+        if (!dateStr) return "";
+        try {
+          const [day, month, year] = dateStr.split("-");
+          return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        } catch (error) {
+          console.error("Error formatting date:", error);
+          return "";
+        }
+      };
+
   const fetchSiteVisit = async () => {
     try {
       setIsLoading(true);
@@ -36,7 +48,8 @@ function EditSitevisit() {
       const data = response.data;
       
       setFormData({
-        date: data.date || "",
+        // date: data.date || "",
+        date:formatDateForInput(data.date),
         time: data.time || "",
         user_id: agentId,
         site_name: data.site_name || "",

@@ -1447,7 +1447,8 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
                       style={{
     backgroundColor: '#273c75',
     borderColor: '#273c75',
-    color: 'white'
+    color: 'white',
+     whiteSpace: 'nowrap'
   }}
                       onClick={handleSubmit}
                       disabled={isSubmitting}
