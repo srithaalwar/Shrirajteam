@@ -2587,7 +2587,7 @@ const SubCategories = () => {
                 <div
                   className="category-item"
                   key={sub.category_id}
-                  onClick={() => navigate(`/w-subcategory/${sub.category_id}`)}
+                  onClick={() => navigate(`/agent-subcategory/${sub.category_id}`)}
                 >
                   <div className="category-icon">
                     <BusinessCenterIcon />

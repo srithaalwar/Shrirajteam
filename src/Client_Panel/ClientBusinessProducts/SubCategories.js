@@ -147,7 +147,7 @@ const ProductCard = ({ product, variant, baseurl }) => {
           <button 
             className="btn text-white" 
             style={{ background: "#6c757d", fontSize: "14px" }}
-            onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}
+            onClick={() => navigate(`/client-business-product-details/${product.product_id}/?variant=${variant.id}`)}
           >
             <Eye size={14} /> Details
           </button>
@@ -386,14 +386,19 @@ const SubCategories = () => {
           <span>Back</span>
         </button> */}
 
-        <button
+        <div class="d-inline-flex">
+          <button
           className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft size={16} /> Back
         </button>
 
-        <h2 className="section-title-head">Sub Categories</h2>
+        <h2 className="section-title-head mt-2">&nbsp;&nbsp;Sub Categories</h2>
+
+        </div>
+
+        
 
         {loading ? (
           <p>Loading subcategories...</p>
@@ -416,7 +421,7 @@ const SubCategories = () => {
                 <div
                   className="category-item"
                   key={sub.category_id}
-                  onClick={() => navigate(`/w-subcategory/${sub.category_id}`)}
+                  onClick={() => navigate(`/client-subcategory/${sub.category_id}`)}
                 >
                   <div className="category-icon">
                     <BusinessCenterIcon />
