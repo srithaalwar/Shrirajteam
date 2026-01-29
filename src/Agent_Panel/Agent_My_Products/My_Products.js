@@ -2225,6 +2225,12 @@ const ProductCard = ({
     return "";
   };
   
+  // Format verification status text
+  const getVerificationStatusText = () => {
+    const status = variant.verification_status || 'pending';
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  };
+  
   return (
     <div className="card h-100 shadow-sm border-0">
       {/* Product Image with Discount Badge */}
@@ -2271,10 +2277,17 @@ const ProductCard = ({
           {variant.stock > 0 ? `In Stock (${variant.stock})` : "Out of Stock"}
         </small>
 
-        {/* Verification Status */}
-        <small className={`badge mb-2 ${variant.verification_status === 'verified' ? 'bg-success' : variant.verification_status === 'rejected' ? 'bg-danger' : 'bg-warning'}`}>
-          {variant.verification_status || 'pending'}
-        </small>
+        {/* Verification Status - Now below active/inactive in same row style */}
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          <small className="text-muted">Verification</small>
+          <span className={`badge ${
+            variant.verification_status === 'verified' ? 'bg-success' : 
+            variant.verification_status === 'rejected' ? 'bg-danger' : 
+            'bg-warning'
+          }`}>
+            {getVerificationStatusText()}
+          </span>
+        </div>
 
         {/* Price Section */}
         <div className="mt-auto mb-3">

@@ -95,7 +95,7 @@
   transition: all 0.3s ease !important;
   background-color: #f8f9fa !important;
   font-size: 1rem !important;
-  height:60px !important;
+  /* height:60px !important; */
 }
 
 .register-input:focus {
@@ -279,4 +279,54 @@ height: 100px;  }
     font-size: 18px;
     margin-bottom: 20px;
   }
+}
+
+
+
+/* Referral Banner */
+.referral-banner {
+  background-color: #e8f5e9;
+  border: 1px solid #4CAF50;
+  border-radius: 6px;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.referral-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.referral-banner-icon {
+  font-size: 18px;
+}
+
+.referral-banner-text {
+  color: #2e7d32;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Sponsor feedback styles */
+.sponsor-feedback {
+  font-size: 12px;
+  margin-top: 5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.sponsor-loading {
+  color: #666;
+}
+
+.sponsor-valid {
+  color: #2e7d32;
+  background-color: #e8f5e9;
 }

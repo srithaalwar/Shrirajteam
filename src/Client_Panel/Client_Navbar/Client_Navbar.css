@@ -431,3 +431,97 @@
     font-size: 10px;
   }
 }
+
+
+
+
+/* ===================== ICON STYLES ===================== */
+.wn-notification, .wn-wishlist, .wn-cart {
+  padding: 8px 16px;
+  background: #f3f4f6;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.wn-notification:hover, .wn-wishlist:hover, .wn-cart:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+/* Notification badge (optional) */
+.wn-notification-badge, .wn-wishlist-count, .wn-cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+/* Different colors for different badges */
+.wn-wishlist-count {
+  background: #3b82f6; /* Blue for wishlist */
+}
+
+.wn-cart-count {
+  background: #10b981; /* Green for cart */
+}
+
+/* Nav right layout with all icons */
+.wn-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .wn-nav-right {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  
+  .wn-notification, .wn-wishlist, .wn-cart {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  /* Hide text on mobile for icons, show only icons */
+  .wn-notification span:not(.wn-notification-badge),
+  .wn-wishlist span:not(.wn-wishlist-count) {
+    display: none;
+  }
+  
+  .wn-cart span:not(.wn-cart-count) {
+    font-size: 12px;
+  }
+  
+  /* Adjust icon sizes for mobile */
+  .wn-notification svg,
+  .wn-wishlist svg,
+  .wn-cart svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wn-nav-right {
+    gap: 6px;
+    margin-left: 0px;
+  }
+}

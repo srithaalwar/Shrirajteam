@@ -107,9 +107,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 /* Row Margins */
-.row > * {
-  margin-bottom: 15px;
-}
+/* .row > * {
+  margin-bottom: 1px;
+} */
 
 /* Container Padding */
 .container.mt-5.pt-5 {

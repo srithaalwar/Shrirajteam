@@ -3592,9 +3592,9 @@ const ProductForm = ({ onSuccess, onCancel }) => {
 
           {/* Product Information Section */}
           <div className="form-section">
-            <h4 className="section-title">
+            {/* <h4 className="section-title">
               <i className="bi bi-box-seam"></i> Product Information
-            </h4>
+            </h4> */}
             
             <div className="row">
               <div className="col-md-6">

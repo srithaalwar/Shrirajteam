@@ -612,6 +612,383 @@
 // export default ClientNavbar;
 
 
+// import React, { useState, useEffect, useRef } from "react";
+// import { useNavigate } from "react-router-dom";
+// import "./Client_Navbar.css";
+// import logoImage from "../../Logos/logo1.png";
+// import { Link } from "react-router-dom";
+
+// // Import FontAwesome icons
+// import { 
+//   FaTachometerAlt, 
+//   FaHome, 
+//   FaBuilding, 
+//   FaUsers, 
+//   FaClipboardList, 
+//   FaCogs,
+//   FaCalendarAlt,
+//   FaChartLine,
+//   FaBriefcase,
+//   FaFileAlt,
+//   FaTag,
+//   FaUserCircle,
+//   FaSignOutAlt,
+//   FaCaretDown,
+//   FaCaretRight,
+//   FaMoneyBillWave,
+//   FaHandHoldingUsd,
+//   FaCreditCard,
+//   FaLayerGroup,
+//   FaGraduationCap,
+//   FaQuestionCircle,
+//   FaExchangeAlt,
+//   FaDatabase,
+//   FaSitemap,
+//   FaEye,
+//   FaRobot,
+//   FaUserTie,
+//   FaStar,
+//   FaEnvelope,
+//   FaPhone,
+//   FaIdCard
+// } from "react-icons/fa";
+
+// const ClientNavbar = () => {
+//   const [open, setOpen] = useState(false);
+//   const [categories, setCategories] = useState([]);
+//   const [showCategories, setShowCategories] = useState(false);
+//   const [selectedCategory, setSelectedCategory] = useState("All");
+//   const [expandedMenu, setExpandedMenu] = useState(null);
+//   const [userData, setUserData] = useState({
+//     email: "",
+//     phone_number: "",
+//     referral_id: "",
+//     username: "",
+//     user_name: "",
+//     referred_by: ""
+//   });
+  
+//   const dropdownRef = useRef(null);
+//   const loginUrl = "/login";
+//   const signupUrl = "/register";
+  
+//   const navigate = useNavigate();
+
+//   // Fetch user data from localStorage on component mount
+//   useEffect(() => {
+//     const fetchUserData = () => {
+//       const storedUserData = {
+//         email: localStorage.getItem("email") || "",
+//         phone_number: localStorage.getItem("phone_number") || "",
+//         referral_id: localStorage.getItem("referral_id") || "",
+//         username: localStorage.getItem("username") || "",
+//         user_name: localStorage.getItem("user_name") || "",
+//         referred_by: localStorage.getItem("referred_by") || ""
+//       };
+//       setUserData(storedUserData);
+//     };
+
+//     fetchUserData();
+    
+//     // Listen for storage changes
+//     const handleStorageChange = () => {
+//       fetchUserData();
+//     };
+    
+//     window.addEventListener('storage', handleStorageChange);
+    
+//     return () => {
+//       window.removeEventListener('storage', handleStorageChange);
+//     };
+//   }, []);
+
+//   // Define your navigation items with appropriate icons
+//   const menuItems = [
+//     { path: "/client-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
+//     { path: "/client-add-property-form", name: "Add Property", icon: <FaHome /> },
+//     { path: "/client-properties", name: "Properties", icon: <FaBuilding /> },
+//     { path: "/client-my-properties", name: "My Properties", icon: <FaClipboardList /> },
+//     { path: "/client-busineess-category", name: "Products", icon: <FaBriefcase /> },
+//     { path: "/client-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
+//     { path: "/client-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
+//     { path: "/client-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
+//     { path: "/client-profile", name: "Profile", icon: <FaUserCircle /> },
+//   ];
+
+//   // Close dropdown when clicking outside
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+//         setShowCategories(false);
+//       }
+//     };
+
+//     if (showCategories) {
+//       document.addEventListener("mousedown", handleClickOutside);
+//     }
+
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, [showCategories]);
+
+//   const handleDropdownToggle = (event) => {
+//     event.stopPropagation();
+//     setShowCategories(!showCategories);
+//   };
+
+//   const handleCategorySelect = (categoryName) => {
+//     setSelectedCategory(categoryName);
+//     setShowCategories(false);
+//   };
+
+//   const toggleSubMenu = (menuName) => {
+//     if (expandedMenu === menuName) {
+//       setExpandedMenu(null);
+//     } else {
+//       setExpandedMenu(menuName);
+//     }
+//   };
+
+//   const handleLogout = () => {
+//     console.log("Client logged out");
+//     // Clear all stored data
+//     localStorage.removeItem("authToken");
+//     localStorage.removeItem("userRole");
+//     localStorage.removeItem("clientData");
+//     localStorage.removeItem("user_id");
+//     localStorage.removeItem("email");
+//     localStorage.removeItem("username");
+//     localStorage.removeItem("phone_number");
+//     localStorage.removeItem("referral_id");
+//     localStorage.removeItem("referred_by");
+//     localStorage.removeItem("user_name");
+//     localStorage.removeItem("token");
+//     localStorage.removeItem("access_token");
+//     localStorage.removeItem("refresh_token");
+    
+//     sessionStorage.clear();
+//     setOpen(false);
+//     navigate("/");
+//   };
+
+//   const LoginButtonExternal = () => (
+//     <a href={loginUrl} className="wn-login-btn-link">
+//       <button className="wn-login-btn">Login</button>
+//     </a>
+//   );
+
+//   const SignupButtonExternal = () => (
+//     <a href={signupUrl} className="wn-signup-btn-link">
+//       <button className="wn-signup-btn">Sign Up</button>
+//     </a>
+//   );
+
+  
+
+//   return (
+//     <>
+//       {/* NAVBAR */}
+//       <header className="wn-navbar">
+//         <div className="wn-nav-left">
+//           <button className="wn-menu-btn" onClick={() => setOpen(true)}>☰</button>
+//           <div className="wn-logo">
+//             <img 
+//               src={logoImage} 
+//               alt="Shriraj Logo" 
+//               className="wn-logo-img"
+//             />
+//           </div>
+//         </div>
+
+//         {/* SEARCH */}
+//         {/* <div className="wn-nav-center">
+//           <div className="wn-search-box">
+//             <div className="wn-category-dropdown" ref={dropdownRef}>
+//               <div 
+//                 className="wn-dropdown-toggle-area"
+//                 onClick={handleDropdownToggle}
+//                 style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+//               >
+//                 <span className="wn-category-text">{selectedCategory}</span>
+//                 <span className={`wn-dropdown-arrow ${showCategories ? "open" : ""}`} />
+//               </div>
+
+//               {showCategories && (
+//                 <div className="wn-category-menu">
+//                   <div
+//                     className="wn-category-item"
+//                     onClick={() => handleCategorySelect("All")}
+//                   >
+//                     <span>All Categories</span>
+//                   </div>
+
+//                   {categories.map((cat) => (
+//                     <div
+//                       key={cat.category_id}
+//                       className="wn-category-item"
+//                       onClick={() => handleCategorySelect(cat.name)}
+//                     >
+//                       <span>{cat.name}</span>
+//                     </div>
+//                   ))}
+//                 </div>
+//               )}
+//             </div>
+
+//             <div className="wn-search-divider" />
+
+//             <input
+//               type="text"
+//               placeholder="What are you looking for?"
+//             />
+
+//             <span className="wn-search-icon">🔍</span>
+//           </div>
+//         </div> */}
+
+//         <div className="wn-nav-right">
+//           <div className="wn-cart">🛒 Cart</div>
+//         </div>
+//       </header>
+
+//       {/* OVERLAY */}
+//       {open && <div className="wn-overlay" onClick={() => setOpen(false)} />}
+
+//       {/* SIDEBAR - UPDATED WITH USER INFO NEXT TO LOGO */}
+//       <aside className={`wn-sidebar ${open ? "open" : ""}`}>
+//         {/* Header with Logo and User Info Side by Side */}
+//         <div className="wn-sidebar-header">
+//           <div className="wn-logo-with-user">
+//             <img 
+//               src={logoImage} 
+//               alt="Shriraj Logo" 
+//               className="wn-logo-img-sidebar"
+//             />
+//             <div className="wn-user-info-compact">
+//               {/* <div className="wn-user-name-compact">
+//                 {userData.user_name || userData.username || "Client"}
+//               </div> */}
+//               <div className="wn-user-details-compact">
+//                 {userData.email && (
+//                   <div className="wn-detail-item">
+//                     <FaEnvelope className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">{userData.email}</span>
+//                   </div>
+//                 )}
+                
+//                 {userData.phone_number && (
+//                   <div className="wn-detail-item">
+//                     <FaPhone className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">
+//                       {userData.phone_number}
+//                     </span>
+//                   </div>
+//                 )}
+                
+//                 {userData.referral_id ? (
+//                   <div className="wn-detail-item">
+//                     <FaIdCard className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">
+//                       Ref ID: {userData.referral_id}
+//                     </span>
+//                   </div>
+//                 ) : (
+//                   <div className="wn-detail-item">
+//                     <FaIdCard className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">Ref ID: None</span>
+//                   </div>
+//                 )}
+//               </div>
+//             </div>
+//           </div>
+          
+//           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
+//         </div>
+
+//         {/* <div className="wn-divider" /> */}
+
+//         {/* Navigation Items */}
+//         <div className="wn-nav-section">
+//           <div className="wn-section-title">Client Menu</div>
+//           <ul className="wn-menu-list">
+//             {menuItems.map((item, index) => (
+//               <React.Fragment key={item.name || item.path}>
+//                 {/* Check if item has submenu */}
+//                 {item.subMenu ? (
+//                   <li className="wn-menu-item-with-submenu">
+//                     <div 
+//                       className="wn-menu-header"
+//                       onClick={() => toggleSubMenu(item.name)}
+//                     >
+//                       <span className="wn-sidebar-icon">{item.icon}</span>
+//                       <span className="wn-sidebar-text" style={{ marginLeft: "10px" }}>{item.name}</span>
+//                       <span className="wn-menu-arrow">
+//                         {expandedMenu === item.name ? <FaCaretDown /> : <FaCaretRight />}
+//                       </span>
+//                     </div>
+                    
+//                     {/* Submenu items */}
+//                     {expandedMenu === item.name && (
+//                       <ul className="wn-submenu">
+//                         {item.subMenu.map((subItem, subIndex) => (
+//                           <li key={`${subItem.name}-${subIndex}`}>
+//                             <Link 
+//                               to={subItem.path} 
+//                               className="wn-submenu-link"
+//                               onClick={() => setOpen(false)}
+//                             >
+//                               <span className="wn-submenu-icon">
+//                                 {subItem.icon || <FaCogs />}
+//                               </span>
+//                               <span className="wn-submenu-text" style={{ marginLeft: "10px" }}>{subItem.name}</span>
+//                             </Link>
+//                           </li>
+//                         ))}
+//                       </ul>
+//                     )}
+//                   </li>
+//                 ) : (
+//                   // Regular menu item without submenu
+//                   <li>
+//                     <Link 
+//                       to={item.path} 
+//                       className="wn-sidebar-link"
+//                       onClick={() => setOpen(false)}
+//                     >
+//                       <span className="wn-sidebar-icon">{item.icon}</span>
+//                       <span className="wn-sidebar-text" style={{ marginLeft: "10px" }}>{item.name}</span>
+//                     </Link>
+//                   </li>
+//                 )}
+//               </React.Fragment>
+//             ))}
+//           </ul>
+//         </div>
+
+//         <div className="wn-divider" />
+
+//         {/* Logout Button */}
+//         <div className="wn-logout-section">
+//           <button 
+//             className="wn-logout-btn"
+//             onClick={handleLogout}
+//           >
+//             <span className="wn-logout-icon">
+//               <FaSignOutAlt />
+//             </span>
+//             <span className="wn-logout-text">Logout</span>
+//           </button>
+//         </div>
+//       </aside>
+//     </>
+//   );
+// };
+
+// export default ClientNavbar;
+
+
+
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Client_Navbar.css";
@@ -650,7 +1027,10 @@ import {
   FaStar,
   FaEnvelope,
   FaPhone,
-  FaIdCard
+  FaIdCard,
+  FaBell,
+  FaHeart,
+  FaShoppingCart
 } from "react-icons/fa";
 
 const ClientNavbar = () => {
@@ -784,7 +1164,23 @@ const ClientNavbar = () => {
     </a>
   );
 
-  
+  // Handle notification click
+  const handleNotificationClick = () => {
+    console.log("Notification icon clicked");
+    // Add notification functionality here
+  };
+
+  // Handle wishlist click
+  const handleWishlistClick = () => {
+    console.log("Wishlist icon clicked");
+    // Add wishlist functionality here
+  };
+
+  // Handle cart click
+  const handleCartClick = () => {
+    console.log("Cart icon clicked");
+    // Add cart functionality here
+  };
 
   return (
     <>
@@ -801,54 +1197,39 @@ const ClientNavbar = () => {
           </div>
         </div>
 
-        {/* SEARCH */}
-        <div className="wn-nav-center">
-          <div className="wn-search-box">
-            <div className="wn-category-dropdown" ref={dropdownRef}>
-              <div 
-                className="wn-dropdown-toggle-area"
-                onClick={handleDropdownToggle}
-                style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-              >
-                <span className="wn-category-text">{selectedCategory}</span>
-                <span className={`wn-dropdown-arrow ${showCategories ? "open" : ""}`} />
-              </div>
-
-              {showCategories && (
-                <div className="wn-category-menu">
-                  <div
-                    className="wn-category-item"
-                    onClick={() => handleCategorySelect("All")}
-                  >
-                    <span>All Categories</span>
-                  </div>
-
-                  {categories.map((cat) => (
-                    <div
-                      key={cat.category_id}
-                      className="wn-category-item"
-                      onClick={() => handleCategorySelect(cat.name)}
-                    >
-                      <span>{cat.name}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="wn-search-divider" />
-
-            <input
-              type="text"
-              placeholder="What are you looking for?"
-            />
-
-            <span className="wn-search-icon">🔍</span>
-          </div>
-        </div>
-
         <div className="wn-nav-right">
-          <div className="wn-cart">🛒 Cart</div>
+          {/* Notification Icon */}
+          <div 
+            className="wn-notification" 
+            onClick={handleNotificationClick}
+            title="Notifications"
+          >
+            <FaBell size={16} />
+            {/* Optional notification badge */}
+            {/* <span className="wn-notification-badge">3</span> */}
+          </div>
+          
+          {/* Wishlist Icon */}
+          <div 
+            className="wn-wishlist" 
+            onClick={handleWishlistClick}
+            title="Wishlist"
+          >
+            <FaHeart size={16} />
+            {/* Optional wishlist count */}
+            {/* <span className="wn-wishlist-count">2</span> */}
+          </div>
+          
+          {/* Cart Icon */}
+          <div 
+            className="wn-cart" 
+            onClick={handleCartClick}
+            title="Cart"
+          >
+            <FaShoppingCart size={16} /> Cart
+            {/* Optional cart count */}
+            {/* <span className="wn-cart-count">3</span> */}
+          </div>
         </div>
       </header>
 
@@ -866,9 +1247,6 @@ const ClientNavbar = () => {
               className="wn-logo-img-sidebar"
             />
             <div className="wn-user-info-compact">
-              {/* <div className="wn-user-name-compact">
-                {userData.user_name || userData.username || "Client"}
-              </div> */}
               <div className="wn-user-details-compact">
                 {userData.email && (
                   <div className="wn-detail-item">
@@ -905,8 +1283,6 @@ const ClientNavbar = () => {
           
           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
         </div>
-
-        {/* <div className="wn-divider" /> */}
 
         {/* Navigation Items */}
         <div className="wn-nav-section">

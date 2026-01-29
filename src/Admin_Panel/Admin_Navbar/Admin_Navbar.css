@@ -725,3 +725,108 @@
     font-size: 10px;
   }
 }
+
+
+
+
+/* ===================== NOTIFICATION ICON STYLES ===================== */
+.wn-notification {
+  padding: 8px 16px;
+  background: #f3f4f6;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.wn-notification:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+/* Notification badge (optional) */
+.wn-notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+/* Cart icon with flex layout */
+.wn-cart {
+  padding: 8px 16px;
+  background: #f3f4f6;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wn-cart:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+/* Nav right layout with both icons */
+.wn-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .wn-nav-right {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  
+  .wn-notification, .wn-cart {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .wn-notification span, .wn-cart span {
+    font-size: 12px;
+  }
+  
+  .admin-notification {
+    margin-left: auto;
+  }
+  
+  .admin-cart {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .wn-nav-right {
+    gap: 6px;
+    margin-left: 0px;
+  }
+  
+  .admin-notification {
+    margin-left: auto;
+  }
+  
+  .admin-cart {
+    margin-left: 0;
+  }
+}
