@@ -574,3 +574,79 @@
 .wn-cart:hover {
   color: #007bff;
 }
+
+
+
+/* Add these styles to your existing Agent_Navbar.css */
+
+/* Copy message notification */
+.wn-copy-message {
+  position: absolute;
+  top: 100%;
+  right: 120px;
+  background: #4CAF50;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  animation: slideDown 0.3s ease;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.wn-copy-message:before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: 20px;
+  width: 10px;
+  height: 10px;
+  background: #4CAF50;
+  transform: rotate(45deg);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Update refer now button style for copied state */
+.wn-refer-now-btn {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+  margin-right: 15px;
+  position: relative;
+}
+
+.wn-refer-now-btn:hover {
+  background-color: #218838;
+}
+
+.wn-refer-now-btn:active {
+  transform: scale(0.98);
+}
+
+/* Make nav-right relative for positioning the copy message */
+.wn-nav-right {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
