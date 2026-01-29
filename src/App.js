@@ -227,6 +227,15 @@ import EditQA from "./Admin_Panel/Admin_ChatBot/EditQA";
 import AdminSitevisit from "./Admin_Panel/Admin_SiteVisits/SiteVisits";
 import AdminEditSitevisit from "./Admin_Panel/Admin_SiteVisits/EditSitevisit";
 import AdminBusinessProductsDetails from "./Admin_Panel/Admin_Business/Business_Products"
+import AdminMeetingRequests from './Admin_Panel/Admin_Meetings/MeetingRequests'
+import AdminSheduleMeetings from './Admin_Panel/Admin_Meetings/SheduleMeeting'
+// import AdminAddProductCategory from './Admin_Panel/Product_Category/AddCategory';
+// import AdminEditProductCategory from './Admin_Panel/Product_Category/EditCategory';
+// import AdminProductCategory from './Admin_Panel/Product_Category/TableCategory';
+
+import TableProductCategory from './Admin_Panel/Product_Category/TableCategory';
+import ProductCategoryForm from './Admin_Panel/Product_Category/AddCategory';
+import EditProductCategory from './Admin_Panel/Product_Category/EditCategory';
 
 
 import AgentDashboard from './Agent_Panel/AgentDashboard/Dashboard'
@@ -250,6 +259,10 @@ import TrainingMaterial from "./Agent_Panel/Agent_TrainingMaterial/Training_Mate
 import AgentMyProducts from "./Agent_Panel/Agent_My_Products/My_Products";
 import AgentSubscriptionPlan from './Agent_Panel/Agent_SubscriptionPlan/Subcrptionplan';
 import AgentBusinessProductsDetails from "./Agent_Panel/AgentMyBusiness/Business_Products"
+import AgentOffers from './Agent_Panel/Agent_Offers/TableOffers';
+import AgentOffersForm from './Agent_Panel/Agent_Offers/OfferForm';
+import AgentMeetings from './Agent_Panel/Agent_Meetings/Meetings';
+import MeetingRequestForm from './Agent_Panel/Agent_Meetings/MeetingRequestForm'
 
 import ClientDashboard from './Client_Panel/Client_Dashboard/Dashboard'
 import ClientAddPropertyForm from "./Client_Panel/Client_AddProperty/Add_Property";
@@ -302,7 +315,7 @@ function App() {
         <Route path="/properties" element={<Properties />} />
         <Route path="/property/:propertyId" element={<PropertyDetails />} />
 
-        <Route path="/w-productdetails" element={<MainProductDetails/>} />
+        <Route path="/w-productdetails" element={<MainProductDetails />} />
         <Route path="/product/:productId" element={<ProductDetails />} />
         {/* <Route path="/w-subcategory/:id" element={<SubCategories />} /> */}
         <Route path="/w-subcategory/:id" element={<SubCategories />} />
@@ -350,35 +363,42 @@ function App() {
         <Route path="/adddepartment" element={<AddDepartments />} />
         <Route path="/admin-profile" element={<AdminProfile />} />
 
-       <Route path="/admin-trainingmaterial" element={<AdminTrainingMaterial />} />
+        <Route path="/admin-trainingmaterial" element={<AdminTrainingMaterial />} />
         <Route path="/admin-addtrainingmaterial" element={<AdminAddTrainingMaterial />} />
-       <Route path="/admin-edittrainingmaterial" element={<AdminEditTrainingMaterial />} />
+        <Route path="/admin-edittrainingmaterial" element={<AdminEditTrainingMaterial />} />
 
         <Route path="/admin-subscriptions" element={<AdminSubscription />} />
-          <Route path="/admin-addsubscriptions" element={<AdminAddSubscription />} />
-          <Route path="/admin-edit-subscription/:id" element={<AdminEditSubscription />} />
+        <Route path="/admin-addsubscriptions" element={<AdminAddSubscription />} />
+        <Route path="/admin-edit-subscription/:id" element={<AdminEditSubscription />} />
 
-            <Route path="/a-settings" element={<SettingsMain />} />
+        <Route path="/a-settings" element={<SettingsMain />} />
         <Route path="/referral-prefix" element={<ReferralPrefix />} />
         <Route path="/add-referral-prefix" element={<AddReferralPrefix />} />
         <Route path="/edit-referral-prefix/:id" element={<EditReferralPrefix />} />
 
-          <Route path="/admin-commissionmaster" element={<CommissionLevels />} />
-          <Route path="/admin-add-commissionmaster" element={<AddCommissionLevels />} />
-          <Route path="/admin-edit-commissionmaster/:id" element={<EditCommissionLevels />} />
-           <Route path="/admin-business" element={<AdminBusiness />} />
-           <Route path="/admin-my-products" element={<AdminBusinessProductsDetails />} />
+        <Route path="/admin-commissionmaster" element={<CommissionLevels />} />
+        <Route path="/admin-add-commissionmaster" element={<AddCommissionLevels />} />
+        <Route path="/admin-edit-commissionmaster/:id" element={<EditCommissionLevels />} />
+        <Route path="/admin-business" element={<AdminBusiness />} />
+        <Route path="/admin-my-products" element={<AdminBusinessProductsDetails />} />
 
 
 
-           <Route path="/admin-chatbot" element={<Chatbot />} />
-           <Route path="/admin-createq&a" element={<CreateQA />} />
-           <Route path="/admin-editqa/:id" element={<EditQA />} />
+        <Route path="/admin-chatbot" element={<Chatbot />} />
+        <Route path="/admin-createq&a" element={<CreateQA />} />
+        <Route path="/admin-editqa/:id" element={<EditQA />} />
 
-            <Route path="/admin-sitevisit" element={<AdminSitevisit />} />
-          <Route path="/admin-admiteditsite/:id" element={<AdminEditSitevisit />} />
+        <Route path="/admin-sitevisit" element={<AdminSitevisit />} />
+        <Route path="/admin-admiteditsite/:id" element={<AdminEditSitevisit />} />
+        <Route path="/admin-meetings" element={<AdminMeetingRequests />} />
+        <Route path="/shedulemeet/:agentId" element={<AdminSheduleMeetings />} />
 
-
+         {/* <Route path="/admin/categories" element={<AdminProductCategory />} />
+          <Route path="/admin/categories/add" element={<AdminAddProductCategory />} />
+          <Route path="/admin/categories/edit/:id" element={<AdminEditProductCategory />} /> */}
+          <Route path="/tableproductcategory" element={<TableProductCategory />} />
+<Route path="/productcategoryform" element={<ProductCategoryForm />} />
+<Route path="/editproductcategory/:id" element={<EditProductCategory />} />
         {/* Agent-panel */}
 
         <Route path="/agent-dashboard" element={<AgentDashboard />} />
@@ -402,20 +422,25 @@ function App() {
         <Route path="/view-business/:id" element={<AddBusinessForm mode="view" />} />
         <Route path="/agent-busineess-category" element={<AgentbusinessCategory />} />
         <Route path="/agent-subcategory/:id" element={<AgentSubCategory />} />
-       <Route path="/agent-business-product-details/:productId" element={<AgentProductDetails />} />
+        <Route path="/agent-business-product-details/:productId" element={<AgentProductDetails />} />
         <Route path="/agent-add-product-form" element={<AgentAddProductForm />} />
 
         <Route path="/agent-my-team" element={<MyTeam />} />
 
-         <Route path="/agent-site-visits" element={<Sitevisit />} />
-          <Route path="/agent-addsitevisit" element={<AddSitevisit />} />
-          <Route path="/agent-editsitevisit/:id" element={<EditSitevisit />} />
-          <Route path="/agent-training-material" element={<TrainingMaterial />} />
-          <Route path="/agent-my-products" element={<AgentMyProducts />} />
-            {/* <Route path="/agent-my-business-products/" element={<AgentBusinessProductsDetails />} /> */}
-            <Route path="/my-products" element={<AgentBusinessProductsDetails />} />
+        <Route path="/agent-site-visits" element={<Sitevisit />} />
+        <Route path="/agent-addsitevisit" element={<AddSitevisit />} />
+        <Route path="/agent-editsitevisit/:id" element={<EditSitevisit />} />
+        <Route path="/agent-training-material" element={<TrainingMaterial />} />
+        <Route path="/agent-my-products" element={<AgentMyProducts />} />
+        {/* <Route path="/agent-my-business-products/" element={<AgentBusinessProductsDetails />} /> */}
+        <Route path="/my-products" element={<AgentBusinessProductsDetails />} />
 
+        <Route path="/agent-offers" element={<AgentOffers />} />
+        <Route path="/agent-add-offer" element={<AgentOffersForm />} />
+        <Route path="/agent-edit-offer/:id" element={<AgentOffersForm />} />
 
+        <Route path="/p-meetings" element={<AgentMeetings />} />
+          <Route path="/p-meetingrequest" element={<MeetingRequestForm />} />
 
 
         {/* Client-panel */}
@@ -426,13 +451,13 @@ function App() {
         <Route path="/clientmyproperties/edit/:property_id" element={<ClientMyPropertyEditForm />} />
         <Route path="/client-profile" element={<ClientProfile />} />
         <Route path="/client-edit-profile" element={<ClientEditProfile />} />
-         <Route path="/client-busineess-category" element={<ClientbusinessCategory />} />
+        <Route path="/client-busineess-category" element={<ClientbusinessCategory />} />
         <Route path="/client-subcategory/:id" element={<ClientSubCategory />} />
         <Route path="/client-business-product-details/:productId" element={<ClientProductDetails />} />
         <Route path="/client-subscription-plan" element={<ClientSubscriptionPlan />} />
 
         <Route path="/admin-users" element={<UserList />} />
-          <Route path="/admin-view-user/:id" element={<ViewUser />} />
+        <Route path="/admin-view-user/:id" element={<ViewUser />} />
         <Route path="/admin-edit-user/:id" element={<EditUser />} />
         <Route path="/a-company" element={<Company />} />
         <Route path="/a-leads" element={<Leads />} />

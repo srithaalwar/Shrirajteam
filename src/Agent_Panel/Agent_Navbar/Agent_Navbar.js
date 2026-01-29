@@ -739,8 +739,8 @@ const AgentNavbar = () => {
         { path: "/agent-my-team", name: "My Team", icon: <FaUsers /> },
       ],
     },
-    { path: "/", name: "Meetings", icon: <FaCalendarAlt /> },
-    { path: "/", name: "Offers", icon: <FaTag /> },
+    { path: "/p-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
+    { path: "/agent-offers", name: "Offers", icon: <FaTag /> },
     { path: "/agent-profile", name: "Profile", icon: <FaUserCircle /> },
   ];
 

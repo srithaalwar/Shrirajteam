@@ -1,0 +1,158 @@
+/* Custom width for department cards */
+.col-lg-2-4 {
+    width: 20%;
+    flex: 0 0 20%;
+    max-width: 20%;
+}
+
+.meetings-container {
+    padding: 2rem;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.department-card {
+    background: linear-gradient(180deg, #fdf9ff 0%, #e7f2ff 100%);
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    min-height: 250px;
+    position: relative;
+    overflow: hidden;
+}
+
+.department-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.department-name {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-weight: 500;
+    color: #4A4A4A;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.department-avatar {
+    margin: 50px auto 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.avatar-img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.request-btn {
+    border-radius: 25px;
+    padding: 8px 24px;
+    font-weight: bold;
+    background-color: #fff;
+    color: #673ab7;
+    border: 2px solid #673ab7;
+    transition: all 0.3s ease;
+    margin-top: auto;
+    font-size: 0.875rem;
+}
+
+.request-btn:hover {
+    background-color: #f3e5f5;
+    color: #673ab7;
+    transform: scale(1.05);
+}
+
+/* Pagination Styles */
+.pagination {
+    margin-bottom: 0;
+}
+
+.page-item .page-link {
+    color: #673ab7;
+    border: 1px solid #dee2e6;
+    margin: 0 2px;
+    border-radius: 4px;
+}
+
+.page-item.active .page-link {
+    background-color: #673ab7;
+    border-color: #673ab7;
+    color: white;
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+/* Modal Backdrop */
+.modal-backdrop {
+    opacity: 0.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .col-lg-2-4 {
+        width: 25%;
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+}
+
+@media (max-width: 992px) {
+    .col-lg-2-4 {
+        width: 33.333%;
+        flex: 0 0 33.333%;
+        max-width: 33.333%;
+    }
+}
+
+@media (max-width: 768px) {
+    .meetings-container {
+        padding: 1rem;
+    }
+    
+    .col-lg-2-4 {
+        width: 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    
+    .department-card {
+        min-height: 220px;
+    }
+    
+    .avatar-img {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 576px) {
+    .col-lg-2-4 {
+        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .request-btn {
+        padding: 6px 20px;
+        font-size: 0.8rem;
+    }
+}

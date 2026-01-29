@@ -2942,6 +2942,15 @@ const ProductCard = ({ product, variant, baseurl }) => {
           >
             VIEW DETAILS
           </button>
+            <button 
+            className="btn w-100 mt-2 text-white" 
+            style={{ background: "#273c75" }}
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log("Add to cart:", variant.id, variant.sku);
+            }}
+          >
+PAYOUT          </button>
 
           <button 
             className="btn w-100 mt-2 text-white" 

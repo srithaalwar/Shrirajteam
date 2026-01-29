@@ -1461,7 +1461,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
                   <button 
                     type="button" 
                     className="btn btn-secondary"
-                    onClick={() => navigate('/admin-properties')}
+          onClick={() => navigate(-1)}
                   >
                     Back to List
                   </button>
@@ -1497,7 +1497,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
                           <button 
                             type="button" 
                             className="btn btn-secondary"
-                            onClick={handleBack}
+          onClick={() => navigate(-1)}
                             disabled={isSubmitting}
                           >
                             <i className="bi bi-arrow-left me-1"></i> Back
