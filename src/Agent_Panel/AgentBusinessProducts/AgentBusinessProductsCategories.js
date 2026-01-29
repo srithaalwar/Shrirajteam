@@ -563,7 +563,7 @@ const ProductGrid = ({ products, viewMode, baseurl }) => {
 };
 
 /* ================= MAIN CATEGORIES COMPONENT ================= */
-const Categories = () => {
+const AgentBusinessProductsCategories = () => {
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const navigate = useNavigate();
@@ -851,4 +851,4 @@ const Categories = () => {
   );
 };
 
-export default Categories;
+export default AgentBusinessProductsCategories;
