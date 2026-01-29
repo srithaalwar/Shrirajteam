@@ -20,7 +20,7 @@ import WebsiteNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-
+import { Info } from "lucide-react";
 // ============= Utility Functions =============
 const formatPrice = (price) => {
   const priceNum = parseFloat(price);
@@ -59,12 +59,346 @@ const getImageUrl = (images) => {
   return "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
 };
 
+
+// ============= Commission Tooltip Component =============
+const CommissionTooltip = ({ show, commissions, distributionCommission }) => {
+  if (!show || !commissions || commissions.length === 0) return null;
+
+  // Calculate commission amounts based on distribution_commission
+  const calculateCommissions = () => {
+    const commissionAmount = parseFloat(distributionCommission) || 0;
+    return commissions.map(commission => ({
+      level: commission.level_no,
+      percentage: parseFloat(commission.percentage),
+      amount: (commissionAmount * parseFloat(commission.percentage)) / 100
+    }));
+  };
+
+  const commissionList = calculateCommissions();
+
+  return (
+    <div className="commission-tooltip">
+      <div className="commission-tooltip-content">
+        <div className="commission-body">
+          {commissionList.map((commission) => (
+            <div key={commission.level} className="d-flex justify-content-between align-items-center mb-2">
+              <span className="fw-medium">Team {commission.level}:</span>
+              <div className="text-end">
+                <span className="fw-bold text-success d-block">₹{commission.amount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+                <small className="text-muted">({commission.percentage}%)</small>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ============= Property Card Component =============
-const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }) => {
+// const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }) => {
+//   const navigate = useNavigate();
+//   const [isUpdating, setIsUpdating] = useState(false);
+//   const [verificationStatus, setVerificationStatus] = useState(property.verification_status || 'pending');
+//   const [isDeleting, setIsDeleting] = useState(false);
+
+//   const handleViewDetails = () => {
+//     navigate(`/property/${property.property_id}`);
+//   };
+
+//   const handleEditProperty = () => {
+//     navigate(`/edit-property/${property.property_id}`);
+//   };
+
+//   // Handle delete property
+//   const handleDeleteProperty = async () => {
+//     // Show confirmation dialog
+//     const result = await Swal.fire({
+//       title: 'Are you sure?',
+//       text: `You are about to delete "${property.property_title}". This action cannot be undone!`,
+//       icon: 'warning',
+//       showCancelButton: true,
+//       confirmButtonColor: '#d33',
+//       cancelButtonColor: '#3085d6',
+//       confirmButtonText: 'Yes, delete it!',
+//       cancelButtonText: 'Cancel',
+//       reverseButtons: true
+//     });
+
+//     if (result.isConfirmed) {
+//       try {
+//         setIsDeleting(true);
+        
+//         // Call the parent component's delete handler
+//         if (onDeleteProperty) {
+//           await onDeleteProperty(property.property_id);
+//         }
+        
+//         // Show success message
+//         Swal.fire(
+//           'Deleted!',
+//           'The property has been deleted successfully.',
+//           'success'
+//         );
+//       } catch (error) {
+//         console.error('Error deleting property:', error);
+//         Swal.fire(
+//           'Error!',
+//           'Failed to delete the property. Please try again.',
+//           'error'
+//         );
+//       } finally {
+//         setIsDeleting(false);
+//       }
+//     }
+//   };
+
+//   // Get the image URL
+//   const imageUrl = getImageUrl(property.images);
+  
+//   const formattedPrice = property.looking_to === "sell" 
+//     ? formatPrice(property.total_property_value || property.property_value)
+//     : `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`;
+
+//   const depositText = property.deposit_amount 
+//     ? ` | Deposit: ₹${parseFloat(property.deposit_amount).toLocaleString()}`
+//     : '';
+
+//   // Handle verification status change
+//   const handleVerificationStatusChange = async (e) => {
+//     const newStatus = e.target.value;
+//     const previousStatus = verificationStatus; // Store previous status for rollback
+    
+//     setVerificationStatus(newStatus);
+    
+//     try {
+//       setIsUpdating(true);
+      
+//       // Make API call to update verification status using the main properties endpoint
+//       const response = await fetch(`${baseurl}/properties/${property.property_id}/`, {
+//         method: 'PUT', // or 'PATCH' if your API supports it
+//         headers: {
+//           'Content-Type': 'application/json',
+//           // Add authentication headers if needed
+//           // 'Authorization': `Bearer ${yourToken}`,
+//         },
+//         body: JSON.stringify({
+//           verification_status: newStatus
+//         })
+//       });
+      
+//       if (!response.ok) {
+//         throw new Error(`Failed to update verification status: ${response.status}`);
+//       }
+      
+//       const result = await response.json();
+      
+//       // Notify parent component about the update
+//       if (onVerificationStatusUpdate) {
+//         onVerificationStatusUpdate(property.property_id, newStatus);
+//       }
+      
+//       // Show success message
+//       console.log('Verification status updated successfully:', result);
+      
+//     } catch (error) {
+//       console.error('Error updating verification status:', error);
+//       // Revert to previous status on error
+//       setVerificationStatus(previousStatus);
+      
+//       // Show user-friendly error message
+//       alert(`Failed to update verification status: ${error.message}. Please try again.`);
+//     } finally {
+//       setIsUpdating(false);
+//     }
+//   };
+
+//   // Get badge color based on verification status
+//   const getVerificationBadgeColor = (status) => {
+//     switch (status) {
+//       case 'verified':
+//         return 'bg-success';
+//       case 'rejected':
+//         return 'bg-danger';
+//       case 'suspended':
+//         return 'bg-warning text-dark';
+//       case 'pending':
+//       default:
+//         return 'bg-secondary';
+//     }
+//   };
+
+//   // Get display text for verification status
+//   const getVerificationDisplayText = (status) => {
+//     switch (status) {
+//       case 'verified':
+//         return 'Verified';
+//       case 'rejected':
+//         return 'Rejected';
+//       case 'suspended':
+//         return 'Suspended';
+//       case 'pending':
+//       default:
+//         return 'Pending';
+//     }
+//   };
+
+//   return (
+//     <div className="card h-100 border rounded overflow-hidden d-flex flex-column">
+//       <div className="position-relative">
+//         <div className="bg-light d-flex align-items-center justify-content-center p-4" style={{ height: '200px' }}>
+//           <img
+//             src={imageUrl}
+//             alt={property.property_title}
+//             className="img-fluid"
+//             style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'cover' }}
+//             onError={(e) => {
+//               e.target.src = "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
+//             }}
+//           />
+//         </div>
+//         <div className="position-absolute top-0 end-0 m-2">
+//           <span className="badge" style={{ backgroundColor: '#273c75', color: 'white' }}>
+//             {property.looking_to === "sell" ? "FOR SALE" : "FOR RENT"}
+//           </span>
+//         </div>
+//         {property.status && (
+//           <div className="position-absolute top-0 start-0 m-2">
+//             <span className="badge bg-warning text-dark">
+//               {property.status.toUpperCase()}
+//             </span>
+//           </div>
+//         )}
+//       </div>
+//       <div className="card-body d-flex flex-column flex-grow-1">
+//         <h6 className="card-title fw-medium mb-1 line-clamp-2" style={{ fontSize: '0.875rem' }}>
+//           {property.property_title}
+//         </h6>
+//         <p className="card-text text-muted small mb-2">
+//           <i className="bi bi-geo-alt"></i> {property.city}
+//         </p>
+//         <div className="d-flex flex-wrap gap-1 mb-2">
+//           {property.number_of_bedrooms && (
+//             <span className="badge bg-light text-dark border small">
+//               {property.number_of_bedrooms} BHK
+//             </span>
+//           )}
+//           {property.facing && (
+//             <span className="badge bg-light text-dark border small">
+//               {property.facing.charAt(0).toUpperCase() + property.facing.slice(1)} Facing
+//             </span>
+//           )}
+//         </div>
+        
+//         {/* Verification Status Section */}
+//         {/* <div className="mb-3">
+//           <div className="d-flex align-items-center justify-content-between mb-2">
+//             <span className="small fw-semibold">Verification Status:</span>
+//             <span className={`badge ${getVerificationBadgeColor(verificationStatus)} small`}>
+//               {getVerificationDisplayText(verificationStatus)}
+//             </span>
+//           </div>
+//           <div className="input-group input-group-sm">
+//             <select 
+//               className="form-select form-select-sm"
+//               value={verificationStatus}
+//               onChange={handleVerificationStatusChange}
+//               disabled={isUpdating}
+//               aria-label="Update verification status"
+//             >
+//               <option value="pending">Pending</option>
+//               <option value="verified">Verified</option>
+//               <option value="rejected">Rejected</option>
+//               <option value="suspended">Suspended</option>
+//             </select>
+//             {isUpdating && (
+//               <span className="input-group-text">
+//                 <div className="spinner-border spinner-border-sm text-primary" role="status">
+//                   <span className="visually-hidden">Updating...</span>
+//                 </div>
+//               </span>
+//             )}
+//           </div>
+//         </div> */}
+        
+//         <div className="d-flex align-items-center gap-2 mt-auto">
+//           <span className="h5 fw-bold text-dark">
+//             {formattedPrice}
+//             {property.looking_to === "rent" && (
+//               <small className="text-muted d-block">{depositText}</small>
+//             )}
+//           </span>
+//         </div>
+
+//         {/* Action Buttons */}
+//         {/* <div className="d-flex gap-2 mt-2">
+//           <button
+//             onClick={handleEditProperty}
+//             className="btn fw-semibold py-2 flex-fill d-flex align-items-center justify-content-center gap-1"
+//             style={{
+//               backgroundColor: "#ffc107",
+//               borderColor: "#ffc107",
+//               color: "#000",
+//             }}
+//           >
+//             <Edit size={16} />
+//             <span>Edit</span>
+//           </button>
+          
+      
+//           <button
+//             onClick={handleDeleteProperty}
+//             disabled={isDeleting}
+//             className="btn fw-semibold py-2 flex-fill d-flex align-items-center justify-content-center gap-1"
+//             style={{
+//               backgroundColor: "#dc3545",
+//               borderColor: "#dc3545",
+//               color: "#fff",
+//             }}
+//           >
+//             {isDeleting ? (
+//               <>
+//                 <div className="spinner-border spinner-border-sm" role="status">
+//                   <span className="visually-hidden">Deleting...</span>
+//                 </div>
+//                 <span>Deleting...</span>
+//               </>
+//             ) : (
+//               <>
+//                 <Trash2 size={16} />
+//                 <span>Delete</span>
+//               </>
+//             )}
+//           </button>
+//         </div> */}
+      
+//         <button 
+//           className="btn w-100 fw-semibold py-2 mt-2"
+//           style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
+//         >
+//           Payout
+//         </button>
+//         <button 
+//           onClick={handleViewDetails}
+//           className="btn w-100 fw-semibold py-2 mt-2"
+//           style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: '#fff' }}
+//         >
+//           {property.looking_to === "sell" ? "VIEW DETAILS" : "CONTACT OWNER"}
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+
+
+// ============= Property Card Component =============
+const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, commissionData }) => {
   const navigate = useNavigate();
   const [isUpdating, setIsUpdating] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState(property.verification_status || 'pending');
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showCommissionTooltip, setShowCommissionTooltip] = useState(false);
 
   const handleViewDetails = () => {
     navigate(`/property/${property.property_id}`);
@@ -117,6 +451,13 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
     }
   };
 
+  // Get distribution commission
+  const getDistributionCommission = () => {
+    return parseFloat(property.distribution_commission || 0);
+  };
+
+  const distributionCommission = getDistributionCommission();
+
   // Get the image URL
   const imageUrl = getImageUrl(property.images);
   
@@ -143,8 +484,6 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
         method: 'PUT', // or 'PATCH' if your API supports it
         headers: {
           'Content-Type': 'application/json',
-          // Add authentication headers if needed
-          // 'Authorization': `Bearer ${yourToken}`,
         },
         body: JSON.stringify({
           verification_status: newStatus
@@ -162,7 +501,6 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
         onVerificationStatusUpdate(property.property_id, newStatus);
       }
       
-      // Show success message
       console.log('Verification status updated successfully:', result);
       
     } catch (error) {
@@ -170,11 +508,20 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
       // Revert to previous status on error
       setVerificationStatus(previousStatus);
       
-      // Show user-friendly error message
       alert(`Failed to update verification status: ${error.message}. Please try again.`);
     } finally {
       setIsUpdating(false);
     }
+  };
+
+  // Handle mouse enter for commission tooltip
+  const handleMouseEnter = () => {
+    setShowCommissionTooltip(true);
+  };
+
+  // Handle mouse leave for commission tooltip
+  const handleMouseLeave = () => {
+    setShowCommissionTooltip(false);
   };
 
   // Get badge color based on verification status
@@ -254,34 +601,13 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
           )}
         </div>
         
-        {/* Verification Status Section */}
-        {/* <div className="mb-3">
-          <div className="d-flex align-items-center justify-content-between mb-2">
-            <span className="small fw-semibold">Verification Status:</span>
-            <span className={`badge ${getVerificationBadgeColor(verificationStatus)} small`}>
-              {getVerificationDisplayText(verificationStatus)}
+        {/* Distribution Commission Display */}
+        {/* <div className="mb-2">
+          <div className="d-flex justify-content-between align-items-center">
+            <span className="small fw-semibold">Commission:</span>
+            <span className="badge bg-info text-dark small">
+              ₹{distributionCommission.toLocaleString()}
             </span>
-          </div>
-          <div className="input-group input-group-sm">
-            <select 
-              className="form-select form-select-sm"
-              value={verificationStatus}
-              onChange={handleVerificationStatusChange}
-              disabled={isUpdating}
-              aria-label="Update verification status"
-            >
-              <option value="pending">Pending</option>
-              <option value="verified">Verified</option>
-              <option value="rejected">Rejected</option>
-              <option value="suspended">Suspended</option>
-            </select>
-            {isUpdating && (
-              <span className="input-group-text">
-                <div className="spinner-border spinner-border-sm text-primary" role="status">
-                  <span className="visually-hidden">Updating...</span>
-                </div>
-              </span>
-            )}
           </div>
         </div> */}
         
@@ -294,54 +620,27 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty }
           </span>
         </div>
 
-        {/* Action Buttons */}
-        {/* <div className="d-flex gap-2 mt-2">
-          <button
-            onClick={handleEditProperty}
-            className="btn fw-semibold py-2 flex-fill d-flex align-items-center justify-content-center gap-1"
-            style={{
-              backgroundColor: "#ffc107",
-              borderColor: "#ffc107",
-              color: "#000",
-            }}
+        {/* PAYOUT BUTTON with Commission Tooltip */}
+        <div className="position-relative mt-2">
+          <button 
+            className="btn w-100 fw-semibold py-2 d-flex align-items-center justify-content-center gap-2"
+            style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onFocus={handleMouseEnter}
+            onBlur={handleMouseLeave}
           >
-            <Edit size={16} />
-            <span>Edit</span>
+            <Info size={16} />
+            Payout
           </button>
           
-      
-          <button
-            onClick={handleDeleteProperty}
-            disabled={isDeleting}
-            className="btn fw-semibold py-2 flex-fill d-flex align-items-center justify-content-center gap-1"
-            style={{
-              backgroundColor: "#dc3545",
-              borderColor: "#dc3545",
-              color: "#fff",
-            }}
-          >
-            {isDeleting ? (
-              <>
-                <div className="spinner-border spinner-border-sm" role="status">
-                  <span className="visually-hidden">Deleting...</span>
-                </div>
-                <span>Deleting...</span>
-              </>
-            ) : (
-              <>
-                <Trash2 size={16} />
-                <span>Delete</span>
-              </>
-            )}
-          </button>
-        </div> */}
-      
-        <button 
-          className="btn w-100 fw-semibold py-2 mt-2"
-          style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
-        >
-          Payout
-        </button>
+          <CommissionTooltip 
+            show={showCommissionTooltip}
+            commissions={commissionData}
+            distributionCommission={distributionCommission}
+          />
+        </div>
+        
         <button 
           onClick={handleViewDetails}
           className="btn w-100 fw-semibold py-2 mt-2"
@@ -1084,11 +1383,234 @@ const ProductHeader = ({
 };
 
 // ============= Property Grid Component =============
-const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDeleteProperty }) => {
+// const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDeleteProperty }) => {
+//   const getGridClasses = () => {
+//     switch (viewMode) {
+//       // case "grid-2":
+//       //   return "row row-cols-1 row-cols-sm-2";
+//       case "grid-3":
+//         return "row row-cols-1 row-cols-sm-2 row-cols-md-3";
+//       case "grid-4":
+//         return "row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4";
+//       case "list":
+//         return "row row-cols-1";
+//       default:
+//         return "row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4";
+//     }
+//   };
+
+//   const navigate = useNavigate();
+
+//   // In list view mode, show properties differently
+//   if (viewMode === "list") {
+//     return (
+//       <div className="list-group">
+//         {properties.map((property) => {
+//           const imageUrl = getImageUrl(property.images);
+          
+//           const getPriceInfo = () => {
+//             if (property.looking_to === "sell") {
+//               const price = property.total_property_value || property.property_value;
+//               return {
+//                 price: formatPrice(price),
+//                 suffix: "",
+//                 showDeposit: false
+//               };
+//             } else {
+//               return {
+//                 price: `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`,
+//                 suffix: property.deposit_amount 
+//                   ? `Deposit: ₹${parseFloat(property.deposit_amount).toLocaleString()}`
+//                   : '',
+//                 showDeposit: true
+//               };
+//             }
+//           };
+
+//           const priceInfo = getPriceInfo();
+          
+//           // Get badge color based on verification status
+//           const getVerificationBadgeColor = (status) => {
+//             switch (status) {
+//               case 'verified':
+//                 return 'bg-success';
+//               case 'rejected':
+//                 return 'bg-danger';
+//               case 'suspended':
+//                 return 'bg-warning text-dark';
+//               case 'pending':
+//               default:
+//                 return 'bg-secondary';
+//             }
+//           };
+          
+//           // Get display text for verification status
+//           const getVerificationDisplayText = (status) => {
+//             switch (status) {
+//               case 'verified':
+//                 return 'Verified';
+//               case 'rejected':
+//                 return 'Rejected';
+//               case 'suspended':
+//                 return 'Suspended';
+//               case 'pending':
+//               default:
+//                 return 'Pending';
+//             }
+//           };
+
+//           return (
+//             <div key={property.property_id} className="list-group-item mb-3">
+//               <div className="row g-3">
+//                 <div className="col-md-3">
+//                   <div className="bg-light d-flex align-items-center justify-content-center p-3" style={{ height: '150px' }}>
+//                     <img
+//                       src={imageUrl}
+//                       alt={property.property_title}
+//                       className="img-fluid"
+//                       style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'cover' }}
+//                       onError={(e) => {
+//                         e.target.src = "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
+//                       }}
+//                     />
+//                   </div>
+//                 </div>
+//                 <div className="col-md-6">
+//                   <div className="d-flex align-items-start gap-2 mb-2">
+//                     <h6 className="card-title fw-medium mb-0">{property.property_title}</h6>
+//                     {property.status && (
+//                       <span className="badge bg-warning text-dark small">
+//                         {property.status.toUpperCase()}
+//                       </span>
+//                     )}
+//                     <span className="badge ms-auto" style={{ backgroundColor: '#273c75', color: 'white' }}>
+//                       {property.looking_to === "sell" ? "FOR SALE" : "FOR RENT"}
+//                     </span>
+//                   </div>
+//                   <p className="card-text text-muted small mb-2">
+//                     <i className="bi bi-geo-alt"></i> {property.address}, {property.city}
+//                   </p>
+//                   <div className="d-flex flex-wrap gap-2 mb-2">
+//                     {property.area && (
+//                       <span className="badge bg-light text-dark border small">
+//                         {property.area} {property.area_unit || 'sq ft'}
+//                       </span>
+//                     )}
+//                     {property.number_of_bedrooms && (
+//                       <span className="badge bg-light text-dark border small">
+//                         {property.number_of_bedrooms} BHK
+//                       </span>
+//                     )}
+//                     {property.facing && (
+//                       <span className="badge bg-light text-dark border small">
+//                         {property.facing.charAt(0).toUpperCase() + property.facing.slice(1)} Facing
+//                       </span>
+//                     )}
+//                   </div>
+                  
+//                   {/* Verification Status for List View */}
+//                   <div className="mb-3">
+//                     <div className="d-flex align-items-center gap-2 mb-2">
+//                       <span className="small fw-semibold">Verification:</span>
+//                       <span className={`badge ${getVerificationBadgeColor(property.verification_status)} small`}>
+//                         {getVerificationDisplayText(property.verification_status)}
+//                       </span>
+//                     </div>
+//                     <div className="input-group input-group-sm" style={{ width: '200px' }}>
+//                       <select 
+//                         className="form-select form-select-sm"
+//                         value={property.verification_status || 'pending'}
+//                         onChange={(e) => onVerificationStatusUpdate && onVerificationStatusUpdate(property.property_id, e.target.value)}
+//                         aria-label="Update verification status"
+//                       >
+//                         <option value="pending">Pending</option>
+//                         <option value="verified">Verified</option>
+//                         <option value="rejected">Rejected</option>
+//                         <option value="suspended">Suspended</option>
+//                       </select>
+//                     </div>
+//                   </div>
+                  
+//                   <div className="d-flex align-items-center gap-2">
+//                     <span className="h5 fw-bold text-dark">
+//                       {priceInfo.price}
+//                       {priceInfo.showDeposit && priceInfo.suffix && (
+//                         <small className="text-muted d-block">{priceInfo.suffix}</small>
+//                       )}
+//                     </span>
+//                   </div>
+//                 </div>
+//                 <div className="col-md-3 d-flex flex-column gap-2">
+//                   {/* Action Buttons for List View */}
+//                   <div className="d-flex gap-2 mb-2">
+//                     <button
+//                       onClick={() => navigate(`/edit-property/${property.property_id}`)}
+//                       className="btn fw-semibold flex-fill d-flex align-items-center justify-content-center gap-1"
+//                       style={{
+//                         backgroundColor: "#ffc107",
+//                         borderColor: "#ffc107",
+//                         color: "#000",
+//                       }}
+//                     >
+//                       <Edit size={14} />
+//                       <span>Edit</span>
+//                     </button>
+                    
+//                     <button
+//                       onClick={() => onDeleteProperty && onDeleteProperty(property.property_id)}
+//                       className="btn fw-semibold flex-fill d-flex align-items-center justify-content-center gap-1"
+//                       style={{
+//                         backgroundColor: "#dc3545",
+//                         borderColor: "#dc3545",
+//                         color: "#fff",
+//                       }}
+//                     >
+//                       <Trash2 size={14} />
+//                       <span>Delete</span>
+//                     </button>
+//                   </div>
+                  
+//                   <button 
+//                     className="btn fw-semibold py-2"
+//                     style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
+//                   >
+//                     Payout
+//                   </button>
+//                   <button 
+//                     onClick={() => navigate(`/property/${property.property_id}`)}
+//                     className="btn fw-semibold py-2"
+//                     style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: '#fff' }}
+//                   >
+//                     {property.looking_to === "sell" ? "VIEW DETAILS" : "CONTACT OWNER"}
+//                   </button>
+//                 </div>
+//               </div>
+//             </div>
+//           );
+//         })}
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className={getGridClasses()}>
+//       {properties.map((property) => (
+//         <div key={property.property_id} className="col mb-4">
+//           <PropertyCard 
+//             property={property} 
+//             onVerificationStatusUpdate={onVerificationStatusUpdate}
+//             onDeleteProperty={onDeleteProperty}
+//           />
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+// ============= Property Grid Component =============
+const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDeleteProperty, commissionData }) => {
   const getGridClasses = () => {
     switch (viewMode) {
-      // case "grid-2":
-      //   return "row row-cols-1 row-cols-sm-2";
       case "grid-3":
         return "row row-cols-1 row-cols-sm-2 row-cols-md-3";
       case "grid-4":
@@ -1129,165 +1651,212 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
           };
 
           const priceInfo = getPriceInfo();
-          
-          // Get badge color based on verification status
-          const getVerificationBadgeColor = (status) => {
-            switch (status) {
-              case 'verified':
-                return 'bg-success';
-              case 'rejected':
-                return 'bg-danger';
-              case 'suspended':
-                return 'bg-warning text-dark';
-              case 'pending':
-              default:
-                return 'bg-secondary';
-            }
-          };
-          
-          // Get display text for verification status
-          const getVerificationDisplayText = (status) => {
-            switch (status) {
-              case 'verified':
-                return 'Verified';
-              case 'rejected':
-                return 'Rejected';
-              case 'suspended':
-                return 'Suspended';
-              case 'pending':
-              default:
-                return 'Pending';
-            }
-          };
 
-          return (
-            <div key={property.property_id} className="list-group-item mb-3">
-              <div className="row g-3">
-                <div className="col-md-3">
-                  <div className="bg-light d-flex align-items-center justify-content-center p-3" style={{ height: '150px' }}>
-                    <img
-                      src={imageUrl}
-                      alt={property.property_title}
-                      className="img-fluid"
-                      style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'cover' }}
-                      onError={(e) => {
-                        e.target.src = "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="d-flex align-items-start gap-2 mb-2">
-                    <h6 className="card-title fw-medium mb-0">{property.property_title}</h6>
-                    {property.status && (
-                      <span className="badge bg-warning text-dark small">
-                        {property.status.toUpperCase()}
-                      </span>
-                    )}
-                    <span className="badge ms-auto" style={{ backgroundColor: '#273c75', color: 'white' }}>
-                      {property.looking_to === "sell" ? "FOR SALE" : "FOR RENT"}
-                    </span>
-                  </div>
-                  <p className="card-text text-muted small mb-2">
-                    <i className="bi bi-geo-alt"></i> {property.address}, {property.city}
-                  </p>
-                  <div className="d-flex flex-wrap gap-2 mb-2">
-                    {property.area && (
-                      <span className="badge bg-light text-dark border small">
-                        {property.area} {property.area_unit || 'sq ft'}
-                      </span>
-                    )}
-                    {property.number_of_bedrooms && (
-                      <span className="badge bg-light text-dark border small">
-                        {property.number_of_bedrooms} BHK
-                      </span>
-                    )}
-                    {property.facing && (
-                      <span className="badge bg-light text-dark border small">
-                        {property.facing.charAt(0).toUpperCase() + property.facing.slice(1)} Facing
-                      </span>
-                    )}
-                  </div>
-                  
-                  {/* Verification Status for List View */}
-                  <div className="mb-3">
-                    <div className="d-flex align-items-center gap-2 mb-2">
-                      <span className="small fw-semibold">Verification:</span>
-                      <span className={`badge ${getVerificationBadgeColor(property.verification_status)} small`}>
-                        {getVerificationDisplayText(property.verification_status)}
-                      </span>
-                    </div>
-                    <div className="input-group input-group-sm" style={{ width: '200px' }}>
-                      <select 
-                        className="form-select form-select-sm"
-                        value={property.verification_status || 'pending'}
-                        onChange={(e) => onVerificationStatusUpdate && onVerificationStatusUpdate(property.property_id, e.target.value)}
-                        aria-label="Update verification status"
-                      >
-                        <option value="pending">Pending</option>
-                        <option value="verified">Verified</option>
-                        <option value="rejected">Rejected</option>
-                        <option value="suspended">Suspended</option>
-                      </select>
+          // Create a separate ListPropertyItem for list view
+          const ListPropertyItem = ({ property }) => {
+            const [showCommissionTooltip, setShowCommissionTooltip] = useState(false);
+
+            // Get distribution commission
+            const getDistributionCommission = () => {
+              return parseFloat(property.distribution_commission || 0);
+            };
+
+            const distributionCommission = getDistributionCommission();
+
+            const handleMouseEnter = () => {
+              setShowCommissionTooltip(true);
+            };
+
+            const handleMouseLeave = () => {
+              setShowCommissionTooltip(false);
+            };
+            
+            // Get badge color based on verification status
+            const getVerificationBadgeColor = (status) => {
+              switch (status) {
+                case 'verified':
+                  return 'bg-success';
+                case 'rejected':
+                  return 'bg-danger';
+                case 'suspended':
+                  return 'bg-warning text-dark';
+                case 'pending':
+                default:
+                  return 'bg-secondary';
+              }
+            };
+            
+            // Get display text for verification status
+            const getVerificationDisplayText = (status) => {
+              switch (status) {
+                case 'verified':
+                  return 'Verified';
+                case 'rejected':
+                  return 'Rejected';
+                case 'suspended':
+                  return 'Suspended';
+                case 'pending':
+                default:
+                  return 'Pending';
+              }
+            };
+
+            return (
+              <div className="list-group-item mb-3">
+                <div className="row g-3">
+                  <div className="col-md-3">
+                    <div className="bg-light d-flex align-items-center justify-content-center p-3" style={{ height: '150px' }}>
+                      <img
+                        src={imageUrl}
+                        alt={property.property_title}
+                        className="img-fluid"
+                        style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'cover' }}
+                        onError={(e) => {
+                          e.target.src = "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
+                        }}
+                      />
                     </div>
                   </div>
-                  
-                  <div className="d-flex align-items-center gap-2">
-                    <span className="h5 fw-bold text-dark">
-                      {priceInfo.price}
-                      {priceInfo.showDeposit && priceInfo.suffix && (
-                        <small className="text-muted d-block">{priceInfo.suffix}</small>
+                  <div className="col-md-6">
+                    <div className="d-flex align-items-start gap-2 mb-2">
+                      <h6 className="card-title fw-medium mb-0">{property.property_title}</h6>
+                      {property.status && (
+                        <span className="badge bg-warning text-dark small">
+                          {property.status.toUpperCase()}
+                        </span>
                       )}
-                    </span>
-                  </div>
-                </div>
-                <div className="col-md-3 d-flex flex-column gap-2">
-                  {/* Action Buttons for List View */}
-                  <div className="d-flex gap-2 mb-2">
-                    <button
-                      onClick={() => navigate(`/edit-property/${property.property_id}`)}
-                      className="btn fw-semibold flex-fill d-flex align-items-center justify-content-center gap-1"
-                      style={{
-                        backgroundColor: "#ffc107",
-                        borderColor: "#ffc107",
-                        color: "#000",
-                      }}
-                    >
-                      <Edit size={14} />
-                      <span>Edit</span>
-                    </button>
+                      <span className="badge ms-auto" style={{ backgroundColor: '#273c75', color: 'white' }}>
+                        {property.looking_to === "sell" ? "FOR SALE" : "FOR RENT"}
+                      </span>
+                    </div>
+                    <p className="card-text text-muted small mb-2">
+                      <i className="bi bi-geo-alt"></i> {property.address}, {property.city}
+                    </p>
+                    <div className="d-flex flex-wrap gap-2 mb-2">
+                      {property.area && (
+                        <span className="badge bg-light text-dark border small">
+                          {property.area} {property.area_unit || 'sq ft'}
+                        </span>
+                      )}
+                      {property.number_of_bedrooms && (
+                        <span className="badge bg-light text-dark border small">
+                          {property.number_of_bedrooms} BHK
+                        </span>
+                      )}
+                      {property.facing && (
+                        <span className="badge bg-light text-dark border small">
+                          {property.facing.charAt(0).toUpperCase() + property.facing.slice(1)} Facing
+                        </span>
+                      )}
+                    </div>
                     
-                    <button
-                      onClick={() => onDeleteProperty && onDeleteProperty(property.property_id)}
-                      className="btn fw-semibold flex-fill d-flex align-items-center justify-content-center gap-1"
-                      style={{
-                        backgroundColor: "#dc3545",
-                        borderColor: "#dc3545",
-                        color: "#fff",
-                      }}
+                    {/* Distribution Commission Display for List View */}
+                    {/* <div className="mb-2">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span className="small fw-semibold">Commission:</span>
+                        <span className="badge bg-info text-dark small">
+                          ₹{distributionCommission.toLocaleString()}
+                        </span>
+                      </div>
+                    </div> */}
+                    
+                    {/* Verification Status for List View */}
+                    {/* <div className="mb-3">
+                      <div className="d-flex align-items-center gap-2 mb-2">
+                        <span className="small fw-semibold">Verification:</span>
+                        <span className={`badge ${getVerificationBadgeColor(property.verification_status)} small`}>
+                          {getVerificationDisplayText(property.verification_status)}
+                        </span>
+                      </div>
+                      <div className="input-group input-group-sm" style={{ width: '200px' }}>
+                        <select 
+                          className="form-select form-select-sm"
+                          value={property.verification_status || 'pending'}
+                          onChange={(e) => onVerificationStatusUpdate && onVerificationStatusUpdate(property.property_id, e.target.value)}
+                          aria-label="Update verification status"
+                        >
+                          <option value="pending">Pending</option>
+                          <option value="verified">Verified</option>
+                          <option value="rejected">Rejected</option>
+                          <option value="suspended">Suspended</option>
+                        </select>
+                      </div>
+                    </div> */}
+                    
+                    <div className="d-flex align-items-center gap-2">
+                      <span className="h5 fw-bold text-dark">
+                        {priceInfo.price}
+                        {priceInfo.showDeposit && priceInfo.suffix && (
+                          <small className="text-muted d-block">{priceInfo.suffix}</small>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="col-md-3 d-flex flex-column gap-2">
+                    {/* Action Buttons for List View */}
+                    <div className="d-flex gap-2 mb-2">
+                      <button
+                        onClick={() => navigate(`/edit-property/${property.property_id}`)}
+                        className="btn fw-semibold flex-fill d-flex align-items-center justify-content-center gap-1"
+                        style={{
+                          backgroundColor: "#ffc107",
+                          borderColor: "#ffc107",
+                          color: "#000",
+                        }}
+                      >
+                        <Edit size={14} />
+                        <span>Edit</span>
+                      </button>
+                      
+                      <button
+                        onClick={() => onDeleteProperty && onDeleteProperty(property.property_id)}
+                        className="btn fw-semibold flex-fill d-flex align-items-center justify-content-center gap-1"
+                        style={{
+                          backgroundColor: "#dc3545",
+                          borderColor: "#dc3545",
+                          color: "#fff",
+                        }}
+                      >
+                        <Trash2 size={14} />
+                        <span>Delete</span>
+                      </button>
+                    </div>
+                    
+                    {/* PAYOUT BUTTON for List View */}
+                    <div className="position-relative">
+                      <button 
+                        className="btn fw-semibold py-2 d-flex align-items-center justify-content-center gap-2 w-100"
+                        style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
+                        onFocus={handleMouseEnter}
+                        onBlur={handleMouseLeave}
+                      >
+                        <Info size={14} />
+                        Payout
+                      </button>
+                      
+                      <CommissionTooltip 
+                        show={showCommissionTooltip}
+                        commissions={commissionData}
+                        distributionCommission={distributionCommission}
+                      />
+                    </div>
+                    
+                    <button 
+                      onClick={() => navigate(`/property/${property.property_id}`)}
+                      className="btn fw-semibold py-2"
+                      style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: '#fff' }}
                     >
-                      <Trash2 size={14} />
-                      <span>Delete</span>
+                      {property.looking_to === "sell" ? "VIEW DETAILS" : "CONTACT OWNER"}
                     </button>
                   </div>
-                  
-                  <button 
-                    className="btn fw-semibold py-2"
-                    style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
-                  >
-                    Payout
-                  </button>
-                  <button 
-                    onClick={() => navigate(`/property/${property.property_id}`)}
-                    className="btn fw-semibold py-2"
-                    style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: '#fff' }}
-                  >
-                    {property.looking_to === "sell" ? "VIEW DETAILS" : "CONTACT OWNER"}
-                  </button>
                 </div>
               </div>
-            </div>
-          );
+            );
+          };
+
+          return <ListPropertyItem key={property.property_id} property={property} />;
         })}
       </div>
     );
@@ -1301,6 +1870,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
             property={property} 
             onVerificationStatusUpdate={onVerificationStatusUpdate}
             onDeleteProperty={onDeleteProperty}
+            commissionData={commissionData}
           />
         </div>
       ))}
@@ -1308,8 +1878,9 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
   );
 };
 
+
 // ============= Main Filters Page Component =============
-const Properties = () => {
+const ClientProperties = () => {
   const [viewMode, setViewMode] = useState("grid-4");
   const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
@@ -1320,6 +1891,8 @@ const Properties = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("default");
+  const [commissionData, setCommissionData] = useState([]);
+const [loadingCommissions, setLoadingCommissions] = useState(false);
 
   // Filter states
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -1336,6 +1909,23 @@ const Properties = () => {
 
   // Get current user ID from localStorage
   const currentUserId = localStorage.getItem("user_id");
+
+  const fetchCommissionData = useCallback(async () => {
+  try {
+    setLoadingCommissions(true);
+    const response = await fetch(`${baseurl}/commissions-master/`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    setCommissionData(data.results || []);
+  } catch (err) {
+    console.error("Error fetching commission data:", err);
+    setCommissionData([]);
+  } finally {
+    setLoadingCommissions(false);
+  }
+}, []);
 
  // Fetch roles from API
 const fetchRoles = useCallback(async () => {
@@ -1592,8 +2182,9 @@ const fetchApprovedProperties = useCallback(async () => {
     fetchRoles();
     fetchCategories();
     fetchPropertyTypes();
+      fetchCommissionData(); 
     fetchApprovedProperties();
-  }, [fetchRoles, fetchCategories, fetchPropertyTypes, fetchApprovedProperties]);
+  }, [fetchRoles, fetchCategories, fetchPropertyTypes, , fetchCommissionData, fetchApprovedProperties]);
 
   // Handle filter changes
   const handleFilterChange = useCallback(() => {
@@ -1721,6 +2312,7 @@ const fetchApprovedProperties = useCallback(async () => {
                     viewMode={viewMode}
                     onVerificationStatusUpdate={handleVerificationStatusUpdate}
                     onDeleteProperty={handleDeleteProperty}
+                    commissionData={commissionData} 
                   />
                 </>
               )}
@@ -1732,4 +2324,4 @@ const fetchApprovedProperties = useCallback(async () => {
   );
 };
 
-export default Properties;
+export default ClientProperties;

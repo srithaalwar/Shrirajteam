@@ -180,3 +180,85 @@
 .status-updating {
   opacity: 0.7;
 }
+
+
+/* Commission Tooltip Styles */
+.commission-tooltip {
+  position: absolute;
+  z-index: 1000;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 10px;
+  width: 250px;
+}
+
+.commission-tooltip-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.commission-tooltip-content::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+}
+
+.commission-tooltip-content::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 9px;
+  border-style: solid;
+  border-color: #e0e0e0 transparent transparent transparent;
+  z-index: -1;
+}
+
+.commission-body {
+  padding: 10px 0;
+}
+
+.commission-body > div {
+  padding: 4px 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Ensure the button has proper positioning context */
+.position-relative {
+  position: relative;
+}
+
+/* Commission badge styling */
+.badge.bg-info {
+  background-color: #17a2b8 !important;
+  color: white !important;
+}
+
+.commission-body .text-end {
+  text-align: right;
+}
+
+.commission-body .text-end .d-block {
+  display: block;
+}
