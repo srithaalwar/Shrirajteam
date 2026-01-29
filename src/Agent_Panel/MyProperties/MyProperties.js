@@ -3548,11 +3548,11 @@ const CommissionTooltip = ({ show, commissions, distributionCommission }) => {
         <div className="commission-body">
           {commissionList.map((commission) => (
             <div key={commission.level} className="d-flex justify-content-between align-items-center mb-2">
-              <span className="fw-medium">Team {commission.level}:</span>
-              <div className="text-end">
+              <span className="fw-medium">Team {commission.level}: &nbsp;₹{commission.amount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+              {/* <div className="text-end">
                 <span className="fw-bold text-success d-block">₹{commission.amount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
                 <small className="text-muted">({commission.percentage}%)</small>
-              </div>
+              </div> */}
             </div>
           ))}
         </div>
@@ -3694,14 +3694,14 @@ const PropertyCard = ({ property, onDeleteProperty, commissionData }) => {
         </div>
         
         {/* Distribution Commission Display */}
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <div className="d-flex justify-content-between align-items-center">
             <span className="small fw-semibold">Commission:</span>
             <span className="badge bg-info text-dark small">
               ₹{distributionCommission.toLocaleString()}
             </span>
           </div>
-        </div>
+        </div> */}
         
         <div className="d-flex align-items-center gap-2 mt-auto">
           <span className="h5 fw-bold text-dark">
@@ -4526,14 +4526,14 @@ const PropertyGrid = ({ properties, viewMode, onDeleteProperty, commissionData }
                     </div>
                     
                     {/* Distribution Commission Display for List View */}
-                    <div className="mb-3">
+                    {/* <div className="mb-3">
                       <div className="d-flex justify-content-between align-items-center">
                         <span className="small fw-semibold">Commission:</span>
                         <span className="badge bg-info text-dark small">
                           ₹{distributionCommission.toLocaleString()}
                         </span>
                       </div>
-                    </div>
+                    </div> */}
                     
                     <div className="d-flex align-items-center gap-2">
                       <span className="h5 fw-bold text-dark">

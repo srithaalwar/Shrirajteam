@@ -1865,11 +1865,11 @@ const CommissionTooltip = ({ show, commissions, distributionCommission }) => {
         <div className="commission-body">
           {commissionList.map((commission) => (
             <div key={commission.level} className="d-flex justify-content-between align-items-center mb-2">
-              <span className="fw-medium">Team {commission.level}:</span>
-              <div className="text-end">
+              <span className="fw-medium">Team {commission.level}:&nbsp;₹{commission.amount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+              {/* <div className="text-end">
                 <span className="fw-bold text-success d-block">₹{commission.amount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
                 <small className="text-muted">({commission.percentage}%)</small>
-              </div>
+              </div> */}
             </div>
           ))}
         </div>
