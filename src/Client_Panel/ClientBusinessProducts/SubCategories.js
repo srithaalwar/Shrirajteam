@@ -6,6 +6,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import {
   Search,
   X,
+  Eye,
   Grid2X2,
   Grid3X3,
   LayoutList,
@@ -119,16 +120,16 @@ const ProductCard = ({ product, variant, baseurl }) => {
           </div>
 
           {/* VIEW DETAILS BUTTON */}
-          <button 
+          {/* <button 
             className="btn w-100 mt-2 text-white" 
             style={{ background: "#6c757d", marginBottom: "8px" }}
             onClick={() => navigate(`/client-business-product-details/${product.product_id}/?variant=${variant.id}`)}
           >
             VIEW DETAILS
-          </button>
+          </button> */}
 
           {/* ADD TO CART BUTTON */}
-          <button 
+          {/* <button 
             className="btn w-100 mt-2 text-white" 
             style={{ background: "#273c75" }}
             onClick={(e) => {
@@ -138,7 +139,42 @@ const ProductCard = ({ product, variant, baseurl }) => {
             }}
           >
             ADD TO CART
+          </button> */}
+
+          {/* View Details and Add to Cart in one row */}
+        <div className="d-grid gap-2" style={{ gridTemplateColumns: '1fr 1fr' }}>
+          {/* VIEW DETAILS BUTTON */}
+          <button 
+            className="btn text-white" 
+            style={{ background: "#6c757d", fontSize: "14px" }}
+            onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}
+          >
+            <Eye size={14} /> Details
           </button>
+
+          {/* ADD TO CART BUTTON */}
+          <button 
+            className="btn text-white" 
+            style={{ background: "#273c75", fontSize: "14px" }}
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log("Add to cart:", variant.id, variant.sku);
+            }}
+            disabled={variant.stock <= 0}
+          >
+            {variant.stock > 0 ? "Add to Cart" : "Out of Stock"}
+          </button>
+        </div>
+
+        <button 
+            className="btn w-100 mt-2 text-white" 
+            style={{ background: "#273c75" }}
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log("Add to cart:", variant.id, variant.sku);
+            }}
+          >
+PAYOUT          </button>
         </div>
       </div>
     </div>

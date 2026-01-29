@@ -68,14 +68,19 @@
 
 
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import "./ProductHeader.css";
 import { FaStar, FaTruck, FaStore } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { baseurl } from "../../../../BaseURL/BaseURL";
+import {
+  ArrowLeft
+} from "lucide-react";
 
 const ShopHeader = ({ businessId }) => {
   const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!businessId) {
@@ -105,6 +110,12 @@ const ShopHeader = ({ businessId }) => {
     <div className="shop-header bg-white border-bottom">
       <div className="container py-4">
         <div className="d-flex align-items-center gap-4">
+          <button
+          className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft size={16} /> Back
+        </button>
 
           {/* LOGO */}
           <div className="shop-logo">

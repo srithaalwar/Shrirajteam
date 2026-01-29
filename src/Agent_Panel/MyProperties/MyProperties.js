@@ -4068,9 +4068,9 @@ const FilterSidebar = ({
                   {type.displayName}
                 </span>
               </div>
-              <span className="text-muted small">
+              {/* <span className="text-muted small">
                 ({type.count})
-              </span>
+              </span> */}
             </div>
           ))}
         </div>

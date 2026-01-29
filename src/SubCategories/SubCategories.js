@@ -2677,6 +2677,7 @@ import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import {
   Search,
   X,
+  Eye,
   Grid3X3,
   LayoutList,
   ChevronUp,
@@ -2935,13 +2936,38 @@ const ProductCard = ({ product, variant, baseurl }) => {
             )}
           </div>
 
-          <button 
+          {/* <button 
             className="btn w-100 mt-2 text-white" 
             style={{ background: "#6c757d", marginBottom: "8px" }}
             onClick={() => navigate(`/product/${product.product_id}/?variant=${variant.id}`)}
           >
             VIEW DETAILS
+          </button> */}
+
+          {/* View Details and Add to Cart in one row */}
+        <div className="d-grid gap-2" style={{ gridTemplateColumns: '1fr 1fr' }}>
+          {/* VIEW DETAILS BUTTON */}
+          <button 
+            className="btn text-white" 
+            style={{ background: "#6c757d", fontSize: "14px" }}
+            onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}
+          >
+            <Eye size={14} /> Details
           </button>
+
+          {/* ADD TO CART BUTTON */}
+          <button 
+            className="btn text-white" 
+            style={{ background: "#273c75", fontSize: "14px" }}
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log("Add to cart:", variant.id, variant.sku);
+            }}
+            disabled={variant.stock <= 0}
+          >
+            {variant.stock > 0 ? "Add to Cart" : "Out of Stock"}
+          </button>
+        </div>
             <button 
             className="btn w-100 mt-2 text-white" 
             style={{ background: "#273c75" }}
@@ -2952,7 +2978,7 @@ const ProductCard = ({ product, variant, baseurl }) => {
           >
 PAYOUT          </button>
 
-          <button 
+          {/* <button 
             className="btn w-100 mt-2 text-white" 
             style={{ background: "#273c75" }}
             onClick={(e) => {
@@ -2961,7 +2987,7 @@ PAYOUT          </button>
             }}
           >
             ADD TO CART
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
@@ -3285,7 +3311,8 @@ const WebsiteSubCategories = () => {
 
       <div className="webhome-container">
 
-        {/* BACK BUTTON */}
+        <div class="d-inline-flex">
+          {/* BACK BUTTON */}
         <button
           className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
           onClick={() => navigate(-1)}
@@ -3293,7 +3320,11 @@ const WebsiteSubCategories = () => {
           <ArrowLeft size={16} /> Back
         </button>
 
-        <h2 className="section-title-head">Sub Categories</h2>
+        <h2 className="section-title-head mt-2">&nbsp;&nbsp;Sub Categories</h2>
+
+        </div>
+
+        
 
         {loading ? (
           <p>Loading subcategories...</p>

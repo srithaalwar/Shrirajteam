@@ -2556,14 +2556,17 @@ const SubCategories = () => {
 
       {/* BACK BUTTON ADDED */}
       <div className="webhome-container">
-        <button
+        <div class="d-inline-flex">
+          <button
           className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
           onClick={() => navigate(-1)}
         >
           <ArrowLeft size={16} /> Back
         </button>
 
-        <h2 className="section-title-head">Sub Categories</h2>
+        <h2 className="section-title-head mt-2">&nbsp;&nbsp;Sub Categories</h2>
+        </div>
+        
 
         {loading ? (
           <p>Loading subcategories...</p>
