@@ -1036,11 +1036,11 @@ const BusinessList = () => {
                           </span>
                         </div>
                         
-                        <div className="business-info-item">
+                        {/* <div className="business-info-item">
                           <i className="bi bi-percent me-2"></i>
                           <span className="info-label">Commission:</span>
                           <span className="info-value">{business.commission_percent}%</span>
-                        </div>
+                        </div> */}
                         
                         <div className="business-description">
                           <p className="description-text">
