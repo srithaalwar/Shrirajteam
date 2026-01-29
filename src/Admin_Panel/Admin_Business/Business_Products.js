@@ -843,7 +843,7 @@ const ProductCard = ({
     <div className="card h-100 shadow-sm border-0">
       {/* Product Image with Discount Badge */}
       <div className="bg-light p-3 text-center position-relative" style={{ height: 150, cursor: "pointer" }}
-           onClick={() => navigate(`/agent-business-product-details/${product.product_id}?variant=${variant.id}`)}>
+           onClick={() => navigate(`/admin-business-product-details/${product.product_id}?variant=${variant.id}`)}>
         <img
           src={getProductImage()}
           alt={getVariantName()}
@@ -862,7 +862,7 @@ const ProductCard = ({
 
       <div className="card-body d-flex flex-column p-3">
         <h6 className="line-clamp-2 mb-2" style={{ cursor: "pointer", minHeight: "30px" }}
-            onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}>
+            onClick={() => navigate(`/admin-business-product-details/${product.product_id}/?variant=${variant.id}`)}>
           {getVariantName()}
         </h6>
         
@@ -944,7 +944,7 @@ const ProductCard = ({
           <button 
             className="btn text-white" 
             style={{ background: "#6c757d", fontSize: "14px" }}
-            onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}
+            onClick={() => navigate(`/admin-business-product-details/${product.product_id}/?variant=${variant.id}`)}
           >
             <Eye size={14} /> Details
           </button>

@@ -229,6 +229,7 @@ import AdminEditSitevisit from "./Admin_Panel/Admin_SiteVisits/EditSitevisit";
 import AdminBusinessProductsDetails from "./Admin_Panel/Admin_Business/Business_Products"
 import AdminMeetingRequests from './Admin_Panel/Admin_Meetings/MeetingRequests'
 import AdminSheduleMeetings from './Admin_Panel/Admin_Meetings/SheduleMeeting'
+import AdminBusinessProductDetails from "./Admin_Panel/Admin_Business/BusinessProductDetails";
 // import AdminAddProductCategory from './Admin_Panel/Product_Category/AddCategory';
 // import AdminEditProductCategory from './Admin_Panel/Product_Category/EditCategory';
 // import AdminProductCategory from './Admin_Panel/Product_Category/TableCategory';
@@ -381,6 +382,7 @@ function App() {
         <Route path="/admin-edit-commissionmaster/:id" element={<EditCommissionLevels />} />
         <Route path="/admin-business" element={<AdminBusiness />} />
         <Route path="/admin-my-products" element={<AdminBusinessProductsDetails />} />
+        <Route path="/admin-business-product-details/:productId" element={<AdminBusinessProductDetails />} />
 
 
 
