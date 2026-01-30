@@ -379,3 +379,33 @@
     font-size: 12px;
   }
 }
+
+
+/* Add to ChatBot.css */
+.answer-cell {
+  max-width: 400px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  padding-right: 10px !important;
+}
+
+.question-cell {
+  max-width: 300px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.actions {
+  white-space: nowrap !important;
+  min-width: 120px !important;
+}
+
+.edit-btn, .delete-btn {
+  margin-right: 8px !important;
+}
+
+.delete-btn:last-child {
+  margin-right: 0 !important;
+}

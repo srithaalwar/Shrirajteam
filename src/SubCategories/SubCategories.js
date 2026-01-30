@@ -2952,7 +2952,7 @@ const ProductCard = ({ product, variant, baseurl }) => {
             style={{ background: "#6c757d", fontSize: "14px" }}
             onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}
           >
-            <Eye size={14} /> Details
+            <Eye size={14} /> DetailsS
           </button>
 
           {/* ADD TO CART BUTTON */}

@@ -55,7 +55,7 @@ function AddTrainingMaterial() {
 
           <form onSubmit={handleSubmit}>
             {/* First Row: Title and Department in two columns */}
-            <div className="row mb-3">
+            <div className="row mb-1">
               <div className="col-md-6">
                 <div className="mb-3">
                   <label className="form-label">Title *</label>
@@ -94,7 +94,7 @@ function AddTrainingMaterial() {
             </div>
 
             {/* Second Row: Description (full width) */}
-            <div className="row mb-3">
+            <div className="row mb-1">
               <div className="col-12">
                 <div className="mb-3">
                   <label className="form-label">Description *</label>

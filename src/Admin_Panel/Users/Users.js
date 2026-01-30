@@ -1508,7 +1508,6 @@
 
 //=====================================================================
 
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -1573,19 +1572,53 @@ const UserList = () => {
   const [filteredStaff, setFilteredStaff] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRole, setSelectedRole] = useState("All");
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const rowsPerPage = 5;
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
     fetchStaff();
-  }, []);
+  }, [currentPage, itemsPerPage]);
 
   const fetchStaff = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${baseurl}/users/`);
-      const data = res.data.results || res.data || [];
+      // Build query parameters for pagination
+      const params = new URLSearchParams({
+        page: currentPage,
+        page_size: itemsPerPage,
+      });
+      
+      // Add role filter if not "All"
+      if (selectedRole !== "All") {
+        params.append('role', selectedRole === "Team" ? "Agent" : selectedRole);
+      }
+      
+      // Add search query if exists
+      if (searchQuery.trim()) {
+        const normalizedQuery = normalizeSearchQuery(searchQuery);
+        params.append('search', normalizedQuery);
+      }
+      
+      const res = await axios.get(`${baseurl}/users/?${params.toString()}`);
+      
+      // Handle different response formats
+      let data = [];
+      let count = 0;
+      
+      if (Array.isArray(res.data)) {
+        data = res.data;
+        count = res.data.length;
+      } else if (res.data.results) {
+        data = res.data.results || [];
+        count = res.data.count || data.length;
+      } else {
+        data = res.data;
+        count = res.data.length || 0;
+      }
       
       const transformed = data.map((user) => ({
         id: user.user_id,
@@ -1607,6 +1640,7 @@ const UserList = () => {
       
       setStaff(transformed);
       setFilteredStaff(transformed);
+      setTotalItems(count);
     } catch (err) {
       console.error("Error fetching staff:", err);
       Swal.fire({
@@ -1623,55 +1657,57 @@ const UserList = () => {
   // Get unique roles for filter
   const uniqueRoles = ["All", ...new Set(staff.map((user) => user.role).filter(Boolean))];
 
-  // Apply filters and search
+  // Apply filters and search - Now handled server-side in fetchStaff
   useEffect(() => {
-    let result = [...staff];
-    
-    // Apply role filter
-    if (selectedRole !== "All") {
-      result = result.filter(user => user.role === selectedRole);
+    fetchStaff();
+  }, [searchQuery, selectedRole]);
+
+  // Calculate pagination values
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage + 1;
+  
+  // Handle page change
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
     }
+  };
+
+  // Handle items per page change
+  const handleItemsPerPageChange = (e) => {
+    const value = parseInt(e.target.value);
+    setItemsPerPage(value);
+    setCurrentPage(1); // Reset to first page when changing items per page
+  };
+
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
     
-    // Apply search filter
-    if (searchQuery.trim()) {
-      const normalizedQuery = normalizeSearchQuery(searchQuery.toLowerCase());
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
       
-      result = result.filter((user) => {
-        const searchableFields = [
-          user.id?.toString() || "",
-          user.first_name?.toLowerCase() || "",
-          user.last_name?.toLowerCase() || "",
-          user.name?.toLowerCase() || "",
-          user.email?.toLowerCase() || "",
-          user.phone?.toString() || "",
-          user.role?.toLowerCase() || "",
-          user.referralId?.toString() || "",
-          user.displayDate?.toLowerCase() || "",
-          user.searchDate?.toLowerCase() || "",
-          user.status?.toLowerCase() || ""
-        ];
-        
-        const searchableText = searchableFields.join(" ");
-        return searchableText.includes(normalizedQuery);
-      });
+      if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+      }
     }
     
-    // Sort by ID (newest first)
-    result = result.sort((a, b) => b.id - a.id);
-    setFilteredStaff(result);
-    setPage(1); // Reset to first page on filter change
-  }, [staff, selectedRole, searchQuery]);
-
-  // Pagination
-  const startIndex = (page - 1) * rowsPerPage;
-  const paginatedData = filteredStaff.slice(startIndex, startIndex + rowsPerPage);
-  const pageCount = Math.ceil(filteredStaff.length / rowsPerPage);
-
-  const getSerialNumber = (index) => startIndex + index + 1;
+    return pageNumbers;
+  };
 
   // Export to Excel (CSV)
   const exportToExcel = () => {
-    if (filteredStaff.length === 0) {
+    if (staff.length === 0) {
       Swal.fire({
         icon: "warning",
         title: "No Data",
@@ -1695,7 +1731,7 @@ const UserList = () => {
 
     const csvContent = [
       headers.join(","),
-      ...filteredStaff.map((user, index) =>
+      ...staff.map((user, index) =>
         [
           index + 1,
           user.id,
@@ -1726,13 +1762,13 @@ const UserList = () => {
     Swal.fire({
       icon: "success",
       title: "Export Successful",
-      text: `Exported ${filteredStaff.length} users to CSV file.`,
+      text: `Exported ${staff.length} users to CSV file.`,
       timer: 2000,
       showConfirmButton: false
     });
   };
 
-  // Handle Actions - Updated to use URL parameters
+  // Handle Actions
   const handleView = (user) => {
     navigate(`/admin-view-user/${user.user_id}`, { state: { user } });
   };
@@ -1755,7 +1791,8 @@ const UserList = () => {
         axios.delete(`${baseurl}/users/${user_id}/`)
           .then((res) => {
             if (res.status === 204 || res.status === 200) {
-              setStaff(prev => prev.filter(user => user.id !== user_id));
+              // Refetch data after deletion
+              fetchStaff();
               Swal.fire({
                 icon: "success",
                 title: "Deleted!",
@@ -1785,11 +1822,8 @@ const UserList = () => {
   const handleStatusChange = async (userId, newStatus) => {
     try {
       await axios.put(`${baseurl}/users/${userId}/`, { status: newStatus });
-      setStaff(prev => prev.map(user => 
-        user.id === userId 
-          ? { ...user, status: newStatus, fullData: { ...user.fullData, status: newStatus } }
-          : user
-      ));
+      // Refetch data to get updated status
+      fetchStaff();
       Swal.fire({
         icon: "success",
         title: "Updated!",
@@ -1804,6 +1838,17 @@ const UserList = () => {
         text: "Failed to update status."
       });
     }
+  };
+
+  // Handle search and filter reset
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handleRoleFilterChange = (e) => {
+    setSelectedRole(e.target.value);
+    setCurrentPage(1); // Reset to first page when filtering
   };
 
   return (
@@ -1825,7 +1870,7 @@ const UserList = () => {
               <select 
                 className="role-filter"
                 value={selectedRole}
-                onChange={(e) => setSelectedRole(e.target.value)}
+                onChange={handleRoleFilterChange}
               >
                 {uniqueRoles.map((role) => (
                   <option key={role} value={role}>
@@ -1841,7 +1886,7 @@ const UserList = () => {
                 type="text"
                 placeholder="Search by name, email, phone, role, date..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
               />
               <span className="search-icon">🔍</span>
             </div>
@@ -1888,10 +1933,10 @@ const UserList = () => {
                     Loading...
                   </td>
                 </tr>
-              ) : paginatedData.length > 0 ? (
-                paginatedData.map((user, index) => (
+              ) : filteredStaff.length > 0 ? (
+                filteredStaff.map((user, index) => (
                   <tr key={user.id}>
-                    <td>{getSerialNumber(index)}</td>
+                    <td>{startIndex + index}</td>
                     <td>{user.id}</td>
                     <td className="name-cell">{user.name}</td>
                     <td className="email-cell">{user.email}</td>
@@ -1949,46 +1994,139 @@ const UserList = () => {
               )}
             </tbody>
           </table>
-        </div>
-
-        {/* Pagination */}
-        {pageCount > 1 && (
-          <div className="pagination-container">
-            <button
-              className="pagination-btn"
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-            >
-              ← Previous
-            </button>
-            
-            <div className="page-numbers">
-              {[...Array(pageCount)].map((_, i) => {
-                const pageNum = i + 1;
-                if (pageNum === page || pageNum === page - 1 || pageNum === page + 1) {
-                  return (
-                    <button
-                      key={pageNum}
-                      className={`page-btn ${page === pageNum ? 'active' : ''}`}
-                      onClick={() => setPage(pageNum)}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                }
-                return null;
-              })}
+          
+          {/* Pagination Controls - Same as first table */}
+          {totalItems > 0 && (
+            <div className="pagination-container" style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '16px',
+              borderTop: '1px solid #eee',
+              backgroundColor: '#f8f9fa'
+            }}>
+              {/* Items per page selector */}
+              <div className="items-per-page" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '14px', color: '#666' }}>Show:</span>
+                <select 
+                  value={itemsPerPage} 
+                  onChange={handleItemsPerPageChange}
+                  style={{
+                    padding: '6px 12px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    fontSize: '14px'
+                  }}
+                >
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+                <span style={{ fontSize: '14px', color: '#666' }}>
+                  of {totalItems} items
+                </span>
+              </div>
+              
+              {/* Page navigation */}
+              <div className="pagination-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {/* First Page */}
+                <button
+                  onClick={() => handlePageChange(1)}
+                  disabled={currentPage === 1}
+                  style={{
+                    padding: '6px 12px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    background: currentPage === 1 ? '#f8f9fa' : 'white',
+                    color: currentPage === 1 ? '#ccc' : '#333',
+                    cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                    fontSize: '14px'
+                  }}
+                >
+                  ««
+                </button>
+                
+                {/* Previous Page */}
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  style={{
+                    padding: '6px 12px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    background: currentPage === 1 ? '#f8f9fa' : 'white',
+                    color: currentPage === 1 ? '#ccc' : '#333',
+                    cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                    fontSize: '14px'
+                  }}
+                >
+                  «
+                </button>
+                
+                {/* Page Numbers */}
+                {getPageNumbers().map(page => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    style={{
+                      padding: '6px 12px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      background: currentPage === page ? '#273c75' : 'white',
+                      color: currentPage === page ? 'white' : '#333',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: currentPage === page ? 'bold' : 'normal'
+                    }}
+                  >
+                    {page}
+                  </button>
+                ))}
+                
+                {/* Next Page */}
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  style={{
+                    padding: '6px 12px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    background: currentPage === totalPages ? '#f8f9fa' : 'white',
+                    color: currentPage === totalPages ? '#ccc' : '#333',
+                    cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                    fontSize: '14px'
+                  }}
+                >
+                  »
+                </button>
+                
+                {/* Last Page */}
+                <button
+                  onClick={() => handlePageChange(totalPages)}
+                  disabled={currentPage === totalPages}
+                  style={{
+                    padding: '6px 12px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    background: currentPage === totalPages ? '#f8f9fa' : 'white',
+                    color: currentPage === totalPages ? '#ccc' : '#333',
+                    cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                    fontSize: '14px'
+                  }}
+                >
+                  »»
+                </button>
+              </div>
+              
+              {/* Current page info */}
+              <div className="page-info" style={{ fontSize: '14px', color: '#666' }}>
+                Page {currentPage} of {totalPages}
+              </div>
             </div>
-            
-            <button
-              className="pagination-btn"
-              disabled={page === pageCount}
-              onClick={() => setPage(page + 1)}
-            >
-              Next →
-            </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </>
   );
