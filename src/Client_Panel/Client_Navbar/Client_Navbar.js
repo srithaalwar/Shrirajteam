@@ -1368,6 +1368,1053 @@
 
 
 
+// import React, { useState, useEffect, useRef } from "react";
+// import { useNavigate } from "react-router-dom";
+// import "./Client_Navbar.css";
+// import logoImage from "../../Logos/logo1.png";
+// import { Link } from "react-router-dom";
+// import axios from "axios";
+
+// // Import FontAwesome icons
+// import { 
+//   FaTachometerAlt, 
+//   FaHome, 
+//   FaBuilding, 
+//   FaUsers, 
+//   FaClipboardList, 
+//   FaCogs,
+//   FaCalendarAlt,
+//   FaChartLine,
+//   FaBriefcase,
+//   FaFileAlt,
+//   FaTag,
+//   FaUserCircle,
+//   FaSignOutAlt,
+//   FaCaretDown,
+//   FaCaretRight,
+//   FaMoneyBillWave,
+//   FaHandHoldingUsd,
+//   FaCreditCard,
+//   FaLayerGroup,
+//   FaGraduationCap,
+//   FaQuestionCircle,
+//   FaExchangeAlt,
+//   FaDatabase,
+//   FaSitemap,
+//   FaEye,
+//   FaRobot,
+//   FaUserTie,
+//   FaStar,
+//   FaEnvelope,
+//   FaPhone,
+//   FaIdCard,
+//   FaBell,
+//   FaHeart,
+//   FaShoppingCart
+// } from "react-icons/fa";
+
+// const ClientNavbar = () => {
+//   const [open, setOpen] = useState(false);
+//   const [categories, setCategories] = useState([]);
+//   const [showCategories, setShowCategories] = useState(false);
+//   const [selectedCategory, setSelectedCategory] = useState("All");
+//   const [expandedMenu, setExpandedMenu] = useState(null);
+//   const [userData, setUserData] = useState({
+//     email: "",
+//     phone_number: "",
+//     referral_id: "",
+//     username: "",
+//     user_name: "",
+//     referred_by: ""
+//   });
+  
+//   // Notification states
+//   const [notifications, setNotifications] = useState([]);
+//   const [unreadCount, setUnreadCount] = useState(0);
+//   const [showNotifications, setShowNotifications] = useState(false);
+  
+//   const dropdownRef = useRef(null);
+//   const notificationRef = useRef(null);
+//   const loginUrl = "/login";
+//   const signupUrl = "/register";
+  
+//   const navigate = useNavigate();
+//   const baseurl = "https://rahul455.pythonanywhere.com";
+
+//   // Fetch user data from localStorage on component mount
+//   useEffect(() => {
+//     const fetchUserData = () => {
+//       const storedUserData = {
+//         email: localStorage.getItem("email") || "",
+//         phone_number: localStorage.getItem("phone_number") || "",
+//         referral_id: localStorage.getItem("referral_id") || "",
+//         username: localStorage.getItem("username") || "",
+//         user_name: localStorage.getItem("user_name") || "",
+//         referred_by: localStorage.getItem("referred_by") || ""
+//       };
+//       setUserData(storedUserData);
+//     };
+
+//     fetchUserData();
+    
+//     // Listen for storage changes
+//     const handleStorageChange = () => {
+//       fetchUserData();
+//     };
+    
+//     window.addEventListener('storage', handleStorageChange);
+    
+//     return () => {
+//       window.removeEventListener('storage', handleStorageChange);
+//     };
+//   }, []);
+
+//   // Fetch notifications for the user
+//   const fetchNotifications = async () => {
+//     try {
+//       const userId = localStorage.getItem("user_id");
+//       if (!userId) return;
+
+//       // const response = await axios.get(`${baseurl}/notifications/user-id/${userId}/`);
+//       const response = await axios.get(`${baseurl}/notifications/?user=${userId}/`);
+//       const allNotifications = response.data.results || [];
+      
+//       // Filter unread notifications
+//       const unreadNotifications = allNotifications.filter(notification => !notification.is_read);
+      
+//       setNotifications(allNotifications);
+//       setUnreadCount(unreadNotifications.length);
+//     } catch (error) {
+//       console.error("Error fetching notifications:", error);
+//       setNotifications([]);
+//       setUnreadCount(0);
+//     }
+//   };
+
+//   // Fetch notifications on component mount and set up polling
+//   useEffect(() => {
+//     const userId = localStorage.getItem("user_id");
+//     if (userId) {
+//       fetchNotifications();
+      
+//       // Poll for new notifications every 10 seconds
+//       const intervalId = setInterval(fetchNotifications, 10000);
+      
+//       return () => clearInterval(intervalId);
+//     }
+//   }, []);
+
+//   // Close dropdowns when clicking outside
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       // Close categories dropdown
+//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+//         setShowCategories(false);
+//       }
+      
+//       // Close notifications dropdown
+//       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+//         setShowNotifications(false);
+//       }
+//     };
+
+//     document.addEventListener("mousedown", handleClickOutside);
+
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, []);
+
+//   const handleDropdownToggle = (event) => {
+//     event.stopPropagation();
+//     setShowCategories(!showCategories);
+//   };
+
+//   const handleCategorySelect = (categoryName) => {
+//     setSelectedCategory(categoryName);
+//     setShowCategories(false);
+//   };
+
+//   const toggleSubMenu = (menuName) => {
+//     if (expandedMenu === menuName) {
+//       setExpandedMenu(null);
+//     } else {
+//       setExpandedMenu(menuName);
+//     }
+//   };
+
+//   // Handle notification click
+//   const handleNotificationClick = (event) => {
+//     event.stopPropagation();
+//     setShowNotifications(!showNotifications);
+//   };
+
+//   // Mark notification as read and navigate to property
+//   const handleNotificationItemClick = async (notification) => {
+//     try {
+//       const userId = localStorage.getItem("user_id");
+      
+//       // Mark as read
+//       await axios.post(`${baseurl}/notifications/mark-as-read/`, {
+//         user_id: parseInt(userId),
+//         notification_id: notification.notification_status_id
+//       });
+      
+//       // Remove from unread list
+//       setNotifications(prev => 
+//         prev.map(n => 
+//           n.notification_id === notification.notification_id 
+//             ? { ...n, is_read: true } 
+//             : n
+//         )
+//       );
+      
+//       // Update unread count
+//       setUnreadCount(prev => Math.max(0, prev - 1));
+      
+//       // Close notifications dropdown
+//       setShowNotifications(false);
+      
+//       // Navigate to property details
+//       if (notification.property && notification.property.id) {
+//         navigate(`/client-properties/${notification.property.id}`);
+//       }
+//     } catch (error) {
+//       console.error("Error marking notification as read:", error);
+//     }
+//   };
+
+//   // Mark all notifications as read
+//   const handleMarkAllAsRead = async () => {
+//     try {
+//       const userId = localStorage.getItem("user_id");
+//       const unreadNotifications = notifications.filter(n => !n.is_read);
+      
+//       // Mark all unread notifications as read
+//       const markAsReadPromises = unreadNotifications.map(notification =>
+//         axios.post(`${baseurl}/notifications/mark-as-read/`, {
+//           user_id: parseInt(userId),
+//           notification_id: notification.notification_status_id
+//         })
+//       );
+      
+//       await Promise.all(markAsReadPromises);
+      
+//       // Update local state
+//       setNotifications(prev => 
+//         prev.map(n => ({ ...n, is_read: true }))
+//       );
+//       setUnreadCount(0);
+//     } catch (error) {
+//       console.error("Error marking all notifications as read:", error);
+//     }
+//   };
+
+//   const handleLogout = () => {
+//     console.log("Client logged out");
+//     // Clear all stored data
+//     localStorage.removeItem("authToken");
+//     localStorage.removeItem("userRole");
+//     localStorage.removeItem("clientData");
+//     localStorage.removeItem("user_id");
+//     localStorage.removeItem("email");
+//     localStorage.removeItem("username");
+//     localStorage.removeItem("phone_number");
+//     localStorage.removeItem("referral_id");
+//     localStorage.removeItem("referred_by");
+//     localStorage.removeItem("user_name");
+//     localStorage.removeItem("token");
+//     localStorage.removeItem("access_token");
+//     localStorage.removeItem("refresh_token");
+    
+//     sessionStorage.clear();
+//     setOpen(false);
+//     setNotifications([]);
+//     setUnreadCount(0);
+//     navigate("/");
+//   };
+
+//   const handleWishlistClick = () => {
+//     console.log("Wishlist icon clicked");
+//     navigate("/client-wishlist");
+//   };
+
+//   const handleCartClick = () => {
+//     console.log("Cart icon clicked");
+//     navigate("/client-cart");
+//   };
+
+//   // Define your navigation items with appropriate icons
+//   const menuItems = [
+//     { path: "/client-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
+//     { path: "/client-add-property-form", name: "Add Property", icon: <FaHome /> },
+//     { path: "/client-properties", name: "Properties", icon: <FaBuilding /> },
+//     { path: "/client-my-properties", name: "My Properties", icon: <FaClipboardList /> },
+//     { path: "/client-busineess-category", name: "Products", icon: <FaBriefcase /> },
+//     { path: "/client-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
+//     { path: "/client-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
+//     { path: "/client-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
+//     { path: "/client-profile", name: "Profile", icon: <FaUserCircle /> },
+//   ];
+
+//   return (
+//     <>
+//       {/* NAVBAR */}
+//       <header className="wn-navbar">
+//         <div className="wn-nav-left">
+//           <button className="wn-menu-btn" onClick={() => setOpen(true)}>☰</button>
+//           <div className="wn-logo">
+//             <img 
+//               src={logoImage} 
+//               alt="Shriraj Logo" 
+//               className="wn-logo-img"
+//             />
+//           </div>
+//         </div>
+
+//         <div className="wn-nav-right">
+//           {/* Notification Icon with Dropdown */}
+//           <div 
+//             ref={notificationRef}
+//             className="wn-notification-container"
+//           >
+//             <div 
+//               className="wn-notification" 
+//               onClick={handleNotificationClick}
+//               title="Notifications"
+//             >
+//               <FaBell size={16} />
+//               {unreadCount > 0 && (
+//                 <span className="wn-notification-badge">{unreadCount}</span>
+//               )}
+//             </div>
+            
+//             {/* Notifications Dropdown */}
+//             {showNotifications && (
+//               <div className="wn-notifications-dropdown">
+//                 <div className="wn-notifications-header">
+//                   <h4>Notifications</h4>
+//                   {unreadCount > 0 && (
+//                     <button 
+//                       className="wn-mark-all-read"
+//                       onClick={handleMarkAllAsRead}
+//                     >
+//                       Mark all as read
+//                     </button>
+//                   )}
+//                 </div>
+                
+//                 <div className="wn-notifications-list">
+//                   {notifications.length > 0 ? (
+//                     notifications.map((notification) => (
+//                       <div 
+//                         key={notification.notification_id}
+//                         className={`wn-notification-item ${!notification.is_read ? 'wn-unread' : ''}`}
+//                         onClick={() => handleNotificationItemClick(notification)}
+//                       >
+//                         <div className="wn-notification-content">
+//                           <p className="wn-notification-message">
+//                             {notification.message}
+//                           </p>
+//                           <small className="wn-notification-time">
+//                             {new Date(notification.created_at).toLocaleDateString('en-US', {
+//                               month: 'short',
+//                               day: 'numeric',
+//                               hour: '2-digit',
+//                               minute: '2-digit'
+//                             })}
+//                           </small>
+//                         </div>
+//                         {!notification.is_read && (
+//                           <div className="wn-unread-dot"></div>
+//                         )}
+//                       </div>
+//                     ))
+//                   ) : (
+//                     <div className="wn-no-notifications">
+//                       No notifications
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+          
+//           {/* Wishlist Icon */}
+//           <div 
+//             className="wn-wishlist" 
+//             onClick={handleWishlistClick}
+//             title="Wishlist"
+//           >
+//             <FaHeart size={16} />
+//           </div>
+          
+//           {/* Cart Icon */}
+//           <div 
+//             className="wn-cart" 
+//             onClick={handleCartClick}
+//             title="Cart"
+//           >
+//             <FaShoppingCart size={16} /> Cart
+//           </div>
+//         </div>
+//       </header>
+
+//       {/* OVERLAY */}
+//       {open && <div className="wn-overlay" onClick={() => setOpen(false)} />}
+
+//       {/* SIDEBAR */}
+//       <aside className={`wn-sidebar ${open ? "open" : ""}`}>
+//         {/* Header with Logo and User Info Side by Side */}
+//         <div className="wn-sidebar-header">
+//           <div className="wn-logo-with-user">
+//             <img 
+//               src={logoImage} 
+//               alt="Shriraj Logo" 
+//               className="wn-logo-img-sidebar"
+//             />
+//             <div className="wn-user-info-compact">
+//               <div className="wn-user-details-compact">
+//                 {userData.email && (
+//                   <div className="wn-detail-item">
+//                     <FaEnvelope className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">{userData.email}</span>
+//                   </div>
+//                 )}
+                
+//                 {userData.phone_number && (
+//                   <div className="wn-detail-item">
+//                     <FaPhone className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">
+//                       {userData.phone_number}
+//                     </span>
+//                   </div>
+//                 )}
+                
+//                 {userData.referral_id ? (
+//                   <div className="wn-detail-item">
+//                     <FaIdCard className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">
+//                       Ref ID: {userData.referral_id}
+//                     </span>
+//                   </div>
+//                 ) : (
+//                   <div className="wn-detail-item">
+//                     <FaIdCard className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">Ref ID: None</span>
+//                   </div>
+//                 )}
+//               </div>
+//             </div>
+//           </div>
+          
+//           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
+//         </div>
+
+//         {/* Navigation Items */}
+//         <div className="wn-nav-section">
+//           <div className="wn-section-title">Client Menu</div>
+//           <ul className="wn-menu-list">
+//             {menuItems.map((item, index) => (
+//               <li key={item.name || item.path}>
+//                 <Link 
+//                   to={item.path} 
+//                   className="wn-sidebar-link"
+//                   onClick={() => setOpen(false)}
+//                 >
+//                   <span className="wn-sidebar-icon">{item.icon}</span>
+//                   <span className="wn-sidebar-text" style={{ marginLeft: "10px" }}>
+//                     {item.name}
+//                   </span>
+//                 </Link>
+//               </li>
+//             ))}
+//           </ul>
+//         </div>
+
+//         <div className="wn-divider" />
+
+//         {/* Logout Button */}
+//         <div className="wn-logout-section">
+//           <button 
+//             className="wn-logout-btn"
+//             onClick={handleLogout}
+//           >
+//             <span className="wn-logout-icon">
+//               <FaSignOutAlt />
+//             </span>
+//             <span className="wn-logout-text">Logout</span>
+//           </button>
+//         </div>
+//       </aside>
+//     </>
+//   );
+// };
+
+// export default ClientNavbar;
+
+
+
+
+
+// import React, { useState, useEffect, useRef } from "react";
+// import { useNavigate } from "react-router-dom";
+// import "./Client_Navbar.css";
+// import logoImage from "../../Logos/logo1.png";
+// import { Link } from "react-router-dom";
+// import axios from "axios";
+
+// // Import FontAwesome icons
+// import { 
+//   FaTachometerAlt, 
+//   FaHome, 
+//   FaBuilding, 
+//   FaUsers, 
+//   FaClipboardList, 
+//   FaCogs,
+//   FaCalendarAlt,
+//   FaChartLine,
+//   FaBriefcase,
+//   FaFileAlt,
+//   FaTag,
+//   FaUserCircle,
+//   FaSignOutAlt,
+//   FaCaretDown,
+//   FaCaretRight,
+//   FaMoneyBillWave,
+//   FaHandHoldingUsd,
+//   FaCreditCard,
+//   FaLayerGroup,
+//   FaGraduationCap,
+//   FaQuestionCircle,
+//   FaExchangeAlt,
+//   FaDatabase,
+//   FaSitemap,
+//   FaEye,
+//   FaRobot,
+//   FaUserTie,
+//   FaStar,
+//   FaEnvelope,
+//   FaPhone,
+//   FaIdCard,
+//   FaBell,
+//   FaHeart,
+//   FaShoppingCart
+// } from "react-icons/fa";
+
+// const ClientNavbar = () => {
+//   const [open, setOpen] = useState(false);
+//   const [categories, setCategories] = useState([]);
+//   const [showCategories, setShowCategories] = useState(false);
+//   const [selectedCategory, setSelectedCategory] = useState("All");
+//   const [expandedMenu, setExpandedMenu] = useState(null);
+//   const [userData, setUserData] = useState({
+//     email: "",
+//     phone_number: "",
+//     referral_id: "",
+//     username: "",
+//     user_name: "",
+//     referred_by: ""
+//   });
+  
+//   // Notification states
+//   const [notifications, setNotifications] = useState([]);
+//   const [unreadCount, setUnreadCount] = useState(0);
+//   const [showNotifications, setShowNotifications] = useState(false);
+  
+//   const dropdownRef = useRef(null);
+//   const notificationRef = useRef(null);
+//   const loginUrl = "/login";
+//   const signupUrl = "/register";
+  
+//   const navigate = useNavigate();
+//   const baseurl = "https://rahul455.pythonanywhere.com";
+
+//   // Fetch user data from localStorage on component mount
+//   useEffect(() => {
+//     const fetchUserData = () => {
+//       const storedUserData = {
+//         email: localStorage.getItem("email") || "",
+//         phone_number: localStorage.getItem("phone_number") || "",
+//         referral_id: localStorage.getItem("referral_id") || "",
+//         username: localStorage.getItem("username") || "",
+//         user_name: localStorage.getItem("user_name") || "",
+//         referred_by: localStorage.getItem("referred_by") || ""
+//       };
+//       setUserData(storedUserData);
+//     };
+
+//     fetchUserData();
+    
+//     // Listen for storage changes
+//     const handleStorageChange = () => {
+//       fetchUserData();
+//     };
+    
+//     window.addEventListener('storage', handleStorageChange);
+    
+//     return () => {
+//       window.removeEventListener('storage', handleStorageChange);
+//     };
+//   }, []);
+
+//   // Fetch notifications for the user
+//   const fetchNotifications = async () => {
+//     try {
+//       const userId = localStorage.getItem("user_id");
+//       if (!userId) return;
+
+//       console.log("Fetching notifications for user:", userId);
+      
+//       // Use the correct endpoint from your API documentation
+//       const response = await axios.get(`${baseurl}/notifications/?user=${userId}`);
+//       console.log("Notifications API Response:", response.data);
+      
+//       // The API response has results array with count, next, previous
+//       const allNotifications = response.data.results || [];
+      
+//       // Update unread count from API response
+//       setUnreadCount(response.data.unread_count || 0);
+      
+//       // Set notifications
+//       setNotifications(allNotifications);
+      
+//     } catch (error) {
+//       console.error("Error fetching notifications:", error);
+//       // Fallback: Try to filter unread notifications locally if API fails
+//       const unread = notifications.filter(notification => !notification.is_read);
+//       setUnreadCount(unread.length);
+//     }
+//   };
+
+//   // Fetch notifications on component mount and set up polling
+//   useEffect(() => {
+//     const userId = localStorage.getItem("user_id");
+//     if (userId) {
+//       fetchNotifications();
+      
+//       // Poll for new notifications every 30 seconds
+//       const intervalId = setInterval(fetchNotifications, 30000);
+      
+//       return () => clearInterval(intervalId);
+//     }
+//   }, []);
+
+//   // Close dropdowns when clicking outside
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       // Close categories dropdown
+//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+//         setShowCategories(false);
+//       }
+      
+//       // Close notifications dropdown
+//       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+//         setShowNotifications(false);
+//       }
+//     };
+
+//     document.addEventListener("mousedown", handleClickOutside);
+
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, []);
+
+//   const handleDropdownToggle = (event) => {
+//     event.stopPropagation();
+//     setShowCategories(!showCategories);
+//   };
+
+//   const handleCategorySelect = (categoryName) => {
+//     setSelectedCategory(categoryName);
+//     setShowCategories(false);
+//   };
+
+//   const toggleSubMenu = (menuName) => {
+//     if (expandedMenu === menuName) {
+//       setExpandedMenu(null);
+//     } else {
+//       setExpandedMenu(menuName);
+//     }
+//   };
+
+//   // Handle notification click
+//   const handleNotificationClick = (event) => {
+//     event.stopPropagation();
+//     setShowNotifications(!showNotifications);
+//   };
+
+//   // Mark notification as read and navigate to property/product
+//   const handleNotificationItemClick = async (notification) => {
+//     try {
+//       const userId = localStorage.getItem("user_id");
+      
+//       console.log("Marking notification as read:", notification);
+      
+//       // Mark as read - using the correct endpoint
+//       await axios.post(`${baseurl}/notifications/mark-as-read/`, {
+//         user_id: parseInt(userId),
+//         notification_id: notification.notification_status_id
+//       });
+      
+//       // Update local state
+//       setNotifications(prev => 
+//         prev.map(n => 
+//           n.notification_status_id === notification.notification_status_id 
+//             ? { ...n, is_read: true } 
+//             : n
+//         )
+//       );
+      
+//       // Update unread count
+//       setUnreadCount(prev => Math.max(0, prev - 1));
+      
+//       // Close notifications dropdown
+//       setShowNotifications(false);
+      
+//       // Navigate based on notification type
+//       if (notification.property && notification.property.id) {
+//         // Navigate to property details
+//         navigate(`/client-properties/${notification.property.id}`);
+//       } else if (notification.product && notification.product.variant_id) {
+//         // Navigate to product details - adjust the path as needed
+//         navigate(`/client-product-details/${notification.product.variant_id}`);
+//       }
+//     } catch (error) {
+//       console.error("Error marking notification as read:", error);
+//       // Still update UI even if API call fails
+//       setNotifications(prev => 
+//         prev.map(n => 
+//           n.notification_status_id === notification.notification_status_id 
+//             ? { ...n, is_read: true } 
+//             : n
+//         )
+//       );
+//       setUnreadCount(prev => Math.max(0, prev - 1));
+//       setShowNotifications(false);
+//     }
+//   };
+
+//   // Mark all notifications as read
+//   const handleMarkAllAsRead = async () => {
+//     try {
+//       const userId = localStorage.getItem("user_id");
+//       const unreadNotifications = notifications.filter(n => !n.is_read);
+      
+//       if (unreadNotifications.length === 0) return;
+      
+//       console.log("Marking all notifications as read");
+      
+//       // Mark all unread notifications as read
+//       const markAsReadPromises = unreadNotifications.map(notification =>
+//         axios.post(`${baseurl}/notifications/mark-as-read/`, {
+//           user_id: parseInt(userId),
+//           notification_id: notification.notification_status_id
+//         }).catch(err => {
+//           console.error(`Failed to mark notification ${notification.notification_status_id} as read:`, err);
+//           return null;
+//         })
+//       );
+      
+//       await Promise.all(markAsReadPromises);
+      
+//       // Update local state
+//       const updatedNotifications = notifications.map(n => ({ ...n, is_read: true }));
+//       setNotifications(updatedNotifications);
+//       setUnreadCount(0);
+      
+//     } catch (error) {
+//       console.error("Error marking all notifications as read:", error);
+//       // Fallback: Update UI even if API fails
+//       const updatedNotifications = notifications.map(n => ({ ...n, is_read: true }));
+//       setNotifications(updatedNotifications);
+//       setUnreadCount(0);
+//     }
+//   };
+
+//   // Format notification message with better styling
+//   const formatNotificationMessage = (notification) => {
+//     if (notification.property) {
+//       return (
+//         <div className="wn-notification-message-content">
+//           <strong className="wn-notification-title">{notification.message}</strong>
+//           <div className="wn-notification-subtitle">Property Update</div>
+//         </div>
+//       );
+//     } else if (notification.product) {
+//       return (
+//         <div className="wn-notification-message-content">
+//           <strong className="wn-notification-title">{notification.message}</strong>
+//           <div className="wn-notification-subtitle">Product Update</div>
+//         </div>
+//       );
+//     } else {
+//       return (
+//         <div className="wn-notification-message-content">
+//           <strong className="wn-notification-title">{notification.message}</strong>
+//         </div>
+//       );
+//     }
+//   };
+
+//   const handleLogout = () => {
+//     console.log("Client logged out");
+//     // Clear all stored data
+//     localStorage.removeItem("authToken");
+//     localStorage.removeItem("userRole");
+//     localStorage.removeItem("clientData");
+//     localStorage.removeItem("user_id");
+//     localStorage.removeItem("email");
+//     localStorage.removeItem("username");
+//     localStorage.removeItem("phone_number");
+//     localStorage.removeItem("referral_id");
+//     localStorage.removeItem("referred_by");
+//     localStorage.removeItem("user_name");
+//     localStorage.removeItem("token");
+//     localStorage.removeItem("access_token");
+//     localStorage.removeItem("refresh_token");
+    
+//     sessionStorage.clear();
+//     setOpen(false);
+//     setNotifications([]);
+//     setUnreadCount(0);
+//     navigate("/");
+//   };
+
+//   const handleWishlistClick = () => {
+//     console.log("Wishlist icon clicked");
+//     navigate("/client-wishlist");
+//   };
+
+//   const handleCartClick = () => {
+//     console.log("Cart icon clicked");
+//     navigate("/client-cart");
+//   };
+
+//   // Define your navigation items with appropriate icons
+//   const menuItems = [
+//     { path: "/client-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
+//     { path: "/client-add-property-form", name: "Add Property", icon: <FaHome /> },
+//     { path: "/client-properties", name: "Properties", icon: <FaBuilding /> },
+//     { path: "/client-my-properties", name: "My Properties", icon: <FaClipboardList /> },
+//     { path: "/client-busineess-category", name: "Products", icon: <FaBriefcase /> },
+//     { path: "/client-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
+//     { path: "/client-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
+//     { path: "/client-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
+//     { path: "/client-profile", name: "Profile", icon: <FaUserCircle /> },
+//   ];
+
+//   return (
+//     <>
+//       {/* NAVBAR */}
+//       <header className="wn-navbar">
+//         <div className="wn-nav-left">
+//           <button className="wn-menu-btn" onClick={() => setOpen(true)}>☰</button>
+//           <div className="wn-logo">
+//             <img 
+//               src={logoImage} 
+//               alt="Shriraj Logo" 
+//               className="wn-logo-img"
+//             />
+//           </div>
+//         </div>
+
+//         <div className="wn-nav-right">
+//           {/* Notification Icon with Dropdown */}
+//           <div 
+//             ref={notificationRef}
+//             className="wn-notification-container"
+//           >
+//             <div 
+//               className="wn-notification-icon" 
+//               onClick={handleNotificationClick}
+//               title="Notifications"
+//             >
+//               <FaBell size={16} />
+//               {unreadCount > 0 && (
+//                 <span className="wn-notification-badge">{unreadCount}</span>
+//               )}
+//             </div>
+            
+//             {/* Notifications Dropdown */}
+//             {showNotifications && (
+//               <div className="wn-notifications-dropdown">
+//                 <div className="wn-notifications-header">
+//                   <h4>Notifications</h4>
+//                   {unreadCount > 0 && (
+//                     <button 
+//                       className="wn-mark-all-read"
+//                       onClick={handleMarkAllAsRead}
+//                     >
+//                       Mark all as read
+//                     </button>
+//                   )}
+//                 </div>
+                
+//                 <div className="wn-notifications-list">
+//                   {notifications.length > 0 ? (
+//                     notifications.map((notification) => (
+//                       <div 
+//                         key={notification.notification_status_id}
+//                         className={`wn-notification-item ${!notification.is_read ? 'wn-unread' : ''}`}
+//                         onClick={() => handleNotificationItemClick(notification)}
+//                       >
+//                         <div className="wn-notification-content">
+//                           {formatNotificationMessage(notification)}
+//                           <small className="wn-notification-time">
+//                             {new Date(notification.created_at).toLocaleDateString('en-US', {
+//                               month: 'short',
+//                               day: 'numeric',
+//                               hour: '2-digit',
+//                               minute: '2-digit'
+//                             })}
+//                           </small>
+//                         </div>
+//                         {!notification.is_read && (
+//                           <div className="wn-unread-dot"></div>
+//                         )}
+//                       </div>
+//                     ))
+//                   ) : (
+//                     <div className="wn-no-notifications">
+//                       No notifications yet
+//                     </div>
+//                   )}
+//                 </div>
+                
+//                 {notifications.length > 0 && (
+//                   <div className="wn-notifications-footer">
+//                     <Link 
+//                       to="/client-notifications" 
+//                       className="wn-view-all-notifications"
+//                       onClick={() => setShowNotifications(false)}
+//                     >
+//                       View all notifications
+//                     </Link>
+//                   </div>
+//                 )}
+//               </div>
+//             )}
+//           </div>
+          
+//           {/* Wishlist Icon */}
+//           <div 
+//             className="wn-wishlist" 
+//             onClick={handleWishlistClick}
+//             title="Wishlist"
+//           >
+//             <FaHeart size={16} />
+//           </div>
+          
+//           {/* Cart Icon */}
+//           <div 
+//             className="wn-cart" 
+//             onClick={handleCartClick}
+//             title="Cart"
+//           >
+//             <FaShoppingCart size={16} />
+//             <span className="wn-cart-text">Cart</span>
+//           </div>
+//         </div>
+//       </header>
+
+//       {/* OVERLAY */}
+//       {open && <div className="wn-overlay" onClick={() => setOpen(false)} />}
+
+//       {/* SIDEBAR */}
+//       <aside className={`wn-sidebar ${open ? "open" : ""}`}>
+//         {/* Header with Logo and User Info Side by Side */}
+//         <div className="wn-sidebar-header">
+//           <div className="wn-logo-with-user">
+//             <img 
+//               src={logoImage} 
+//               alt="Shriraj Logo" 
+//               className="wn-logo-img-sidebar"
+//             />
+//             <div className="wn-user-info-compact">
+//               <div className="wn-user-details-compact">
+//                 {userData.email && (
+//                   <div className="wn-detail-item">
+//                     <FaEnvelope className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">{userData.email}</span>
+//                   </div>
+//                 )}
+                
+//                 {userData.phone_number && (
+//                   <div className="wn-detail-item">
+//                     <FaPhone className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">
+//                       {userData.phone_number}
+//                     </span>
+//                   </div>
+//                 )}
+                
+//                 {userData.referral_id ? (
+//                   <div className="wn-detail-item">
+//                     <FaIdCard className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">
+//                       Ref ID: {userData.referral_id}
+//                     </span>
+//                   </div>
+//                 ) : (
+//                   <div className="wn-detail-item">
+//                     <FaIdCard className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">Ref ID: None</span>
+//                   </div>
+//                 )}
+//               </div>
+//             </div>
+//           </div>
+          
+//           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
+//         </div>
+
+//         {/* Navigation Items */}
+//         <div className="wn-nav-section">
+//           <div className="wn-section-title">Client Menu</div>
+//           <ul className="wn-menu-list">
+//             {menuItems.map((item, index) => (
+//               <li key={item.name || item.path}>
+//                 <Link 
+//                   to={item.path} 
+//                   className="wn-sidebar-link"
+//                   onClick={() => setOpen(false)}
+//                 >
+//                   <span className="wn-sidebar-icon">{item.icon}</span>
+//                   <span className="wn-sidebar-text" style={{ marginLeft: "10px" }}>
+//                     {item.name}
+//                   </span>
+//                 </Link>
+//               </li>
+//             ))}
+//           </ul>
+//         </div>
+
+//         <div className="wn-divider" />
+
+//         {/* Logout Button */}
+//         <div className="wn-logout-section">
+//           <button 
+//             className="wn-logout-btn"
+//             onClick={handleLogout}
+//           >
+//             <span className="wn-logout-icon">
+//               <FaSignOutAlt />
+//             </span>
+//             <span className="wn-logout-text">Logout</span>
+//           </button>
+//         </div>
+//       </aside>
+//     </>
+//   );
+// };
+
+// export default ClientNavbar;
+
+
+
+
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Client_Navbar.css";
@@ -1473,20 +2520,42 @@ const ClientNavbar = () => {
   const fetchNotifications = async () => {
     try {
       const userId = localStorage.getItem("user_id");
-      if (!userId) return;
+      if (!userId) {
+        console.log("No user_id found in localStorage");
+        return;
+      }
 
-      const response = await axios.get(`${baseurl}/notifications/user-id/${userId}/`);
+      console.log("Fetching notifications for user:", userId);
+      
+      // Use the correct endpoint from your API documentation
+      const response = await axios.get(`${baseurl}/notifications/?user=${userId}&is_read=false`);
+      console.log("Notifications API Response:", response.data);
+      
+      // The API response has results array with count, next, previous
       const allNotifications = response.data.results || [];
       
-      // Filter unread notifications
-      const unreadNotifications = allNotifications.filter(notification => !notification.is_read);
+      // Update unread count from API response or calculate locally
+      const apiUnreadCount = response.data.unread_count;
+      if (apiUnreadCount !== undefined) {
+        setUnreadCount(apiUnreadCount);
+      } else {
+        // Fallback: Calculate unread count locally
+        const localUnreadCount = allNotifications.filter(n => !n.is_read).length;
+        setUnreadCount(localUnreadCount);
+      }
       
+      // Set notifications
       setNotifications(allNotifications);
-      setUnreadCount(unreadNotifications.length);
+      
     } catch (error) {
       console.error("Error fetching notifications:", error);
-      setNotifications([]);
-      setUnreadCount(0);
+      if (error.response) {
+        console.error("Error response status:", error.response.status);
+        console.error("Error response data:", error.response.data);
+      }
+      // Fallback: Try to filter unread notifications locally
+      const unread = notifications.filter(notification => !notification.is_read);
+      setUnreadCount(unread.length);
     }
   };
 
@@ -1494,10 +2563,11 @@ const ClientNavbar = () => {
   useEffect(() => {
     const userId = localStorage.getItem("user_id");
     if (userId) {
+      console.log("Setting up notification polling for user:", userId);
       fetchNotifications();
       
-      // Poll for new notifications every 10 seconds
-      const intervalId = setInterval(fetchNotifications, 10000);
+      // Poll for new notifications every 30 seconds
+      const intervalId = setInterval(fetchNotifications, 30000);
       
       return () => clearInterval(intervalId);
     }
@@ -1548,38 +2618,83 @@ const ClientNavbar = () => {
     setShowNotifications(!showNotifications);
   };
 
-  // Mark notification as read and navigate to property
+  // Mark notification as read and navigate to property/product
   const handleNotificationItemClick = async (notification) => {
     try {
       const userId = localStorage.getItem("user_id");
+      if (!userId) {
+        console.error("No user_id found in localStorage");
+        return;
+      }
       
-      // Mark as read
-      await axios.post(`${baseurl}/notifications/mark-as-read/`, {
+      console.log("Marking notification as read:", notification);
+      console.log("Notification status ID:", notification.notification_status_id);
+      
+      // Use the correct endpoint and payload structure
+      await axios.post(`${baseurl}/notifications/mark-read/`, {
         user_id: parseInt(userId),
-        notification_id: notification.notification_status_id
+        notification_status_ids: [notification.notification_status_id]
       });
       
-      // Remove from unread list
-      setNotifications(prev => 
-        prev.map(n => 
-          n.notification_id === notification.notification_id 
-            ? { ...n, is_read: true } 
-            : n
-        )
+      console.log("Successfully marked notification as read");
+      
+      // Update local state immediately for better UX
+      const updatedNotifications = notifications.map(n => 
+        n.notification_status_id === notification.notification_status_id 
+          ? { ...n, is_read: true } 
+          : n
       );
       
+      setNotifications(updatedNotifications);
+      
       // Update unread count
-      setUnreadCount(prev => Math.max(0, prev - 1));
+      const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+      setUnreadCount(newUnreadCount);
       
       // Close notifications dropdown
       setShowNotifications(false);
       
-      // Navigate to property details
+      // Navigate based on notification type
       if (notification.property && notification.property.id) {
+        // Navigate to property details
+        console.log("Navigating to property:", notification.property.id);
         navigate(`/client-properties/${notification.property.id}`);
+      } else if (notification.product && notification.product.variant_id) {
+        // Navigate to product details - adjust the path as needed
+        console.log("Navigating to product variant:", notification.product.variant_id);
+        navigate(`/client-product-details/${notification.product.variant_id}`);
+      } else {
+        // If no specific navigation, just close dropdown and refresh notifications
+        fetchNotifications();
       }
+      
     } catch (error) {
       console.error("Error marking notification as read:", error);
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+      }
+      
+      // Still update UI even if API call fails for better UX
+      const updatedNotifications = notifications.map(n => 
+        n.notification_status_id === notification.notification_status_id 
+          ? { ...n, is_read: true } 
+          : n
+      );
+      
+      setNotifications(updatedNotifications);
+      
+      // Update unread count
+      const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+      setUnreadCount(newUnreadCount);
+      
+      setShowNotifications(false);
+      
+      // Try navigation anyway
+      if (notification.property && notification.property.id) {
+        navigate(`/client-properties/${notification.property.id}`);
+      } else if (notification.product && notification.product.variant_id) {
+        navigate(`/client-product-details/${notification.product.variant_id}`);
+      }
     }
   };
 
@@ -1587,25 +2702,71 @@ const ClientNavbar = () => {
   const handleMarkAllAsRead = async () => {
     try {
       const userId = localStorage.getItem("user_id");
+      if (!userId) {
+        console.error("No user_id found in localStorage");
+        return;
+      }
+      
       const unreadNotifications = notifications.filter(n => !n.is_read);
       
-      // Mark all unread notifications as read
-      const markAsReadPromises = unreadNotifications.map(notification =>
-        axios.post(`${baseurl}/notifications/mark-as-read/`, {
-          user_id: parseInt(userId),
-          notification_id: notification.notification_status_id
-        })
-      );
+      if (unreadNotifications.length === 0) {
+        console.log("No unread notifications to mark");
+        return;
+      }
       
-      await Promise.all(markAsReadPromises);
+      console.log("Marking all notifications as read");
+      console.log("Unread notification IDs:", unreadNotifications.map(n => n.notification_status_id));
+      
+      // Get all unread notification status IDs
+      const notificationStatusIds = unreadNotifications.map(n => n.notification_status_id);
+      
+      // Use the correct endpoint and payload structure
+      const response = await axios.post(`${baseurl}/notifications/mark-read/`, {
+        user_id: parseInt(userId),
+        notification_status_ids: notificationStatusIds
+      });
+      
+      console.log("Mark all as read response:", response.data);
       
       // Update local state
-      setNotifications(prev => 
-        prev.map(n => ({ ...n, is_read: true }))
-      );
+      const updatedNotifications = notifications.map(n => ({ ...n, is_read: true }));
+      setNotifications(updatedNotifications);
       setUnreadCount(0);
+      
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+      }
+      // Fallback: Update UI even if API fails
+      const updatedNotifications = notifications.map(n => ({ ...n, is_read: true }));
+      setNotifications(updatedNotifications);
+      setUnreadCount(0);
+    }
+  };
+
+  // Format notification message with better styling
+  const formatNotificationMessage = (notification) => {
+    if (notification.property) {
+      return (
+        <div className="wn-notification-message-content">
+          <strong className="wn-notification-title">{notification.message}</strong>
+          <div className="wn-notification-subtitle">Property Update</div>
+        </div>
+      );
+    } else if (notification.product) {
+      return (
+        <div className="wn-notification-message-content">
+          <strong className="wn-notification-title">{notification.message}</strong>
+          <div className="wn-notification-subtitle">Product Update</div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="wn-notification-message-content">
+          <strong className="wn-notification-title">{notification.message}</strong>
+        </div>
+      );
     }
   };
 
@@ -1678,7 +2839,7 @@ const ClientNavbar = () => {
             className="wn-notification-container"
           >
             <div 
-              className="wn-notification" 
+              className="wn-notification-icon" 
               onClick={handleNotificationClick}
               title="Notifications"
             >
@@ -1707,14 +2868,12 @@ const ClientNavbar = () => {
                   {notifications.length > 0 ? (
                     notifications.map((notification) => (
                       <div 
-                        key={notification.notification_id}
+                        key={notification.notification_status_id}
                         className={`wn-notification-item ${!notification.is_read ? 'wn-unread' : ''}`}
                         onClick={() => handleNotificationItemClick(notification)}
                       >
                         <div className="wn-notification-content">
-                          <p className="wn-notification-message">
-                            {notification.message}
-                          </p>
+                          {formatNotificationMessage(notification)}
                           <small className="wn-notification-time">
                             {new Date(notification.created_at).toLocaleDateString('en-US', {
                               month: 'short',
@@ -1731,10 +2890,22 @@ const ClientNavbar = () => {
                     ))
                   ) : (
                     <div className="wn-no-notifications">
-                      No notifications
+                      No notifications yet
                     </div>
                   )}
                 </div>
+                
+                {notifications.length > 0 && (
+                  <div className="wn-notifications-footer">
+                    <Link 
+                      to="/client-notifications" 
+                      className="wn-view-all-notifications"
+                      onClick={() => setShowNotifications(false)}
+                    >
+                      View all notifications
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -1754,7 +2925,8 @@ const ClientNavbar = () => {
             onClick={handleCartClick}
             title="Cart"
           >
-            <FaShoppingCart size={16} /> Cart
+            <FaShoppingCart size={16} />
+            <span className="wn-cart-text">Cart</span>
           </div>
         </div>
       </header>

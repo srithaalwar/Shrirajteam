@@ -778,3 +778,261 @@
     margin-left: 0px;
   }
 }
+
+
+
+
+
+
+
+
+
+/* Client_Navbar.css - Add these styles */
+
+/* Notification Container */
+.wn-notification-container {
+  position: relative;
+  margin-right: 20px;
+}
+
+.wn-notification-icon {
+  position: relative;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.wn-notification-icon:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.wn-notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #ff4757;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Notifications Dropdown */
+.wn-notifications-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 350px;
+  max-height: 500px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.wn-notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  background-color: #f8f9fa;
+}
+
+.wn-notifications-header h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+}
+
+.wn-mark-all-read {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.wn-mark-all-read:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+/* Notifications List */
+.wn-notifications-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.wn-notification-item {
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.wn-notification-item:hover {
+  background-color: #f8f9fa;
+}
+
+.wn-notification-item.wn-unread {
+  background-color: #f0f8ff;
+}
+
+.wn-notification-item.wn-unread:hover {
+  background-color: #e8f4ff;
+}
+
+.wn-notification-content {
+  flex: 1;
+}
+
+.wn-notification-message-content {
+  margin-bottom: 8px;
+}
+
+.wn-notification-title {
+  display: block;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.wn-notification-subtitle {
+  font-size: 12px;
+  color: #666;
+  background-color: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.wn-notification-time {
+  color: #888;
+  font-size: 12px;
+}
+
+.wn-unread-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #007bff;
+  border-radius: 50%;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+.wn-no-notifications {
+  padding: 30px 20px;
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}
+
+/* Notifications Footer */
+.wn-notifications-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.wn-view-all-notifications {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.wn-view-all-notifications:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  text-decoration: none;
+}
+
+/* Cart styles */
+.wn-cart {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  color: #333;
+  font-size: 14px;
+}
+
+.wn-cart:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.wn-cart-text {
+  margin-left: 6px;
+  font-weight: 500;
+}
+
+/* Wishlist styles */
+.wn-wishlist {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+  margin-right: 15px;
+  color: #333;
+}
+
+.wn-wishlist:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Scrollbar styling for notifications */
+.wn-notifications-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.wn-notifications-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.wn-notifications-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.wn-notifications-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .wn-notifications-dropdown {
+    width: 300px;
+    right: -50px;
+  }
+  
+  .wn-cart-text {
+    display: none;
+  }
+  
+  .wn-cart {
+    padding: 8px;
+  }
+}
