@@ -525,3 +525,256 @@
     margin-left: 0px;
   }
 }
+
+
+
+/* ===================== NOTIFICATION STYLES ===================== */
+.wn-notification-container {
+  position: relative;
+  display: inline-block;
+}
+
+.wn-notification {
+  position: relative;
+  padding: 8px 16px;
+  background: #f3f4f6;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wn-notification:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.wn-notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  padding: 0 3px;
+}
+
+/* Notifications Dropdown */
+.wn-notifications-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  width: 320px;
+  max-height: 400px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.wn-notifications-header {
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.wn-notifications-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.wn-mark-all-read {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.wn-mark-all-read:hover {
+  background: #eff6ff;
+}
+
+.wn-notifications-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.wn-notification-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  transition: background 0.2s;
+}
+
+.wn-notification-item:hover {
+  background: #f9fafb;
+}
+
+.wn-notification-item.wn-unread {
+  background: #f0f9ff;
+}
+
+.wn-notification-content {
+  flex: 1;
+  margin-right: 8px;
+}
+
+.wn-notification-message {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.wn-notification-time {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.wn-unread-dot {
+  width: 8px;
+  height: 8px;
+  background: #3b82f6;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.wn-no-notifications {
+  padding: 32px 16px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Scrollbar styling for notifications list */
+.wn-notifications-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.wn-notifications-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.wn-notifications-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.wn-notifications-list::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wn-notifications-dropdown {
+    width: 280px;
+    right: -50px;
+  }
+  
+  .wn-notification {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .wn-notification svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .wn-notification-badge {
+    font-size: 9px;
+    min-width: 14px;
+    height: 14px;
+  }
+}
+
+/* ===================== EXISTING STYLES (keep these) ===================== */
+.wn-wishlist, .wn-cart {
+  padding: 8px 16px;
+  background: #f3f4f6;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.wn-wishlist:hover, .wn-cart:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.wn-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .wn-nav-right {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  
+  .wn-notification, .wn-wishlist, .wn-cart {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  /* Hide text on mobile for icons, show only icons */
+  .wn-notification span:not(.wn-notification-badge),
+  .wn-wishlist span:not(.wn-wishlist-count) {
+    display: none;
+  }
+  
+  .wn-cart span:not(.wn-cart-count) {
+    font-size: 12px;
+  }
+  
+  /* Adjust icon sizes for mobile */
+  .wn-notification svg,
+  .wn-wishlist svg,
+  .wn-cart svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wn-nav-right {
+    gap: 6px;
+    margin-left: 0px;
+  }
+}

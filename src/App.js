@@ -178,7 +178,7 @@ import WebsiteNavbar from "./WebsiteNavbar/WebsiteNavbar";
 import SubCategories from "./SubCategories/SubCategories";
 import ProductDetails from "./ProductDetails/ProductDetails"
 import MainProductDetails from "./Products_Main_page/Products"
-
+import WebsiteProductDetails from "./SubCategories/WebsiteProductBusinessDetails";
 import Products from "./Products_Main_page/Products";
 import ShopHeader from "./Products_Main_page/ShopHeader";
 import Properties from "./Properties_Main_Page/Properties";
@@ -320,6 +320,8 @@ function App() {
         <Route path="/product/:productId" element={<ProductDetails />} />
         {/* <Route path="/w-subcategory/:id" element={<SubCategories />} /> */}
         <Route path="/w-subcategory/:id" element={<SubCategories />} />
+        <Route path="/website-business-product-details/:productId" element={<WebsiteProductDetails />} />
+
         <Route path="/products/:id" element={<AdminProducts />} />
         <Route path="/login" element={<Login />} />
         <Route path="/loginwithemail" element={<LoginWithEmail />} />

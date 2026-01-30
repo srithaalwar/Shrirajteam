@@ -47,3 +47,45 @@
 }
 
 
+/* Commission Tooltip Styles */
+.commission-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  right: 0;
+  z-index: 1000;
+  pointer-events: none;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.commission-tooltip-content {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
+  max-width: 200px;
+}
+
+.commission-header {
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+}
+
+.commission-body {
+  font-size: 0.875rem;
+}
+
+.commission-footer {
+  font-size: 0.875rem;
+  border-top: 1px solid #dee2e6;
+}
+
+/* Ensure the Payout button has relative positioning for the tooltip */
+.position-relative {
+  position: relative;
+}
