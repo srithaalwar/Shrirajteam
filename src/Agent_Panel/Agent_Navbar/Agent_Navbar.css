@@ -453,7 +453,7 @@
 }
 
 /* Notification badge (optional) */
-.wn-notification-badge, .wn-wishlist-count, .wn-cart-count {
+.wn-notification-badge, .wn-wishlist-count, .wn-cart-count,.wn-cart-badge {
   position: absolute;
   top: -5px;
   right: -5px;

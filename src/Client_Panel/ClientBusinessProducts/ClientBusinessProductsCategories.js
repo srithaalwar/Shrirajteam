@@ -1218,7 +1218,7 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
           <button 
             className="btn w-100 mt-2 text-white" 
             style={{ background: "#6c757d", marginBottom: "8px" }}
-            onClick={() => navigate(`/product/${product.product_id}/?variant=${variant.id}`)}
+            onClick={() => navigate(`/client-business-product-details/${product.product_id}/?variant=${variant.id}`)}
           >
             VIEW DETAILS
           </button>

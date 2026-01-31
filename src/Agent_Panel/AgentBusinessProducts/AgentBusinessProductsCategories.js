@@ -1209,8 +1209,8 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
           </div>
 
           {/* View Details and Add to Cart in one row */}
-          <div className="d-grid gap-2" style={{ gridTemplateColumns: '1fr 1fr' }}>
-            {/* VIEW DETAILS BUTTON */}
+          {/* <div className="d-grid gap-2" style={{ gridTemplateColumns: '1fr 1fr' }}>
+            
             <button 
               className="btn text-white" 
               style={{ background: "#6c757d", fontSize: "14px" }}
@@ -1219,7 +1219,7 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
               <Eye size={14} /> Details
             </button>
 
-            {/* ADD TO CART BUTTON */}
+            
             <button 
               className="btn text-white" 
               style={{ background: "#273c75", fontSize: "14px" }}
@@ -1231,7 +1231,16 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
             >
               {variant.stock > 0 ? "Add to Cart" : "Out of Stock"}
             </button>
-          </div>
+          </div> */}
+
+          <button 
+            className="btn w-100 mt-2 text-white" 
+            style={{ background: "#6c757d", marginBottom: "8px" }}
+            onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}
+          >
+           VIEW DETAILS
+          </button>
+
 
           {/* PAYOUT BUTTON with Commission Tooltip */}
           <div className="position-relative mt-2">
@@ -1244,7 +1253,7 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
               onBlur={handleMouseLeave}
             >
               <Info size={14} />
-              Payout
+              PAYOUT
             </button>
             
             <CommissionTooltip 
