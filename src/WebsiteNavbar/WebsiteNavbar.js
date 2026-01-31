@@ -583,7 +583,7 @@ const WebsiteNavbar = () => {
           <LoginButtonExternal />
           <SignupButtonExternal />
           
-          <div className="wn-cart">🛒 Cart</div>
+          {/* <div className="wn-cart">🛒 Cart</div> */}
         </div>
       </header>
 
