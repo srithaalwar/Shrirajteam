@@ -577,3 +577,119 @@ color: black;
 .text-danger {
   color: #dc3545;
 }
+
+
+
+/* Wishlist Icon Styles */
+.icon-circle.active {
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+.icon-circle {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.icon-circle:hover {
+  transform: scale(1.1);
+}
+
+.icon-circle:active {
+  transform: scale(0.95);
+}
+
+/* Cart Button Styles */
+.cart-actions {
+  margin-top: 20px;
+}
+
+.cart-buttons-group {
+  display: flex;
+  gap: 10px;
+}
+
+.cart-btn {
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.add-cart {
+  background-color: #007bff;
+  color: white;
+}
+
+.add-cart:hover {
+  background-color: #0056b3;
+}
+
+.add-cart:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.update-cart {
+  background-color: #ff9800;
+  color: white;
+  flex: 2;
+}
+
+.update-cart:hover {
+  background-color: #f57c00;
+}
+
+.update-cart:disabled {
+  background-color: #ffcc80;
+  cursor: not-allowed;
+}
+
+.remove-cart {
+  background-color: #f44336;
+  color: white;
+  flex: 1;
+}
+
+.remove-cart:hover {
+  background-color: #d32f2f;
+}
+
+.remove-cart:disabled {
+  background-color: #ffcdd2;
+  cursor: not-allowed;
+}
+
+/* Cart Info Text */
+.cart-info {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #28a745;
+  font-weight: 500;
+  text-align: center;
+  background-color: rgba(40, 167, 69, 0.1);
+  padding: 5px 10px;
+  border-radius: 4px;
+  border-left: 3px solid #28a745;
+}
+
+/* Quantity Selector Disabled State */
+.qty-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cart-buttons-group {
+    flex-direction: column;
+  }
+  
+  .cart-btn {
+    width: 100%;
+  }
+}
