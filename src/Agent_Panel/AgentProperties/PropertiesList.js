@@ -2423,7 +2423,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
             onBlur={handleMouseLeave}
           >
             <Info size={16} />
-            Payout
+            PAYOUT
           </button>
           
           <CommissionTooltip 
@@ -3384,7 +3384,7 @@ const ListPropertyItem = ({ property, commissionData }) => {
         </div>
         <div className="col-md-3 d-flex flex-column gap-2">
           {/* Action Buttons for List View */}
-          <div className="d-flex gap-2 mb-2">
+          {/* <div className="d-flex gap-2 mb-2">
             <button
               onClick={() => navigate(`/edit-property/${property.property_id}`)}
               className="btn fw-semibold flex-fill d-flex align-items-center justify-content-center gap-1"
@@ -3410,7 +3410,7 @@ const ListPropertyItem = ({ property, commissionData }) => {
               <Trash2 size={14} />
               <span>Delete</span>
             </button>
-          </div>
+          </div> */}
           
           {/* PAYOUT BUTTON for List View */}
           <div className="position-relative">
@@ -3423,7 +3423,7 @@ const ListPropertyItem = ({ property, commissionData }) => {
               onBlur={handleMouseLeave}
             >
               <Info size={14} />
-              Payout
+              PAYOUT
             </button>
             
             <CommissionTooltip 

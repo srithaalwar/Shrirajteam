@@ -3555,7 +3555,8 @@ import {
   TrendingUp,
   CheckCircle,
   XCircle,
-  Clock
+  Clock,
+  Info
 } from "lucide-react";
 import { baseurl } from "../../BaseURL/BaseURL";
 
@@ -4606,8 +4607,8 @@ const ProductCard = ({
         </div>
 
         {/* View Details and Add to Cart in one row */}
-        <div className="d-grid gap-2" style={{ gridTemplateColumns: '1fr 1fr' }}>
-          {/* VIEW DETAILS BUTTON */}
+        {/* <div className="d-grid gap-2" style={{ gridTemplateColumns: '1fr 1fr' }}>
+          
           <button 
             className="btn text-white" 
             style={{ background: "#6c757d", fontSize: "14px" }}
@@ -4616,7 +4617,7 @@ const ProductCard = ({
             <Eye size={14} /> Details
           </button>
 
-          {/* ADD TO CART BUTTON */}
+          
           <button 
             className="btn text-white" 
             style={{ background: "#273c75", fontSize: "14px" }}
@@ -4628,7 +4629,16 @@ const ProductCard = ({
           >
             {variant.stock > 0 ? "Add to Cart" : "Out of Stock"}
           </button>
-        </div>
+        </div> */}
+
+        <button 
+            className="btn w-100 mt-2 text-white" 
+            style={{ background: "#6c757d", marginBottom: "8px" }}
+            onClick={() => navigate(`/product/${product.product_id}/?variant=${variant.id}`)}
+          >
+            VIEW DETAILS
+          </button>
+
 
         {/* PAYOUT BUTTON - Full width below the two buttons */}
         <button 
@@ -4639,7 +4649,7 @@ const ProductCard = ({
             console.log("Payout:", variant.id, variant.sku);
           }}
         >
-          PAYOUT
+          <Info size={14} /> PAYOUT
         </button>
       </div>
     </div>

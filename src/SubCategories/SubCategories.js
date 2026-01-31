@@ -2684,7 +2684,8 @@ import {
   ChevronDown,
   Tag,
   DollarSign,
-  ArrowLeft
+  ArrowLeft,
+  Info
 } from "lucide-react";
 import "./SubCategories.css";
 import { baseurl } from "../BaseURL/BaseURL";
@@ -2936,17 +2937,17 @@ const ProductCard = ({ product, variant, baseurl }) => {
             )}
           </div>
 
-          {/* <button 
+          <button 
             className="btn w-100 mt-2 text-white" 
             style={{ background: "#6c757d", marginBottom: "8px" }}
             onClick={() => navigate(`/product/${product.product_id}/?variant=${variant.id}`)}
           >
             VIEW DETAILS
-          </button> */}
+          </button>
 
           {/* View Details and Add to Cart in one row */}
-        <div className="d-grid gap-2" style={{ gridTemplateColumns: '1fr 1fr' }}>
-          {/* VIEW DETAILS BUTTON */}
+        {/* <div className="d-grid gap-2" style={{ gridTemplateColumns: '1fr 1fr' }}>
+          
           <button 
             className="btn text-white" 
             style={{ background: "#6c757d", fontSize: "14px" }}
@@ -2955,7 +2956,7 @@ const ProductCard = ({ product, variant, baseurl }) => {
             <Eye size={14} /> Details
           </button>
 
-          {/* ADD TO CART BUTTON */}
+          
           <button 
             className="btn text-white" 
             style={{ background: "#273c75", fontSize: "14px" }}
@@ -2967,7 +2968,7 @@ const ProductCard = ({ product, variant, baseurl }) => {
           >
             {variant.stock > 0 ? "Add to Cart" : "Out of Stock"}
           </button>
-        </div>
+        </div> */}
             <button 
             className="btn w-100 mt-2 text-white" 
             style={{ background: "#273c75" }}
@@ -2976,6 +2977,7 @@ const ProductCard = ({ product, variant, baseurl }) => {
               console.log("Add to cart:", variant.id, variant.sku);
             }}
           >
+  <Info size={14} />
 PAYOUT          </button>
 
           {/* <button 

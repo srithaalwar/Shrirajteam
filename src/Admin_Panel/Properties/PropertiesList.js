@@ -703,7 +703,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
             onBlur={handleMouseLeave}
           >
             <Info size={16} />
-            Payout
+            PAYOUT
           </button>
           
           <CommissionTooltip 
@@ -1903,7 +1903,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                         onBlur={handleMouseLeave}
                       >
                         <Info size={14} />
-                        Payout
+                        PAYOUT
                       </button>
                       
                       <CommissionTooltip 
