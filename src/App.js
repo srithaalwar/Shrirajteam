@@ -242,7 +242,9 @@ import EditProductCategory from './Admin_Panel/Product_Category/EditCategory';
 import AgentDashboard from './Agent_Panel/AgentDashboard/Dashboard'
 import AgentAddProperty from './Agent_Panel/AgentAddProperty/Add_Property'
 import AgentProperties from './Agent_Panel/AgentProperties/PropertiesList'
+import AgentPropertyDetails from './Agent_Panel/AgentProperties/PropertyDetails'
 import AgentMyProperty from './Agent_Panel/MyProperties/MyProperties'
+import AgentMyPropertyDetails from './Agent_Panel/MyProperties/MyPropertyDetails'
 import AgentMyPropertyEditForm from "./Agent_Panel/MyProperties/MyPropertiesEditForm"
 import AgentProfile from './Agent_Panel/AgentProfile/AgentProfile'
 import AgentEditProfile from "./Agent_Panel/AgentProfile/AgentEditProfile";
@@ -268,7 +270,10 @@ import MeetingRequestForm from './Agent_Panel/Agent_Meetings/MeetingRequestForm'
 import ClientDashboard from './Client_Panel/Client_Dashboard/Dashboard'
 import ClientAddPropertyForm from "./Client_Panel/Client_AddProperty/Add_Property";
 import ClientProperties from './Client_Panel/ClientProperties/PropertiesList';
+import ClientPropertiesDeatils from './Client_Panel/ClientProperties/PropertyDetails'
 import ClientMyProperty from './Client_Panel/MyProperties/MyProperties';
+import ClientMyPropertyDetails from './Client_Panel/MyProperties/MyPropertyDetails';
+
 import ClientMyPropertyEditForm from './Client_Panel/MyProperties/MyPropertiesEditForm';
 import ClientProfile from "./Client_Panel/ClientProfile/ClientProfile";
 import ClientEditProfile from "./Client_Panel/ClientProfile/ClientEditProfile";
@@ -408,8 +413,13 @@ function App() {
         <Route path="/agent-dashboard" element={<AgentDashboard />} />
         <Route path="/agent-add-property" element={<AgentAddProperty />} />
         <Route path="/agent-properties" element={<AgentProperties />} />
+        <Route path="/agent-properties-details/:propertyId" element={<AgentPropertyDetails />} />
 
         <Route path="/agent-my-properties" element={<AgentMyProperty />} />
+
+        <Route path="/agent-my-properties-details/:propertyId" element={<AgentMyPropertyDetails />} />
+
+
         <Route path="/myproperties/edit/:property_id" element={<AgentMyPropertyEditForm />} />
         <Route path="/agent-profile" element={<AgentProfile />} />
         <Route path="/agent-edit-profile" element={<AgentEditProfile />} />
@@ -451,7 +461,13 @@ function App() {
         <Route path="/client-dashboard" element={<ClientDashboard />} />
         <Route path="/client-add-property-form" element={<ClientAddPropertyForm />} />
         <Route path="/client-Properties" element={<ClientProperties />} />
+        <Route path="/client-properties-details/:propertyId" element={<ClientPropertiesDeatils />} />
+
+
         <Route path="/client-my-properties" element={<ClientMyProperty />} />
+
+        <Route path="/client-my-properties-details/:propertyId" element={<ClientMyPropertyDetails />} />
+
         <Route path="/clientmyproperties/edit/:property_id" element={<ClientMyPropertyEditForm />} />
         <Route path="/client-profile" element={<ClientProfile />} />
         <Route path="/client-edit-profile" element={<ClientEditProfile />} />

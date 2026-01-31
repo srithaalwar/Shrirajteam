@@ -2189,7 +2189,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
   const [showCommissionTooltip, setShowCommissionTooltip] = useState(false);
 
   const handleViewDetails = () => {
-    navigate(`/property/${property.property_id}`);
+    navigate(`/agent-properties-details/${property.property_id}`);
   };
 
   const handleEditProperty = () => {
@@ -3434,7 +3434,7 @@ const ListPropertyItem = ({ property, commissionData }) => {
           </div>
           
           <button 
-            onClick={() => navigate(`/property/${property.property_id}`)}
+            onClick={() => navigate(`/agent-properties-details/${property.property_id}`)}
             className="btn fw-semibold py-2"
             style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: '#fff' }}
           >

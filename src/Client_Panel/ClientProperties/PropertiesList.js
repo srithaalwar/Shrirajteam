@@ -401,7 +401,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
   const [showCommissionTooltip, setShowCommissionTooltip] = useState(false);
 
   const handleViewDetails = () => {
-    navigate(`/property/${property.property_id}`);
+    navigate(`/client-properties-details/${property.property_id}`);
   };
 
   const handleEditProperty = () => {
@@ -1794,7 +1794,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                   </div>
                   <div className="col-md-3 d-flex flex-column gap-2">
                     {/* Action Buttons for List View */}
-                    <div className="d-flex gap-2 mb-2">
+                    {/* <div className="d-flex gap-2 mb-2">
                       <button
                         onClick={() => navigate(`/edit-property/${property.property_id}`)}
                         className="btn fw-semibold flex-fill d-flex align-items-center justify-content-center gap-1"
@@ -1820,7 +1820,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                         <Trash2 size={14} />
                         <span>Delete</span>
                       </button>
-                    </div>
+                    </div> */}
                     
                     {/* PAYOUT BUTTON for List View */}
                     <div className="position-relative">
@@ -1844,7 +1844,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                     </div>
                     
                     <button 
-                      onClick={() => navigate(`/property/${property.property_id}`)}
+                      onClick={() => navigate(`/client-properties-details/${property.property_id}`)}
                       className="btn fw-semibold py-2"
                       style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: '#fff' }}
                     >
@@ -1881,6 +1881,10 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
 
 // ============= Main Filters Page Component =============
 const ClientProperties = () => {
+
+
+
+
   const [viewMode, setViewMode] = useState("grid-4");
   const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);

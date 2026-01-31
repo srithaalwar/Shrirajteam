@@ -3568,7 +3568,7 @@ const PropertyCard = ({ property, onDeleteProperty, commissionData }) => {
   const [showCommissionTooltip, setShowCommissionTooltip] = useState(false);
 
   const handleViewDetails = () => {
-    navigate(`/property/${property.property_id}`);
+    navigate(`/agent-my-properties-details/${property.property_id}`);
   };
 
   const handleEditProperty = () => {
@@ -4596,7 +4596,7 @@ const PropertyGrid = ({ properties, viewMode, onDeleteProperty, commissionData }
                     </div>
                     
                     <button 
-                      onClick={() => navigate(`/property/${property.property_id}`)}
+                      onClick={() => navigate(`/agent-my-properties-details/${property.property_id}`)}
                       className="btn fw-semibold py-2"
                       style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: '#fff' }}
                     >
