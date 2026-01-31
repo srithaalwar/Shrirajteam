@@ -282,7 +282,8 @@ import ClientbusinessCategory from './Client_Panel/ClientBusinessProducts/Client
 import ClientSubCategory from './Client_Panel/ClientBusinessProducts/SubCategories'
 import ClientProductDetails from './Client_Panel/ClientBusinessProducts/ProductDetails/ProductDetails'
 import ClientSubscriptionPlan from './Client_Panel/Client_SubscriptionPlan/Subcrptionplan';
-
+import ClientMeetings from "./Client_Panel/Client_Meetings/Meetings";
+import ClientMeetingRequestForm from './Client_Panel/Client_Meetings/MeetingRequestForm'
 
 import UserList from "./Admin_Panel/Users/Users";
 import EditUser from "./Admin_Panel/Users/EditUsers";
@@ -479,6 +480,10 @@ function App() {
         <Route path="/client-subcategory/:id" element={<ClientSubCategory />} />
         <Route path="/client-business-product-details/:productId" element={<ClientProductDetails />} />
         <Route path="/client-subscription-plan" element={<ClientSubscriptionPlan />} />
+
+
+        <Route path="/client-meetings" element={<ClientMeetings />} />
+        <Route path="/client-meetingrequest" element={<ClientMeetingRequestForm />} />
 
         <Route path="/admin-users" element={<UserList />} />
         <Route path="/admin-view-user/:id" element={<ViewUser />} />

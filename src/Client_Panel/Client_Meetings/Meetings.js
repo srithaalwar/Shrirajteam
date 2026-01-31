@@ -452,7 +452,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+import ClientNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
 import DisplayRequest from './DisplayRequests';
 import axios from 'axios';
 import { baseurl } from '../../BaseURL/BaseURL';
@@ -530,7 +530,7 @@ function Meetings() {
 
     const handleRequestMeeting = (departmentName, id) => {
         if (subscriptionPaid) {
-            navigate("/p-meetingrequest", {
+            navigate("/client-meetingrequest", {
                 state: { profileType: departmentName, departmentId: id },
             });
         } else {
@@ -548,7 +548,7 @@ function Meetings() {
 
     return (
         <>
-            <AgentNavbar />
+            <ClientNavbar />
             <div className="container-fluid meetings-container">
                 {loadingDepartments ? (
                     <div className="text-center py-5">
