@@ -957,9 +957,7 @@ const ProductDetails = () => {
 
           {/* ========== MIDDLE : DETAILS ========== */}
           <div className="details-section product-details-section">
-            <p className="store-link">
-              Visit the {product.brand || "Store"}
-            </p>
+            
 
             <h1>{product.product_name}</h1>
 
