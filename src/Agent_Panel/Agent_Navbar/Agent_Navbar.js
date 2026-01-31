@@ -2264,6 +2264,7 @@ import "./Agent_Navbar.css";
 import logoImage from "../../Logos/logo1.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { baseurl } from "../../BaseURL/BaseURL";
 
 // Import FontAwesome icons
 import { 
@@ -2333,8 +2334,7 @@ const AgentNavbar = () => {
   const signupUrl = "/register";
   
   const navigate = useNavigate();
-  const baseurl = "https://rahul455.pythonanywhere.com";
-
+ 
   // Fetch user data from localStorage on component mount
   useEffect(() => {
     const fetchUserData = () => {
@@ -2516,7 +2516,7 @@ const AgentNavbar = () => {
         // Navigate to property details
         console.log("Navigating to property:", notification.property.id);
         // navigate(`/agent-properties/${notification.property.id}`);
-        navigate(`/property/${notification.property.id}`);
+        navigate(`/agent-properties-details/${notification.property.id}`);
       } else if (notification.product && notification.product.variant_id) {
         // Navigate to product details
         console.log("Navigating to product variant:", notification.product.variant_id);
@@ -2801,14 +2801,14 @@ const AgentNavbar = () => {
               <div className="wn-notifications-dropdown">
                 <div className="wn-notifications-header">
                   <h4>Notifications</h4>
-                  {unreadCount > 0 && (
+                  {/* {unreadCount > 0 && (
                     <button 
                       className="wn-mark-all-read"
                       onClick={handleMarkAllAsRead}
                     >
                       Mark all as read
                     </button>
-                  )}
+                  )} */}
                 </div>
                 
                 <div className="wn-notifications-list">
@@ -2842,7 +2842,7 @@ const AgentNavbar = () => {
                   )}
                 </div>
                 
-                {notifications.length > 0 && (
+                {/* {notifications.length > 0 && (
                   <div className="wn-notifications-footer">
                     <Link 
                       to="/agent-notifications" 
@@ -2852,7 +2852,7 @@ const AgentNavbar = () => {
                       View all notifications
                     </Link>
                   </div>
-                )}
+                )} */}
               </div>
             )}
           </div>
@@ -3007,3 +3007,5 @@ const AgentNavbar = () => {
 };
 
 export default AgentNavbar;
+
+

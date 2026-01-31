@@ -273,8 +273,8 @@ const WebHome = () => {
           ))}
         </div> */}
 
-        <h2 className="deals-heading">Products</h2>
-        <div className="products-row">
+        {/* <h2 className="deals-heading">Products</h2> */}
+        {/* <div className="products-row">
           {productDealsData.map((item, index) => (
             <div className="product-card" key={index}>
               <div className="discount-badge">{item.discount}</div>
@@ -300,7 +300,7 @@ const WebHome = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
 

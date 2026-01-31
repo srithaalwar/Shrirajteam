@@ -2421,6 +2421,7 @@ import "./Client_Navbar.css";
 import logoImage from "../../Logos/logo1.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { baseurl } from "../../BaseURL/BaseURL";
 
 // Import FontAwesome icons
 import { 
@@ -2486,7 +2487,7 @@ const ClientNavbar = () => {
   const signupUrl = "/register";
   
   const navigate = useNavigate();
-  const baseurl = "https://rahul455.pythonanywhere.com";
+  
 
   // Fetch user data from localStorage on component mount
   useEffect(() => {
@@ -2658,7 +2659,7 @@ const ClientNavbar = () => {
       if (notification.property && notification.property.id) {
         // Navigate to property details
         console.log("Navigating to property:", notification.property.id);
-        navigate(`/client-properties/${notification.property.id}`);
+        navigate(`/client-properties-details/${notification.property.id}`);
       } else if (notification.product && notification.product.variant_id) {
         // Navigate to product details - adjust the path as needed
         console.log("Navigating to product variant:", notification.product.variant_id);
@@ -2854,14 +2855,14 @@ const ClientNavbar = () => {
               <div className="wn-notifications-dropdown">
                 <div className="wn-notifications-header">
                   <h4>Notifications</h4>
-                  {unreadCount > 0 && (
+                  {/* {unreadCount > 0 && (
                     <button 
                       className="wn-mark-all-read"
                       onClick={handleMarkAllAsRead}
                     >
                       Mark all as read
                     </button>
-                  )}
+                  )} */}
                 </div>
                 
                 <div className="wn-notifications-list">
@@ -2895,7 +2896,7 @@ const ClientNavbar = () => {
                   )}
                 </div>
                 
-                {notifications.length > 0 && (
+                {/* {notifications.length > 0 && (
                   <div className="wn-notifications-footer">
                     <Link 
                       to="/client-notifications" 
@@ -2905,7 +2906,7 @@ const ClientNavbar = () => {
                       View all notifications
                     </Link>
                   </div>
-                )}
+                )} */}
               </div>
             )}
           </div>

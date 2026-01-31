@@ -8,6 +8,7 @@ import {
   Bed,
   Bath,
   Car,
+  ArrowLeft,
   Maximize2,
   MapPin,
   Calendar,
@@ -227,7 +228,7 @@ const PropertyDetails = () => {
 
       <div className="product-wrapper">
         {/* Breadcrumb */}
-        <div className="breadcrumb">
+        {/* <div className="breadcrumb">
           <button 
             className="back-btn"
             onClick={() => navigate(-1)}
@@ -239,10 +240,16 @@ const PropertyDetails = () => {
               marginRight: '10px'
             }}
           >
-            ← Back
+            ← Back 2
           </button>
           Home / Properties / {property.city} / {property.property_title}
-        </div>
+        </div> */}
+        <button
+          className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft size={16} /> Back
+        </button>
 
         <div className="product-layout">
           {/* LEFT – IMAGE SECTION */}
