@@ -205,6 +205,7 @@ import AdminDashboard from "./Admin_Panel/Dashboard/Dashboard";
 import AdminLayout from "./AdminSidebar/AdminLayout";
 import AdminProducts from './Admin_Panel/Products/Products'
 import PropertiesList from './Admin_Panel/Properties/PropertiesList';
+import AdminPropertyDetails from './Admin_Panel/Properties/PropertyDetails'
 import PropertyEditForm from './Admin_Panel/Properties/PropertyEditForm';
 import AdminProfile from "./Admin_Panel/Profile/AdminProfile";
 import AdminAddTrainingMaterial from "./Admin_Panel/Admin_TrainingMaterial/AddTrainingMaterial";
@@ -356,6 +357,9 @@ function App() {
 
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin-properties" element={<PropertiesList />} />
+
+       <Route path="/admin-properties-details/:propertyId" element={<AdminPropertyDetails />} />
+
         {/* <Route path="/a-edit-form" element={<PropertyEditForm />} /> */}
         <Route path="/edit-property/:property_id" element={<PropertyEditForm />} />
 

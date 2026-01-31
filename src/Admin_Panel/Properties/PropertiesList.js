@@ -399,7 +399,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
   const [showCommissionTooltip, setShowCommissionTooltip] = useState(false);
 
   const handleViewDetails = () => {
-    navigate(`/property/${property.property_id}`);
+    navigate(`/admin-properties-details/${property.property_id}`);
   };
 
   const handleEditProperty = () => {
@@ -1914,7 +1914,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                     </div>
                     
                     <button 
-                      onClick={() => navigate(`/property/${property.property_id}`)}
+                      onClick={() => navigate(`/admin-properties-details/${property.property_id}`)}
                       className="btn fw-semibold py-2"
                       style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: '#fff' }}
                     >
@@ -1950,6 +1950,13 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
 
 // ============= Main Filters Page Component =============
 const Adminproperties = () => {
+
+
+
+
+
+
+
   const [viewMode, setViewMode] = useState("grid-4");
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
