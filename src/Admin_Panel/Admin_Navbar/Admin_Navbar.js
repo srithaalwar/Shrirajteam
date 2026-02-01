@@ -1641,13 +1641,13 @@ const AdminNavbar = () => {
           </div>
           
           {/* Cart Icon */}
-          <div 
+          {/* <div 
             className="wn-cart admin-cart" 
             onClick={handleCartClick}
             title="Cart"
           >
             <FaShoppingCart size={16} />
-          </div>
+          </div> */}
         </div>
       </header>
 

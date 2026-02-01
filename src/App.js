@@ -267,6 +267,7 @@ import AgentOffers from './Agent_Panel/Agent_Offers/TableOffers';
 import AgentOffersForm from './Agent_Panel/Agent_Offers/OfferForm';
 import AgentMeetings from './Agent_Panel/Agent_Meetings/Meetings';
 import MeetingRequestForm from './Agent_Panel/Agent_Meetings/MeetingRequestForm'
+import AgentAddToCart from './Agent_Panel/Agent_AddToCart/AddToCart'
 
 import ClientDashboard from './Client_Panel/Client_Dashboard/Dashboard'
 import ClientAddPropertyForm from "./Client_Panel/Client_AddProperty/Add_Property";
@@ -460,6 +461,8 @@ function App() {
 
         <Route path="/p-meetings" element={<AgentMeetings />} />
           <Route path="/p-meetingrequest" element={<MeetingRequestForm />} />
+
+          <Route path="/agent-add-to-cart" element={<AgentAddToCart />} />
 
 
         {/* Client-panel */}
