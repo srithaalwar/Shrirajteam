@@ -268,7 +268,7 @@ import AgentOffersForm from './Agent_Panel/Agent_Offers/OfferForm';
 import AgentMeetings from './Agent_Panel/Agent_Meetings/Meetings';
 import MeetingRequestForm from './Agent_Panel/Agent_Meetings/MeetingRequestForm'
 import AgentAddToCart from './Agent_Panel/Agent_AddToCart/AddToCart'
-
+import AgentWishlist from './Agent_Panel/Agent_Wishlist/AgentWishlist'
 import ClientDashboard from './Client_Panel/Client_Dashboard/Dashboard'
 import ClientAddPropertyForm from "./Client_Panel/Client_AddProperty/Add_Property";
 import ClientProperties from './Client_Panel/ClientProperties/PropertiesList';
@@ -286,6 +286,7 @@ import ClientSubscriptionPlan from './Client_Panel/Client_SubscriptionPlan/Subcr
 import ClientMeetings from "./Client_Panel/Client_Meetings/Meetings";
 import ClientMeetingRequestForm from './Client_Panel/Client_Meetings/MeetingRequestForm'
 import ClientAddToCart from './Client_Panel/Client_AddToCart/AddToCart'
+import ClientWishlist from "./Client_Panel/Client_Wishlist/ClientWishlist";
 
 import UserList from "./Admin_Panel/Users/Users";
 import EditUser from "./Admin_Panel/Users/EditUsers";
@@ -464,6 +465,7 @@ function App() {
           <Route path="/p-meetingrequest" element={<MeetingRequestForm />} />
 
           <Route path="/agent-add-to-cart" element={<AgentAddToCart />} />
+         <Route path="/agent-wishlist" element={<AgentWishlist />} />
 
 
         {/* Client-panel */}
@@ -489,6 +491,8 @@ function App() {
         <Route path="/client-meetings" element={<ClientMeetings />} />
         <Route path="/client-meetingrequest" element={<ClientMeetingRequestForm />} />
           <Route path="/client-add-to-cart" element={<ClientAddToCart />} />
+         <Route path="/client-wishlist" element={<ClientWishlist />} />
+
 
         <Route path="/admin-users" element={<UserList />} />
         <Route path="/admin-view-user/:id" element={<ViewUser />} />
