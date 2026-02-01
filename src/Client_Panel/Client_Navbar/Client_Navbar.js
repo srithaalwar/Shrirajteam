@@ -3535,7 +3535,7 @@ const ClientNavbar = () => {
     console.log("Current cart distinct items:", cartItemCount);
     console.log("Current cart total quantity:", cartTotalQuantity);
     console.log("Cart items:", cartItems);
-    navigate("/client-cart");
+    navigate("/client-add-to-cart");
   };
 
   // Define your navigation items with appropriate icons

@@ -793,9 +793,9 @@ function AgentCart() {
   };
 
   // Handle product click
-  const handleProductClick = (variantId) => {
-    navigate(`/agent-product-details/${variantId}`);
-  };
+//   const handleProductClick = (variantId) => {
+//     navigate(`/agent-business-product-details/${variantId}`);
+//   };
 
   // Get product image
   const getProductImage = (item) => {
@@ -912,7 +912,9 @@ function AgentCart() {
 
                   return (
                     <div key={item.id} className="cart-item-card">
-                      <div className="cart-item-image" onClick={() => handleProductClick(item.variant)}>
+                      <div className="cart-item-image">
+                                              {/* <div className="cart-item-image" onClick={() => handleProductClick(item.variant)}> */}
+
                         <img 
                           src={getProductImage(item)} 
                           alt={variant.sku}
@@ -924,9 +926,13 @@ function AgentCart() {
                       
                       <div className="cart-item-details">
                         <div className="item-header">
-                          <h5 className="item-title" onClick={() => handleProductClick(item.variant)}>
+                          <h5 className="item-title">
                             {variant.sku}
                           </h5>
+
+                            {/* <h5 className="item-title" onClick={() => handleProductClick(item.variant)}>
+                            {variant.sku}
+                          </h5> */}
                           <button 
                             className="btn btn-danger btn-sm remove-btn"
                             onClick={() => handleRemoveItem(item.id)}
