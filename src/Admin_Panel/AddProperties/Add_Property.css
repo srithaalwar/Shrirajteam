@@ -178,10 +178,10 @@ textarea.customer-form-input {
   outline: none;
 }
 
-.form-control:focus, .form-select:focus {
+/* .form-control:focus, .form-select:focus {
   border-color: #1890ff;
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-}
+} */
 
 textarea.customer-form-input {
   min-height: 70px;

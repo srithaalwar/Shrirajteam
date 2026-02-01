@@ -391,6 +391,12 @@
     height: 40px;
     font-size: 14px;
   }
+  
+  .wishlist-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
 }
 
 /* Spinner styling */

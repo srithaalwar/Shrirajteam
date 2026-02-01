@@ -2959,6 +2959,8 @@
 // export default MyProperties;
 
 
+//================================================================
+ // Below code with Pagination Added full code 
 
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
@@ -2967,15 +2969,13 @@ import {
   ChevronDown,
   Search,
   X,
-  Grid2X2,
   Grid3X3,
   List,
   LayoutList,
   Filter,
-  User,
   Edit,
   Trash2,
-  Info // Added Info icon for tooltip
+  Info
 } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./MyProperties.css";
@@ -2999,26 +2999,21 @@ const getImageUrl = (images) => {
   if (images && images.length > 0) {
     const imagePath = images[0].image;
     
-    // Check if it's a relative path starting with /media/
     if (imagePath.startsWith('/media/')) {
       return `${baseurl}/${imagePath}`;
     }
     
-    // Check if it's a relative path without leading slash
     if (imagePath.startsWith('media/')) {
       return `${baseurl}/${imagePath}`;
     }
     
-    // Check if it's already a full URL
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
       return imagePath;
     }
     
-    // For any other relative path
     return `${baseurl}/${imagePath}`;
   }
   
-  // Fallback image
   return "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
 };
 
@@ -3026,7 +3021,6 @@ const getImageUrl = (images) => {
 const CommissionTooltip = ({ show, commissions, distributionCommission }) => {
   if (!show || !commissions || commissions.length === 0) return null;
 
-  // Calculate commission amounts based on distribution_commission
   const calculateCommissions = () => {
     const commissionAmount = parseFloat(distributionCommission) || 0;
     return commissions.map(commission => ({
@@ -3061,7 +3055,7 @@ const CommissionTooltip = ({ show, commissions, distributionCommission }) => {
 const PropertyCard = ({ property, onDeleteProperty, commissionData }) => {
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
-  const [showCommissionTooltip, setShowCommissionTooltip] = useState(false); // State for tooltip visibility
+  const [showCommissionTooltip, setShowCommissionTooltip] = useState(false);
 
   const handleViewDetails = () => {
     navigate(`/client-my-properties-details/${property.property_id}`);
@@ -3073,7 +3067,6 @@ const PropertyCard = ({ property, onDeleteProperty, commissionData }) => {
 
   // Handle delete property
   const handleDeleteProperty = async () => {
-    // Show confirmation dialog
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: `You are about to delete "${property.property_title}". This action cannot be undone!`,
@@ -3090,12 +3083,10 @@ const PropertyCard = ({ property, onDeleteProperty, commissionData }) => {
       try {
         setIsDeleting(true);
         
-        // Call the parent component's delete handler
         if (onDeleteProperty) {
           await onDeleteProperty(property.property_id);
         }
         
-        // Show success message
         Swal.fire(
           'Deleted!',
           'The property has been deleted successfully.',
@@ -3120,8 +3111,6 @@ const PropertyCard = ({ property, onDeleteProperty, commissionData }) => {
   };
 
   const distributionCommission = getDistributionCommission();
-
-  // Get the image URL
   const imageUrl = getImageUrl(property.images);
   
   const formattedPrice = property.looking_to === "sell" 
@@ -3553,9 +3542,6 @@ const FilterSidebar = ({
                   {type.displayName}
                 </span>
               </div>
-              {/* <span className="text-muted small">
-                ({type.count})
-              </span> */}
             </div>
           ))}
         </div>
@@ -3793,10 +3779,11 @@ const ProductHeader = ({
   setSearchTerm,
   sortOption,
   setSortOption,
-  onSearch
+  onSearch,
+  pageSize,
+  setPageSize
 }) => {
   const viewButtons = [
-    // { mode: "grid-2", icon: Grid2X2, label: "2 Columns" },
     { mode: "grid-3", icon: Grid3X3, label: "3 Columns" },
     { mode: "list", icon: List, label: "List" },
     { mode: "grid-4", icon: LayoutList, label: "4 Columns" },
@@ -3890,7 +3877,19 @@ const ProductHeader = ({
             <option value="default">Sort By</option>
             <option value="price-low">Price: Low to High</option>
             <option value="price-high">Price: High to Low</option>
-            {/* <option value="newest">Newest First</option> */}
+          </select>
+
+          {/* Items per page selector */}
+          <select 
+            className="form-select form-select-sm" 
+            style={{ width: '120px' }}
+            value={pageSize}
+            onChange={(e) => setPageSize(Number(e.target.value))}
+            aria-label="Items per page"
+          >
+            <option value="10">10 per page</option>
+            <option value="20">20 per page</option>
+            <option value="50">50 per page</option>
           </select>
         </div>
       </div>
@@ -3902,8 +3901,6 @@ const ProductHeader = ({
 const PropertyGrid = ({ properties, viewMode, onDeleteProperty, commissionData }) => {
   const getGridClasses = () => {
     switch (viewMode) {
-      // case "grid-2":
-      //   return "row row-cols-1 row-cols-sm-2";
       case "grid-3":
         return "row row-cols-1 row-cols-sm-2 row-cols-md-3";
       case "grid-4":
@@ -4107,7 +4104,7 @@ const PropertyGrid = ({ properties, viewMode, onDeleteProperty, commissionData }
 };
 
 // ============= Main Filters Page Component =============
-const MyProperties = () => {
+const ClientMyProperties = () => {
   const [viewMode, setViewMode] = useState("grid-4");
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -4120,8 +4117,11 @@ const MyProperties = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("default");
-  const [commissionData, setCommissionData] = useState([]); // Added commission data state
-  const [loadingCommissions, setLoadingCommissions] = useState(false); // Added loading state for commissions
+  const [commissionData, setCommissionData] = useState([]);
+  const [loadingCommissions, setLoadingCommissions] = useState(false);
+
+  // Page size state
+  const [pageSize, setPageSize] = useState(10);
 
   // Filter states
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -4139,13 +4139,10 @@ const MyProperties = () => {
   // Handle delete property
   const handleDeleteProperty = useCallback(async (propertyId) => {
     try {
-      // Make API call to delete property
       const response = await fetch(`${baseurl}/properties/${propertyId}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          // Add authentication headers if needed
-          // 'Authorization': `Bearer ${yourToken}`,
         }
       });
       
@@ -4153,12 +4150,10 @@ const MyProperties = () => {
         throw new Error(`Failed to delete property: ${response.status}`);
       }
       
-      // Remove property from local state
       setProperties(prevProperties => 
         prevProperties.filter(property => property.property_id !== propertyId)
       );
       
-      // Update total count
       setTotalCount(prev => prev - 1);
       
       return true;
@@ -4242,84 +4237,94 @@ const MyProperties = () => {
 
   // Fetch properties from API with filters
   const fetchProperties = useCallback(async () => {
-  try {
-    setLoading(true);
-    
-    const params = new URLSearchParams();
-    
-    // Get user_id from local storage
-    const userId = localStorage.getItem('user_id');
-    
-    if (userId) {
-      params.append('user_id', userId);
-    } else {
-      // Handle case where user_id is not found in local storage
-      console.warn('user_id not found in local storage');
-      // Optionally, you could throw an error or handle it differently
-      // throw new Error('User ID not found in local storage');
+    try {
+      setLoading(true);
+      
+      const params = new URLSearchParams();
+      
+      // Get user_id from local storage
+      const userId = localStorage.getItem('user_id');
+      
+      if (userId) {
+        params.append('user_id', userId);
+      } else {
+        console.warn('user_id not found in local storage');
+      }
+      
+      if (searchTerm.trim()) {
+        params.append('keyword', searchTerm.trim());
+      }
+      
+      if (selectedCategories.length > 0) {
+        const categoryQuery = selectedCategories.join(',');
+        params.append('category', categoryQuery);
+      }
+      
+      if (selectedTypes.length > 0) {
+        const typeQuery = selectedTypes.join(',');
+        params.append('property_type', typeQuery);
+      }
+      
+      if (selectedTransactionTypes.length > 0) {
+        const lookingToQuery = selectedTransactionTypes.join(',');
+        params.append('looking_to', lookingToQuery);
+      }
+      
+      if (selectedCities.length > 0) {
+        params.append('city', selectedCities.join(','));
+      }
+      
+      if (selectedRoles.length > 0) {
+        const roleIds = selectedRoles.join(',');
+        params.append('user_role', roleIds);
+      }
+      
+      // Pagination parameters
+      params.append('page', currentPage);
+      params.append('page_size', pageSize);
+      
+      const queryString = params.toString();
+      const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setProperties(data.results || []);
+      setTotalCount(data.count || 0);
+      setTotalPages(Math.ceil((data.count || 0) / pageSize));
+    } catch (err) {
+      setError(err.message);
+      console.error("Error fetching properties:", err);
+    } finally {
+      setLoading(false);
     }
-    
-    if (searchTerm.trim()) {
-      params.append('keyword', searchTerm.trim());
-    }
-    
-    if (selectedCategories.length > 0) {
-      const categoryQuery = selectedCategories.join(',');
-      params.append('category', categoryQuery);
-    }
-    
-    if (selectedTypes.length > 0) {
-      const typeQuery = selectedTypes.join(',');
-      params.append('property_type', typeQuery);
-    }
-    
-    if (selectedTransactionTypes.length > 0) {
-      const lookingToQuery = selectedTransactionTypes.join(',');
-      params.append('looking_to', lookingToQuery);
-    }
-    
-    if (selectedCities.length > 0) {
-      params.append('city', selectedCities.join(','));
-    }
-    
-    if (selectedRoles.length > 0) {
-      const roleIds = selectedRoles.join(',');
-      params.append('user_role', roleIds);
-    }
-    
-    params.append('page', currentPage);
-    
-    const queryString = params.toString();
-const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
-    
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    setProperties(data.results || []);
-    setTotalCount(data.count || 0);
-    setTotalPages(Math.ceil((data.count || 0) / 10));
-  } catch (err) {
-    setError(err.message);
-    console.error("Error fetching properties:", err);
-  } finally {
-    setLoading(false);
-  }
-}, [
-  currentPage, 
-  selectedCategories, 
-  selectedTypes, 
-  selectedCities, 
-  selectedTransactionTypes,
-  selectedRoles,
-  searchTerm
-  // Note: We don't need to add localStorage as a dependency
-  // since it's synchronous and not a React state/prop
-]);
+  }, [
+    currentPage, 
+    selectedCategories, 
+    selectedTypes, 
+    selectedCities, 
+    selectedTransactionTypes,
+    selectedRoles,
+    searchTerm,
+    pageSize
+  ]);
 
   // Handle filter changes
   const handleFilterChange = useCallback(() => {
+    setCurrentPage(1);
+  }, []);
+
+  // Handle page change
+  const handlePageChange = useCallback((page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  // Handle page size change
+  const handlePageSizeChange = useCallback((size) => {
+    setPageSize(size);
     setCurrentPage(1);
   }, []);
 
@@ -4328,7 +4333,7 @@ const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
     fetchRoles();
     fetchCategories();
     fetchPropertyTypes();
-    fetchCommissionData(); // Added commission data fetch
+    fetchCommissionData();
   }, [fetchRoles, fetchCategories, fetchPropertyTypes, fetchCommissionData]);
 
   // Fetch properties when filters or page change
@@ -4384,52 +4389,20 @@ const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
         case "price-high":
           return (parseFloat(b.looking_to === "sell" ? b.total_property_value || b.property_value : b.rent_amount || 0) -
                   parseFloat(a.looking_to === "sell" ? a.total_property_value || a.property_value : a.rent_amount || 0));
-        case "newest":
-          return new Date(b.created_at) - new Date(a.created_at);
         default:
           return 0;
       }
     });
   }, [filteredProperties, sortOption]);
 
-  // Handle pagination
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   // Render pagination
   const renderPagination = () => {
     if (totalPages <= 1) return null;
     
-    const pages = [];
-    const maxVisiblePages = 5;
-    
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-    
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(
-        <li key={i} className={`page-item ${currentPage === i ? 'active' : ''}`}>
-          <button 
-            className="page-link" 
-            onClick={() => handlePageChange(i)}
-            aria-label={`Go to page ${i}`}
-            aria-current={currentPage === i ? 'page' : undefined}
-          >
-            {i}
-          </button>
-        </li>
-      );
-    }
-
     return (
-      <nav aria-label="Page navigation" className="mt-5">
-        <ul className="pagination justify-content-center">
+      <nav aria-label="Properties pagination" className="mt-5">
+        <ul className="pagination justify-content-center flex-wrap">
+          {/* Previous Button */}
           <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
             <button 
               className="page-link" 
@@ -4437,38 +4410,86 @@ const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
               disabled={currentPage === 1}
               aria-label="Go to previous page"
             >
-              Previous
+              <span aria-hidden="true">&laquo;</span>
+              <span className="visually-hidden">Previous</span>
             </button>
           </li>
-          {startPage > 1 && (
-            <>
-              <li className="page-item">
-                <button 
-                  className="page-link" 
-                  onClick={() => handlePageChange(1)}
-                  aria-label="Go to page 1"
-                >
-                  1
-                </button>
-              </li>
-              {startPage > 2 && <li className="page-item disabled"><span className="page-link">...</span></li>}
-            </>
+          
+          {/* First Page */}
+          {currentPage > 2 && (
+            <li className="page-item">
+              <button 
+                className="page-link" 
+                onClick={() => handlePageChange(1)}
+                aria-label="Go to page 1"
+              >
+                1
+              </button>
+            </li>
           )}
-          {pages}
-          {endPage < totalPages && (
-            <>
-              {endPage < totalPages - 1 && <li className="page-item disabled"><span className="page-link">...</span></li>}
-              <li className="page-item">
-                <button 
-                  className="page-link" 
-                  onClick={() => handlePageChange(totalPages)}
-                  aria-label={`Go to page ${totalPages}`}
-                >
-                  {totalPages}
-                </button>
-              </li>
-            </>
+          
+          {/* Ellipsis if needed */}
+          {currentPage > 3 && (
+            <li className="page-item disabled">
+              <span className="page-link">...</span>
+            </li>
           )}
+          
+          {/* Page Before Current */}
+          {currentPage > 1 && (
+            <li className="page-item">
+              <button 
+                className="page-link" 
+                onClick={() => handlePageChange(currentPage - 1)}
+                aria-label={`Go to page ${currentPage - 1}`}
+              >
+                {currentPage - 1}
+              </button>
+            </li>
+          )}
+          
+          {/* Current Page */}
+          <li className="page-item active" aria-current="page">
+            <button className="page-link">
+              {currentPage}
+              <span className="visually-hidden">(current)</span>
+            </button>
+          </li>
+          
+          {/* Page After Current */}
+          {currentPage < totalPages && (
+            <li className="page-item">
+              <button 
+                className="page-link" 
+                onClick={() => handlePageChange(currentPage + 1)}
+                aria-label={`Go to page ${currentPage + 1}`}
+              >
+                {currentPage + 1}
+              </button>
+            </li>
+          )}
+          
+          {/* Ellipsis if needed */}
+          {currentPage < totalPages - 2 && (
+            <li className="page-item disabled">
+              <span className="page-link">...</span>
+            </li>
+          )}
+          
+          {/* Last Page */}
+          {currentPage < totalPages - 1 && (
+            <li className="page-item">
+              <button 
+                className="page-link" 
+                onClick={() => handlePageChange(totalPages)}
+                aria-label={`Go to page ${totalPages}`}
+              >
+                {totalPages}
+              </button>
+            </li>
+          )}
+          
+          {/* Next Button */}
           <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
             <button 
               className="page-link" 
@@ -4476,10 +4497,16 @@ const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
               disabled={currentPage === totalPages}
               aria-label="Go to next page"
             >
-              Next
+              <span className="visually-hidden">Next</span>
+              <span aria-hidden="true">&raquo;</span>
             </button>
           </li>
         </ul>
+        
+        {/* Page Info */}
+        <div className="text-center text-muted small mt-2">
+          Page {currentPage} of {totalPages} • {sortedProperties.length} properties on this page • {totalCount} total properties
+        </div>
       </nav>
     );
   };
@@ -4533,6 +4560,8 @@ const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
             sortOption={sortOption}
             setSortOption={setSortOption}
             onSearch={handleSearch}
+            pageSize={pageSize}
+            setPageSize={handlePageSizeChange}
           />
 
           <div className="row">
@@ -4581,7 +4610,7 @@ const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
                     properties={sortedProperties} 
                     viewMode={viewMode}
                     onDeleteProperty={handleDeleteProperty}
-                    commissionData={commissionData} // Pass commission data to PropertyGrid
+                    commissionData={commissionData}
                   />
                   {renderPagination()}
                 </>
@@ -4594,4 +4623,4 @@ const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
   );
 };
 
-export default MyProperties;
+export default ClientMyProperties;

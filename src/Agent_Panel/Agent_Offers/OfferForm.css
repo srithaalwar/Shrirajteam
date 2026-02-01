@@ -172,13 +172,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 /* Focus States for Accessibility */
-.form-control:focus,
+/* .form-control:focus,
 .btn:focus,
 .page-btn:focus,
 .page-number:focus {
   outline: 2px solid #273c75;
   outline-offset: 2px;
-}
+} */
 
 /* Disabled State Styles */
 .form-control:disabled,

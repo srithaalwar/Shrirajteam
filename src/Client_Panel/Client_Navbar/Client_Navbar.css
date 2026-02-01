@@ -1036,6 +1036,12 @@
   .wn-cart {
     padding: 8px;
   }
+
+
+  .wn-notification-container {
+  position: relative;
+  margin-right: 0px;
+}
 }
 
 

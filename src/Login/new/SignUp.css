@@ -59,11 +59,11 @@
     transition: all 0.3s ease;
 }
 
-.form-control:focus,
+/* .form-control:focus,
 .form-select:focus {
     border-color: #004080;
     box-shadow: 0 0 0 0.2rem rgba(0, 64, 128, 0.1);
-}
+} */
 
 .form-control.is-invalid,
 .form-select.is-invalid {

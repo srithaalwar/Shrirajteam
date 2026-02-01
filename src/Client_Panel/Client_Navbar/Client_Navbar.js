@@ -4291,7 +4291,7 @@ const ClientNavbar = () => {
     { path: "/client-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
     { path: "/client-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
     { path: "/client-wishlist", name: "My Wishlist", icon: <FaHeart /> }, // ADDED WISHLIST TO SIDEBAR
-    { path: "/client-cart", name: "My Cart", icon: <FaShoppingCart /> }, // ADDED CART TO SIDEBAR
+    { path: "/client-add-to-cart", name: "My Cart", icon: <FaShoppingCart /> }, // ADDED CART TO SIDEBAR
     { path: "/client-profile", name: "Profile", icon: <FaUserCircle /> },
   ];
 

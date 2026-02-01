@@ -17,12 +17,12 @@
   color: #495057;
   margin-bottom: 0.5rem;
 }
-
+/* 
 .form-control:focus,
 .form-select:focus {
   border-color: #80bdff;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
+} */
 
 .btn-primary {
   background-color: #1A0033;
