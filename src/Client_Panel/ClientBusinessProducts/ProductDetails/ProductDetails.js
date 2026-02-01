@@ -586,12 +586,18 @@ import ClientNavbar from "../../../Client_Panel/Client_Navbar/Client_Navbar";
 import ShopHeader from "./ProductsDetailsHeader/ProductHeader";
 import "./ProductDetails.css";
 import { baseurl } from "../../../BaseURL/BaseURL";
+import {
+  Heart,
+  Share2,
+  
+} from "lucide-react";
 
 const ProductDetails = () => {
   /* ================= ROUTE PARAMS ================= */
   const { productId } = useParams();
   const [searchParams] = useSearchParams();
   const variantId = searchParams.get("variant");
+  const [isFavorite, setIsFavorite] = useState(false);
 
   /* ================= STATE ================= */
   const [product, setProduct] = useState(null);
@@ -934,8 +940,8 @@ const ProductDetails = () => {
             {/* Main Image */}
             <div className="main-image-box">
               <img src={selectedImage} alt={product.product_name} />
-              <div className="floating-icons">
-                {/* Wishlist Icon - Now Dynamic */}
+              {/* <div className="floating-icons">
+                
                 <div 
                   className={`icon-circle ${isInWishlist ? 'active' : ''}`}
                   onClick={handleWishlistToggle}
@@ -947,19 +953,31 @@ const ProductDetails = () => {
                   {isInWishlist ? '❤️' : '🤍'}
                 </div>
                 
-                {/* Share Icon */}
+                
                 <div className="icon-circle" title="Share">
                   ↗️
                 </div>
+              </div> */}
+
+              <div className="floating-icons">
+                <div 
+                  className="icon-circle"
+                  onClick={() => setIsFavorite(!isFavorite)}
+                  style={{ color: isFavorite ? '#ff2e93' : '#666' }}
+                >
+                  <Heart size={20} fill={isFavorite ? '#ff2e93' : 'none'} />
+                </div>
+                <div className="icon-circle">
+                  <Share2 size={20} />
+                </div>
               </div>
+              
             </div>
           </div>
 
           {/* ========== MIDDLE : DETAILS ========== */}
           <div className="details-section product-details-section">
-            <p className="store-link">
-              Visit the {product.brand || "Store"}
-            </p>
+            
 
             <h1>{product.product_name}</h1>
 

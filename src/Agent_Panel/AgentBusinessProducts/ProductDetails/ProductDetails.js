@@ -1604,10 +1604,15 @@ const AgentProductDetails = () => {
           </div>
 
           {/* ========== MIDDLE : DETAILS ========== */}
+<<<<<<< HEAD
           <div className="details-section product-details-section">
             <p className="store-link">
               Visit the {product.brand || "Store"}
             </p>
+=======
+          <div className="details-section">
+            
+>>>>>>> 3e31247133cb82169eb3d9d8748403c8703150fa
 
             <h1>{product.product_name}</h1>
 
