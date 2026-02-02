@@ -238,7 +238,7 @@ import AdminBusinessProductDetails from "./Admin_Panel/Admin_Business/BusinessPr
 import TableProductCategory from './Admin_Panel/Product_Category/TableCategory';
 import ProductCategoryForm from './Admin_Panel/Product_Category/AddCategory';
 import EditProductCategory from './Admin_Panel/Product_Category/EditCategory';
-
+import AdminTransactions from './Admin_Panel/Admin_Transactions/TransactionSummary'
 
 import AgentDashboard from './Agent_Panel/AgentDashboard/Dashboard'
 import AgentAddProperty from './Agent_Panel/AgentAddProperty/Add_Property'
@@ -269,6 +269,9 @@ import AgentMeetings from './Agent_Panel/Agent_Meetings/Meetings';
 import MeetingRequestForm from './Agent_Panel/Agent_Meetings/MeetingRequestForm'
 import AgentAddToCart from './Agent_Panel/Agent_AddToCart/AddToCart'
 import AgentWishlist from './Agent_Panel/Agent_Wishlist/AgentWishlist'
+import AgentTransactions from './Agent_Panel/Agent_Transactions/TransactionSummary'
+
+
 import ClientDashboard from './Client_Panel/Client_Dashboard/Dashboard'
 import ClientAddPropertyForm from "./Client_Panel/Client_AddProperty/Add_Property";
 import ClientProperties from './Client_Panel/ClientProperties/PropertiesList';
@@ -287,6 +290,8 @@ import ClientMeetings from "./Client_Panel/Client_Meetings/Meetings";
 import ClientMeetingRequestForm from './Client_Panel/Client_Meetings/MeetingRequestForm'
 import ClientAddToCart from './Client_Panel/Client_AddToCart/AddToCart'
 import ClientWishlist from "./Client_Panel/Client_Wishlist/ClientWishlist";
+import ClientTransactions from './Client_Panel/Client_Transactions/TransactionSummary'
+
 
 import UserList from "./Admin_Panel/Users/Users";
 import EditUser from "./Admin_Panel/Users/EditUsers";
@@ -416,6 +421,8 @@ function App() {
           <Route path="/tableproductcategory" element={<TableProductCategory />} />
 <Route path="/productcategoryform" element={<ProductCategoryForm />} />
 <Route path="/editproductcategory/:id" element={<EditProductCategory />} />
+        <Route path="/admin-transactions" element={<AdminTransactions />} />
+
         {/* Agent-panel */}
 
         <Route path="/agent-dashboard" element={<AgentDashboard />} />
@@ -466,6 +473,7 @@ function App() {
 
           <Route path="/agent-add-to-cart" element={<AgentAddToCart />} />
          <Route path="/agent-wishlist" element={<AgentWishlist />} />
+        <Route path="/agent-transactions" element={<AgentTransactions />} />
 
 
         {/* Client-panel */}
@@ -492,6 +500,7 @@ function App() {
         <Route path="/client-meetingrequest" element={<ClientMeetingRequestForm />} />
           <Route path="/client-add-to-cart" element={<ClientAddToCart />} />
          <Route path="/client-wishlist" element={<ClientWishlist />} />
+        <Route path="/client-transactions" element={<ClientTransactions />} />
 
 
         <Route path="/admin-users" element={<UserList />} />

@@ -1530,7 +1530,7 @@ const AdminNavbar = () => {
         { path: "/a-bookingslab", name: "Booking Slab", icon: <FaLayerGroup /> },
         { path: "/admin-trainingmaterial", name: "Training Material", icon: <FaGraduationCap /> },
         { path: "/", name: "How it works", icon: <FaQuestionCircle /> },
-        { path: "/", name: "Transactions", icon: <FaExchangeAlt /> },
+        { path: "/admin-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
         { path: "/admin-commissionmaster", name: "Payout Master", icon: <FaDatabase /> },
         { path: "/tablecategory", name: " Property Category", icon: <FaTag /> },
         { path: "/tableproductcategory", name: " Product Category", icon: <FaTag /> },
