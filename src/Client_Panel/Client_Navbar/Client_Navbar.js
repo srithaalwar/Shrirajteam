@@ -3763,6 +3763,740 @@
 
 
 
+// import React, { useState, useEffect, useRef } from "react";
+// import { useNavigate } from "react-router-dom";
+// import "./Client_Navbar.css";
+// import logoImage from "../../Logos/logo1.png";
+// import { Link } from "react-router-dom";
+// import axios from "axios";
+// import { baseurl } from "../../BaseURL/BaseURL";
+
+// // Import FontAwesome icons
+// import { 
+//   FaTachometerAlt, 
+//   FaHome, 
+//   FaBuilding, 
+//   FaUsers, 
+//   FaClipboardList, 
+//   FaCogs,
+//   FaCalendarAlt,
+//   FaChartLine,
+//   FaBriefcase,
+//   FaFileAlt,
+//   FaTag,
+//   FaUserCircle,
+//   FaSignOutAlt,
+//   FaCaretDown,
+//   FaCaretRight,
+//   FaMoneyBillWave,
+//   FaHandHoldingUsd,
+//   FaCreditCard,
+//   FaLayerGroup,
+//   FaGraduationCap,
+//   FaQuestionCircle,
+//   FaExchangeAlt,
+//   FaDatabase,
+//   FaSitemap,
+//   FaEye,
+//   FaRobot,
+//   FaUserTie,
+//   FaStar,
+//   FaEnvelope,
+//   FaPhone,
+//   FaIdCard,
+//   FaBell,
+//   FaHeart,
+//   FaShoppingCart
+// } from "react-icons/fa";
+
+// const ClientNavbar = () => {
+//   const [open, setOpen] = useState(false);
+//   const [categories, setCategories] = useState([]);
+//   const [showCategories, setShowCategories] = useState(false);
+//   const [selectedCategory, setSelectedCategory] = useState("All");
+//   const [expandedMenu, setExpandedMenu] = useState(null);
+//   const [userData, setUserData] = useState({
+//     email: "",
+//     phone_number: "",
+//     referral_id: "",
+//     username: "",
+//     user_name: "",
+//     referred_by: ""
+//   });
+  
+//   // Notification states
+//   const [notifications, setNotifications] = useState([]);
+//   const [unreadCount, setUnreadCount] = useState(0);
+//   const [showNotifications, setShowNotifications] = useState(false);
+  
+//   // Cart states
+//   const [cartItems, setCartItems] = useState([]);
+//   const [cartItemCount, setCartItemCount] = useState(0); // Number of distinct items
+//   const [cartTotalQuantity, setCartTotalQuantity] = useState(0); // Total quantity sum
+//   const [cartLoading, setCartLoading] = useState(false);
+  
+//   // Wishlist states
+//   const [wishlistItems, setWishlistItems] = useState([]);
+//   const [wishlistCount, setWishlistCount] = useState(0); // Number of wishlist items
+//   const [wishlistLoading, setWishlistLoading] = useState(false);
+  
+//   const dropdownRef = useRef(null);
+//   const notificationRef = useRef(null);
+//   const loginUrl = "/login";
+//   const signupUrl = "/register";
+  
+//   const navigate = useNavigate();
+
+//   // Get user ID from localStorage
+//   const userId = localStorage.getItem("user_id");
+
+//   // Fetch user data from localStorage on component mount
+//   useEffect(() => {
+//     const fetchUserData = () => {
+//       const storedUserData = {
+//         email: localStorage.getItem("email") || "",
+//         phone_number: localStorage.getItem("phone_number") || "",
+//         referral_id: localStorage.getItem("referral_id") || "",
+//         username: localStorage.getItem("username") || "",
+//         user_name: localStorage.getItem("user_name") || "",
+//         referred_by: localStorage.getItem("referred_by") || ""
+//       };
+//       setUserData(storedUserData);
+//     };
+
+//     fetchUserData();
+    
+//     // Listen for storage changes
+//     const handleStorageChange = () => {
+//       fetchUserData();
+//     };
+    
+//     window.addEventListener('storage', handleStorageChange);
+    
+//     return () => {
+//       window.removeEventListener('storage', handleStorageChange);
+//     };
+//   }, []);
+
+//   /* ================= FETCH CART ITEMS ================= */
+//   const fetchCartItems = async () => {
+//     if (!userId) {
+//       console.log("No user_id found, cannot fetch cart items");
+//       setCartItems([]);
+//       setCartItemCount(0);
+//       setCartTotalQuantity(0);
+//       return;
+//     }
+
+//     setCartLoading(true);
+//     try {
+//       console.log("Fetching cart items for user:", userId);
+      
+//       // Fetch cart items from API with user filter
+//       const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
+//       console.log("Cart API Response:", response.data);
+      
+//       // Handle paginated response - get items from results array
+//       const cartResponse = response.data;
+//       let userCartItems = [];
+      
+//       if (cartResponse.results && Array.isArray(cartResponse.results)) {
+//         // Get items from results array
+//         userCartItems = cartResponse.results;
+//       } else if (Array.isArray(cartResponse)) {
+//         // If response is already an array
+//         userCartItems = cartResponse;
+//       }
+      
+//       console.log("User cart items:", userCartItems);
+      
+//       setCartItems(userCartItems);
+      
+//       // Use the count from API response
+//       if (cartResponse.count !== undefined) {
+//         setCartItemCount(cartResponse.count);
+//       } else {
+//         setCartItemCount(userCartItems.length);
+//       }
+      
+//       // Calculate total quantity
+//       const totalQuantity = userCartItems.reduce((total, item) => {
+//         return total + (item.quantity || 1);
+//       }, 0);
+      
+//       setCartTotalQuantity(totalQuantity);
+      
+//     } catch (error) {
+//       console.error("Error fetching cart items:", error);
+//       setCartItems([]);
+//       setCartItemCount(0);
+//       setCartTotalQuantity(0);
+//     } finally {
+//       setCartLoading(false);
+//     }
+//   };
+
+//   /* ================= FETCH WISHLIST ITEMS ================= */
+//   const fetchWishlistItems = async () => {
+//     if (!userId) {
+//       console.log("No user_id found, cannot fetch wishlist items");
+//       setWishlistItems([]);
+//       setWishlistCount(0);
+//       return;
+//     }
+
+//     setWishlistLoading(true);
+//     try {
+//       console.log("Fetching wishlist items for user:", userId);
+      
+//       // Fetch wishlist items from API with user filter
+//       const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
+//       console.log("Wishlist API Response:", response.data);
+      
+//       // Handle paginated response - get items from results array
+//       const wishlistResponse = response.data;
+//       let userWishlistItems = [];
+      
+//       if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
+//         // Get items from results array
+//         userWishlistItems = wishlistResponse.results;
+//       } else if (Array.isArray(wishlistResponse)) {
+//         // If response is already an array
+//         userWishlistItems = wishlistResponse;
+//       }
+      
+//       console.log("User wishlist items:", userWishlistItems);
+      
+//       setWishlistItems(userWishlistItems);
+      
+//       // Use the count from API response
+//       if (wishlistResponse.count !== undefined) {
+//         setWishlistCount(wishlistResponse.count);
+//       } else {
+//         setWishlistCount(userWishlistItems.length);
+//       }
+      
+//     } catch (error) {
+//       console.error("Error fetching wishlist items:", error);
+//       setWishlistItems([]);
+//       setWishlistCount(0);
+//     } finally {
+//       setWishlistLoading(false);
+//     }
+//   };
+
+//   // Fetch cart items on component mount and set up polling
+//   useEffect(() => {
+//     if (userId) {
+//       console.log("Setting up cart polling for user:", userId);
+//       fetchCartItems();
+      
+//       // Poll for cart updates every 5 seconds for real-time updates
+//       const cartIntervalId = setInterval(fetchCartItems, 5000);
+      
+//       return () => clearInterval(cartIntervalId);
+//     } else {
+//       setCartItems([]);
+//       setCartItemCount(0);
+//       setCartTotalQuantity(0);
+//     }
+//   }, [userId]);
+
+//   // Fetch wishlist items on component mount and set up polling
+//   useEffect(() => {
+//     if (userId) {
+//       console.log("Setting up wishlist polling for user:", userId);
+//       fetchWishlistItems();
+      
+//       // Poll for wishlist updates every 5 seconds for real-time updates
+//       const wishlistIntervalId = setInterval(fetchWishlistItems, 5000);
+      
+//       return () => clearInterval(wishlistIntervalId);
+//     } else {
+//       setWishlistItems([]);
+//       setWishlistCount(0);
+//     }
+//   }, [userId]);
+
+//   // Also fetch cart when component mounts
+//   useEffect(() => {
+//     fetchCartItems();
+//   }, []);
+
+//   // Also fetch wishlist when component mounts
+//   useEffect(() => {
+//     fetchWishlistItems();
+//   }, []);
+
+//   // Listen for cart updates from other components
+//   useEffect(() => {
+//     const handleCartUpdate = () => {
+//       console.log("Cart update event received, refreshing cart...");
+//       fetchCartItems();
+//     };
+
+//     // Listen for custom event when cart is updated
+//     window.addEventListener('cartUpdated', handleCartUpdate);
+    
+//     return () => {
+//       window.removeEventListener('cartUpdated', handleCartUpdate);
+//     };
+//   }, []);
+
+//   // Listen for wishlist updates from other components
+//   useEffect(() => {
+//     const handleWishlistUpdate = () => {
+//       console.log("Wishlist update event received, refreshing wishlist...");
+//       fetchWishlistItems();
+//     };
+
+//     // Listen for custom event when wishlist is updated
+//     window.addEventListener('wishlistUpdated', handleWishlistUpdate);
+    
+//     return () => {
+//       window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
+//     };
+//   }, []);
+
+//   // Fetch notifications for the user
+//   const fetchNotifications = async () => {
+//     try {
+//       const userId = localStorage.getItem("user_id");
+//       if (!userId) {
+//         console.log("No user_id found in localStorage");
+//         return;
+//       }
+
+//       console.log("Fetching notifications for user:", userId);
+      
+//       const response = await axios.get(`${baseurl}/notifications/?user=${userId}&is_read=false`);
+//       console.log("Notifications API Response:", response.data);
+      
+//       const allNotifications = response.data.results || [];
+      
+//       const apiUnreadCount = response.data.unread_count;
+//       if (apiUnreadCount !== undefined) {
+//         setUnreadCount(apiUnreadCount);
+//       } else {
+//         const localUnreadCount = allNotifications.filter(n => !n.is_read).length;
+//         setUnreadCount(localUnreadCount);
+//       }
+      
+//       setNotifications(allNotifications);
+      
+//     } catch (error) {
+//       console.error("Error fetching notifications:", error);
+//       const unread = notifications.filter(notification => !notification.is_read);
+//       setUnreadCount(unread.length);
+//     }
+//   };
+
+//   // Fetch notifications on component mount and set up polling
+//   useEffect(() => {
+//     const userId = localStorage.getItem("user_id");
+//     if (userId) {
+//       console.log("Setting up notification polling for user:", userId);
+//       fetchNotifications();
+      
+//       // Poll for new notifications every 30 seconds
+//       const intervalId = setInterval(fetchNotifications, 30000);
+      
+//       return () => clearInterval(intervalId);
+//     }
+//   }, []);
+
+//   // Close dropdowns when clicking outside
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+//         setShowCategories(false);
+//       }
+      
+//       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+//         setShowNotifications(false);
+//       }
+//     };
+
+//     document.addEventListener("mousedown", handleClickOutside);
+
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, []);
+
+//   const handleDropdownToggle = (event) => {
+//     event.stopPropagation();
+//     setShowCategories(!showCategories);
+//   };
+
+//   const handleCategorySelect = (categoryName) => {
+//     setSelectedCategory(categoryName);
+//     setShowCategories(false);
+//   };
+
+//   const toggleSubMenu = (menuName) => {
+//     if (expandedMenu === menuName) {
+//       setExpandedMenu(null);
+//     } else {
+//       setExpandedMenu(menuName);
+//     }
+//   };
+
+//   // Handle notification click
+//   const handleNotificationClick = (event) => {
+//     event.stopPropagation();
+//     setShowNotifications(!showNotifications);
+//   };
+
+//   // Mark notification as read and navigate to property/product
+//   const handleNotificationItemClick = async (notification) => {
+//     try {
+//       const userId = localStorage.getItem("user_id");
+//       if (!userId) {
+//         console.error("No user_id found in localStorage");
+//         return;
+//       }
+      
+//       console.log("Marking notification as read:", notification);
+//       console.log("Notification status ID:", notification.notification_status_id);
+      
+//       await axios.post(`${baseurl}/notifications/mark-read/`, {
+//         user_id: parseInt(userId),
+//         notification_status_ids: [notification.notification_status_id]
+//       });
+      
+//       console.log("Successfully marked notification as read");
+      
+//       const updatedNotifications = notifications.map(n => 
+//         n.notification_status_id === notification.notification_status_id 
+//           ? { ...n, is_read: true } 
+//           : n
+//       );
+      
+//       setNotifications(updatedNotifications);
+      
+//       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+//       setUnreadCount(newUnreadCount);
+      
+//       setShowNotifications(false);
+      
+//       if (notification.property && notification.property.id) {
+//         navigate(`/client-properties-details/${notification.property.id}`);
+//       } else if (notification.product && notification.product.variant_id) {
+//         navigate(`/client-product-details/${notification.product.variant_id}`);
+//       } else {
+//         fetchNotifications();
+//       }
+      
+//     } catch (error) {
+//       console.error("Error marking notification as read:", error);
+//       const updatedNotifications = notifications.map(n => 
+//         n.notification_status_id === notification.notification_status_id 
+//           ? { ...n, is_read: true } 
+//           : n
+//       );
+      
+//       setNotifications(updatedNotifications);
+//       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+//       setUnreadCount(newUnreadCount);
+      
+//       setShowNotifications(false);
+      
+//       if (notification.property && notification.property.id) {
+//         navigate(`/client-properties/${notification.property.id}`);
+//       } else if (notification.product && notification.product.variant_id) {
+//         navigate(`/client-product-details/${notification.product.variant_id}`);
+//       }
+//     }
+//   };
+
+//   // Format notification message with better styling
+//   const formatNotificationMessage = (notification) => {
+//     if (notification.property) {
+//       return (
+//         <div className="wn-notification-message-content">
+//           <strong className="wn-notification-title">{notification.message}</strong>
+//           <div className="wn-notification-subtitle">Property Update</div>
+//         </div>
+//       );
+//     } else if (notification.product) {
+//       return (
+//         <div className="wn-notification-message-content">
+//           <strong className="wn-notification-title">{notification.message}</strong>
+//           <div className="wn-notification-subtitle">Product Update</div>
+//         </div>
+//       );
+//     } else {
+//       return (
+//         <div className="wn-notification-message-content">
+//           <strong className="wn-notification-title">{notification.message}</strong>
+//         </div>
+//       );
+//     }
+//   };
+
+//   const handleLogout = () => {
+//     console.log("Client logged out");
+//     // Clear all stored data
+//     localStorage.removeItem("authToken");
+//     localStorage.removeItem("userRole");
+//     localStorage.removeItem("clientData");
+//     localStorage.removeItem("user_id");
+//     localStorage.removeItem("email");
+//     localStorage.removeItem("username");
+//     localStorage.removeItem("phone_number");
+//     localStorage.removeItem("referral_id");
+//     localStorage.removeItem("referred_by");
+//     localStorage.removeItem("user_name");
+//     localStorage.removeItem("token");
+//     localStorage.removeItem("access_token");
+//     localStorage.removeItem("refresh_token");
+    
+//     sessionStorage.clear();
+//     setOpen(false);
+//     setNotifications([]);
+//     setUnreadCount(0);
+//     setCartItems([]);
+//     setCartItemCount(0);
+//     setCartTotalQuantity(0);
+//     setWishlistItems([]);
+//     setWishlistCount(0);
+//     navigate("/");
+//   };
+
+//   // Handle wishlist click - UPDATED
+//   const handleWishlistClick = () => {
+//     console.log("Wishlist icon clicked");
+//     console.log("Wishlist count:", wishlistCount);
+//     console.log("Wishlist items:", wishlistItems);
+//     navigate("/client-wishlist");
+//   };
+
+//   // Handle cart click - UPDATED
+//   const handleCartClick = () => {
+//     console.log("Cart icon clicked");
+//     console.log("Cart count:", cartItemCount);
+//     console.log("Cart items:", cartItems);
+//     navigate("/client-add-to-cart");
+//   };
+
+//   // Define your navigation items with appropriate icons
+//   const menuItems = [
+//     { path: "/client-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
+//     { path: "/client-add-property-form", name: "Add Property", icon: <FaHome /> },
+//     { path: "/client-properties", name: "Properties", icon: <FaBuilding /> },
+//     { path: "/client-my-properties", name: "My Properties", icon: <FaClipboardList /> },
+//     { path: "/client-busineess-category", name: "Products", icon: <FaBriefcase /> },
+//     { path: "/client-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
+//     { path: "/client-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
+//     { path: "/client-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
+//     { path: "/client-wishlist", name: "My Wishlist", icon: <FaHeart /> }, // ADDED WISHLIST TO SIDEBAR
+//     { path: "/client-add-to-cart", name: "My Cart", icon: <FaShoppingCart /> }, // ADDED CART TO SIDEBAR
+//     { path: "/client-profile", name: "Profile", icon: <FaUserCircle /> },
+//   ];
+
+//   return (
+//     <>
+//       {/* NAVBAR */}
+//       <header className="wn-navbar">
+//         <div className="wn-nav-left">
+//           <button className="wn-menu-btn" onClick={() => setOpen(true)}>☰</button>
+//           <div className="wn-logo">
+//             <img 
+//               src={logoImage} 
+//               alt="Shriraj Logo" 
+//               className="wn-logo-img"
+//             />
+//           </div>
+//         </div>
+
+//         <div className="wn-nav-right">
+//           {/* Notification Icon with Dropdown */}
+//           <div 
+//             ref={notificationRef}
+//             className="wn-notification-container"
+//           >
+//             <div 
+//               className="wn-notification-icon" 
+//               onClick={handleNotificationClick}
+//               title="Notifications"
+//             >
+//               <FaBell size={16} />
+//               {unreadCount > 0 && (
+//                 <span className="wn-notification-badge">{unreadCount}</span>
+//               )}
+//             </div>
+            
+//             {/* Notifications Dropdown */}
+//             {showNotifications && (
+//               <div className="wn-notifications-dropdown">
+//                 <div className="wn-notifications-header">
+//                   <h4>Notifications</h4>
+//                 </div>
+                
+//                 <div className="wn-notifications-list">
+//                   {notifications.length > 0 ? (
+//                     notifications.map((notification) => (
+//                       <div 
+//                         key={notification.notification_status_id}
+//                         className={`wn-notification-item ${!notification.is_read ? 'wn-unread' : ''}`}
+//                         onClick={() => handleNotificationItemClick(notification)}
+//                       >
+//                         <div className="wn-notification-content">
+//                           {formatNotificationMessage(notification)}
+//                           <small className="wn-notification-time">
+//                             {new Date(notification.created_at).toLocaleDateString('en-US', {
+//                               month: 'short',
+//                               day: 'numeric',
+//                               hour: '2-digit',
+//                               minute: '2-digit'
+//                             })}
+//                           </small>
+//                         </div>
+//                         {!notification.is_read && (
+//                           <div className="wn-unread-dot"></div>
+//                         )}
+//                       </div>
+//                     ))
+//                   ) : (
+//                     <div className="wn-no-notifications">
+//                       No notifications yet
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+          
+//           {/* Wishlist Icon with Dynamic Count - UPDATED */}
+//           <div 
+//             className="wn-wishlist" 
+//             onClick={handleWishlistClick}
+//             title={`Wishlist: ${wishlistCount} item${wishlistCount !== 1 ? 's' : ''}`}
+//             style={{ 
+//               opacity: wishlistLoading ? 0.7 : 1,
+//               cursor: wishlistLoading ? 'not-allowed' : 'pointer'
+//             }}
+//           >
+//             <FaHeart size={16} />
+//             {wishlistCount > 0 && (
+//               <span className="wn-wishlist-badge">{wishlistCount > 99 ? '99+' : wishlistCount}</span>
+//             )}
+//           </div>
+          
+//           {/* Cart Icon with Dynamic Count */}
+//           <div 
+//             className="wn-cart" 
+//             onClick={handleCartClick}
+//             title={`Cart: ${cartItemCount} item${cartItemCount !== 1 ? 's' : ''} (${cartTotalQuantity} total)`}
+//             style={{ 
+//               opacity: cartLoading ? 0.7 : 1,
+//               cursor: cartLoading ? 'not-allowed' : 'pointer'
+//             }}
+//           >
+//             <FaShoppingCart size={16} />
+//             {cartItemCount > 0 && (
+//               <span className="wn-cart-badge">{cartItemCount > 99 ? '99+' : cartItemCount}</span>
+//             )}
+//           </div>
+//         </div>
+//       </header>
+
+//       {/* OVERLAY */}
+//       {open && <div className="wn-overlay" onClick={() => setOpen(false)} />}
+
+//       {/* SIDEBAR */}
+//       <aside className={`wn-sidebar ${open ? "open" : ""}`}>
+//         {/* Header with Logo and User Info Side by Side */}
+//         <div className="wn-sidebar-header">
+//           <div className="wn-logo-with-user">
+//             <img 
+//               src={logoImage} 
+//               alt="Shriraj Logo" 
+//               className="wn-logo-img-sidebar"
+//             />
+//             <div className="wn-user-info-compact">
+//               <div className="wn-user-details-compact">
+//                 {userData.email && (
+//                   <div className="wn-detail-item">
+//                     <FaEnvelope className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">{userData.email}</span>
+//                   </div>
+//                 )}
+                
+//                 {userData.phone_number && (
+//                   <div className="wn-detail-item">
+//                     <FaPhone className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">
+//                       {userData.phone_number}
+//                     </span>
+//                   </div>
+//                 )}
+                
+//                 {userData.referral_id ? (
+//                   <div className="wn-detail-item">
+//                     <FaIdCard className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">
+//                       Ref ID: {userData.referral_id}
+//                     </span>
+//                   </div>
+//                 ) : (
+//                   <div className="wn-detail-item">
+//                     <FaIdCard className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">Ref ID: None</span>
+//                   </div>
+//                 )}
+//               </div>
+//             </div>
+//           </div>
+          
+//           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
+//         </div>
+
+//         {/* Navigation Items */}
+//         <div className="wn-nav-section">
+//           <div className="wn-section-title">Client Menu</div>
+//           <ul className="wn-menu-list">
+//             {menuItems.map((item, index) => (
+//               <li key={item.name || item.path}>
+//                 <Link 
+//                   to={item.path} 
+//                   className="wn-sidebar-link"
+//                   onClick={() => setOpen(false)}
+//                 >
+//                   <span className="wn-sidebar-icon">{item.icon}</span>
+//                   <span className="wn-sidebar-text" style={{ marginLeft: "10px" }}>
+//                     {item.name}
+//                   </span>
+//                 </Link>
+//               </li>
+//             ))}
+//           </ul>
+//         </div>
+
+//         <div className="wn-divider" />
+
+//         {/* Logout Button */}
+//         <div className="wn-logout-section">
+//           <button 
+//             className="wn-logout-btn"
+//             onClick={handleLogout}
+//           >
+//             <span className="wn-logout-icon">
+//               <FaSignOutAlt />
+//             </span>
+//             <span className="wn-logout-text">Logout</span>
+//           </button>
+//         </div>
+//       </aside>
+//     </>
+//   );
+// };
+
+// export default ClientNavbar;
+
+
+
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Client_Navbar.css";
@@ -4067,10 +4801,10 @@ const ClientNavbar = () => {
         return;
       }
 
-      console.log("Fetching notifications for user:", userId);
+      console.log("Fetching notifications for client user:", userId);
       
       const response = await axios.get(`${baseurl}/notifications/?user=${userId}&is_read=false`);
-      console.log("Notifications API Response:", response.data);
+      console.log("Client Notifications API Response:", response.data);
       
       const allNotifications = response.data.results || [];
       
@@ -4085,7 +4819,7 @@ const ClientNavbar = () => {
       setNotifications(allNotifications);
       
     } catch (error) {
-      console.error("Error fetching notifications:", error);
+      console.error("Error fetching client notifications:", error);
       const unread = notifications.filter(notification => !notification.is_read);
       setUnreadCount(unread.length);
     }
@@ -4095,7 +4829,7 @@ const ClientNavbar = () => {
   useEffect(() => {
     const userId = localStorage.getItem("user_id");
     if (userId) {
-      console.log("Setting up notification polling for user:", userId);
+      console.log("Setting up notification polling for client user:", userId);
       fetchNotifications();
       
       // Poll for new notifications every 30 seconds
@@ -4157,15 +4891,14 @@ const ClientNavbar = () => {
         return;
       }
       
-      console.log("Marking notification as read:", notification);
-      console.log("Notification status ID:", notification.notification_status_id);
+      console.log("Marking client notification as read:", notification);
       
       await axios.post(`${baseurl}/notifications/mark-read/`, {
         user_id: parseInt(userId),
         notification_status_ids: [notification.notification_status_id]
       });
       
-      console.log("Successfully marked notification as read");
+      console.log("Successfully marked client notification as read");
       
       const updatedNotifications = notifications.map(n => 
         n.notification_status_id === notification.notification_status_id 
@@ -4180,16 +4913,33 @@ const ClientNavbar = () => {
       
       setShowNotifications(false);
       
-      if (notification.property && notification.property.id) {
+      // Navigate based on notification type for client
+      if (notification.property !== null) {
+        // Navigate to client property details
         navigate(`/client-properties-details/${notification.property.id}`);
-      } else if (notification.product && notification.product.variant_id) {
-        navigate(`/client-product-details/${notification.product.variant_id}`);
+      } else if (notification.product !== null) {
+        // Navigate to client product details with product_id and variant_id
+        const productId = notification.product.product_id;
+        const variantId = notification.product.variant_id;
+        
+        // Navigate to the correct URL for client
+        if (productId && variantId) {
+          navigate(`/client-business-product-details/${productId}/?variant=${variantId}`);
+        } else if (productId) {
+          // Fallback: If we only have productId
+          navigate(`/client-business-product-details/${productId}/`);
+        } else if (variantId) {
+          // Fallback: If we only have variantId
+          navigate(`/client-product-details/${variantId}`);
+        } else {
+          fetchNotifications();
+        }
       } else {
         fetchNotifications();
       }
       
     } catch (error) {
-      console.error("Error marking notification as read:", error);
+      console.error("Error marking client notification as read:", error);
       const updatedNotifications = notifications.map(n => 
         n.notification_status_id === notification.notification_status_id 
           ? { ...n, is_read: true } 
@@ -4202,24 +4952,34 @@ const ClientNavbar = () => {
       
       setShowNotifications(false);
       
-      if (notification.property && notification.property.id) {
-        navigate(`/client-properties/${notification.property.id}`);
-      } else if (notification.product && notification.product.variant_id) {
-        navigate(`/client-product-details/${notification.product.variant_id}`);
+      // Try navigation anyway even if API fails
+      if (notification.property !== null) {
+        navigate(`/client-properties-details/${notification.property.id}`);
+      } else if (notification.product !== null) {
+        const productId = notification.product.product_id;
+        const variantId = notification.product.variant_id;
+        
+        if (productId && variantId) {
+          navigate(`/client-business-product-details/${productId}/?variant=${variantId}`);
+        } else if (productId) {
+          navigate(`/client-business-product-details/${productId}/`);
+        } else if (variantId) {
+          navigate(`/client-product-details/${variantId}`);
+        }
       }
     }
   };
 
   // Format notification message with better styling
   const formatNotificationMessage = (notification) => {
-    if (notification.property) {
+    if (notification.property !== null) {
       return (
         <div className="wn-notification-message-content">
           <strong className="wn-notification-title">{notification.message}</strong>
           <div className="wn-notification-subtitle">Property Update</div>
         </div>
       );
-    } else if (notification.product) {
+    } else if (notification.product !== null) {
       return (
         <div className="wn-notification-message-content">
           <strong className="wn-notification-title">{notification.message}</strong>
@@ -4264,19 +5024,13 @@ const ClientNavbar = () => {
     navigate("/");
   };
 
-  // Handle wishlist click - UPDATED
+  // Handle wishlist click
   const handleWishlistClick = () => {
-    console.log("Wishlist icon clicked");
-    console.log("Wishlist count:", wishlistCount);
-    console.log("Wishlist items:", wishlistItems);
     navigate("/client-wishlist");
   };
 
-  // Handle cart click - UPDATED
+  // Handle cart click
   const handleCartClick = () => {
-    console.log("Cart icon clicked");
-    console.log("Cart count:", cartItemCount);
-    console.log("Cart items:", cartItems);
     navigate("/client-add-to-cart");
   };
 
@@ -4331,7 +5085,7 @@ const ClientNavbar = () => {
             {showNotifications && (
               <div className="wn-notifications-dropdown">
                 <div className="wn-notifications-header">
-                  <h4>Notifications</h4>
+                  <h4>Client Notifications</h4>
                 </div>
                 
                 <div className="wn-notifications-list">
