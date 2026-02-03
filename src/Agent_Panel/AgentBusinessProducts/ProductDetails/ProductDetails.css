@@ -11,7 +11,7 @@
 
 .product-layout {
   display: grid;
-  grid-template-columns: 1.2fr 1.6fr 1fr;
+  grid-template-columns: 1.2fr 1.6fr;
   gap: 30px;
 }
 
