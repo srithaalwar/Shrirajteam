@@ -415,7 +415,7 @@
 // below code without carousel slides 
 
 import React, { useEffect, useState } from "react";
-import "./Carousel.css";
+// import "./Carousel.css";
 import { baseurl } from "../BaseURL/BaseURL";
 import { useNavigate } from "react-router-dom";
 

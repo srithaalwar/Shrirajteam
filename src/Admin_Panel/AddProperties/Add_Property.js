@@ -625,7 +625,7 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
             <h3 className="form-section-title">Information</h3>
             <div className="form-section-content">
               <div className="row">
-                <div className="col-md-6">
+                <div className="col-md-6 ">
                   {renderField({
                     type: 'select',
                     name: 'lookingTo',

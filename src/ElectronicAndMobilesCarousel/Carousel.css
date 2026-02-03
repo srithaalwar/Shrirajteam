@@ -154,8 +154,41 @@
 /* ================================================= */
 
 /* ===== TABLET VIEW ===== */
-@media (max-width: 991px) {
+/* @media (max-width: 991px) {
   .three-cards-grid {
+    gap: 20px;
+  }
+  
+  .offer-card {
+    height: 220px;
+  }
+
+  .offer-content h2 {
+    font-size: 22px;
+  }
+
+  .category-heading {
+    font-size: 24px;
+  }
+} */
+
+
+/* ================================================= */
+/* ================= RESPONSIVE ==================== */
+/* ================================================= */
+
+/* ===== DESKTOP: DEFAULT ===== */
+.three-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  width: 100%;
+}
+
+/* ===== TABLET VIEW (768px to 1024px): 2 cards per row ===== */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .three-cards-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
     gap: 20px;
   }
   
@@ -172,6 +205,76 @@
   }
 }
 
+/* ===== LARGE MOBILE (481px to 767px): 2 cards per row ===== */
+@media (min-width: 481px) and (max-width: 767px) {
+  .three-cards-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for large mobile */
+    gap: 18px;
+  }
+  
+  .offer-card {
+    height: 200px;
+  }
+
+  .carousel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .view-all-link {
+    align-self: flex-end;
+  }
+
+  .offer-content h2 {
+    font-size: 24px;
+  }
+
+  .shop-btn {
+    padding: 7px 18px;
+    font-size: 13px;
+  }
+}
+
+/* ===== SMALL MOBILE (480px and below): 1 card per row ===== */
+@media (max-width: 480px) {
+  .three-cards-grid {
+    grid-template-columns: 1fr; /* 1 column for small mobile */
+    gap: 20px;
+  }
+  
+  .offer-card {
+    height: 180px;
+  }
+
+  .offer-carousel-wrapper {
+    padding: 0 15px;
+  }
+
+  .carousel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .view-all-link {
+    align-self: flex-end;
+  }
+
+  .offer-content h2 {
+    font-size: 22px;
+  }
+
+  .offer-content .off {
+    font-size: 12px;
+  }
+
+  .category-heading {
+    font-size: 20px;
+  }
+}
 /* ===== MOBILE VIEW ===== */
 @media (max-width: 767px) {
   .three-cards-grid {
