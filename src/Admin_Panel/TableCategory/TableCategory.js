@@ -903,7 +903,7 @@ function TableCategory() {
                 value={searchCat}
                 onChange={handleSearchCatChange}
               />
-              <span className="search-icon">🔍</span>
+              {/* <span className="search-icon">🔍</span> */}
             </div>
             
             <button 
@@ -994,7 +994,7 @@ function TableCategory() {
                 value={searchType}
                 onChange={handleSearchTypeChange}
               />
-              <span className="search-icon">🔍</span>
+              {/* <span className="search-icon">🔍</span> */}
             </div>
             
             <button 

@@ -23,7 +23,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
     sku: '',
     mrp: '',
     selling_price: '',
-    stock: 0,
+    stock:"" ,
     attributes: {},
     cgst_percent: 0,
     sgst_percent: 0,
@@ -1001,7 +1001,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
                         name="stock"
                         value={variant.stock}
                         onChange={(e) => handleVariantChange(variantIndex, e)}
-                        min="0"
+                        min=""
                       />
                       {errors[`variant_${variantIndex}_stock`] && (
                         <div className="invalid-feedback">{errors[`variant_${variantIndex}_stock`]}</div>

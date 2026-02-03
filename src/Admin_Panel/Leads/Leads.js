@@ -663,7 +663,7 @@ const Leads = () => {
               value={search}
               onChange={handleSearchChange}
             />
-            <span className="search-icon">🔍</span>
+            {/* <span className="search-icon">🔍</span> */}
           </div>
         </div>
 

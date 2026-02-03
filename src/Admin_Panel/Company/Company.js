@@ -135,7 +135,7 @@ const Company = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <span className="search-icon">🔍</span>
+            {/* <span className="search-icon">🔍</span> */}
           </div>
 
         </div>

@@ -1888,7 +1888,7 @@ const UserList = () => {
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
-              <span className="search-icon">🔍</span>
+              {/* <span className="search-icon">🔍</span> */}
             </div>
           </div>
 

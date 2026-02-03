@@ -569,7 +569,7 @@ const WebsiteNavbar = () => {
               placeholder="What are you looking for?"
             />
 
-            <span className="wn-search-icon">🔍</span>
+            {/* <span className="wn-search-icon">🔍</span> */}
           </div>
         </div>
 
