@@ -519,9 +519,25 @@
 
 @media (max-width: 767px) {
   .wn-nav-right {
-    gap: 6px;
-    margin-left: 0px;
+    gap: 0px !important;
+    margin-left: 0px !important;
   }
+
+  .wn-logo {
+    display: flex;
+    align-items: center;
+    margin-left: -10px;
+}
+
+
+
+.wn-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 0px ;
+}
+
+
 }
 
 

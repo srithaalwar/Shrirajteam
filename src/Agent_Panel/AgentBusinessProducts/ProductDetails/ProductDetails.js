@@ -3616,7 +3616,7 @@ const AgentProductDetails = () => {
 
             <p className="unit">SKU: {selectedVariant.sku}</p>
 
-            <div className="qty">
+            {/* <div className="qty">
               <button 
                 className="qty-btn minus" 
                 onClick={() => setQty(q => Math.max(1, q - 1))}
@@ -3632,10 +3632,10 @@ const AgentProductDetails = () => {
               >
                 +
               </button>
-            </div>
+            </div> */}
 
             {/* Cart Buttons */}
-            <div className="cart-actions">
+            {/* <div className="cart-actions">
               {isInCart ? (
                 <div className="cart-buttons-group">
                   <button 
@@ -3645,13 +3645,13 @@ const AgentProductDetails = () => {
                   >
                     {cartLoading ? 'UPDATING...' : `UPDATE CART (${cartQuantity})`}
                   </button>
-                  {/* <button 
+                  <button 
                     className="cart-btn remove-cart"
                     onClick={handleRemoveFromCart}
                     disabled={cartLoading}
                   >
                     REMOVE
-                  </button> */}
+                  </button>
                 </div>
               ) : (
                 <button 
@@ -3662,10 +3662,10 @@ const AgentProductDetails = () => {
                   {cartLoading ? 'ADDING...' : 'ADD TO CART'}
                 </button>
               )}
-            </div>
+            </div> */}
 
             {/* Wishlist Button */}
-            <button 
+            {/* <button 
               className={`wishlist-btn ${isInWishlist ? 'in-wishlist' : ''}`}
               onClick={handleWishlistToggle}
               disabled={wishlistLoading}
@@ -3702,7 +3702,7 @@ const AgentProductDetails = () => {
                   {isInWishlist ? 'ADDED TO WISHLIST' : 'ADD TO WISHLIST'}
                 </>
               )}
-            </button>
+            </button> */}
 
             <p className="secure">
               Stock Available: {selectedVariant.stock}

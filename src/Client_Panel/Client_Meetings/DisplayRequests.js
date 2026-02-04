@@ -224,7 +224,7 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
- import ClientNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
+import ClientNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
  import { baseurl } from '../../BaseURL/BaseURL';
 import './DisplayRequests.css';
 
