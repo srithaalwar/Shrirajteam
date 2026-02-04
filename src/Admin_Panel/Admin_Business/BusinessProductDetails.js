@@ -407,7 +407,7 @@ const AgentProductDetails = () => {
 
             <p className="unit">SKU: {selectedVariant.sku}</p>
 
-            <div className="qty">
+            {/* <div className="qty">
               <button 
                 className="qty-btn minus"
                 onClick={() => setQty(q => Math.max(1, q - 1))}
@@ -424,7 +424,7 @@ const AgentProductDetails = () => {
               </button>
             </div>
 
-            <button className="cart-btn">ADD TO CART</button>
+            <button className="cart-btn">ADD TO CART</button> */}
 
             <p className="secure">
               Stock Available: {selectedVariant.stock}
