@@ -746,6 +746,241 @@ const ManageMediaModal = ({ product, variant, isOpen, onClose, onDeleteMedia, ba
 };
 
 /* ================= PRODUCT CARD COMPONENT ================= */
+// const ProductCard = ({ 
+//   product, 
+//   variant, 
+//   baseurl,
+//   onEditProduct,
+//   onEditVariant,
+//   onAddVariant,
+//   onManageMedia
+// }) => {
+//   const navigate = useNavigate();
+  
+//   // Get image for specific variant
+//   const getProductImage = () => {
+//     if (variant.media && variant.media.length > 0) {
+//       const imageMedia = variant.media.find(m => m.media_type === "image");
+//       if (imageMedia) {
+//         return `${baseurl}${imageMedia.file}`;
+//       }
+//       return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//     }
+    
+//     if (product.variants && product.variants.length > 0) {
+//       for (const v of product.variants) {
+//         if (v.media && v.media.length > 0) {
+//           const imageMedia = v.media.find(m => m.media_type === "image");
+//           if (imageMedia) {
+//             return `${baseurl}${imageMedia.file}`;
+//           }
+//         }
+//       }
+//     }
+    
+//     return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//   };
+
+//   // Calculate discount percentage for variant
+//   const calculateDiscount = () => {
+//     const mrp = parseFloat(variant.mrp);
+//     const sellingPrice = parseFloat(variant.selling_price);
+//     if (mrp > 0 && sellingPrice < mrp) {
+//       return Math.round(((mrp - sellingPrice) / mrp) * 100);
+//     }
+//     return 0;
+//   };
+
+//   const discount = calculateDiscount();
+  
+//   // Create variant name
+//   const getVariantName = () => {
+//     if (variant.attributes && variant.attributes.display) {
+//       return `${product.product_name} - ${variant.attributes.display}`;
+//     } else if (variant.attributes) {
+//       const attrDisplay = Object.entries(variant.attributes)
+//         .filter(([key]) => key !== 'unit' && key !== 'value')
+//         .map(([key, value]) => value)
+//         .join(" ");
+//       if (attrDisplay.trim()) {
+//         return `${product.product_name} - ${attrDisplay}`;
+//       }
+//     }
+//     return product.product_name;
+//   };
+
+//   // Get variant display text from attributes
+//   const getVariantDisplay = () => {
+//     if (variant.attributes) {
+//       const displayAttrs = [];
+      
+//       if (variant.attributes.display) {
+//         displayAttrs.push(variant.attributes.display);
+//       }
+      
+//       if (variant.attributes.packaging) {
+//         displayAttrs.push(variant.attributes.packaging);
+//       }
+      
+//       if (variant.attributes.milk_type) {
+//         displayAttrs.push(variant.attributes.milk_type);
+//       }
+      
+//       if (variant.attributes.fat_content) {
+//         displayAttrs.push(variant.attributes.fat_content);
+//       }
+      
+//       if (variant.attributes.quantity) {
+//         displayAttrs.push(variant.attributes.quantity);
+//       }
+      
+//       return displayAttrs.join(" • ");
+//     }
+//     return "";
+//   };
+  
+//   return (
+//     <div className="card h-100 shadow-sm border-0">
+//       {/* Product Image with Discount Badge */}
+//       <div className="bg-light p-3 text-center position-relative" style={{ height: 150, cursor: "pointer" }}
+//            onClick={() => navigate(`/agent-business-product-details/${product.product_id}?variant=${variant.id}`)}>
+//         <img
+//           src={getProductImage()}
+//           alt={getVariantName()}
+//           className="img-fluid mt-4"
+//           style={{ maxHeight: "100%", objectFit: "contain" }}
+//           onError={(e) => {
+//             e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//           }}
+//         />
+//         {discount > 0 && (
+//           <span className="badge bg-danger position-absolute top-0 end-0 m-2">
+//             {discount}% OFF
+//           </span>
+//         )}
+//       </div>
+
+//       <div className="card-body d-flex flex-column p-3">
+//         <h6 className="line-clamp-2 mb-2" style={{ cursor: "pointer", minHeight: "30px" }}
+//             onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}>
+//           {getVariantName()}
+//         </h6>
+        
+//         <div className="d-flex justify-content-between align-items-center mb-2">
+//           <small className="text-muted">{product.brand || "No Brand"}</small>
+//           <span className={`badge ${variant.is_active ? 'bg-success' : 'bg-danger'}`}>
+//             {variant.is_active ? 'Active' : 'Inactive'}
+//           </span>
+//         </div>
+        
+//         {/* Variant attributes */}
+//         {getVariantDisplay() && (
+//           <small className="text-info mb-2 d-block">
+//             {getVariantDisplay()}
+//           </small>
+//         )}
+
+//         {/* Stock status */}
+//         <small className={`mb-2 ${variant.stock > 0 ? "text-success" : "text-danger"}`}>
+//           {variant.stock > 0 ? `In Stock (${variant.stock})` : "Out of Stock"}
+//         </small>
+
+//         {/* Verification Status */}
+//         <small className={`badge mb-2 ${variant.verification_status === 'verified' ? 'bg-success' : variant.verification_status === 'rejected' ? 'bg-danger' : 'bg-warning'}`}>
+//           {variant.verification_status || 'pending'}
+//         </small>
+
+//         {/* Price Section */}
+//         <div className="mt-auto mb-3">
+//           <div className="d-flex align-items-center gap-2">
+//             <strong className="h5 mb-0">₹{parseFloat(variant.selling_price).toFixed(2)}</strong>
+//             {parseFloat(variant.mrp) > parseFloat(variant.selling_price) && (
+//               <small className="text-muted text-decoration-line-through">
+//                 ₹{parseFloat(variant.mrp).toFixed(2)}
+//               </small>
+//             )}
+//           </div>
+//         </div>
+
+//         {/* Action Buttons - Moved above the main buttons */}
+//         <div className="mb-3">
+//           <div className="btn-group w-100" role="group">
+//             <button 
+//               className="btn btn-sm btn-outline-primary flex-fill"
+//               onClick={(e) => {
+//                 e.stopPropagation();
+//                 onEditProduct(product);
+//               }}
+//               title="Edit Product"
+//             >
+//               <Edit size={14} /> Product
+//             </button>
+//             <button 
+//               className="btn btn-sm btn-outline-info flex-fill"
+//               onClick={(e) => {
+//                 e.stopPropagation();
+//                 onEditVariant(product, variant);
+//               }}
+//               title="Edit Variant"
+//             >
+//               <Package size={14} /> Variant
+//             </button>
+//             <button 
+//               className="btn btn-sm btn-outline-warning flex-fill"
+//               onClick={(e) => {
+//                 e.stopPropagation();
+//                 onManageMedia(product, variant);
+//               }}
+//               title="Manage Media"
+//             >
+//               <ImageIcon size={14} /> Media
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* View Details and Add to Cart in one row */}
+//         <div className="d-grid gap-2" style={{ gridTemplateColumns: '1fr 1fr' }}>
+//           {/* VIEW DETAILS BUTTON */}
+//           <button 
+//             className="btn text-white" 
+//             style={{ background: "#6c757d", fontSize: "14px" }}
+//             onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}
+//           >
+//             <Eye size={14} /> Details
+//           </button>
+
+//           {/* ADD TO CART BUTTON */}
+//           <button 
+//             className="btn text-white" 
+//             style={{ background: "#273c75", fontSize: "14px" }}
+//             onClick={(e) => {
+//               e.stopPropagation();
+//               console.log("Add to cart:", variant.id, variant.sku);
+//             }}
+//             disabled={variant.stock <= 0}
+//           >
+//             {variant.stock > 0 ? "Add to Cart" : "Out of Stock"}
+//           </button>
+//         </div>
+
+//         {/* PAYOUT BUTTON - Full width below the two buttons */}
+//         <button 
+//           className="btn w-100 text-white mt-2" 
+//           style={{ background: "#273c75", fontSize: "14px" }}
+//           onClick={(e) => {
+//             e.stopPropagation();
+//             console.log("Payout:", variant.id, variant.sku);
+//           }}
+//         >
+//           PAYOUT
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+
+/* ================= PRODUCT CARD COMPONENT ================= */
 const ProductCard = ({ 
   product, 
   variant, 
@@ -866,10 +1101,19 @@ const ProductCard = ({
           {getVariantName()}
         </h6>
         
+        {/* Brand and Active Status in one row */}
         <div className="d-flex justify-content-between align-items-center mb-2">
           <small className="text-muted">{product.brand || "No Brand"}</small>
           <span className={`badge ${variant.is_active ? 'bg-success' : 'bg-danger'}`}>
             {variant.is_active ? 'Active' : 'Inactive'}
+          </span>
+        </div>
+        
+        {/* Verification Status - Now in its own row similar to above */}
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          <small className="text-muted">Verification</small>
+          <span className={`badge ${variant.verification_status === 'verified' ? 'bg-success' : variant.verification_status === 'rejected' ? 'bg-danger' : 'bg-warning'}`}>
+            {variant.verification_status ? variant.verification_status.charAt(0).toUpperCase() + variant.verification_status.slice(1) : 'Pending'}
           </span>
         </div>
         
@@ -883,11 +1127,6 @@ const ProductCard = ({
         {/* Stock status */}
         <small className={`mb-2 ${variant.stock > 0 ? "text-success" : "text-danger"}`}>
           {variant.stock > 0 ? `In Stock (${variant.stock})` : "Out of Stock"}
-        </small>
-
-        {/* Verification Status */}
-        <small className={`badge mb-2 ${variant.verification_status === 'verified' ? 'bg-success' : variant.verification_status === 'rejected' ? 'bg-danger' : 'bg-warning'}`}>
-          {variant.verification_status || 'pending'}
         </small>
 
         {/* Price Section */}
@@ -978,7 +1217,6 @@ const ProductCard = ({
     </div>
   );
 };
-
 /* ================= PRODUCT HEADER COMPONENT ================= */
 const ProductHeader = ({ 
   viewMode, 

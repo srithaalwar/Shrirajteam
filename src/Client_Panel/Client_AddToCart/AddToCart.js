@@ -1,13 +1,12 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import ClientNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
-import { baseurl } from '../../BaseURL/BaseURL';
+import AgentNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
+import { baseurl, redirecturl } from '../../BaseURL/BaseURL';
 import "./AddToCart.css";
 import { FaTrash, FaMinus, FaPlus, FaCreditCard, FaArrowLeft, FaShoppingCart } from "react-icons/fa";
 
-function ClientCart() {
+function AgentCart() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState(false);
@@ -16,6 +15,10 @@ function ClientCart() {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [updatingItem, setUpdatingItem] = useState(null);
   const [removingItem, setRemovingItem] = useState(null);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [merchantOrderId, setMerchantOrderId] = useState(null);
+  const [paymentUrl, setPaymentUrl] = useState(null);
+  const hasPostedStatus = useRef(false);
   
   const navigate = useNavigate();
   const userId = localStorage.getItem("user_id");
@@ -60,6 +63,53 @@ function ClientCart() {
   useEffect(() => {
     fetchCartItems();
   }, [userId]);
+
+  // Handle payment confirmation on component mount
+  useEffect(() => {
+    const merchant_order_id = localStorage.getItem("merchant_order_id");
+    
+    const confirmCartPayment = async () => {
+      if (hasPostedStatus.current || !merchant_order_id) return;
+      
+      try {
+        hasPostedStatus.current = true;
+        
+        const response = await axios.post(
+          `${baseurl}/product/confirm-payment/`,
+          {
+            merchant_order_id: merchant_order_id
+          }
+        );
+        
+        console.log("Payment confirmation response:", response.data);
+        
+        // Clear storage after successful confirmation
+        localStorage.removeItem("merchant_order_id");
+        localStorage.removeItem("order_id");
+        localStorage.removeItem("payment_amount");
+        
+        // Refresh cart data
+        await fetchCartItems();
+        
+        showSnackbar("Payment confirmed successfully!", "success");
+        
+        // Optionally redirect to success page
+        setTimeout(() => {
+          navigate("/client-transactions");
+        }, 2000);
+        
+      } catch (error) {
+        console.error("Error confirming payment:", error);
+        hasPostedStatus.current = false; // Allow retry
+        showSnackbar(
+          error.response?.data?.message || "Payment confirmation failed",
+          "error"
+        );
+      }
+    };
+    
+    confirmCartPayment();
+  }, []);
 
   // Update quantity
   const handleQuantityChange = async (cartItemId, newQuantity) => {
@@ -145,6 +195,11 @@ function ClientCart() {
     return calculateSubtotal() + calculateTax();
   };
 
+  // Convert to paise (₹1 = 100 paise)
+  const convertToPaise = (amount) => {
+    return Math.round(amount * 100);
+  };
+
   // Initiate Payment
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
@@ -159,41 +214,137 @@ function ClientCart() {
 
     setPaymentLoading(true);
     try {
-      // Create order first
-      const orderResponse = await axios.post(`${baseurl}/orders/`, {
-        user: parseInt(userId),
-        items: cartItems.map(item => ({
-          variant: item.variant,
-          quantity: item.quantity,
-          price: parseFloat(item.variant_details.selling_price)
-        }))
+      const totalAmount = calculateTotal();
+
+      console.log("Initiating payment with:", {
+        user_id: parseInt(userId),
+        redirect_url: `${redirecturl}/client-transactions`,      
+        amount: totalAmount
       });
 
-      console.log("Order created:", orderResponse.data);
-      
-      // Initiate payment
-      const paymentResponse = await axios.post(`${baseurl}/payment/initiate/`, {
-        order_id: orderResponse.data.id,
-        amount: calculateTotal(),
-        user_id: parseInt(userId)
-      });
+      // Initiate payment with new API endpoint and payload
+      const paymentResponse = await axios.post(
+        `${baseurl}/product/initiate-payment/`,
+        {
+          user_id: parseInt(userId),
+          redirect_url: `${redirecturl}/client-transactions`,  
+          amount: totalAmount  // Send amount in rupees
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
 
       console.log("Payment response:", paymentResponse.data);
 
-      if (paymentResponse.data && paymentResponse.data.payment_url) {
-        // Redirect to payment gateway
-        window.location.href = paymentResponse.data.payment_url;
+      if (paymentResponse.data) {
+        const orderId = paymentResponse.data.merchant_order_id;
+        setMerchantOrderId(orderId);
+        
+        // Check if payment_url is returned
+        if (paymentResponse.data.payment_url) {
+          // If payment_url is provided, redirect directly
+          setPaymentUrl(paymentResponse.data.payment_url);
+          
+          // Save payment info to localStorage for confirmation later
+          localStorage.setItem('merchant_order_id', orderId);
+          localStorage.setItem('order_id', paymentResponse.data.order_id);
+          localStorage.setItem('payment_amount', totalAmount.toString());
+          
+          // Redirect to payment gateway
+          window.location.href = paymentResponse.data.payment_url;
+        } else {
+          // If no payment_url, show confirmation dialog
+          setConfirmDialogOpen(true);
+          
+          // Store merchant_order_id for later confirmation
+          localStorage.setItem("merchant_order_id", orderId);
+        }
+        
       } else {
-        showSnackbar("Payment initialization failed", "error");
+        showSnackbar("Failed to initiate payment. Please try again.", "error");
       }
     } catch (error) {
       console.error("Payment initiation error:", error);
       showSnackbar(
-        error.response?.data?.message || "Failed to initiate payment",
+        error.response?.data?.message || error.response?.data?.detail || "Failed to initiate payment",
         "error"
       );
     } finally {
       setPaymentLoading(false);
+    }
+  };
+
+  // Confirm Payment (when no payment_url is provided)
+  const handleConfirmPayment = async () => {
+    if (!merchantOrderId) {
+      showSnackbar("Payment order ID not found", "error");
+      return;
+    }
+
+    setPaymentLoading(true);
+    try {
+      // Confirm payment API call
+      const response = await axios.post(
+        `${baseurl}/product/confirm-payment/`,
+        {
+          merchant_order_id: merchantOrderId
+        }
+      );
+
+      console.log("Payment confirmation response:", response.data);
+
+      if (response.data) {
+        // Handle successful payment response
+        showSnackbar("Payment successful!", "success");
+        setConfirmDialogOpen(false);
+        setMerchantOrderId(null);
+        
+        // Clear storage
+        localStorage.removeItem('merchant_order_id');
+        localStorage.removeItem('order_id');
+        localStorage.removeItem('payment_amount');
+        
+        // Clear cart after successful payment
+        await clearCartAfterPayment();
+        
+        // Redirect to success page
+        setTimeout(() => {
+          navigate("/client-transactions");
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Payment confirmation error:", error);
+      showSnackbar(
+        error.response?.data?.message || "Payment failed. Please try again.",
+        "error"
+      );
+    } finally {
+      setPaymentLoading(false);
+      setConfirmDialogOpen(false);
+    }
+  };
+
+  // Clear cart after successful payment
+  const clearCartAfterPayment = async () => {
+    try {
+      // Delete all cart items for the user
+      const deletePromises = cartItems.map(item =>
+        axios.delete(`${baseurl}/cart/${item.id}/`)
+      );
+      await Promise.all(deletePromises);
+      
+      // Clear local cart state
+      setCartItems([]);
+      
+      // Dispatch cart update event for navbar
+      window.dispatchEvent(new Event('cartUpdated'));
+      
+      showSnackbar("Cart cleared after successful payment", "success");
+    } catch (error) {
+      console.error("Error clearing cart:", error);
     }
   };
 
@@ -210,10 +361,11 @@ function ClientCart() {
     navigate("/client-busineess-category");
   };
 
-  // Handle product click
-  // const handleProductClick = (variantId) => {
-  //   navigate(`/client-business-product-details/${variantId}`);
-  // };
+  // Handle dialog close
+  const handleDialogClose = () => {
+    setConfirmDialogOpen(false);
+    setMerchantOrderId(null);
+  };
 
   // Get product image
   const getProductImage = (item) => {
@@ -227,7 +379,7 @@ function ClientCart() {
   if (!userId) {
     return (
       <>
-        <ClientNavbar />
+        <AgentNavbar />
         <div className="agent-cart-container">
           <div className="agent-cart-empty text-center py-5">
             <div className="empty-cart-icon mb-3">
@@ -252,7 +404,7 @@ function ClientCart() {
   if (loading) {
     return (
       <>
-        <ClientNavbar />
+        <AgentNavbar />
         <div className="agent-cart-container">
           <div className="text-center py-5">
             <div className="spinner-border text-primary" role="status">
@@ -267,12 +419,73 @@ function ClientCart() {
 
   return (
     <>
-      <ClientNavbar />
+      <AgentNavbar />
       
       {/* Snackbar */}
       {snackbarOpen && (
         <div className={`agent-cart-snackbar ${snackbarSeverity}`}>
           {snackbarMessage}
+        </div>
+      )}
+
+      {/* Payment Confirmation Dialog */}
+      {confirmDialogOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Confirm Payment</h5>
+              <button 
+                type="button" 
+                className="btn-close" 
+                onClick={handleDialogClose}
+              ></button>
+            </div>
+            <div className="modal-body">
+              <p>Please confirm your payment to complete the order.</p>
+              {merchantOrderId && (
+                <div className="mt-3 p-2 bg-light rounded">
+                  <small className="text-muted">
+                    Order ID: {merchantOrderId}
+                  </small>
+                </div>
+              )}
+              <div className="mt-3 p-3 bg-light rounded">
+                <h6 className="mb-2">Order Summary</h6>
+                <div className="d-flex justify-content-between">
+                  <span>Total Items:</span>
+                  <span>{cartItems.length}</span>
+                </div>
+                <div className="d-flex justify-content-between mt-2">
+                  <span>Total Amount:</span>
+                  <span className="fw-bold">₹{calculateTotal().toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button 
+                type="button" 
+                className="btn btn-secondary" 
+                onClick={handleDialogClose}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="btn btn-primary" 
+                onClick={handleConfirmPayment}
+                disabled={paymentLoading}
+              >
+                {paymentLoading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                    Processing...
+                  </>
+                ) : (
+                  "Confirm Payment"
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -330,9 +543,7 @@ function ClientCart() {
 
                   return (
                     <div key={item.id} className="cart-item-card">
-                      <div className="cart-item-image" >
-                                              {/* <div className="cart-item-image" onClick={() => handleProductClick(item.variant)}> */}
-
+                      <div className="cart-item-image">
                         <img 
                           src={getProductImage(item)} 
                           alt={variant.sku}
@@ -344,12 +555,9 @@ function ClientCart() {
                       
                       <div className="cart-item-details">
                         <div className="item-header">
-                          <h5 className="item-title" >
+                          <h5 className="item-title">
                             {variant.sku}
                           </h5>
-                            {/* <h5 className="item-title" onClick={() => handleProductClick(item.variant)}>
-                            {variant.sku}
-                          </h5> */}
                           <button 
                             className="btn btn-danger btn-sm remove-btn"
                             onClick={() => handleRemoveItem(item.id)}
@@ -482,14 +690,6 @@ function ClientCart() {
                     Continue Shopping
                   </button>
                 </div>
-                
-                {/* <div className="secure-checkout">
-                  <div className="secure-icon">🔒</div>
-                  <div className="secure-text">
-                    <div className="secure-title">Secure Checkout</div>
-                    <div className="secure-subtitle">Your payment information is protected</div>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>
@@ -499,4 +699,4 @@ function ClientCart() {
   );
 }
 
-export default ClientCart
+export default AgentCart;

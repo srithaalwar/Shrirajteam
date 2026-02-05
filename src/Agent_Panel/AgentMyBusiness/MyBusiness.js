@@ -908,25 +908,25 @@ const BusinessList = () => {
             <div className="business-stats">
               <div className="stat-card">
                 <div className="stat-number">{businesses.length}</div>
-                <div className="stat-label">Total Businesses</div>
+                <div className="stat-label"  style={{ color: "black" }}>Total Businesses</div>
               </div>
               <div className="stat-card">
                 <div className="stat-number">
                   {businesses.filter(b => b.verification_status === 'verified').length}
                 </div>
-                <div className="stat-label">Verified</div>
+                <div className="stat-label" style={{ color: "black" }}>Verified</div>
               </div>
               <div className="stat-card">
                 <div className="stat-number">
                   {businesses.filter(b => b.is_featured).length}
                 </div>
-                <div className="stat-label">Featured</div>
+                <div className="stat-label"  style={{ color: "black" }}>Featured</div>
               </div>
               <div className="stat-card">
                 <div className="stat-number">
                   {businesses.filter(b => b.is_active).length}
                 </div>
-                <div className="stat-label">Active</div>
+                <div className="stat-label"  style={{ color: "black" }}>Active</div>
               </div>
             </div>
           </div>
