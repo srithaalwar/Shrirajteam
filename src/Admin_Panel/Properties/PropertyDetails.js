@@ -443,10 +443,7 @@ const AdminPropertyDetails = () => {
                     </a>
                   </div>
                 </div>
-                <button className="whatsapp-btn">
-                  <MessageCircle size={18} />
-                  Chat on WhatsApp
-                </button>
+            
               </div>
             )}
 
@@ -460,20 +457,20 @@ const AdminPropertyDetails = () => {
                 <Building size={16} color="#007bff" />
                 <span>Free Legal Verification</span>
               </div>
-              <div className="fact">
+              {/* <div className="fact">
                 <Key size={16} color="#ffc107" />
                 <span>Instant Visit Available</span>
-              </div>
+              </div> */}
             </div>
 
             {/* Schedule Visit */}
-            <div className="schedule-visit">
+            {/* <div className="schedule-visit">
               <h4>Schedule a Visit</h4>
               <button className="schedule-btn">
                 <Calendar size={18} />
                 Book Free Site Visit
               </button>
-            </div>
+            </div> */}
 
             {/* Loan Calculator */}
             {/* {isForSale && (

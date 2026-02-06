@@ -1861,39 +1861,34 @@ const ClientProductDetails = () => {
   const [openDetails, setOpenDetails] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [showCopyAlert, setShowCopyAlert] = useState(false); // NEW: Copy alert state
+  const [showCopyAlert, setShowCopyAlert] = useState(false);
   
   /* ================= NEW STATES FOR DYNAMIC FUNCTIONALITY ================= */
-  const [wishlist, setWishlist] = useState([]); // Array of wishlist items
+  const [wishlist, setWishlist] = useState([]);
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [isInCart, setIsInCart] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
-  const [cartItemId, setCartItemId] = useState(null); // To track existing cart item ID
-  const [cartQuantity, setCartQuantity] = useState(0); // Quantity in cart
+  const [cartItemId, setCartItemId] = useState(null);
+  const [cartQuantity, setCartQuantity] = useState(0);
   
   // Get user from localStorage
   const userId = localStorage.getItem("user_id");
 
   /* ================= SHARE FUNCTIONALITY ================= */
   const handleShareClick = () => {
-    // Construct the product URL with variant
     const currentUrl = `${window.location.origin}/product/${productId}/?variant=${variantId || selectedVariant?.id}`;
     
     navigator.clipboard.writeText(currentUrl)
       .then(() => {
-        // Show custom alert/notification
         setShowCopyAlert(true);
-        
-        // Auto-hide after 3 seconds
         setTimeout(() => {
           setShowCopyAlert(false);
         }, 3000);
       })
       .catch((err) => {
         console.error("Failed to copy URL: ", err);
-        // Fallback for browsers that don't support clipboard API
         const textArea = document.createElement("textarea");
         textArea.value = currentUrl;
         document.body.appendChild(textArea);
@@ -1905,7 +1900,6 @@ const ClientProductDetails = () => {
             setShowCopyAlert(false);
           }, 3000);
         } catch (err) {
-          // Show error message
           alert("Failed to copy URL. Please copy it manually: " + currentUrl);
         }
         document.body.removeChild(textArea);
@@ -1979,22 +1973,20 @@ const ClientProductDetails = () => {
 
     const fetchWishlist = async () => {
       try {
+        // Fetch wishlist filtered by current user
         const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
         console.log("📋 Wishlist API Response:", response.data);
         
-        // Handle paginated response - get items from results array
         const wishlistResponse = response.data;
         let wishlistItems = [];
         
         if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
-          // Get items from results array
           wishlistItems = wishlistResponse.results;
         } else if (Array.isArray(wishlistResponse)) {
-          // If response is already an array
           wishlistItems = wishlistResponse;
         }
         
-        console.log("📋 Wishlist items:", wishlistItems);
+        console.log("📋 Wishlist items for user:", wishlistItems);
         setWishlist(wishlistItems);
         
         // Check if current variant is in wishlist
@@ -2002,7 +1994,7 @@ const ClientProductDetails = () => {
           item => item.variant === selectedVariant.id
         );
         
-        console.log("📋 Is variant in wishlist:", isVariantInWishlist, "for variant:", selectedVariant.id);
+        console.log("📋 Is variant in wishlist:", isVariantInWishlist);
         setIsInWishlist(isVariantInWishlist);
         
       } catch (error) {
@@ -2023,10 +2015,10 @@ const ClientProductDetails = () => {
 
     const fetchCartItems = async () => {
       try {
-        const response = await axios.get(`${baseurl}/cart/`);
-        console.log("🛒 Cart API Response:", response.data);
+        // Fetch cart items filtered by current user
+        const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
+        console.log("🛒 Cart API Response for user:", response.data);
         
-        // Handle paginated response - get items from results array
         const cartResponse = response.data;
         let userCartItems = [];
         
@@ -2089,23 +2081,14 @@ const ClientProductDetails = () => {
     try {
       if (isInWishlist) {
         // Find wishlist item ID to delete
-        console.log("Looking for wishlist item to delete...");
-        console.log("Current wishlist:", wishlist);
-        
         const wishlistItem = wishlist.find(
           item => item.variant === selectedVariant.id && item.user === parseInt(userId)
         );
         
-        console.log("Found wishlist item to delete:", wishlistItem);
-        
         if (wishlistItem) {
-          console.log(`Deleting wishlist item ${wishlistItem.id}`);
           await axios.delete(`${baseurl}/wishlist/${wishlistItem.id}/`);
           setIsInWishlist(false);
-          
-          // Update local wishlist state
           setWishlist(prev => prev.filter(item => item.id !== wishlistItem.id));
-          
           console.log("✅ Removed from wishlist");
           alert("Removed from wishlist");
         } else {
@@ -2113,19 +2096,15 @@ const ClientProductDetails = () => {
         }
       } else {
         // Add to wishlist
-        console.log("Adding to wishlist...");
         const payload = {
           user: parseInt(userId),
           variant: selectedVariant.id
         };
-        console.log("Wishlist payload:", payload);
         
         const response = await axios.post(`${baseurl}/wishlist/`, payload);
         console.log("Wishlist POST response:", response.data);
         
         setIsInWishlist(true);
-        
-        // Add new item to local wishlist state
         setWishlist(prev => [...prev, response.data]);
         
         console.log("✅ Added to wishlist");
@@ -2175,13 +2154,10 @@ const ClientProductDetails = () => {
           variant: selectedVariant.id,
           quantity: qty
         };
-        console.log("Cart update payload:", payload);
         
         await axios.put(`${baseurl}/cart/${cartItemId}/`, payload);
         
         setCartQuantity(qty);
-        
-        // Update local cart state
         setCartItems(prev => prev.map(item => 
           item.id === cartItemId ? { ...item, quantity: qty } : item
         ));
@@ -2199,23 +2175,26 @@ const ClientProductDetails = () => {
           variant: selectedVariant.id,
           quantity: qty
         };
-        console.log("Cart POST payload:", payload);
         
         const response = await axios.post(`${baseurl}/cart/`, payload);
         console.log("Cart POST response:", response.data);
         
-        setIsInCart(true);
-        setCartItemId(response.data.id);
-        setCartQuantity(qty);
-        
-        // Add to local cart state
-        setCartItems(prev => [...prev, response.data]);
-        
-        // Dispatch cart update event for navbar
-        window.dispatchEvent(new Event('cartUpdated'));
-        
-        console.log("✅ Added to cart");
-        alert("Added to cart successfully!");
+        // Verify the response belongs to current user
+        if (String(response.data.user) === String(userId)) {
+          setIsInCart(true);
+          setCartItemId(response.data.id);
+          setCartQuantity(qty);
+          setCartItems(prev => [...prev, response.data]);
+          
+          // Dispatch cart update event for navbar
+          window.dispatchEvent(new Event('cartUpdated'));
+          
+          console.log("✅ Added to cart");
+          alert("Added to cart successfully!");
+        } else {
+          console.error("Cart item created for wrong user");
+          alert("Added to cart successfully!");
+        }
       }
     } catch (error) {
       console.error("❌ Error updating cart:", error);
@@ -2241,8 +2220,6 @@ const ClientProductDetails = () => {
       setIsInCart(false);
       setCartItemId(null);
       setCartQuantity(0);
-      
-      // Remove from local cart state
       setCartItems(prev => prev.filter(item => item.id !== cartItemId));
       
       // Dispatch cart update event for navbar
@@ -2450,13 +2427,13 @@ const ClientProductDetails = () => {
                   >
                     {cartLoading ? 'UPDATING...' : `UPDATE CART (${cartQuantity})`}
                   </button>
-                  {/* <button 
+                  <button 
                     className="cart-btn remove-cart"
                     onClick={handleRemoveFromCart}
                     disabled={cartLoading}
                   >
                     REMOVE
-                  </button> */}
+                  </button>
                 </div>
               ) : (
                 <button 
@@ -2515,9 +2492,12 @@ const ClientProductDetails = () => {
             
             {/* Show if item is already in cart */}
             {isInCart && (
-              <p className="cart-info">
-                Already in cart: {cartQuantity} item{cartQuantity !== 1 ? 's' : ''}
-              </p>
+              <div className="cart-info">
+                <p>Already in cart: {cartQuantity} item{cartQuantity !== 1 ? 's' : ''}</p>
+                <p style={{ fontSize: '12px', color: '#666' }}>
+                  Total cart items for user: {cartItems.length}
+                </p>
+              </div>
             )}
           </div>
         </div>
