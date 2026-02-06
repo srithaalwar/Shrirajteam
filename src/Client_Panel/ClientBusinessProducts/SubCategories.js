@@ -1,4 +1,547 @@
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
+// import { useParams, useNavigate } from "react-router-dom";
+// import ClientNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
+// import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
+// import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+// import {
+//   Search,
+//   X,
+//   Eye,
+//   Grid2X2,
+//   Grid3X3,
+//   LayoutList,
+//   ArrowLeft,
+//   Info
+// } from "lucide-react";
+// // import "./SubCategories.css";
+// import { baseurl } from "../../BaseURL/BaseURL";
+
+// /* ================= PRODUCT CARD COMPONENT ================= */
+// const ProductCard = ({ product, variant, baseurl }) => {
+//   const navigate = useNavigate();
+  
+//   // Get image for specific variant - UPDATED to match your payload structure
+//   const getProductImage = () => {
+//     // Check if this variant has media images
+//     if (variant.media && variant.media.length > 0) {
+//       // Use the first image from variant's media
+//       return `${baseurl}${variant.media[0].file}`;
+//     }
+    
+//     // If no media for this variant, check other variants in the product
+//     if (product.variants && product.variants.length > 0) {
+//       // Find any variant that has media
+//       const variantWithMedia = product.variants.find(v => v.media && v.media.length > 0);
+//       if (variantWithMedia && variantWithMedia.media.length > 0) {
+//         return `${baseurl}${variantWithMedia.media[0].file}`;
+//       }
+//     }
+    
+//     // Fallback to common product image when no media is available
+//     return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//   };
+
+//   // Calculate discount percentage for variant
+//   const calculateDiscount = () => {
+//     const mrp = parseFloat(variant.mrp);
+//     const sellingPrice = parseFloat(variant.selling_price);
+//     if (mrp > 0 && sellingPrice < mrp) {
+//       return Math.round(((mrp - sellingPrice) / mrp) * 100);
+//     }
+//     return 0;
+//   };
+
+//   const discount = calculateDiscount();
+  
+//   // Create variant name - UPDATED to use your actual attribute structure
+//   const getVariantName = () => {
+//     if (variant.attributes) {
+//       // Create a display string from attributes
+//       const attrDisplay = Object.values(variant.attributes).join(" ");
+//       if (attrDisplay.trim()) {
+//         return `${product.product_name} - ${attrDisplay}`;
+//       }
+//     }
+//     return product.product_name;
+//   };
+
+//   // Get variant display text from attributes
+//   const getVariantDisplay = () => {
+//     if (variant.attributes) {
+//       // For your payload example: "quantity": "500ml", "fat_content": "3.5%", "packaging": "Pouch"
+//       return Object.entries(variant.attributes)
+//         .map(([key, value]) => `${value}`)
+//         .join(" • ");
+//     }
+//     return "";
+//   };
+  
+//   return (
+//     <div className="card h-100">
+//       <div className="bg-light p-3 text-center position-relative" style={{ height: 200, cursor: "pointer" }}
+//            onClick={() => navigate(`/client-business-product-details/${product.product_id}?variant=${variant.id}`)}>
+//         <img
+//           src={getProductImage()}
+//           alt={getVariantName()}
+//           className="img-fluid"
+//           style={{ maxHeight: "100%", objectFit: "contain" }}
+//           onError={(e) => {
+//             e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//           }}
+//         />
+//         {discount > 0 && (
+//           <span className="badge bg-danger position-absolute top-0 end-0 m-2">
+//             {discount}% OFF
+//           </span>
+//         )}
+//       </div>
+
+//       <div className="card-body d-flex flex-column">
+//         <h6 className="line-clamp-2" style={{ cursor: "pointer" }}
+//             onClick={() => navigate(`/client-business-product-details/${product.product_id}/?variant=${variant.id}`)}>
+//           {getVariantName()}
+//         </h6>
+//         <small className="text-muted">{product.brand || "No Brand"}</small>
+        
+//         {/* Variant attributes */}
+//         {getVariantDisplay() && (
+//           <small className="text-info mb-2">
+//             {getVariantDisplay()}
+//           </small>
+//         )}
+
+//         <div className="mt-auto">
+//           <div className="d-flex align-items-center gap-2">
+//             <strong>₹{parseFloat(variant.selling_price).toFixed(2)}</strong>
+//             {parseFloat(variant.mrp) > parseFloat(variant.selling_price) && (
+//               <small className="text-muted text-decoration-line-through">
+//                 ₹{parseFloat(variant.mrp).toFixed(2)}
+//               </small>
+//             )}
+//           </div>
+
+//           {/* VIEW DETAILS BUTTON */}
+//           <button 
+//             className="btn w-100 mt-2 text-white" 
+//             style={{ background: "#6c757d", marginBottom: "8px" }}
+//             onClick={() => navigate(`/client-business-product-details/${product.product_id}/?variant=${variant.id}`)}
+//           >
+//             VIEW DETAILS
+//           </button>
+
+//           {/* ADD TO CART BUTTON */}
+//           {/* <button 
+//             className="btn w-100 mt-2 text-white" 
+//             style={{ background: "#273c75" }}
+//             onClick={(e) => {
+//               e.stopPropagation();
+//               // Add to cart logic here with variant.id
+//               console.log("Add to cart:", variant.id, variant.sku);
+//             }}
+//           >
+//             ADD TO CART
+//           </button> */}
+
+//           {/* View Details and Add to Cart in one row */}
+//         {/* <div className="d-grid gap-2" style={{ gridTemplateColumns: '1fr 1fr' }}>
+          
+//           <button 
+//             className="btn text-white" 
+//             style={{ background: "#6c757d", fontSize: "14px" }}
+//             onClick={() => navigate(`/client-business-product-details/${product.product_id}/?variant=${variant.id}`)}
+//           >
+//             <Eye size={14} /> Details
+//           </button>
+
+          
+//           <button 
+//             className="btn text-white" 
+//             style={{ background: "#273c75", fontSize: "14px" }}
+//             onClick={(e) => {
+//               e.stopPropagation();
+//               console.log("Add to cart:", variant.id, variant.sku);
+//             }}
+//             disabled={variant.stock <= 0}
+//           >
+//             {variant.stock > 0 ? "Add to Cart" : "Out of Stock"}
+//           </button>
+//         </div> */}
+
+//         <button 
+//             className="btn w-100 mt-2 text-white" 
+//             style={{ background: "#273c75" }}
+//             onClick={(e) => {
+//               e.stopPropagation();
+//               console.log("Add to cart:", variant.id, variant.sku);
+//             }}
+//           >
+//  <Info size={14} />PAYOUT </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// /* ================= PRODUCT HEADER COMPONENT ================= */
+// const ProductHeader = ({ viewMode, onViewModeChange, search, setSearch }) => {
+//   const views = [
+//     // { mode: "grid-2", icon: Grid2X2 },
+//     { mode: "grid-3", icon: Grid3X3 },
+//     { mode: "grid-4", icon: LayoutList },
+//   ];
+
+//   return (
+//     <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+//       <h4 className="fw-bold mb-0">Products</h4>
+
+//       <div className="d-flex align-items-center gap-2">
+//         <div className="input-group input-group-sm" style={{ width: 220 }}>
+//           <span className="input-group-text bg-transparent">
+//             <Search size={16} />
+//           </span>
+//           <input
+//             className="form-control"
+//             placeholder="Search products..."
+//             value={search}
+//             onChange={(e) => setSearch(e.target.value)}
+//           />
+//           {search && (
+//             <button className="btn btn-outline-secondary" onClick={() => setSearch("")}>
+//               <X size={14} />
+//             </button>
+//           )}
+//         </div>
+
+//         <div className="btn-group">
+//           {views.map(({ mode, icon: Icon }) => (
+//             <button
+//               key={mode}
+//               className={`btn btn-outline-secondary ${viewMode === mode ? "active" : ""}`}
+//               onClick={() => onViewModeChange(mode)}
+//             >
+//               <Icon size={16} />
+//             </button>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// /* ================= PRODUCT GRID COMPONENT ================= */
+// const ProductGrid = ({ products, viewMode, baseurl }) => {
+//   const gridClass = {
+//     // "grid-2": "row row-cols-1 row-cols-sm-2",
+//     "grid-3": "row row-cols-1 row-cols-sm-2 row-cols-md-3",
+//     "grid-4": "row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4",
+//   }[viewMode];
+
+//   return (
+//     <div className={gridClass}>
+//       {products.map((item) => (
+//         <div key={`${item.product.product_id}-${item.variant.id}`} className="col mb-4">
+//           <ProductCard 
+//             product={item.product} 
+//             variant={item.variant} 
+//             baseurl={baseurl} 
+//           />
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+// /* ================= MAIN SUBCATEGORIES COMPONENT ================= */
+// const ClientSubCategories = () => {
+//   const { id } = useParams();
+//   const navigate = useNavigate();
+
+//   const [subCategories, setSubCategories] = useState([]);
+//   const [products, setProducts] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [productsLoading, setProductsLoading] = useState(true);
+//   const [currentPage, setCurrentPage] = useState(0);
+  
+//   // Products grid states
+//   const [productsViewMode, setProductsViewMode] = useState("grid-4");
+//   const [productsSearch, setProductsSearch] = useState("");
+//   const [productsCurrentPage, setProductsCurrentPage] = useState(1);
+
+//   // Fetch subcategories
+//   useEffect(() => {
+//     setLoading(true);
+//     fetch(`${baseurl}/categories/${id}/`)
+//       .then(res => res.json())
+//       .then(data => {
+//         const filtered = (data.children || []).filter(sc => sc.is_active);
+//         setSubCategories(filtered);
+//         setCurrentPage(0);
+//         setLoading(false);
+//       })
+//       .catch(() => setLoading(false));
+//   }, [id]);
+
+//   // Fetch products for the category
+//   useEffect(() => {
+//     setProductsLoading(true);
+//     fetch(`${baseurl}/products/?category_id=${id}&variant_verification_status=verified`)
+//       .then(res => res.json())
+//       .then(data => {
+//         console.log("Products data:", data);
+        
+//         // Transform products to include each variant as a separate item
+//         const allProductItems = [];
+//         (data.results || []).forEach(product => {
+//           if (product.variants && product.variants.length > 0) {
+//             // Add each variant as a separate product item
+//             product.variants.forEach(variant => {
+//               allProductItems.push({
+//                 product: product,
+//                 variant: variant
+//               });
+//             });
+//           } else {
+//             // If no variants, add the product as is
+//             allProductItems.push({
+//               product: product,
+//               variant: {
+//                 id: product.product_id,
+//                 sku: product.product_id,
+//                 mrp: "0.00",
+//                 selling_price: "0.00",
+//                 attributes: {}
+//               }
+//             });
+//           }
+//         });
+        
+//         setProducts(allProductItems);
+//         setProductsLoading(false);
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching products:", error);
+//         setProductsLoading(false);
+//       });
+//   }, [id]);
+
+//   /* ===== Subcategories Pagination ===== */
+//   const itemsPerPage = 9;
+//   const totalPages = Math.ceil(subCategories.length / itemsPerPage);
+
+//   const startIndex = currentPage * itemsPerPage;
+//   const endIndex = startIndex + itemsPerPage;
+//   const currentSubCategories = subCategories.slice(startIndex, endIndex);
+
+//   const handleNext = () => {
+//     if (currentPage < totalPages - 1) {
+//       setCurrentPage(prev => prev + 1);
+//     }
+//   };
+
+//   const handlePrev = () => {
+//     if (currentPage > 0) {
+//       setCurrentPage(prev => prev - 1);
+//     }
+//   };
+
+//   /* ===== Products Pagination ===== */
+//   const productsItemsPerPage = {
+//     // "grid-2": 4,
+//     "grid-3": 6,
+//     "grid-4": 8,
+//   }[productsViewMode];
+
+//   // Filter products based on search
+//   const filteredProducts = products.filter((item) => {
+//     const searchTerm = productsSearch.toLowerCase();
+//     return (
+//       item.product.product_name.toLowerCase().includes(searchTerm) ||
+//       (item.product.brand && item.product.brand.toLowerCase().includes(searchTerm)) ||
+//       item.variant.sku.toLowerCase().includes(searchTerm)
+//     );
+//   });
+
+//   const productsTotalPages = Math.ceil(filteredProducts.length / productsItemsPerPage);
+
+//   const paginatedProducts = filteredProducts.slice(
+//     (productsCurrentPage - 1) * productsItemsPerPage,
+//     productsCurrentPage * productsItemsPerPage
+//   );
+
+//   // Reset products page on view/search change
+//   useEffect(() => {
+//     setProductsCurrentPage(1);
+//   }, [productsViewMode, productsSearch]);
+
+//   return (
+//     <>
+//       <ClientNavbar />
+
+//       <div className="webhome-container">
+//         {/* 🔙 BACK BUTTON */}
+//         {/* <button
+//           className="back-btn"
+//           onClick={() => navigate(-1)}
+//         >
+//           <ArrowBackIosNewIcon />
+//           <span>Back</span>
+//         </button> */}
+
+//         <div class="d-inline-flex">
+//           <button
+//           className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
+//           onClick={() => navigate(-1)}
+//         >
+//           <ArrowLeft size={16} /> Back
+//         </button>
+
+//         <h2 className="section-title-head mt-2">&nbsp;&nbsp;Sub Categories</h2>
+
+//         </div>
+
+        
+
+//         {loading ? (
+//           <p>Loading subcategories...</p>
+//         ) : subCategories.length === 0 ? (
+//           <p></p>
+//         ) : (
+//           <div className="categories-wrapper">
+//             {/* LEFT ARROW */}
+//             <button
+//               className={`category-arrow ${currentPage === 0 ? "disabled" : ""}`}
+//               onClick={handlePrev}
+//               disabled={currentPage === 0}
+//             >
+//               ‹
+//             </button>
+
+//             {/* SUB CATEGORY GRID */}
+//             <div className="categories-row">
+//               {currentSubCategories.map(sub => (
+//                 <div
+//                   className="category-item"
+//                   key={sub.category_id}
+//                   onClick={() => navigate(`/client-subcategory/${sub.category_id}`)}
+//                 >
+//                   <div className="category-icon">
+//                     <BusinessCenterIcon />
+//                   </div>
+//                   <p>{sub.name}</p>
+//                 </div>
+//               ))}
+//             </div>
+
+//             {/* RIGHT ARROW */}
+//             <button
+//               className={`category-arrow ${
+//                 currentPage === totalPages - 1 ? "disabled" : ""
+//               }`}
+//               onClick={handleNext}
+//               disabled={currentPage === totalPages - 1}
+//             >
+//               ›
+//             </button>
+//           </div>
+//         )}
+
+//         {/* SUBCATEGORIES DOTS */}
+//         {totalPages > 1 && (
+//           <div className="category-dots">
+//             {Array.from({ length: totalPages }).map((_, index) => (
+//               <span
+//                 key={index}
+//                 className={`category-dot ${
+//                   index === currentPage ? "active" : ""
+//                 }`}
+//                 onClick={() => setCurrentPage(index)}
+//               ></span>
+//             ))}
+//           </div>
+//         )}
+
+//         {/* PRODUCTS SECTION */}
+//         <div className="products-section mt-5 pt-4 border-top">
+//           <ProductHeader
+//             viewMode={productsViewMode}
+//             onViewModeChange={setProductsViewMode}
+//             search={productsSearch}
+//             setSearch={setProductsSearch}
+//           />
+
+//           {productsLoading ? (
+//             <div className="text-center py-5">
+//               <div className="spinner-border text-primary" role="status">
+//                 <span className="visually-hidden">Loading...</span>
+//               </div>
+//               <p className="mt-2">Loading products...</p>
+//             </div>
+//           ) : filteredProducts.length === 0 ? (
+//             <div className="text-center py-5">
+//               <h5>No products found</h5>
+//               <p className="text-muted">Try changing your search or check back later.</p>
+//             </div>
+//           ) : (
+//             <>
+//               <ProductGrid 
+//                 products={paginatedProducts} 
+//                 viewMode={productsViewMode} 
+//                 baseurl={baseurl}
+//               />
+
+//               {/* PRODUCTS PAGINATION */}
+//               {productsTotalPages > 1 && (
+//                 <nav className="mt-5">
+//                   <ul className="pagination justify-content-center">
+//                     <li className={`page-item ${productsCurrentPage === 1 && "disabled"}`}>
+//                       <button
+//                         className="page-link"
+//                         onClick={() => setProductsCurrentPage(p => p - 1)}
+//                         disabled={productsCurrentPage === 1}
+//                       >
+//                         Previous
+//                       </button>
+//                     </li>
+
+//                     {Array.from({ length: productsTotalPages }).map((_, i) => (
+//                       <li
+//                         key={i}
+//                         className={`page-item ${productsCurrentPage === i + 1 && "active"}`}
+//                       >
+//                         <button
+//                           className="page-link"
+//                           onClick={() => setProductsCurrentPage(i + 1)}
+//                         >
+//                           {i + 1}
+//                         </button>
+//                       </li>
+//                     ))}
+
+//                     <li className={`page-item ${productsCurrentPage === productsTotalPages && "disabled"}`}>
+//                       <button
+//                         className="page-link"
+//                         onClick={() => setProductsCurrentPage(p => p + 1)}
+//                         disabled={productsCurrentPage === productsTotalPages}
+//                       >
+//                         Next
+//                       </button>
+//                     </li>
+//                   </ul>
+//                 </nav>
+//               )}
+//             </>
+//           )}
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default ClientSubCategories;
+
+
+
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ClientNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
@@ -7,41 +550,246 @@ import {
   Search,
   X,
   Eye,
-  Grid2X2,
   Grid3X3,
   LayoutList,
   ArrowLeft,
-  Info
+  Info,
+  ChevronUp,
+  ChevronDown,
+  Tag,
+  DollarSign
 } from "lucide-react";
-// import "./SubCategories.css";
 import { baseurl } from "../../BaseURL/BaseURL";
 
-/* ================= PRODUCT CARD COMPONENT ================= */
-const ProductCard = ({ product, variant, baseurl }) => {
-  const navigate = useNavigate();
+// Custom hook to detect clicks outside of component
+const useClickOutside = (ref, callback) => {
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        callback();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [ref, callback]);
+};
+
+// ============= Commission Tooltip Component =============
+const CommissionTooltip = ({ show, commissions, distributionCommission }) => {
+  if (!show || !commissions || commissions.length === 0) return null;
+
+  // Calculate commission amounts based on distribution_commission
+  const calculateCommissions = () => {
+    const commissionAmount = parseFloat(distributionCommission) || 0;
+    return commissions.map(commission => ({
+      level: commission.level_no,
+      percentage: parseFloat(commission.percentage),
+      amount: (commissionAmount * parseFloat(commission.percentage)) / 100
+    }));
+  };
+
+  const commissionList = calculateCommissions();
+  const totalCommission = commissionList.reduce((sum, comm) => sum + comm.amount, 0);
+
+  return (
+    <div className="commission-tooltip">
+      <div className="commission-tooltip-content">
+        <div className="commission-body">
+          {commissionList.map((commission) => (
+            <div key={commission.level} className="d-flex justify-content-between align-items-center mb-2">
+              <span className="fw-medium">Team {commission.level}:&nbsp;₹{commission.amount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ================= FILTER COMPONENTS ================= */
+const FilterDropdown = ({ 
+  title, 
+  icon: Icon, 
+  options, 
+  selectedOptions, 
+  onOptionToggle,
+  type = "price",
+  isOpen,
+  onToggle
+}) => {
+  const dropdownRef = useRef(null);
   
-  // Get image for specific variant - UPDATED to match your payload structure
+  // Close dropdown when clicking outside
+  useClickOutside(dropdownRef, () => {
+    if (isOpen) onToggle();
+  });
+
+  const handleOptionClick = (option) => {
+    onOptionToggle(option);
+  };
+
+  const clearSelection = (e) => {
+    e.stopPropagation();
+    selectedOptions.forEach(option => onOptionToggle(option));
+  };
+
+  return (
+    <div className="position-relative" ref={dropdownRef}>
+      <button
+        className="btn btn-outline-secondary d-flex align-items-center gap-2"
+        onClick={onToggle}
+        style={{ 
+          borderColor: selectedOptions.length > 0 ? '#273c75' : '#dee2e6',
+          backgroundColor: selectedOptions.length > 0 ? '#f0f4ff' : 'transparent'
+        }}
+      >
+        {Icon && <Icon size={16} />}
+        <span>{title}</span>
+        {selectedOptions.length > 0 && (
+          <span className="badge bg-primary ms-1">{selectedOptions.length}</span>
+        )}
+        {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+      </button>
+
+      {isOpen && (
+        <div className="position-absolute bg-white border rounded shadow mt-1 p-2"
+             style={{ 
+               minWidth: '200px', 
+               zIndex: 1000,
+               left: 0,
+               top: '100%'
+             }}>
+          <div className="d-flex justify-content-between align-items-center mb-2 p-2">
+            <small className="fw-semibold text-muted">Select {type}</small>
+            {selectedOptions.length > 0 && (
+              <button 
+                className="btn btn-sm btn-link text-decoration-none p-0"
+                onClick={clearSelection}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          <div className="overflow-auto" style={{ maxHeight: '200px' }}>
+            {options.map((option) => (
+              <div
+                key={option.value}
+                className="d-flex align-items-center gap-2 p-2 hover-bg-light rounded"
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleOptionClick(option.value)}
+              >
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={selectedOptions.includes(option.value)}
+                  readOnly
+                />
+                <span className="small">{option.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ================= ACTIVE FILTERS BADGES ================= */
+const ActiveFilters = ({ 
+  selectedPriceRanges, 
+  selectedDiscountRanges, 
+  priceOptions, 
+  discountOptions,
+  onRemovePriceFilter,
+  onRemoveDiscountFilter,
+  onClearAll
+}) => {
+  const hasActiveFilters = selectedPriceRanges.length > 0 || selectedDiscountRanges.length > 0;
+  
+  if (!hasActiveFilters) return null;
+
+  const getLabelFromValue = (value, options) => {
+    const option = options.find(opt => opt.value === value);
+    return option ? option.label : value;
+  };
+
+  return (
+    <div className="d-flex align-items-center gap-2 mt-2 flex-wrap">
+      <small className="fw-semibold text-muted me-1">Active:</small>
+      
+      {selectedPriceRanges.map(range => (
+        <span key={range} className="badge bg-primary-subtle text-primary border border-primary d-flex align-items-center">
+          <DollarSign size={12} className="me-1" />
+          {getLabelFromValue(range, priceOptions)}
+          <button 
+            onClick={() => onRemovePriceFilter(range)} 
+            className="btn-close btn-close-sm ms-1"
+            style={{ fontSize: '0.5rem' }}
+          ></button>
+        </span>
+      ))}
+      
+      {selectedDiscountRanges.map(range => (
+        <span key={range} className="badge bg-success-subtle text-success border border-success d-flex align-items-center">
+          <Tag size={12} className="me-1" />
+          {getLabelFromValue(range, discountOptions)}
+          <button 
+            onClick={() => onRemoveDiscountFilter(range)} 
+            className="btn-close btn-close-sm ms-1"
+            style={{ fontSize: '0.5rem' }}
+          ></button>
+        </span>
+      ))}
+      
+      <button 
+        onClick={onClearAll}
+        className="btn btn-sm btn-outline-secondary ms-2"
+        style={{ fontSize: '0.75rem', padding: '0.125rem 0.5rem' }}
+      >
+        Clear All
+      </button>
+    </div>
+  );
+};
+
+/* ================= PRODUCT CARD COMPONENT ================= */
+const ProductCard = ({ product, variant, baseurl, commissionData }) => {
+  const navigate = useNavigate();
+  const [showCommissionTooltip, setShowCommissionTooltip] = useState(false);
+  
+  // Get distribution commission from variant
+  const getDistributionCommission = () => {
+    return parseFloat(variant.distribution_commission || 0);
+  };
+
+  const distributionCommission = getDistributionCommission();
+
+  // Handle mouse enter for commission tooltip
+  const handleMouseEnter = () => {
+    setShowCommissionTooltip(true);
+  };
+
+  // Handle mouse leave for commission tooltip
+  const handleMouseLeave = () => {
+    setShowCommissionTooltip(false);
+  };
+
   const getProductImage = () => {
-    // Check if this variant has media images
     if (variant.media && variant.media.length > 0) {
-      // Use the first image from variant's media
       return `${baseurl}${variant.media[0].file}`;
     }
     
-    // If no media for this variant, check other variants in the product
     if (product.variants && product.variants.length > 0) {
-      // Find any variant that has media
       const variantWithMedia = product.variants.find(v => v.media && v.media.length > 0);
       if (variantWithMedia && variantWithMedia.media.length > 0) {
         return `${baseurl}${variantWithMedia.media[0].file}`;
       }
     }
     
-    // Fallback to common product image when no media is available
     return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
   };
 
-  // Calculate discount percentage for variant
   const calculateDiscount = () => {
     const mrp = parseFloat(variant.mrp);
     const sellingPrice = parseFloat(variant.selling_price);
@@ -53,11 +801,11 @@ const ProductCard = ({ product, variant, baseurl }) => {
 
   const discount = calculateDiscount();
   
-  // Create variant name - UPDATED to use your actual attribute structure
   const getVariantName = () => {
     if (variant.attributes) {
-      // Create a display string from attributes
-      const attrDisplay = Object.values(variant.attributes).join(" ");
+      const attrDisplay = Object.values(variant.attributes)
+        .filter(val => typeof val === 'string' || typeof val === 'number')
+        .join(" ");
       if (attrDisplay.trim()) {
         return `${product.product_name} - ${attrDisplay}`;
       }
@@ -65,10 +813,8 @@ const ProductCard = ({ product, variant, baseurl }) => {
     return product.product_name;
   };
 
-  // Get variant display text from attributes
   const getVariantDisplay = () => {
     if (variant.attributes) {
-      // For your payload example: "quantity": "500ml", "fat_content": "3.5%", "packaging": "Pouch"
       return Object.entries(variant.attributes)
         .map(([key, value]) => `${value}`)
         .join(" • ");
@@ -77,7 +823,7 @@ const ProductCard = ({ product, variant, baseurl }) => {
   };
   
   return (
-    <div className="card h-100">
+    <div className="card h-100" style={{ zIndex: 999 }}>
       <div className="bg-light p-3 text-center position-relative" style={{ height: 200, cursor: "pointer" }}
            onClick={() => navigate(`/client-business-product-details/${product.product_id}?variant=${variant.id}`)}>
         <img
@@ -103,7 +849,6 @@ const ProductCard = ({ product, variant, baseurl }) => {
         </h6>
         <small className="text-muted">{product.brand || "No Brand"}</small>
         
-        {/* Variant attributes */}
         {getVariantDisplay() && (
           <small className="text-info mb-2">
             {getVariantDisplay()}
@@ -129,53 +874,26 @@ const ProductCard = ({ product, variant, baseurl }) => {
             VIEW DETAILS
           </button>
 
-          {/* ADD TO CART BUTTON */}
-          {/* <button 
-            className="btn w-100 mt-2 text-white" 
-            style={{ background: "#273c75" }}
-            onClick={(e) => {
-              e.stopPropagation();
-              // Add to cart logic here with variant.id
-              console.log("Add to cart:", variant.id, variant.sku);
-            }}
-          >
-            ADD TO CART
-          </button> */}
-
-          {/* View Details and Add to Cart in one row */}
-        {/* <div className="d-grid gap-2" style={{ gridTemplateColumns: '1fr 1fr' }}>
-          
-          <button 
-            className="btn text-white" 
-            style={{ background: "#6c757d", fontSize: "14px" }}
-            onClick={() => navigate(`/client-business-product-details/${product.product_id}/?variant=${variant.id}`)}
-          >
-            <Eye size={14} /> Details
-          </button>
-
-          
-          <button 
-            className="btn text-white" 
-            style={{ background: "#273c75", fontSize: "14px" }}
-            onClick={(e) => {
-              e.stopPropagation();
-              console.log("Add to cart:", variant.id, variant.sku);
-            }}
-            disabled={variant.stock <= 0}
-          >
-            {variant.stock > 0 ? "Add to Cart" : "Out of Stock"}
-          </button>
-        </div> */}
-
-        <button 
-            className="btn w-100 mt-2 text-white" 
-            style={{ background: "#273c75" }}
-            onClick={(e) => {
-              e.stopPropagation();
-              console.log("Add to cart:", variant.id, variant.sku);
-            }}
-          >
- <Info size={14} />PAYOUT </button>
+          {/* PAYOUT BUTTON with Commission Tooltip */}
+          <div className="position-relative mt-2">
+            <button 
+              className="btn w-100 text-white d-flex align-items-center justify-content-center gap-2"
+              style={{ background: "#273c75" }}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onFocus={handleMouseEnter}
+              onBlur={handleMouseLeave}
+            >
+              <Info size={14} />
+              PAYOUT
+            </button>
+            
+            <CommissionTooltip 
+              show={showCommissionTooltip}
+              commissions={commissionData}
+              distributionCommission={distributionCommission}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -183,55 +901,135 @@ const ProductCard = ({ product, variant, baseurl }) => {
 };
 
 /* ================= PRODUCT HEADER COMPONENT ================= */
-const ProductHeader = ({ viewMode, onViewModeChange, search, setSearch }) => {
+const ProductHeader = ({ 
+  viewMode, 
+  onViewModeChange, 
+  search, 
+  setSearch,
+  selectedPriceRanges,
+  selectedDiscountRanges,
+  onPriceRangeToggle,
+  onDiscountRangeToggle,
+  onRemovePriceFilter,
+  onRemoveDiscountFilter,
+  onClearAllFilters
+}) => {
+  const [openDropdown, setOpenDropdown] = useState(null); // 'price', 'discount', or null
+
   const views = [
-    // { mode: "grid-2", icon: Grid2X2 },
     { mode: "grid-3", icon: Grid3X3 },
     { mode: "grid-4", icon: LayoutList },
   ];
 
+  const priceOptions = [
+    { value: "0-500", label: "Under ₹500" },
+    { value: "500-1000", label: "₹500 - ₹1000" },
+    { value: "1000-5000", label: "₹1000 - ₹5000" },
+    { value: "5000-10000", label: "₹5000 - ₹10000" },
+    { value: "10000+", label: "Over ₹10000" },
+  ];
+
+  const discountOptions = [
+    { value: "0-10", label: "0-10%" },
+    { value: "10-20", label: "10-20%" },
+    { value: "20-30", label: "20-30%" },
+    { value: "30-40", label: "30-40%" },
+    { value: "40-50", label: "40-50%" },
+    { value: "50-60", label: "50-60%" },
+    { value: "60+", label: "60%+" },
+  ];
+
+  const handlePriceToggle = () => {
+    setOpenDropdown(openDropdown === 'price' ? null : 'price');
+  };
+
+  const handleDiscountToggle = () => {
+    setOpenDropdown(openDropdown === 'discount' ? null : 'discount');
+  };
+
+  const handleOptionClick = (type, option) => {
+    if (type === 'price') {
+      onPriceRangeToggle(option);
+    } else {
+      onDiscountRangeToggle(option);
+    }
+  };
+
   return (
-    <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-      <h4 className="fw-bold mb-0">Products</h4>
+    <>
+      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <h4 className="fw-bold mb-0">Products</h4>
 
-      <div className="d-flex align-items-center gap-2">
-        <div className="input-group input-group-sm" style={{ width: 220 }}>
-          <span className="input-group-text bg-transparent">
-            <Search size={16} />
-          </span>
-          <input
-            className="form-control"
-            placeholder="Search products..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+        <div className="d-flex align-items-center gap-2 flex-wrap">
+          <div className="input-group input-group-sm" style={{ width: 220 }}>
+            <span className="input-group-text bg-transparent">
+              <Search size={16} />
+            </span>
+            <input
+              className="form-control"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search && (
+              <button className="btn btn-outline-secondary" onClick={() => setSearch("")}>
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+          <FilterDropdown
+            title="Price"
+            icon={DollarSign}
+            options={priceOptions}
+            selectedOptions={selectedPriceRanges}
+            onOptionToggle={(option) => handleOptionClick('price', option)}
+            isOpen={openDropdown === 'price'}
+            onToggle={handlePriceToggle}
+            type="price"
           />
-          {search && (
-            <button className="btn btn-outline-secondary" onClick={() => setSearch("")}>
-              <X size={14} />
-            </button>
-          )}
-        </div>
 
-        <div className="btn-group">
-          {views.map(({ mode, icon: Icon }) => (
-            <button
-              key={mode}
-              className={`btn btn-outline-secondary ${viewMode === mode ? "active" : ""}`}
-              onClick={() => onViewModeChange(mode)}
-            >
-              <Icon size={16} />
-            </button>
-          ))}
+          <FilterDropdown
+            title="Discount"
+            icon={Tag}
+            options={discountOptions}
+            selectedOptions={selectedDiscountRanges}
+            onOptionToggle={(option) => handleOptionClick('discount', option)}
+            isOpen={openDropdown === 'discount'}
+            onToggle={handleDiscountToggle}
+            type="discount"
+          />
+
+          <div className="btn-group">
+            {views.map(({ mode, icon: Icon }) => (
+              <button
+                key={mode}
+                className={`btn btn-outline-secondary ${viewMode === mode ? "active" : ""}`}
+                onClick={() => onViewModeChange(mode)}
+              >
+                <Icon size={16} />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+
+      <ActiveFilters
+        selectedPriceRanges={selectedPriceRanges}
+        selectedDiscountRanges={selectedDiscountRanges}
+        priceOptions={priceOptions}
+        discountOptions={discountOptions}
+        onRemovePriceFilter={onRemovePriceFilter}
+        onRemoveDiscountFilter={onRemoveDiscountFilter}
+        onClearAll={onClearAllFilters}
+      />
+    </>
   );
 };
 
 /* ================= PRODUCT GRID COMPONENT ================= */
-const ProductGrid = ({ products, viewMode, baseurl }) => {
+const ProductGrid = ({ products, viewMode, baseurl, commissionData }) => {
   const gridClass = {
-    // "grid-2": "row row-cols-1 row-cols-sm-2",
     "grid-3": "row row-cols-1 row-cols-sm-2 row-cols-md-3",
     "grid-4": "row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4",
   }[viewMode];
@@ -243,7 +1041,8 @@ const ProductGrid = ({ products, viewMode, baseurl }) => {
           <ProductCard 
             product={item.product} 
             variant={item.variant} 
-            baseurl={baseurl} 
+            baseurl={baseurl}
+            commissionData={commissionData}
           />
         </div>
       ))}
@@ -252,7 +1051,7 @@ const ProductGrid = ({ products, viewMode, baseurl }) => {
 };
 
 /* ================= MAIN SUBCATEGORIES COMPONENT ================= */
-const SubCategories = () => {
+const ClientSubCategories = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -266,6 +1065,26 @@ const SubCategories = () => {
   const [productsViewMode, setProductsViewMode] = useState("grid-4");
   const [productsSearch, setProductsSearch] = useState("");
   const [productsCurrentPage, setProductsCurrentPage] = useState(1);
+  
+  // Filter states
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+  const [selectedDiscountRanges, setSelectedDiscountRanges] = useState([]);
+  const [commissionData, setCommissionData] = useState([]);
+
+  // Fetch commission data from API
+  const fetchCommissionData = useCallback(async () => {
+    try {
+      const response = await fetch(`${baseurl}/commissions-master/`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCommissionData(data.results || []);
+    } catch (err) {
+      console.error("Error fetching commission data:", err);
+      setCommissionData([]);
+    }
+  }, []);
 
   // Fetch subcategories
   useEffect(() => {
@@ -281,48 +1100,64 @@ const SubCategories = () => {
       .catch(() => setLoading(false));
   }, [id]);
 
-  // Fetch products for the category
+  // Fetch commission data
   useEffect(() => {
+    fetchCommissionData();
+  }, [fetchCommissionData]);
+
+  // Fetch products for the category with filters
+  const fetchProducts = useCallback(async () => {
     setProductsLoading(true);
-    fetch(`${baseurl}/products/?category_id=${id}&variant_verification_status=verified`)
-      .then(res => res.json())
-      .then(data => {
-        console.log("Products data:", data);
-        
-        // Transform products to include each variant as a separate item
-        const allProductItems = [];
-        (data.results || []).forEach(product => {
-          if (product.variants && product.variants.length > 0) {
-            // Add each variant as a separate product item
-            product.variants.forEach(variant => {
-              allProductItems.push({
-                product: product,
-                variant: variant
-              });
-            });
-          } else {
-            // If no variants, add the product as is
+    
+    const params = new URLSearchParams();
+    params.append('category_id', id);
+    params.append('variant_verification_status', 'verified');
+    
+    if (productsSearch.trim()) params.append('search', productsSearch.trim());
+    
+    selectedPriceRanges.forEach(range => params.append('price_range', range));
+    selectedDiscountRanges.forEach(range => params.append('discount_range', range));
+    
+    try {
+      const response = await fetch(`${baseurl}/products/?${params.toString()}`);
+      const data = await response.json();
+      
+      // Transform products to include each variant as a separate item
+      const allProductItems = [];
+      (data.results || []).forEach(product => {
+        if (product.variants && product.variants.length > 0) {
+          product.variants.forEach(variant => {
             allProductItems.push({
               product: product,
-              variant: {
-                id: product.product_id,
-                sku: product.product_id,
-                mrp: "0.00",
-                selling_price: "0.00",
-                attributes: {}
-              }
+              variant: variant
             });
-          }
-        });
-        
-        setProducts(allProductItems);
-        setProductsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-        setProductsLoading(false);
+          });
+        } else {
+          allProductItems.push({
+            product: product,
+            variant: {
+              id: product.product_id,
+              sku: product.product_id,
+              mrp: "0.00",
+              selling_price: "0.00",
+              attributes: {},
+              distribution_commission: "0.00"
+            }
+          });
+        }
       });
-  }, [id]);
+      
+      setProducts(allProductItems);
+      setProductsLoading(false);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setProductsLoading(false);
+    }
+  }, [id, productsSearch, selectedPriceRanges, selectedDiscountRanges]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   /* ===== Subcategories Pagination ===== */
   const itemsPerPage = 9;
@@ -346,12 +1181,11 @@ const SubCategories = () => {
 
   /* ===== Products Pagination ===== */
   const productsItemsPerPage = {
-    // "grid-2": 4,
     "grid-3": 6,
     "grid-4": 8,
   }[productsViewMode];
 
-  // Filter products based on search
+  // Filter products based on search (client-side filtering if needed)
   const filteredProducts = products.filter((item) => {
     const searchTerm = productsSearch.toLowerCase();
     return (
@@ -368,96 +1202,117 @@ const SubCategories = () => {
     productsCurrentPage * productsItemsPerPage
   );
 
-  // Reset products page on view/search change
+  // Reset products page on view/search/filter change
   useEffect(() => {
     setProductsCurrentPage(1);
-  }, [productsViewMode, productsSearch]);
+  }, [productsViewMode, productsSearch, selectedPriceRanges, selectedDiscountRanges]);
+
+  // Filter handlers
+  const handlePriceRangeToggle = (range) => {
+    setSelectedPriceRanges(prev =>
+      prev.includes(range) ? prev.filter(r => r !== range) : [...prev, range]
+    );
+    setProductsCurrentPage(1);
+  };
+
+  const handleDiscountRangeToggle = (range) => {
+    setSelectedDiscountRanges(prev =>
+      prev.includes(range) ? prev.filter(r => r !== range) : [...prev, range]
+    );
+    setProductsCurrentPage(1);
+  };
+
+  const handleRemovePriceFilter = (range) => {
+    setSelectedPriceRanges(prev => prev.filter(r => r !== range));
+    setProductsCurrentPage(1);
+  };
+
+  const handleRemoveDiscountFilter = (range) => {
+    setSelectedDiscountRanges(prev => prev.filter(r => r !== range));
+    setProductsCurrentPage(1);
+  };
+
+  const handleClearAllFilters = () => {
+    setSelectedPriceRanges([]);
+    setSelectedDiscountRanges([]);
+    setProductsCurrentPage(1);
+  };
 
   return (
     <>
       <ClientNavbar />
 
-      <div className="webhome-container">
-        {/* 🔙 BACK BUTTON */}
-        {/* <button
-          className="back-btn"
-          onClick={() => navigate(-1)}
-        >
-          <ArrowBackIosNewIcon />
-          <span>Back</span>
-        </button> */}
-
-        <div class="d-inline-flex">
+      <div className="container-fluid py-4">
+        {/* Back Button and Title */}
+        <div className="d-inline-flex align-items-center mb-4">
           <button
-          className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
-          onClick={() => navigate(-1)}
-        >
-          <ArrowLeft size={16} /> Back
-        </button>
-
-        <h2 className="section-title-head mt-2">&nbsp;&nbsp;Sub Categories</h2>
-
+            className="btn btn-outline-secondary d-flex align-items-center gap-2 me-3"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft size={16} /> Back
+          </button>
+          <h2 className="section-title-head mb-0">Sub Categories</h2>
         </div>
 
-        
-
+        {/* Subcategories Section */}
         {loading ? (
           <p>Loading subcategories...</p>
         ) : subCategories.length === 0 ? (
           <p></p>
         ) : (
-          <div className="categories-wrapper">
-            {/* LEFT ARROW */}
-            <button
-              className={`category-arrow ${currentPage === 0 ? "disabled" : ""}`}
-              onClick={handlePrev}
-              disabled={currentPage === 0}
-            >
-              ‹
-            </button>
+          <>
+            <div className="categories-wrapper mb-5">
+              <button
+                className={`category-arrow ${currentPage === 0 ? "disabled" : ""}`}
+                onClick={handlePrev}
+                disabled={currentPage === 0}
+              >
+                ‹
+              </button>
 
-            {/* SUB CATEGORY GRID */}
-            <div className="categories-row">
-              {currentSubCategories.map(sub => (
-                <div
-                  className="category-item"
-                  key={sub.category_id}
-                  onClick={() => navigate(`/client-subcategory/${sub.category_id}`)}
-                >
-                  <div className="category-icon">
-                    <BusinessCenterIcon />
+              {/* SUB CATEGORY GRID */}
+              <div className="categories-row">
+                {currentSubCategories.map(sub => (
+                  <div
+                    className="category-item"
+                    key={sub.category_id}
+                    onClick={() => navigate(`/client-subcategory/${sub.category_id}`)}
+                  >
+                    <div className="category-icon">
+                      <BusinessCenterIcon />
+                    </div>
+                    <p>{sub.name}</p>
                   </div>
-                  <p>{sub.name}</p>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {/* RIGHT ARROW */}
+              <button
+                className={`category-arrow ${
+                  currentPage === totalPages - 1 ? "disabled" : ""
+                }`}
+                onClick={handleNext}
+                disabled={currentPage === totalPages - 1}
+              >
+                ›
+              </button>
             </div>
 
-            {/* RIGHT ARROW */}
-            <button
-              className={`category-arrow ${
-                currentPage === totalPages - 1 ? "disabled" : ""
-              }`}
-              onClick={handleNext}
-              disabled={currentPage === totalPages - 1}
-            >
-              ›
-            </button>
-          </div>
-        )}
-
-        {/* SUBCATEGORIES DOTS */}
-        {totalPages > 1 && (
-          <div className="category-dots">
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <span
-                key={index}
-                className={`category-dot ${
-                  index === currentPage ? "active" : ""
-                }`}
-                onClick={() => setCurrentPage(index)}
-              ></span>
-            ))}
-          </div>
+            {/* SUBCATEGORIES DOTS */}
+            {totalPages > 1 && (
+              <div className="category-dots mb-5">
+                {Array.from({ length: totalPages }).map((_, index) => (
+                  <span
+                    key={index}
+                    className={`category-dot ${
+                      index === currentPage ? "active" : ""
+                    }`}
+                    onClick={() => setCurrentPage(index)}
+                  ></span>
+                ))}
+              </div>
+            )}
+          </>
         )}
 
         {/* PRODUCTS SECTION */}
@@ -467,6 +1322,13 @@ const SubCategories = () => {
             onViewModeChange={setProductsViewMode}
             search={productsSearch}
             setSearch={setProductsSearch}
+            selectedPriceRanges={selectedPriceRanges}
+            selectedDiscountRanges={selectedDiscountRanges}
+            onPriceRangeToggle={handlePriceRangeToggle}
+            onDiscountRangeToggle={handleDiscountRangeToggle}
+            onRemovePriceFilter={handleRemovePriceFilter}
+            onRemoveDiscountFilter={handleRemoveDiscountFilter}
+            onClearAllFilters={handleClearAllFilters}
           />
 
           {productsLoading ? (
@@ -479,7 +1341,7 @@ const SubCategories = () => {
           ) : filteredProducts.length === 0 ? (
             <div className="text-center py-5">
               <h5>No products found</h5>
-              <p className="text-muted">Try changing your search or check back later.</p>
+              <p className="text-muted">Try changing your filters or check back later.</p>
             </div>
           ) : (
             <>
@@ -487,6 +1349,7 @@ const SubCategories = () => {
                 products={paginatedProducts} 
                 viewMode={productsViewMode} 
                 baseurl={baseurl}
+                commissionData={commissionData}
               />
 
               {/* PRODUCTS PAGINATION */}
@@ -537,4 +1400,4 @@ const SubCategories = () => {
   );
 };
 
-export default SubCategories;
+export default ClientSubCategories;
