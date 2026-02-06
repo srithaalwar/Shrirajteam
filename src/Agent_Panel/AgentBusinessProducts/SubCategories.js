@@ -2448,6 +2448,8 @@ const SubCategories = () => {
 
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [selectedDiscountRanges, setSelectedDiscountRanges] = useState([]);
+  // Get current user ID from localStorage
+  const currentUserId = localStorage.getItem("user_id");
 
   useEffect(() => {
     setLoading(true);
@@ -2474,7 +2476,9 @@ const SubCategories = () => {
     selectedDiscountRanges.forEach(range => params.append('discount_range', range));
     
     try {
-      const response = await fetch(`${baseurl}/products/?${params.toString()}`);
+      // const response = await fetch(`${baseurl}/products/?${params.toString()}`);
+      const response = await fetch(`${baseurl}/products/?exclude_user_id=${currentUserId}&variant_verification_status=verified&${params.toString()}`);
+      
       const data = await response.json();
       
       const allProductItems = [];

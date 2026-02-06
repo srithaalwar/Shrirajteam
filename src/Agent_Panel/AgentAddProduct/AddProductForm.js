@@ -2386,7 +2386,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
                           name="product_commission"
                           value={variant.product_commission}
                           onChange={(e) => handleVariantChange(variantIndex, e)}
-                          min="0"
+                          min=""
                           step="0.01"
                           placeholder="0.00"
                         />

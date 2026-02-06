@@ -284,7 +284,7 @@ const SubCategories = () => {
   // Fetch products for the category
   useEffect(() => {
     setProductsLoading(true);
-    fetch(`${baseurl}/products/?category_id=${id}`)
+    fetch(`${baseurl}/products/?category_id=${id}&variant_verification_status=verified`)
       .then(res => res.json())
       .then(data => {
         console.log("Products data:", data);

@@ -1416,7 +1416,7 @@ const ClientBusinessProductsCategories = () => {
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [selectedDiscountRanges, setSelectedDiscountRanges] = useState([]);
   const [commissionData, setCommissionData] = useState([]);
-
+  
   // Fetch commission data from API
   const fetchCommissionData = useCallback(async () => {
     try {
@@ -1463,7 +1463,8 @@ const ClientBusinessProductsCategories = () => {
     selectedDiscountRanges.forEach(range => params.append('discount_range', range));
     
     try {
-      const response = await fetch(`${baseurl}/products/?${params.toString()}`);
+      // const response = await fetch(`${baseurl}/products/?${params.toString()}`);
+      const response = await fetch(`${baseurl}/products/?variant_verification_status=verified&${params.toString()}`);
       const data = await response.json();
       
       const allProductItems = [];
