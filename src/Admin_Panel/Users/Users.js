@@ -562,7 +562,7 @@ const UserList = () => {
                         >
                           👁️
                         </button>
-                        <button 
+                        {/* <button 
                           onClick={() => handleEdit(user)}
                           title="Edit"
                           style={{
@@ -576,7 +576,7 @@ const UserList = () => {
                           }}
                         >
                           ✏️
-                        </button>
+                        </button> */}
                         <button 
                           onClick={() => handleDelete(user.id)}
                           title="Delete"
