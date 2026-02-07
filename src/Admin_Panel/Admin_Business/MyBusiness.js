@@ -220,11 +220,11 @@ const BusinessList = () => {
   };
 
   const handleEdit = (businessId) => {
-    navigate(`/edit-business/${businessId}`);
+    navigate(`/admin-edit-business/${businessId}`);
   };
 
   const handleView = (businessId) => {
-    navigate(`/view-business/${businessId}`);
+    navigate(`/admin-view-business/${businessId}`);
   };
 
   // New function to handle View Products navigation

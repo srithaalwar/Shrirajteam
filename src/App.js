@@ -190,6 +190,8 @@ import Contact from "./ContacUs/Contact";
 import AboutUs from './AboutUs/AboutUs'
 import Register from "./Register/Register";
 import VerifyOTP from "./Login/VerifyOTP";
+import WebsiteAddToCart from './Website_AddToCart/CartPage'
+import WebsiteCheckout  from './Website_AddToCart/CheckoutPage'
 
 import PrivacyPolicy from "./PrivacyPolicy/PrivacyPolicy";
 import FAQAccordion from "./FAQs/FAQ";
@@ -231,6 +233,8 @@ import AdminBusinessProductsDetails from "./Admin_Panel/Admin_Business/Business_
 import AdminMeetingRequests from './Admin_Panel/Admin_Meetings/MeetingRequests'
 import AdminSheduleMeetings from './Admin_Panel/Admin_Meetings/SheduleMeeting'
 import AdminBusinessProductDetails from "./Admin_Panel/Admin_Business/BusinessProductDetails";
+import AdminAddBusinessForm from './Admin_Panel/AdminBusiness/AddBusiness';
+
 // import AdminAddProductCategory from './Admin_Panel/Product_Category/AddCategory';
 // import AdminEditProductCategory from './Admin_Panel/Product_Category/EditCategory';
 // import AdminProductCategory from './Admin_Panel/Product_Category/TableCategory';
@@ -333,6 +337,10 @@ function App() {
 
         <Route path="/w-productdetails" element={<MainProductDetails />} />
         <Route path="/product/:productId" element={<ProductDetails />} />
+       <Route path="/cart" element={<WebsiteAddToCart />} />
+          <Route path="/checkout" element={<WebsiteCheckout />} />
+
+
         {/* <Route path="/w-subcategory/:id" element={<SubCategories />} /> */}
         <Route path="/w-subcategory/:id" element={<SubCategories />} />
         <Route path="/website-business-product-details/:productId" element={<WebsiteProductDetails />} />
@@ -401,6 +409,8 @@ function App() {
         <Route path="/admin-add-commissionmaster" element={<AddCommissionLevels />} />
         <Route path="/admin-edit-commissionmaster/:id" element={<EditCommissionLevels />} />
         <Route path="/admin-business" element={<AdminBusiness />} />
+         <Route path="/admin-edit-business/:id" element={<AdminAddBusinessForm mode="edit" />} />
+        <Route path="/admin-view-business/:id" element={<AdminAddBusinessForm mode="view" />} />
         <Route path="/admin-my-products" element={<AdminBusinessProductsDetails />} />
         <Route path="/admin-business-product-details/:productId" element={<AdminBusinessProductDetails />} />
 
