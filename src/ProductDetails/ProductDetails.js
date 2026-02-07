@@ -1625,6 +1625,7 @@
 
 // export default ProductDetails;
 
+
 // import React, { useEffect, useState, useMemo } from "react";
 // import { useParams, useSearchParams } from "react-router-dom";
 // import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
@@ -1643,7 +1644,6 @@
 //   const [product, setProduct] = useState(null);
 //   const [selectedVariant, setSelectedVariant] = useState(null);
 //   const [selectedImage, setSelectedImage] = useState("");
-//   const [qty, setQty] = useState(1);
 //   const [openAbout, setOpenAbout] = useState(false);
 //   const [openDetails, setOpenDetails] = useState(false);
 //   const [loading, setLoading] = useState(true);
@@ -1831,6 +1831,24 @@
 //           <div className="details-section">
 //             <h1>{product.product_name}</h1>
 
+//             {/* PRICE INFORMATION */}
+//             <div className="price-info">
+//               <div className="price-row">
+//                 <span className="price">₹{pricing.price.toFixed(2)}</span>
+//                 {pricing.mrp > pricing.price && (
+//                   <>
+//                     <span className="mrp">₹{pricing.mrp.toFixed(2)}</span>
+//                     <span className="off">{pricing.discount}% OFF</span>
+//                   </>
+//                 )}
+//               </div>
+              
+//               <div className="sku-stock-info">
+//                 <p className="sku">SKU: {selectedVariant.sku}</p>
+//                 <p className="stock">Stock Available: {selectedVariant.stock}</p>
+//               </div>
+//             </div>
+
 //             {product.description && (
 //               <p className="desc">{product.description}</p>
 //             )}
@@ -1865,41 +1883,42 @@
 //               </>
 //             )}
 //           </div>
+//         </div>
 
-//           {/* ========== RIGHT : BUY BOX ========== */}
-//           <div className="buy-box">
+//                  {/* ========== RIGHT : BUY BOX ========== */} 
+//            <div className="buy-box">
 //             <div className="price-row">
 //               <span className="price">₹{pricing.price.toFixed(2)}</span>
-//               {pricing.mrp > pricing.price && (
-//                 <>
-//                   <span className="mrp">₹{pricing.mrp.toFixed(2)}</span>
-//                   <span className="off">{pricing.discount}% OFF</span>
-//                 </>
-//               )}
-//             </div>
+//                {pricing.mrp > pricing.price && (
+//                  <>
+//                    <span className="mrp">₹{pricing.mrp.toFixed(2)}</span>
+//                    <span className="off">{pricing.discount}% OFF</span>
+//                  </>
+//                )}
+//              </div>
 
 //             <p className="unit">SKU: {selectedVariant.sku}</p>
 
-//             <div className="qty">
-//               <button onClick={() => setQty(q => q - 1)} disabled={qty === 1}>
-//                 −
-//               </button>
-//               <span>{qty}</span>
-//               <button
-//                 onClick={() => setQty(q => q + 1)}
-//                 disabled={qty >= selectedVariant.stock}
-//               >
-//                 +
-//               </button>
+//              <div className="qty">
+//                <button onClick={() => setQty(q => q - 1)} disabled={qty === 1}>
+//                  −
+//                </button>
+//                <span>{qty}</span>
+//                <button
+//                  onClick={() => setQty(q => q + 1)}
+//                  disabled={qty >= selectedVariant.stock}
+//                >
+//                  +
+//                </button>
 //             </div>
 
-//             <button className="cart-btn">ADD TO CART</button>
+//              <button className="cart-btn">ADD TO CART</button>
 
-//             <p className="secure">
-//               Stock Available: {selectedVariant.stock}
-//             </p>
-//           </div>
-//         </div>
+//              <p className="secure">
+//                Stock Available: {selectedVariant.stock}
+//              </p>
+//            </div>
+//          </div>
 
 //         {/* ========== ABOUT & DETAILS ========== */}
 //         <div className="product-info-row">
@@ -1955,6 +1974,9 @@
 
 
 
+//================================================================
+
+// Addded Add to cart option 
 
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
@@ -1974,6 +1996,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
+  const [qty, setQty] = useState(1);
   const [openAbout, setOpenAbout] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -2161,24 +2184,6 @@ const ProductDetails = () => {
           <div className="details-section">
             <h1>{product.product_name}</h1>
 
-            {/* PRICE INFORMATION */}
-            <div className="price-info">
-              <div className="price-row">
-                <span className="price">₹{pricing.price.toFixed(2)}</span>
-                {pricing.mrp > pricing.price && (
-                  <>
-                    <span className="mrp">₹{pricing.mrp.toFixed(2)}</span>
-                    <span className="off">{pricing.discount}% OFF</span>
-                  </>
-                )}
-              </div>
-              
-              <div className="sku-stock-info">
-                <p className="sku">SKU: {selectedVariant.sku}</p>
-                <p className="stock">Stock Available: {selectedVariant.stock}</p>
-              </div>
-            </div>
-
             {product.description && (
               <p className="desc">{product.description}</p>
             )}
@@ -2212,6 +2217,40 @@ const ProductDetails = () => {
                 </div>
               </>
             )}
+          </div>
+
+          {/* ========== RIGHT : BUY BOX ========== */}
+          <div className="buy-box">
+            <div className="price-row">
+              <span className="price">₹{pricing.price.toFixed(2)}</span>
+              {pricing.mrp > pricing.price && (
+                <>
+                  <span className="mrp">₹{pricing.mrp.toFixed(2)}</span>
+                  <span className="off">{pricing.discount}% OFF</span>
+                </>
+              )}
+            </div>
+
+            <p className="unit">SKU: {selectedVariant.sku}</p>
+
+            <div className="qty">
+              <button onClick={() => setQty(q => q - 1)} disabled={qty === 1}>
+                −
+              </button>
+              <span>{qty}</span>
+              <button
+                onClick={() => setQty(q => q + 1)}
+                disabled={qty >= selectedVariant.stock}
+              >
+                +
+              </button>
+            </div>
+
+            <button className="cart-btn">ADD TO CART</button>
+
+            <p className="secure">
+              Stock Available: {selectedVariant.stock}
+            </p>
           </div>
         </div>
 
