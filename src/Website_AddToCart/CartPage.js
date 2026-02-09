@@ -134,7 +134,7 @@ const CartPage = () => {
       if (result.isConfirmed) {
         // Save cart data to session for checkout
         sessionStorage.setItem('checkout_cart', JSON.stringify(cartItems));
-        window.location.href = '/checkout';
+        window.location.href = '/register';
       }
     });
   };
@@ -156,7 +156,7 @@ const CartPage = () => {
           <div className="empty-cart-content">
             <h2>Your cart is empty</h2>
             <p>Looks like you haven't added any items to your cart yet.</p>
-            <Link to="/products" className="continue-shopping-btn">
+            <Link to="/" className="continue-shopping-btn">
               Continue Shopping
             </Link>
           </div>

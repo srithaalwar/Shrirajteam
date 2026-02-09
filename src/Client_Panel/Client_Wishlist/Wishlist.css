@@ -246,21 +246,21 @@
 }
 
 .summary-details {
-  margin-bottom: 25px;
+  margin-bottom: 5px;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   font-size: 15px;
 }
 
 .summary-divider {
   height: 1px;
   background-color: #e0e0e0;
-  margin: 20px 0;
+  margin: 5px 0;
 }
 
 .summary-row.total-value {

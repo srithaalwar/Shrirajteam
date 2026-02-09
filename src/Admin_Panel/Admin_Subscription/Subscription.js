@@ -774,7 +774,6 @@
 
 
 
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { baseurl } from '../../BaseURL/BaseURL';
@@ -784,7 +783,7 @@ import axios from 'axios';
 import './Subscription.css';
 
 function Subscription() {
-  const [userType, setUserType] = useState('client');
+  const [userType, setUserType] = useState('all'); // Changed default to 'all'
   const [variantData, setVariantData] = useState([]);
   const [planDataMap, setPlanDataMap] = useState({});
   const [loading, setLoading] = useState(true);
@@ -797,10 +796,40 @@ function Subscription() {
 
   const navigate = useNavigate();
 
-  /* ================= FETCH ================= */
-  const fetchVariantsAndPlans = async (type) => {
+  /* ================= FETCH ALL PLANS ================= */
+  const fetchAllPlans = async () => {
+    try {
+      const response = await axios.get(`${baseurl}/subscription/plans/`);
+      let plans = [];
+      
+      if (Array.isArray(response.data)) {
+        plans = response.data;
+      } else if (response.data.results) {
+        plans = response.data.results || [];
+      } else {
+        plans = response.data;
+      }
+      
+      // Create a map of plan_id -> plan object
+      const plansMap = {};
+      plans.forEach(plan => {
+        plansMap[plan.plan_id] = plan;
+      });
+      
+      return plansMap;
+    } catch (error) {
+      console.error('Error fetching plans:', error);
+      return {};
+    }
+  };
+
+  /* ================= FETCH VARIANTS WITH FILTERING ================= */
+  const fetchVariants = async (type) => {
     setLoading(true);
     try {
+      // First fetch all plans
+      const plansMap = await fetchAllPlans();
+      
       // Build query parameters for pagination
       const params = new URLSearchParams({
         page: currentPage,
@@ -811,53 +840,66 @@ function Subscription() {
         params.append('search', searchQuery.trim());
       }
       
-      // 1️⃣ Fetch variants with pagination
+      // Fetch all variants
       const variantRes = await axios.get(
-        `${baseurl}/subscription/plan-variants/${type}/?${params.toString()}`
+        `${baseurl}/subscription/plan-variants/?${params.toString()}`
       );
 
       // Handle different response formats
-      let variants = [];
+      let allVariants = [];
       let count = 0;
       
       if (Array.isArray(variantRes.data)) {
-        variants = variantRes.data;
+        allVariants = variantRes.data;
         count = variantRes.data.length;
       } else if (variantRes.data.results) {
-        variants = variantRes.data.results || [];
-        count = variantRes.data.count || variants.length;
+        allVariants = variantRes.data.results || [];
+        count = variantRes.data.count || allVariants.length;
       } else {
-        variants = variantRes.data;
+        allVariants = variantRes.data;
         count = variantRes.data.length || 0;
       }
 
-      setVariantData(variants);
-      setTotalItems(count);
-
-      // 2️⃣ Collect unique plan IDs
-      const planIds = [...new Set(variants.map(v => v.plan_id))];
-      const plansMap = {};
-
-      // 3️⃣ Fetch plans safely
-      await Promise.all(
-        planIds.map(async (id) => {
-          try {
-            const res = await axios.get(
-              `${baseurl}/subscription/plans/${id}/`
-            );
-
-            // Handle paginated OR direct object
-            const plan =
-              res.data?.results?.[0] || res.data;
-
-            plansMap[id] = plan;
-          } catch (err) {
-            console.error(`Error fetching plan with ID ${id}`, err);
+      // Filter variants based on user type
+      let filteredVariants = allVariants;
+      if (type !== 'all') {
+        filteredVariants = allVariants.filter(variant => {
+          const plan = plansMap[variant.plan_id];
+          if (plan && plan.user_type) {
+            return plan.user_type === type;
           }
-        })
-      );
-
+          return false;
+        });
+      }
+      
+      // Apply search filter if needed
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase().trim();
+        filteredVariants = filteredVariants.filter(variant => {
+          const plan = plansMap[variant.plan_id];
+          if (!plan) return false;
+          
+          return (
+            (plan.plan_name && plan.plan_name.toLowerCase().includes(query)) ||
+            (plan.description && plan.description.toLowerCase().includes(query)) ||
+            (variant.duration_in_days && variant.duration_in_days.toString().includes(query)) ||
+            (variant.price && variant.price.toString().includes(query))
+          );
+        });
+      }
+      
+      // Calculate total items based on filtered results
+      const totalFilteredItems = filteredVariants.length;
+      
+      // Apply pagination to filtered results
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const paginatedVariants = filteredVariants.slice(startIndex, endIndex);
+      
+      setVariantData(paginatedVariants);
+      setTotalItems(totalFilteredItems);
       setPlanDataMap(plansMap);
+      
     } catch (error) {
       console.error('Error fetching variant data:', error);
       Swal.fire({
@@ -875,7 +917,7 @@ function Subscription() {
   };
 
   useEffect(() => {
-    fetchVariantsAndPlans(userType);
+    fetchVariants(userType);
   }, [userType, currentPage, itemsPerPage, searchQuery]);
 
   /* ================= PAGINATION FUNCTIONS ================= */
@@ -940,7 +982,7 @@ function Subscription() {
             `${baseurl}/subscription/plan-variants/${variantId}/`
           );
           Swal.fire('Deleted!', 'Subscription variant deleted.', 'success');
-          fetchVariantsAndPlans(userType); // Refetch data after deletion
+          fetchVariants(userType); // Refetch data after deletion
         } catch {
           Swal.fire('Error', 'Delete failed', 'error');
         }
@@ -960,8 +1002,30 @@ function Subscription() {
     setCurrentPage(1); // Reset to first page when changing user type
   };
 
+  /* ================= CLEAR SEARCH ================= */
+  const clearSearch = () => {
+    setSearchQuery('');
+    setCurrentPage(1);
+  };
+
+  /* ================= HANDLE KEY PRESS ================= */
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      fetchVariants(userType);
+    }
+  };
+
   const formatCurrency = (v) =>
     `₹${Number(v || 0).toLocaleString()}`;
+
+  // Helper function to get user type display
+  const getUserTypeDisplay = (userType) => {
+    switch (userType) {
+      case 'client': return 'User';
+      case 'agent': return 'Team';
+      default: return userType || '—';
+    }
+  };
 
   return (
     <>
@@ -971,42 +1035,101 @@ function Subscription() {
         {/* Header */}
         <div className="page-header">
           <h2>Subscription Plan Variants</h2>
+          <div style={{ fontSize: '14px', color: '#666', marginTop: '8px' }}>
+            Total Variants: {totalItems}
+          </div>
         </div>
 
         {/* Toolbar */}
-        <div className="page-toolbar">
-          <div className="search-box">
-            <input
-              type="text"
-              placeholder="Search by Plan, Description, Duration or Price"
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
-            {/* <span className="search-icon">🔍</span> */}
+        <div className="page-toolbar" style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '24px'
+        }}>
+          {/* Left Side: Search and Filter */}
+          <div className="toolbar-left" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            {/* User Type Filter */}
+            <div className="filter-container">
+              <select
+                className="form-select user-type-select"
+                value={userType}
+                onChange={handleUserTypeChange}
+                style={{
+                  padding: '8px 12px',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                  minWidth: '120px'
+                }}
+              >
+                <option value="all">All</option>
+                <option value="client">User</option>
+                <option value="agent">Team</option>
+              </select>
+            </div>
+
+            {/* Search Box */}
+            <div className="search-box" style={{ position: 'relative' }}>
+              <input
+                type="text"
+                placeholder="Search by Plan, Description, Duration or Price"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onKeyPress={handleKeyPress}
+                style={{
+                  padding: '8px 12px 8px 40px',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                  width: '400px'
+                }}
+              />
+              <span style={{
+                position: 'absolute',
+                left: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: '#666'
+              }}>
+                🔍
+              </span>
+              {searchQuery && (
+                <button 
+                  className="clear-search"
+                  onClick={clearSearch}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#666',
+                    fontSize: '16px'
+                  }}
+                  title="Clear search"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           </div>
 
-          <div className="d-flex gap-2">
-            <select
-              className="form-select user-type-select"
-              value={userType}
-              onChange={handleUserTypeChange}
-              style={{
-                padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px'
-              }}
-            >
-              <option value="client">User</option>
-              <option value="agent">Team</option>
-            </select>
-
+          {/* Right Side: Add Button */}
+          <div className="toolbar-right">
             <button
               className="primary-btn"
               style={{
                 backgroundColor: '#273c75',
                 borderColor: '#273c75',
                 color: 'white',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                fontSize: '14px',
+                cursor: 'pointer',
+                fontWeight: '500'
               }}
               onClick={() => navigate('/admin-addsubscriptions')}
             >
@@ -1025,6 +1148,7 @@ function Subscription() {
                 <th>Description</th>
                 <th>Duration (Days)</th>
                 <th>Price</th>
+                <th>User Type</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -1032,13 +1156,15 @@ function Subscription() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="no-data">
+                  <td colSpan="7" className="no-data">
                     Loading...
                   </td>
                 </tr>
               ) : variantData.length ? (
                 variantData.map((variant, index) => {
                   const plan = planDataMap[variant.plan_id] || {};
+                  const userTypeDisplay = getUserTypeDisplay(plan.user_type);
+                  
                   return (
                     <tr key={variant.variant_id}>
                       <td>{startIndex + index}</td>
@@ -1046,23 +1172,56 @@ function Subscription() {
                       <td>{plan.description || '—'}</td>
                       <td>{variant.duration_in_days}</td>
                       <td>{formatCurrency(variant.price)}</td>
+                      <td>
+                        <span style={{
+                          display: 'inline-block',
+                          padding: '4px 12px',
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: '500',
+                          backgroundColor: userTypeDisplay === 'User' ? '#e3f2fd' : '#e8f5e9',
+                          color: userTypeDisplay === 'User' ? '#1976d2' : '#388e3c',
+                          textTransform: 'capitalize'
+                        }}>
+                          {userTypeDisplay}
+                        </span>
+                      </td>
                       <td className="actions">
                         <button
                           className="edit-btn"
                           onClick={() =>
                             navigate(
                               `/admin-edit-subscription/${variant.variant_id}`,
-                              { state: { variant } }
+                              { state: { variant, plan } }
                             )
                           }
+                          style={{
+                            padding: '4px 12px',
+                            border: 'none',
+                            borderRadius: '4px',
+                            backgroundColor: '#e8f5e9',
+                            color: '#388e3c',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            marginRight: '8px'
+                          }}
                         >
-                          ✏️
+                          ✏️ 
                         </button>
                         <button
                           className="delete-btn"
                           onClick={() =>
                             handleDelete(variant.variant_id)
                           }
+                          style={{
+                            padding: '4px 12px',
+                            border: 'none',
+                            borderRadius: '4px',
+                            backgroundColor: '#ffebee',
+                            color: '#d32f2f',
+                            cursor: 'pointer',
+                            fontSize: '14px'
+                          }}
                         >
                           🗑️
                         </button>
@@ -1072,8 +1231,31 @@ function Subscription() {
                 })
               ) : (
                 <tr>
-                  <td colSpan="6" className="no-data">
-                    No subscription variants found
+                  <td colSpan="7" className="no-data">
+                    {searchQuery || userType !== 'all' ? 
+                      "No subscription variants found matching your criteria" : 
+                      "No subscription variants found"}
+                    {(searchQuery || userType !== 'all') && (
+                      <button
+                        onClick={() => {
+                          setSearchQuery("");
+                          setUserType("all");
+                        }}
+                        style={{
+                          marginTop: '12px',
+                          padding: '8px 16px',
+                          backgroundColor: '#273c75',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          display: 'block',
+                          margin: '12px auto 0'
+                        }}
+                      >
+                        Clear Filters
+                      </button>
+                    )}
                   </td>
                 </tr>
               )}
@@ -1110,7 +1292,7 @@ function Subscription() {
                   <option value="100">100</option>
                 </select>
                 <span style={{ fontSize: '14px', color: '#666' }}>
-                  of {totalItems} items
+                  Showing {startIndex} to {Math.min(startIndex + itemsPerPage - 1, totalItems)} of {totalItems} items
                 </span>
               </div>
               

@@ -6507,13 +6507,809 @@
 
 
 
+// import React, { useState, useEffect, useRef } from "react";
+// import { useNavigate, useLocation } from "react-router-dom";
+// import axios from "axios";
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import { baseurl, redirecturl } from '../../BaseURL/BaseURL';
+// import "./AddToCart.css";
+// import { FaTrash, FaMinus, FaPlus, FaCreditCard, FaArrowLeft, FaShoppingCart, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+
+// function AgentCart() {
+//   const [cartItems, setCartItems] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [paymentLoading, setPaymentLoading] = useState(false);
+//   const [snackbarOpen, setSnackbarOpen] = useState(false);
+//   const [snackbarMessage, setSnackbarMessage] = useState("");
+//   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+//   const [updatingItem, setUpdatingItem] = useState(null);
+//   const [removingItem, setRemovingItem] = useState(null);
+//   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+//   const [paymentInfo, setPaymentInfo] = useState(null);
+//   const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
+  
+//   const paymentVerifiedRef = useRef(false);
+//   const paymentTimerRef = useRef(null);
+//   const refreshTimeoutRef = useRef(null);
+//   const location = useLocation();
+//   const navigate = useNavigate();
+//   const userId = localStorage.getItem("user_id");
+
+//   // Fetch cart items
+//   const fetchCartItems = async () => {
+//     if (!userId) {
+//       setLoading(false);
+//       setCartItems([]);
+//       return;
+//     }
+
+//     try {
+//       setLoading(true);
+//       console.log("Fetching cart items for user:", userId);
+      
+//       const response = await axios.get(`${baseurl}/cart/?user=${userId}`, {
+//         timeout: 10000
+//       });
+//       console.log("Cart API Response:", response.data);
+      
+//       const cartResponse = response.data;
+//       let userCartItems = [];
+      
+//       if (cartResponse.results && Array.isArray(cartResponse.results)) {
+//         userCartItems = cartResponse.results;
+//       } else if (Array.isArray(cartResponse)) {
+//         userCartItems = cartResponse;
+//       }
+      
+//       console.log("Filtered cart items:", userCartItems);
+//       setCartItems(userCartItems);
+      
+//     } catch (error) {
+//       console.error("Error fetching cart data:", error);
+//       showSnackbar("Error loading cart data", "error");
+//       setCartItems([]);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // Clear cart after successful payment
+//   const clearCartAfterPayment = async () => {
+//     try {
+//       if (!userId) return;
+      
+//       // Get current cart items
+//       const currentCartResponse = await axios.get(`${baseurl}/cart/?user=${userId}`, {
+//         timeout: 5000
+//       });
+//       const userCartItems = currentCartResponse.data.results || currentCartResponse.data || [];
+      
+//       // Delete all cart items for the user
+//       const deletePromises = userCartItems.map(item =>
+//         axios.delete(`${baseurl}/cart/${item.id}/`, {
+//           timeout: 5000
+//         }).catch(err => {
+//           console.warn(`Failed to delete cart item ${item.id}:`, err);
+//           return Promise.resolve();
+//         })
+//       );
+//       await Promise.all(deletePromises);
+      
+//       // Clear local cart state
+//       setCartItems([]);
+      
+//       // Dispatch cart update event for navbar
+//       window.dispatchEvent(new Event('cartUpdated'));
+      
+//       console.log("Cart cleared after successful payment");
+//     } catch (error) {
+//       console.error("Error clearing cart:", error);
+//     }
+//   };
+
+//   // Check URL for payment parameters
+//   const checkURLForPaymentParams = () => {
+//     const searchParams = new URLSearchParams(location.search);
+//     const merchantOrderId = searchParams.get('merchant_order_id');
+//     const paymentStatus = searchParams.get('payment_status');
+//     const orderId = searchParams.get('order_id');
+    
+//     console.log("Checking URL for payment params:", {
+//       merchantOrderId,
+//       paymentStatus,
+//       orderId
+//     });
+    
+//     if (merchantOrderId) {
+//       // Save to localStorage
+//       localStorage.setItem('merchant_order_id', merchantOrderId);
+//       if (paymentStatus) localStorage.setItem('payment_status', paymentStatus);
+//       if (orderId) localStorage.setItem('order_id', orderId);
+      
+//       // Clean the URL
+//       window.history.replaceState({}, '', window.location.pathname);
+      
+//       return merchantOrderId;
+//     }
+    
+//     return null;
+//   };
+
+//   // Confirm Payment function
+//   const confirmPayment = async (merchantOrderId) => {
+//     if (!merchantOrderId || paymentVerifiedRef.current) {
+//       console.log("No merchant order ID or payment already verified");
+//       return;
+//     }
+
+//     try {
+//       setIsVerifyingPayment(true);
+//       paymentVerifiedRef.current = true;
+      
+//       console.log("Calling confirm-payment API with:", { merchant_order_id: merchantOrderId });
+      
+//       const response = await axios.post(
+//         `${baseurl}/product/confirm-payment/`,
+//         {
+//           merchant_order_id: merchantOrderId
+//         },
+//         {
+//           headers: {
+//             'Content-Type': 'application/json'
+//           },
+//           timeout: 15000
+//         }
+//       );
+      
+//       console.log("Payment confirmation response:", response.data);
+      
+//       const paymentData = response.data;
+      
+//       if (paymentData.status === "success" || paymentData.status === "SUCCESS") {
+//         // Payment successful
+//         showSnackbar("Payment confirmed successfully!", "success");
+        
+//         // Clear cart
+//         await clearCartAfterPayment();
+        
+//         // Clear localStorage
+//         localStorage.removeItem("merchant_order_id");
+//         localStorage.removeItem("order_id");
+//         localStorage.removeItem("payment_status");
+        
+//         // Show success message and refresh after 1 second
+//         setTimeout(() => {
+//           showSnackbar("Payment successful! Refreshing page...", "success");
+//           // Refresh page after 1 second
+//           setTimeout(() => {
+//             console.log("Refreshing page after successful payment");
+//             window.location.reload();
+//           }, 1000);
+//         }, 500);
+        
+//       } else if (paymentData.status === "pending" || paymentData.status === "PENDING") {
+//         // Payment still pending
+//         showSnackbar("Payment is still pending. We'll check again in 30 seconds.", "info");
+        
+//         // Reset verified flag to allow retry
+//         paymentVerifiedRef.current = false;
+        
+//         // Schedule retry in 30 seconds
+//         paymentTimerRef.current = setTimeout(() => {
+//           console.log("30 seconds passed, retrying payment confirmation...");
+//           confirmPayment(merchantOrderId);
+//         }, 30000);
+        
+//       } else {
+//         // Payment failed
+//         showSnackbar(paymentData.message || "Payment verification failed", "error");
+//         localStorage.removeItem("merchant_order_id");
+//         localStorage.removeItem("order_id");
+//         localStorage.removeItem("payment_status");
+//       }
+      
+//     } catch (error) {
+//       console.error("Error confirming payment:", error);
+//       showSnackbar("Payment verification failed. Please try again.", "error");
+      
+//       // Reset verified flag on error
+//       paymentVerifiedRef.current = false;
+      
+//       // Retry in 30 seconds on network errors
+//       if (error.code === 'ECONNABORTED' || !error.response) {
+//         paymentTimerRef.current = setTimeout(() => {
+//           console.log("Network error, retrying payment confirmation in 30 seconds...");
+//           confirmPayment(merchantOrderId);
+//         }, 30000);
+//       } else {
+//         localStorage.removeItem("merchant_order_id");
+//         localStorage.removeItem("order_id");
+//         localStorage.removeItem("payment_status");
+//       }
+//     } finally {
+//       setIsVerifyingPayment(false);
+//     }
+//   };
+
+//   // Initialize component
+//   useEffect(() => {
+//     const initialize = async () => {
+//       await fetchCartItems();
+      
+//       // Check URL for payment parameters
+//       const merchantOrderIdFromURL = checkURLForPaymentParams();
+      
+//       // Check localStorage for pending payment
+//       const merchantOrderId = merchantOrderIdFromURL || localStorage.getItem("merchant_order_id");
+//       const paymentStatus = localStorage.getItem("payment_status");
+      
+//       console.log("Initial payment check:", {
+//         merchantOrderIdFromURL,
+//         merchantOrderId,
+//         paymentStatus,
+//         pathname: location.pathname,
+//         search: location.search
+//       });
+      
+//       // If we have a merchant order ID, confirm payment
+//       if (merchantOrderId && !paymentVerifiedRef.current) {
+//         console.log("Found merchant order ID, starting payment verification:", merchantOrderId);
+        
+//         // Wait 2 seconds before first check to ensure page is loaded
+//         setTimeout(() => {
+//           confirmPayment(merchantOrderId);
+//         }, 2000);
+//       }
+//     };
+    
+//     initialize();
+    
+//     // Cleanup timers on unmount
+//     return () => {
+//       if (paymentTimerRef.current) {
+//         clearTimeout(paymentTimerRef.current);
+//       }
+//       if (refreshTimeoutRef.current) {
+//         clearTimeout(refreshTimeoutRef.current);
+//       }
+//     };
+//   }, [location.search]);
+
+//   // Update quantity
+//   const handleQuantityChange = async (cartItemId, newQuantity) => {
+//     if (newQuantity < 1) return;
+
+//     const cartItem = cartItems.find(item => item.id === cartItemId);
+//     if (!cartItem) return;
+
+//     // Check stock availability
+//     if (newQuantity > cartItem.variant_details.stock) {
+//       showSnackbar(`Only ${cartItem.variant_details.stock} items available in stock`, "error");
+//       return;
+//     }
+
+//     setUpdatingItem(cartItemId);
+    
+//     try {
+//       await axios.put(`${baseurl}/cart/${cartItemId}/`, {
+//         user: parseInt(userId),
+//         variant: cartItem.variant,
+//         quantity: newQuantity
+//       }, {
+//         timeout: 5000
+//       });
+
+//       // Update local state
+//       setCartItems(prev => prev.map(item => 
+//         item.id === cartItemId ? { 
+//           ...item, 
+//           quantity: newQuantity,
+//           subtotal: (parseFloat(cartItem.variant_details.selling_price) * newQuantity)
+//         } : item
+//       ));
+
+//       // Dispatch cart update event for navbar
+//       window.dispatchEvent(new Event('cartUpdated'));
+      
+//       showSnackbar("Quantity updated successfully", "success");
+//     } catch (error) {
+//       console.error("Error updating quantity:", error);
+//       showSnackbar("Failed to update quantity", "error");
+//     } finally {
+//       setUpdatingItem(null);
+//     }
+//   };
+
+//   // Remove item from cart
+//   const handleRemoveItem = async (cartItemId) => {
+//     setRemovingItem(cartItemId);
+    
+//     try {
+//       await axios.delete(`${baseurl}/cart/${cartItemId}/`, {
+//         timeout: 5000
+//       });
+      
+//       // Update local state
+//       setCartItems(prev => prev.filter(item => item.id !== cartItemId));
+      
+//       // Dispatch cart update event for navbar
+//       window.dispatchEvent(new Event('cartUpdated'));
+      
+//       showSnackbar("Item removed from cart", "info");
+//     } catch (error) {
+//       console.error("Error removing item:", error);
+//       showSnackbar("Failed to remove item", "error");
+//     } finally {
+//       setRemovingItem(null);
+//     }
+//   };
+
+//   // Calculate totals
+//   const calculateSubtotal = () => {
+//     return cartItems.reduce((total, item) => {
+//       return total + parseFloat(item.subtotal || 0);
+//     }, 0);
+//   };
+
+//   const calculateTax = () => {
+//     return cartItems.reduce((total, item) => {
+//       const taxPercent = parseFloat(item.variant_details.tax_percent || 0);
+//       const price = parseFloat(item.variant_details.selling_price || 0);
+//       return total + ((price * item.quantity * taxPercent) / 100);
+//     }, 0);
+//   };
+
+//   const calculateTotal = () => {
+//     return calculateSubtotal() + calculateTax();
+//   };
+
+//   // Initiate Payment
+//   const handleCheckout = async () => {
+//     if (cartItems.length === 0) {
+//       showSnackbar("Your cart is empty", "warning");
+//       return;
+//     }
+
+//     if (!userId) {
+//       showSnackbar("Please login to proceed", "warning");
+//       return;
+//     }
+
+//     setPaymentLoading(true);
+//     try {
+//       console.log("Initiating payment for user:", userId);
+
+//       const paymentResponse = await axios.post(
+//         `${baseurl}/product/initiate-payment/`,
+//         {
+//           user_id: parseInt(userId),
+//           redirect_url: `${redirecturl}/agent-add-to-cart`
+//         },
+//         {
+//           headers: {
+//             'Content-Type': 'application/json'
+//           },
+//           timeout: 15000
+//         }
+//       );
+
+//       console.log("Payment initiation response:", paymentResponse.data);
+
+//       if (paymentResponse.data && paymentResponse.data.payment_url) {
+//         // Save merchant order id to localStorage
+//         localStorage.setItem('merchant_order_id', paymentResponse.data.merchant_order_id);
+//         localStorage.setItem('order_id', paymentResponse.data.order_id);
+        
+//         // Reset verification flag
+//         paymentVerifiedRef.current = false;
+        
+//         // Redirect to payment gateway
+//         window.location.href = paymentResponse.data.payment_url;
+//       } else {
+//         showSnackbar("Payment initialization failed", "error");
+//       }
+//     } catch (error) {
+//       console.error("Payment initiation error:", error);
+//       showSnackbar(
+//         error.response?.data?.message || "Failed to initiate payment",
+//         "error"
+//       );
+//     } finally {
+//       setPaymentLoading(false);
+//     }
+//   };
+
+//   // Handle payment dialog close
+//   const handlePaymentDialogClose = () => {
+//     setPaymentDialogOpen(false);
+//     setPaymentInfo(null);
+    
+//     // Clear any pending refresh timeout
+//     if (refreshTimeoutRef.current) {
+//       clearTimeout(refreshTimeoutRef.current);
+//       refreshTimeoutRef.current = null;
+//     }
+    
+//     navigate("/agent-add-to-cart");
+//   };
+
+//   // Helper function to show snackbar
+//   const showSnackbar = (message, severity) => {
+//     setSnackbarMessage(message);
+//     setSnackbarSeverity(severity);
+//     setSnackbarOpen(true);
+//     setTimeout(() => setSnackbarOpen(false), 4000);
+//   };
+
+//   // Handle continue shopping
+//   const handleContinueShopping = () => {
+//     navigate("/agent-busineess-category");
+//   };
+
+//   // Get product image
+//   const getProductImage = (item) => {
+//     if (item.variant_details.media && item.variant_details.media.length > 0) {
+//       const media = item.variant_details.media[0];
+//       return `${baseurl}${media.file}`;
+//     }
+//     return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400";
+//   };
+
+//   // Manual verification for testing
+//   const handleManualVerification = () => {
+//     const merchantOrderId = localStorage.getItem("merchant_order_id");
+//     if (merchantOrderId) {
+//       paymentVerifiedRef.current = false;
+//       confirmPayment(merchantOrderId);
+//     }
+//   };
+
+//   if (!userId) {
+//     return (
+//       <>
+//         <AgentNavbar />
+//         <div className="agent-cart-container">
+//           <div className="agent-cart-empty text-center py-5">
+//             <div className="empty-cart-icon mb-3">
+//               <FaShoppingCart size={64} />
+//             </div>
+//             <h3 className="mb-3">Please Login</h3>
+//             <p className="text-muted mb-4">
+//               You need to be logged in to view your cart
+//             </p>
+//             <button 
+//               className="btn btn-primary btn-lg"
+//               onClick={() => navigate("/login")}
+//             >
+//               Go to Login
+//             </button>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   if (loading) {
+//     return (
+//       <>
+//         <AgentNavbar />
+//         <div className="agent-cart-container">
+//           <div className="text-center py-5">
+//             <div className="spinner-border text-primary" role="status">
+//               <span className="visually-hidden">Loading...</span>
+//             </div>
+//             <p className="mt-3">Loading cart...</p>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   return (
+//     <>
+//       <AgentNavbar />
+      
+//       {/* Snackbar */}
+//       {snackbarOpen && (
+//         <div className={`agent-cart-snackbar ${snackbarSeverity}`}>
+//           {snackbarSeverity === "success" ? 
+//             <FaCheckCircle className="me-2" /> : 
+//             <FaExclamationCircle className="me-2" />
+//           }
+//           {snackbarMessage}
+//         </div>
+//       )}
+
+//       {/* Payment Success Dialog - Simplified */}
+//       {paymentDialogOpen && paymentInfo && (
+//         <div className="payment-dialog-overlay">
+//           <div className="payment-dialog">
+//             <div className="payment-dialog-header">
+//               <FaCheckCircle className="text-success me-2" size={32} />
+//               <h3>Payment Successful!</h3>
+//             </div>
+//             <div className="payment-dialog-body">
+//               <p className="mb-4">{paymentInfo.message}</p>
+//               <div className="payment-details">
+//                 <div className="payment-detail-row">
+//                   <span>Merchant Order ID:</span>
+//                   <strong>{paymentInfo.merchant_order_id}</strong>
+//                 </div>
+//                 {paymentInfo.order_id && (
+//                   <div className="payment-detail-row">
+//                     <span>Order ID:</span>
+//                     <strong>{paymentInfo.order_id}</strong>
+//                   </div>
+//                 )}
+//                 {paymentInfo.amount > 0 && (
+//                   <div className="payment-detail-row">
+//                     <span>Amount Paid:</span>
+//                     <strong>₹{paymentInfo.amount.toFixed(2)}</strong>
+//                   </div>
+//                 )}
+//               </div>
+//               <div className="auto-refresh-notice mt-3 p-2 text-center bg-light rounded">
+//                 <small className="text-muted">
+//                   Page will refresh automatically in 1 second...
+//                 </small>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+
+//       <div className="agent-cart-container">
+//         {/* Payment Verification Status */}
+//         {isVerifyingPayment && (
+//           <div className="payment-verification-status mb-4">
+//             <div className="alert alert-info">
+//               <div className="d-flex align-items-center">
+//                 <div className="spinner-border spinner-border-sm me-3" role="status"></div>
+//                 <div>
+//                   <strong>Verifying Payment Status</strong>
+//                   <p className="mb-0 small">Checking payment confirmation...</p>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         )}
+
+//         <div className="agent-cart-header">
+//           <h1 className="agent-cart-title">
+//             <FaShoppingCart className="me-2" />
+//             Shopping Cart
+//             {cartItems.length > 0 && (
+//               <span className="cart-count-badge">
+//                 {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}
+//               </span>
+//             )}
+//           </h1>
+//           <button 
+//             className="btn btn-outline-secondary"
+//             onClick={handleContinueShopping}
+//           >
+//             <FaArrowLeft className="me-2" />
+//             Continue Shopping
+//           </button>
+//         </div>
+
+//         {cartItems.length === 0 ? (
+//           <div className="agent-cart-empty text-center py-5">
+//             <div className="empty-cart-icon mb-3">
+//               <FaShoppingCart size={64} />
+//             </div>
+//             <h3 className="mb-3">Your cart is empty</h3>
+//             <p className="text-muted mb-4">
+//               {localStorage.getItem("merchant_order_id") ? 
+//                 "Payment completed! Your cart has been cleared." : 
+//                 "Add some products to your cart and they will appear here"}
+//             </p>
+//             <button 
+//               className="btn btn-primary btn-lg"
+//               onClick={handleContinueShopping}
+//             >
+//               Browse Products
+//             </button>
+            
+//             {/* For testing: Show manual verification button if we have merchant order id */}
+//             {localStorage.getItem("merchant_order_id") && !isVerifyingPayment && (
+//               <div className="mt-4">
+//                 <button 
+//                   className="btn btn-sm btn-warning"
+//                   onClick={handleManualVerification}
+//                 >
+//                   Test: Verify Payment Manually
+//                 </button>
+//               </div>
+//             )}
+//           </div>
+//         ) : (
+//           <div className="agent-cart-content">
+//             <div className="cart-items-section">
+//               <div className="cart-items-header">
+//                 <h3>Cart Items ({cartItems.length})</h3>
+//               </div>
+              
+//               <div className="cart-items-list">
+//                 {cartItems.map((item) => {
+//                   const variant = item.variant_details;
+//                   const mrp = parseFloat(variant.mrp || 0);
+//                   const price = parseFloat(variant.selling_price || 0);
+//                   const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+//                   const attributes = variant.attributes || {};
+//                   const displayAttributes = Object.entries(attributes).map(([key, value]) => 
+//                     `${key.replace(/_/g, ' ')}: ${value}`
+//                   ).join(', ');
+
+//                   return (
+//                     <div key={item.id} className="cart-item-card">
+//                       <div className="cart-item-image">
+//                         <img 
+//                           src={getProductImage(item)} 
+//                           alt={variant.sku}
+//                           onError={(e) => {
+//                             e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400";
+//                           }}
+//                         />
+//                       </div>
+                      
+//                       <div className="cart-item-details">
+//                         <div className="item-header">
+//                           <h5 className="item-title">
+//                             {variant.sku}
+//                           </h5>
+//                           <button 
+//                             className="btn btn-danger btn-sm remove-btn"
+//                             onClick={() => handleRemoveItem(item.id)}
+//                             disabled={removingItem === item.id}
+//                           >
+//                             {removingItem === item.id ? (
+//                               <span className="spinner-border spinner-border-sm" role="status"></span>
+//                             ) : (
+//                               <FaTrash />
+//                             )}
+//                           </button>
+//                         </div>
+                        
+//                         {displayAttributes && (
+//                           <p className="item-attributes text-muted small">
+//                             {displayAttributes}
+//                           </p>
+//                         )}
+                        
+//                         <div className="item-pricing">
+//                           <div className="price-display">
+//                             <span className="current-price">₹{price.toFixed(2)}</span>
+//                             {discount > 0 && (
+//                               <>
+//                                 <span className="original-price">₹{mrp.toFixed(2)}</span>
+//                                 <span className="discount-badge">{discount}% OFF</span>
+//                               </>
+//                             )}
+//                           </div>
+                          
+//                           <div className="item-stock">
+//                             <span className={`stock-badge ${variant.stock > 10 ? 'in-stock' : 'low-stock'}`}>
+//                               {variant.stock > 10 ? 'In Stock' : `Only ${variant.stock} left`}
+//                             </span>
+//                           </div>
+//                         </div>
+                        
+//                         <div className="item-quantity">
+//                           <div className="quantity-controls">
+//                             <button 
+//                               className="quantity-btn"
+//                               onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+//                               disabled={item.quantity <= 1 || updatingItem === item.id}
+//                             >
+//                               <FaMinus />
+//                             </button>
+                            
+//                             <span className="quantity-display">
+//                               {updatingItem === item.id ? (
+//                                 <span className="spinner-border spinner-border-sm" role="status"></span>
+//                               ) : (
+//                                 item.quantity
+//                               )}
+//                             </span>
+                            
+//                             <button 
+//                               className="quantity-btn"
+//                               onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+//                               disabled={item.quantity >= variant.stock || updatingItem === item.id}
+//                             >
+//                               <FaPlus />
+//                             </button>
+//                           </div>
+                          
+//                           <div className="item-subtotal">
+//                             <span className="subtotal-label">Subtotal:</span>
+//                             <span className="subtotal-amount">₹{item.subtotal.toFixed(2)}</span>
+//                           </div>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   );
+//                 })}
+//               </div>
+//             </div>
+            
+//             {/* Order Summary */}
+//             <div className="order-summary-section">
+//               <div className="order-summary-card">
+//                 <h3 className="summary-title">Order Summary</h3>
+                
+//                 <div className="summary-details">
+//                   <div className="summary-row">
+//                     <span>Subtotal ({cartItems.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
+//                     <span>₹{calculateSubtotal().toFixed(2)}</span>
+//                   </div>
+                  
+//                   <div className="summary-row">
+//                     <span>Tax</span>
+//                     <span>₹{calculateTax().toFixed(2)}</span>
+//                   </div>
+                  
+//                   <div className="summary-row shipping-row">
+//                     <span>Shipping</span>
+//                     <span className="free-shipping">FREE</span>
+//                   </div>
+                  
+//                   <div className="summary-divider"></div>
+                  
+//                   <div className="summary-row total-row">
+//                     <span className="total-label">Total</span>
+//                     <span className="total-amount">₹{calculateTotal().toFixed(2)}</span>
+//                   </div>
+//                 </div>
+                
+//                 <div className="checkout-actions">
+//                   <button 
+//                     className="btn btn-primary checkout-btn"
+//                     onClick={handleCheckout}
+//                     disabled={paymentLoading || cartItems.length === 0 || isVerifyingPayment}
+//                   >
+//                     {paymentLoading ? (
+//                       <>
+//                         <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+//                         Processing...
+//                       </>
+//                     ) : (
+//                       <>
+//                         <FaCreditCard className="me-2" />
+//                         Proceed to Checkout
+//                       </>
+//                     )}
+//                   </button>
+                  
+//                   <button 
+//                     className="btn btn-outline-secondary continue-btn"
+//                     onClick={handleContinueShopping}
+//                   >
+//                     <FaArrowLeft className="me-2" />
+//                     Continue Shopping
+//                   </button>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//     </>
+//   );
+// }
+
+// export default AgentCart;
+
+
+
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import { baseurl, redirecturl } from '../../BaseURL/BaseURL';
 import "./AddToCart.css";
-import { FaTrash, FaMinus, FaPlus, FaCreditCard, FaArrowLeft, FaShoppingCart, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+import { FaTrash, FaMinus, FaPlus, FaCreditCard, FaArrowLeft, FaShoppingCart, FaCheckCircle, FaExclamationCircle, FaTimes } from "react-icons/fa";
 
 function AgentCart() {
   const [cartItems, setCartItems] = useState([]);
@@ -6524,13 +7320,13 @@ function AgentCart() {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [updatingItem, setUpdatingItem] = useState(null);
   const [removingItem, setRemovingItem] = useState(null);
-  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
-  const [paymentInfo, setPaymentInfo] = useState(null);
+  const [paymentSuccessOpen, setPaymentSuccessOpen] = useState(false);
+  const [paymentSuccessInfo, setPaymentSuccessInfo] = useState(null);
   const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
+  const [paymentVerified, setPaymentVerified] = useState(false);
   
   const paymentVerifiedRef = useRef(false);
   const paymentTimerRef = useRef(null);
-  const refreshTimeoutRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const userId = localStorage.getItem("user_id");
@@ -6573,6 +7369,7 @@ function AgentCart() {
     }
   };
 
+
   // Clear cart after successful payment
   const clearCartAfterPayment = async () => {
     try {
@@ -6602,8 +7399,10 @@ function AgentCart() {
       window.dispatchEvent(new Event('cartUpdated'));
       
       console.log("Cart cleared after successful payment");
+      return true;
     } catch (error) {
       console.error("Error clearing cart:", error);
+      return false;
     }
   };
 
@@ -6633,6 +7432,37 @@ function AgentCart() {
     }
     
     return null;
+  };
+
+  // Show payment success alert
+  const showPaymentSuccessAlert = (paymentData) => {
+    setPaymentSuccessInfo({
+      merchant_order_id: paymentData.merchant_order_id || paymentData.merchantOrderId,
+      order_id: paymentData.order_id || paymentData.orderId,
+      amount: paymentData.amount || calculateTotal(),
+      message: paymentData.message || "Your payment was successful!",
+      timestamp: new Date().toLocaleString()
+    });
+    setPaymentSuccessOpen(true);
+    setPaymentVerified(true);
+  };
+
+  // Close payment success alert
+  const closePaymentSuccessAlert = () => {
+    setPaymentSuccessOpen(false);
+    setPaymentSuccessInfo(null);
+    
+    // Clear localStorage
+    localStorage.removeItem("merchant_order_id");
+    localStorage.removeItem("order_id");
+    localStorage.removeItem("payment_status");
+    
+    // Reset verification flag
+    paymentVerifiedRef.current = false;
+    setPaymentVerified(false);
+    
+    // Refresh cart data
+    fetchCartItems();
   };
 
   // Confirm Payment function
@@ -6670,22 +7500,12 @@ function AgentCart() {
         showSnackbar("Payment confirmed successfully!", "success");
         
         // Clear cart
-        await clearCartAfterPayment();
+        const cleared = await clearCartAfterPayment();
         
-        // Clear localStorage
-        localStorage.removeItem("merchant_order_id");
-        localStorage.removeItem("order_id");
-        localStorage.removeItem("payment_status");
-        
-        // Show success message and refresh after 1 second
-        setTimeout(() => {
-          showSnackbar("Payment successful! Refreshing page...", "success");
-          // Refresh page after 1 second
-          setTimeout(() => {
-            console.log("Refreshing page after successful payment");
-            window.location.reload();
-          }, 1000);
-        }, 500);
+        if (cleared) {
+          // Show payment success alert
+          showPaymentSuccessAlert(paymentData);
+        }
         
       } else if (paymentData.status === "pending" || paymentData.status === "PENDING") {
         // Payment still pending
@@ -6707,6 +7527,8 @@ function AgentCart() {
         localStorage.removeItem("order_id");
         localStorage.removeItem("payment_status");
       }
+      fetchCartItems()
+
       
     } catch (error) {
       console.error("Error confirming payment:", error);
@@ -6752,13 +7574,13 @@ function AgentCart() {
       });
       
       // If we have a merchant order ID, confirm payment
-      if (merchantOrderId && !paymentVerifiedRef.current) {
+      if (merchantOrderId && !paymentVerifiedRef.current && !paymentVerified) {
         console.log("Found merchant order ID, starting payment verification:", merchantOrderId);
         
-        // Wait 2 seconds before first check to ensure page is loaded
+        // Wait 1 second before first check to ensure page is loaded
         setTimeout(() => {
           confirmPayment(merchantOrderId);
-        }, 2000);
+        }, 1000);
       }
     };
     
@@ -6768,9 +7590,6 @@ function AgentCart() {
     return () => {
       if (paymentTimerRef.current) {
         clearTimeout(paymentTimerRef.current);
-      }
-      if (refreshTimeoutRef.current) {
-        clearTimeout(refreshTimeoutRef.current);
       }
     };
   }, [location.search]);
@@ -6902,6 +7721,7 @@ function AgentCart() {
         
         // Reset verification flag
         paymentVerifiedRef.current = false;
+        setPaymentVerified(false);
         
         // Redirect to payment gateway
         window.location.href = paymentResponse.data.payment_url;
@@ -6917,20 +7737,6 @@ function AgentCart() {
     } finally {
       setPaymentLoading(false);
     }
-  };
-
-  // Handle payment dialog close
-  const handlePaymentDialogClose = () => {
-    setPaymentDialogOpen(false);
-    setPaymentInfo(null);
-    
-    // Clear any pending refresh timeout
-    if (refreshTimeoutRef.current) {
-      clearTimeout(refreshTimeoutRef.current);
-      refreshTimeoutRef.current = null;
-    }
-    
-    navigate("/agent-add-to-cart");
   };
 
   // Helper function to show snackbar
@@ -6960,6 +7766,7 @@ function AgentCart() {
     const merchantOrderId = localStorage.getItem("merchant_order_id");
     if (merchantOrderId) {
       paymentVerifiedRef.current = false;
+      setPaymentVerified(false);
       confirmPayment(merchantOrderId);
     }
   };
@@ -7020,39 +7827,78 @@ function AgentCart() {
         </div>
       )}
 
-      {/* Payment Success Dialog - Simplified */}
-      {paymentDialogOpen && paymentInfo && (
-        <div className="payment-dialog-overlay">
-          <div className="payment-dialog">
-            <div className="payment-dialog-header">
-              <FaCheckCircle className="text-success me-2" size={32} />
-              <h3>Payment Successful!</h3>
-            </div>
-            <div className="payment-dialog-body">
-              <p className="mb-4">{paymentInfo.message}</p>
-              <div className="payment-details">
-                <div className="payment-detail-row">
-                  <span>Merchant Order ID:</span>
-                  <strong>{paymentInfo.merchant_order_id}</strong>
-                </div>
-                {paymentInfo.order_id && (
-                  <div className="payment-detail-row">
-                    <span>Order ID:</span>
-                    <strong>{paymentInfo.order_id}</strong>
-                  </div>
-                )}
-                {paymentInfo.amount > 0 && (
-                  <div className="payment-detail-row">
-                    <span>Amount Paid:</span>
-                    <strong>₹{paymentInfo.amount.toFixed(2)}</strong>
-                  </div>
-                )}
+      {/* Payment Success Alert Dialog */}
+      {paymentSuccessOpen && paymentSuccessInfo && (
+        <div className="payment-success-overlay">
+          <div className="payment-success-alert">
+            <div className="payment-success-header">
+              <FaCheckCircle className="text-success me-3" size={40} />
+              <div>
+                <h3 className="mb-1">Payment Successful!</h3>
+                <p className="text-muted mb-0">Your order has been placed successfully</p>
               </div>
-              <div className="auto-refresh-notice mt-3 p-2 text-center bg-light rounded">
-                <small className="text-muted">
-                  Page will refresh automatically in 1 second...
+              <button 
+                className="btn-close ms-auto"
+                onClick={closePaymentSuccessAlert}
+              >
+                <FaTimes />
+              </button>
+            </div>
+            
+            <div className="payment-success-body">
+              <div className="success-icon-container">
+                <div className="success-icon-circle">
+                  <FaCheckCircle size={48} />
+                </div>
+              </div>
+              
+              <p className="success-message text-center">
+                Thank you for your purchase! Your payment has been confirmed.
+              </p>
+              
+              <div className="payment-details-card">
+                <h5 className="mb-3">Payment Details</h5>
+                <div className="payment-detail-item">
+                  <span className="detail-label">Merchant Order ID:</span>
+                  <span className="detail-value">{paymentSuccessInfo.merchant_order_id}</span>
+                </div>
+                {paymentSuccessInfo.order_id && (
+                  <div className="payment-detail-item">
+                    <span className="detail-label">Order ID:</span>
+                    <span className="detail-value">{paymentSuccessInfo.order_id}</span>
+                  </div>
+                )}
+                <div className="payment-detail-item">
+                  <span className="detail-label">Amount Paid:</span>
+                  <span className="detail-value">₹{paymentSuccessInfo.amount.toFixed(2)}</span>
+                </div>
+                <div className="payment-detail-item">
+                  <span className="detail-label">Date & Time:</span>
+                  <span className="detail-value">{paymentSuccessInfo.timestamp}</span>
+                </div>
+              </div>
+              
+              <div className="alert alert-info mt-3">
+                <small>
+                  <FaExclamationCircle className="me-2" />
+                  Your cart has been cleared. You will receive order confirmation shortly.
                 </small>
               </div>
+            </div>
+            
+            <div className="payment-success-footer">
+              <button 
+                className="btn btn-primary"
+                onClick={closePaymentSuccessAlert}
+              >
+                Continue Shopping
+              </button>
+              <button 
+                className="btn btn-outline-secondary"
+                onClick={() => navigate("/agent-orders")}
+              >
+                View Orders
+              </button>
             </div>
           </div>
         </div>
@@ -7098,29 +7944,48 @@ function AgentCart() {
             <div className="empty-cart-icon mb-3">
               <FaShoppingCart size={64} />
             </div>
-            <h3 className="mb-3">Your cart is empty</h3>
-            <p className="text-muted mb-4">
-              {localStorage.getItem("merchant_order_id") ? 
-                "Payment completed! Your cart has been cleared." : 
-                "Add some products to your cart and they will appear here"}
-            </p>
-            <button 
-              className="btn btn-primary btn-lg"
-              onClick={handleContinueShopping}
-            >
-              Browse Products
-            </button>
             
-            {/* For testing: Show manual verification button if we have merchant order id */}
-            {localStorage.getItem("merchant_order_id") && !isVerifyingPayment && (
-              <div className="mt-4">
+            {paymentVerified ? (
+              <>
+                <h3 className="mb-3 text-success">Payment Successful!</h3>
+                <p className="text-muted mb-4">
+                  Your order has been placed and cart has been cleared.
+                </p>
                 <button 
-                  className="btn btn-sm btn-warning"
-                  onClick={handleManualVerification}
+                  className="btn btn-primary btn-lg"
+                  onClick={handleContinueShopping}
                 >
-                  Test: Verify Payment Manually
+                  Continue Shopping
                 </button>
-              </div>
+              </>
+            ) : localStorage.getItem("merchant_order_id") ? (
+              <>
+                <h3 className="mb-3">Payment Processing</h3>
+                <p className="text-muted mb-4">
+                  We're verifying your payment status...
+                </p>
+                {!isVerifyingPayment && (
+                  <button 
+                    className="btn btn-warning btn-lg"
+                    onClick={handleManualVerification}
+                  >
+                    Check Payment Status
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <h3 className="mb-3">Your cart is empty</h3>
+                <p className="text-muted mb-4">
+                  Add some products to your cart and they will appear here
+                </p>
+                <button 
+                  className="btn btn-primary btn-lg"
+                  onClick={handleContinueShopping}
+                >
+                  Browse Products
+                </button>
+              </>
             )}
           </div>
         ) : (

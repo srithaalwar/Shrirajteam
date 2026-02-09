@@ -240,3 +240,37 @@
     gap: 8px;
   }
 }
+
+
+/* Add these styles to your existing CSS file */
+
+.disabled-plan {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.option-row.disabled {
+  background-color: #f8f9fa !important;
+  cursor: not-allowed !important;
+}
+
+.option-row.disabled input[type="radio"] {
+  cursor: not-allowed !important;
+}
+
+.option-row.disabled .option-duration,
+.option-row.disabled .option-permonth,
+.option-row.disabled .option-price {
+  color: #6c757d !important;
+}
+
+.alert {
+  margin: 20px auto;
+  max-width: 800px;
+  border-radius: 10px;
+}
+
+/* Override for active subscription state */
+.option-row input[type="radio"]:disabled + div {
+  opacity: 0.6;
+}
