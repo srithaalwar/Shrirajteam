@@ -2527,6 +2527,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { baseurl } from "../../BaseURL/BaseURL";
 
+
 // Import FontAwesome icons
 import { 
   FaTachometerAlt, 
@@ -2935,8 +2936,8 @@ const AdminNavbar = () => {
       name: "Operations",
       icon: <FaCogs />,
       subMenu: [
-        { path: "/", name: "Company Payout", icon: <FaMoneyBillWave /> },
-        { path: "/", name: "Team Payout", icon: <FaHandHoldingUsd /> },
+        // { path: "/", name: "Company Payout", icon: <FaMoneyBillWave /> },
+        // { path: "/", name: "Team Payout", icon: <FaHandHoldingUsd /> },
         { path: "/admin-subscriptions", name: "Subscription", icon: <FaCreditCard /> },
         { path: "/a-bookingslab", name: "Booking Slab", icon: <FaLayerGroup /> },
         { path: "/admin-trainingmaterial", name: "Training Material", icon: <FaGraduationCap /> },
@@ -2954,6 +2955,7 @@ const AdminNavbar = () => {
     { path: "/admin-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/a-leads", name: "Leads", icon: <FaChartLine /> },
     { path: "/", name: "Reports", icon: <FaFileAlt /> },
+    { path: "/admin-orders", name: "Orders", icon: <FaFileAlt /> },
     { path: "/a-settings", name: "Prefix", icon: <FaTag /> },
     { path: "/admin-profile", name: "Profile", icon: <FaUserCircle /> },
   ];

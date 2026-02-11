@@ -5370,6 +5370,7 @@ const AgentNavbar = () => {
     },
     { path: "/p-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/agent-offers", name: "Offers", icon: <FaTag /> },
+    { path: "/agent-orders", name: "Orders", icon: <FaTag /> },
     { path: "/agent-wishlist", name: "My Wishlist", icon: <FaHeart /> }, // ADDED
     { path: "/agent-add-to-cart", name: "My Cart", icon: <FaShoppingCart /> }, // ADDED
     { path: "/agent-profile", name: "Profile", icon: <FaUserCircle /> },

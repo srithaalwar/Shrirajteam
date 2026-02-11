@@ -1020,7 +1020,7 @@ const AgentSubcrptionplan = () => {
           body: JSON.stringify({
             user_id: Number(userId),
             variant_id: selectedVariantId,
-            redirect_url: `${redirecturl}/agent-transactions`,
+            redirect_url: `${redirecturl}/agent-subscription-plan`,
           }),
         }
       );

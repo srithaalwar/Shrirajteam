@@ -5,7 +5,7 @@ import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
 import Swal from "sweetalert2";
 import "./CartPage.css";
 
-const WebsiteCartPage = () => {
+const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -266,4 +266,4 @@ const WebsiteCartPage = () => {
   );
 };
 
-export default WebsiteCartPage;
+export default CartPage;

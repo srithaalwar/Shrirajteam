@@ -318,6 +318,12 @@ import BusinessList from './Agent_Panel/AgentMyBusiness/MyBusiness';
 // Import the AddBusinessForm component
 import AddBusinessForm from './Agent_Panel/AgentBusiness/AddBusiness';
 
+import AdminOrders from "./Admin_Panel/Admin_Orders/Orders"
+import AgentOrders from "./Agent_Panel/Agent_Orders/Orders"
+
+
+import ClientOrders from "./Client_Panel/Client_Orders/Orders"
+
 function App() {
   return (
     <BrowserRouter>
@@ -432,6 +438,9 @@ function App() {
 <Route path="/productcategoryform" element={<ProductCategoryForm />} />
 <Route path="/editproductcategory/:id" element={<EditProductCategory />} />
         <Route path="/admin-transactions" element={<AdminTransactions />} />
+        <Route path="/admin-orders" element={<AdminOrders />} />
+        <Route path="/agent-orders" element={<AgentOrders />} />
+        <Route path="/client-orders" element={<ClientOrders />} />
 
         {/* Agent-panel */}
 
