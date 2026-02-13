@@ -743,12 +743,12 @@
 
 
 
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './TransactionSummary.css';
 import AdminNavbar from "./../Admin_Navbar/Admin_Navbar";
+import { baseurl } from '../../BaseURL/BaseURL'; // Added baseurl import
 
 function TransactionSummary() {
     const [transactions, setTransactions] = useState([]);
@@ -762,8 +762,8 @@ function TransactionSummary() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     
-    // API URL
-    const API_URL = 'https://test.shrirajteam.com:85/transactions/';
+    // API URL - Using baseurl from import
+    const API_URL = `${baseurl}/transactions/`; // Updated to use baseurl
 
     const formatDateTime = (dateString) => {
         if (!dateString) return 'N/A';
@@ -999,7 +999,6 @@ function TransactionSummary() {
             "Payment Mode",
             "Role",
             "Username",
-            // "User ID",
             "PhonePe Merchant Order ID",
             "PhonePe Order ID",
             "PhonePe Transaction ID",
@@ -1021,8 +1020,7 @@ function TransactionSummary() {
                     `"₹${parseFloat(item.paid_amount).toLocaleString('en-IN')}"`,
                     `"${mapPaymentMode(item.payment_mode)}"`,
                     `"${item.role}"`,
-                    // `"${item.username}"`,
-                    // item.user_id,
+                    `"${item.username}"`,
                     `"${item.phone_pe_merchant_order_id || ''}"`,
                     `"${item.phone_pe_order_id || ''}"`,
                     `"${item.phone_pe_transaction_id || ''}"`,
@@ -1208,7 +1206,6 @@ function TransactionSummary() {
                                 <th>AMOUNT</th>
                                 <th>PAYMENT MODE</th>
                                 <th>ROLE</th>
-                                {/* <th>USERNAME</th> */}
                                 <th>USER ID</th>
                                 <th>STATUS</th>
                                 <th>RECEIPT</th>
@@ -1258,8 +1255,7 @@ function TransactionSummary() {
                                         <td>
                                             <span className="role-badge">{transaction.role}</span>
                                         </td>
-                                        <td className="username-cell">{transaction.username}</td>
-                                        <td>{transaction.user_id}</td>
+                                        <td className="username-cell">{transaction.user_id}</td>
                                         <td>
                                             <span 
                                                 className="status-badge"
@@ -1274,7 +1270,7 @@ function TransactionSummary() {
                                         <td className="receipt-cell">
                                             {transaction.document_file ? (
                                                 <a
-                                                    href={transaction.document_file}
+                                                    href={`${baseurl}${transaction.document_file}`} // Updated to use baseurl
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="receipt-link"

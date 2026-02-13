@@ -647,3 +647,465 @@
     font-size: 0.9rem;
   }
 }
+
+
+/* Add these styles to your existing AddToCart.css file */
+
+/* Split Layout - Add after your existing agent-cart-content styles */
+.agent-cart-content.split-layout {
+  display: flex;
+  gap: 24px;
+  height: calc(100vh - 200px);
+  min-height: 600px;
+  margin-top: 20px;
+}
+
+/* Left Column - Cart Items */
+.cart-items-column {
+  flex: 1;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+.cart-items-header.sticky-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.cart-items-header.sticky-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.cart-items-list.scrollable-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Compact Cart Items - Keep your existing cart-item-card styles but add these modifications */
+.cart-item-card.compact {
+  padding: 12px;
+  margin-bottom: 0;
+}
+
+.cart-item-card.compact .cart-item-image {
+  width: 80px;
+  height: 80px;
+}
+
+.cart-item-card.compact .item-title {
+  font-size: 0.95rem;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cart-item-card.compact .current-price {
+  font-size: 0.95rem;
+}
+
+.cart-item-card.compact .original-price {
+  font-size: 0.75rem;
+}
+
+.cart-item-card.compact .discount-badge {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+}
+
+.cart-item-card.compact .quantity-btn {
+  width: 24px;
+  height: 24px;
+  font-size: 0.7rem;
+}
+
+.cart-item-card.compact .quantity-display {
+  min-width: 24px;
+  font-size: 0.9rem;
+}
+
+.cart-item-card.compact .item-subtotal {
+  font-size: 0.85rem;
+}
+
+.cart-item-card.compact .subtotal-amount {
+  font-size: 0.95rem;
+}
+
+/* Right Column - Order Summary */
+.order-summary-column {
+  width: 400px;
+  flex-shrink: 0;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.order-summary-card.compact {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+/* Compact Summary */
+.summary-details.compact {
+  margin-bottom: 16px;
+}
+
+.summary-details.compact .summary-row {
+  font-size: 0.9rem;
+  padding: 6px 0;
+}
+
+.summary-details.compact .total-amount {
+  font-size: 1.2rem;
+}
+
+/* Compact Payment Method */
+.payment-method-section.compact {
+  margin: 16px 0;
+  padding: 16px 0;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.payment-method-options.compact {
+  gap: 8px;
+}
+
+.payment-method-option.compact {
+  padding: 10px 12px;
+}
+
+.payment-method-option.compact input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  margin-right: 10px;
+}
+
+.payment-method-option.compact .payment-icon {
+  font-size: 1rem;
+  margin-right: 10px;
+}
+
+.payment-method-option.compact .payment-method-name {
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
+/* Compact Address Forms */
+.address-section.compact {
+  padding: 0;
+  margin-bottom: 16px;
+}
+
+.address-section.compact .address-section-title {
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  padding: 0;
+}
+
+.address-section.compact .address-form-section {
+  margin-bottom: 16px;
+}
+
+.address-section.compact .address-form-title {
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.address-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.address-section.compact .form-label {
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+}
+
+.address-section.compact .form-control {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
+.address-section.compact .invalid-feedback {
+  font-size: 0.7rem;
+  margin-top: 2px;
+}
+
+/* Billing Address Section */
+.billing-address-section {
+  margin-top: 12px;
+  padding-top: 12px;
+}
+
+.address-section.compact .form-check-label {
+  font-size: 0.8rem;
+}
+
+/* Compact Checkout Actions */
+.checkout-actions.compact {
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.checkout-actions.compact .checkout-btn {
+  height: 45px;
+  font-size: 0.9rem;
+}
+
+/* Scrollbar Styling */
+.cart-items-list.scrollable-list::-webkit-scrollbar,
+.order-summary-column::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cart-items-list.scrollable-list::-webkit-scrollbar-track,
+.order-summary-column::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.cart-items-list.scrollable-list::-webkit-scrollbar-thumb,
+.order-summary-column::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.cart-items-list.scrollable-list::-webkit-scrollbar-thumb:hover,
+.order-summary-column::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Update existing responsive styles */
+@media (max-width: 1024px) {
+  .agent-cart-content.split-layout {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .cart-items-column {
+    height: 500px;
+  }
+  
+  .order-summary-column {
+    width: 100%;
+  }
+}
+
+/* Keep your existing responsive styles and add these overrides */
+@media (max-width: 992px) {
+  .agent-cart-content.split-layout {
+    grid-template-columns: 1fr; /* This will be overridden by flex column */
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-item-card.compact {
+    grid-template-columns: 1fr; /* Override the grid for mobile */
+  }
+  
+  .cart-item-card.compact .cart-item-image {
+    width: 100%;
+    height: 120px;
+  }
+  
+  .cart-item-card.compact .item-title {
+    max-width: 100%;
+  }
+  
+  .address-form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .order-summary-column {
+    overflow-y: visible; /* Prevent double scroll on mobile */
+  }
+}
+
+@media (max-width: 576px) {
+  .cart-items-column {
+    height: 400px;
+  }
+  
+  .cart-item-card.compact .cart-item-image {
+    height: 100px;
+  }
+}
+
+/* Payment Success Alert Styles - Add these if not present */
+.payment-success-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  animation: fadeIn 0.3s ease;
+}
+
+.payment-success-alert {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease;
+}
+
+.payment-success-header {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background: linear-gradient(135deg, #f8f9fa, #ffffff);
+}
+
+.payment-success-header .btn-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.payment-success-header .btn-close:hover {
+  color: #333;
+}
+
+.payment-success-body {
+  padding: 30px 20px;
+}
+
+.success-icon-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.success-icon-circle {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  animation: scaleIn 0.5s ease;
+}
+
+.success-message {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.payment-details-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.payment-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed #ddd;
+}
+
+.payment-detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.payment-success-footer {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.payment-success-footer .btn {
+  flex: 1;
+  height: 45px;
+}
+
+/* Payment Verification Status */
+.payment-verification-status {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

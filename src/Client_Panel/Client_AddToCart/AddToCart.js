@@ -2198,12 +2198,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
- import AgentNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
- import { baseurl, redirecturl } from '../../BaseURL/BaseURL';
+import AgentNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
+import { baseurl, redirecturl } from '../../BaseURL/BaseURL';
 import "./AddToCart.css";
-import { FaTrash, FaMinus, FaPlus, FaCreditCard, FaArrowLeft, FaShoppingCart, FaCheckCircle, FaExclamationCircle, FaTimes } from "react-icons/fa";
+import { FaTrash, FaMinus, FaPlus, FaCreditCard, FaArrowLeft, FaShoppingCart, FaCheckCircle, FaExclamationCircle, FaTimes, FaMoneyBillWave, FaTruck, FaMapMarkerAlt, FaUser, FaPhone, FaCity, FaFlag } from "react-icons/fa";
 
-function AgentCart() {
+function ClientCart() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState(false);
@@ -2216,6 +2216,32 @@ function AgentCart() {
   const [paymentSuccessInfo, setPaymentSuccessInfo] = useState(null);
   const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
   const [paymentVerified, setPaymentVerified] = useState(false);
+  
+  // New state for payment method and addresses
+  const [paymentMethod, setPaymentMethod] = useState("online");
+  const [shippingAddress, setShippingAddress] = useState({
+    full_name: "",
+    phone: "",
+    address_line1: "",
+    address_line2: "",
+    city: "",
+    state: "",
+    pincode: "",
+    country: "India"
+  });
+  const [billingAddress, setBillingAddress] = useState({
+    full_name: "",
+    phone: "",
+    address_line1: "",
+    address_line2: "",
+    city: "",
+    state: "",
+    pincode: "",
+    country: "India"
+  });
+  const [sameAsShipping, setSameAsShipping] = useState(true);
+  const [addressErrors, setAddressErrors] = useState({});
+  const [addressTouched, setAddressTouched] = useState({});
   
   const paymentVerifiedRef = useRef(false);
   const paymentTimerRef = useRef(null);
@@ -2261,6 +2287,104 @@ function AgentCart() {
     }
   };
 
+  // Validate address fields
+  const validateAddress = (address, type) => {
+    const errors = {};
+    
+    if (!address.full_name?.trim()) {
+      errors[`${type}_full_name`] = "Full name is required";
+    }
+    
+    if (!address.phone?.trim()) {
+      errors[`${type}_phone`] = "Phone number is required";
+    } else if (!/^\d{10}$/.test(address.phone)) {
+      errors[`${type}_phone`] = "Enter a valid 10-digit phone number";
+    }
+    
+    if (!address.address_line1?.trim()) {
+      errors[`${type}_address_line1`] = "Address line 1 is required";
+    }
+    
+    if (!address.city?.trim()) {
+      errors[`${type}_city`] = "City is required";
+    }
+    
+    if (!address.state?.trim()) {
+      errors[`${type}_state`] = "State is required";
+    }
+    
+    if (!address.pincode?.trim()) {
+      errors[`${type}_pincode`] = "Pincode is required";
+    } else if (!/^\d{6}$/.test(address.pincode)) {
+      errors[`${type}_pincode`] = "Enter a valid 6-digit pincode";
+    }
+    
+    return errors;
+  };
+
+  // Validate all addresses based on payment method
+  const validateAddresses = () => {
+    let errors = {};
+    
+    // Always validate shipping address
+    errors = { ...errors, ...validateAddress(shippingAddress, 'shipping') };
+    
+    // Validate billing address if not same as shipping
+    if (!sameAsShipping) {
+      errors = { ...errors, ...validateAddress(billingAddress, 'billing') };
+    }
+    
+    setAddressErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Handle address input change
+  const handleAddressChange = (type, field, value) => {
+    if (type === 'shipping') {
+      setShippingAddress(prev => ({ ...prev, [field]: value }));
+      
+      // If same as shipping is checked, update billing too
+      if (sameAsShipping) {
+        setBillingAddress(prev => ({ ...prev, [field]: value }));
+      }
+    } else {
+      setBillingAddress(prev => ({ ...prev, [field]: value }));
+    }
+    
+    // Mark field as touched
+    setAddressTouched(prev => ({ ...prev, [`${type}_${field}`]: true }));
+    
+    // Clear error for this field
+    if (addressErrors[`${type}_${field}`]) {
+      setAddressErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[`${type}_${field}`];
+        return newErrors;
+      });
+    }
+  };
+
+  // Handle same as shipping checkbox
+  const handleSameAsShippingChange = (e) => {
+    const checked = e.target.checked;
+    setSameAsShipping(checked);
+    
+    if (checked) {
+      // Copy shipping address to billing
+      setBillingAddress({ ...shippingAddress });
+      
+      // Clear billing address errors
+      setAddressErrors(prev => {
+        const newErrors = { ...prev };
+        Object.keys(newErrors).forEach(key => {
+          if (key.startsWith('billing_')) {
+            delete newErrors[key];
+          }
+        });
+        return newErrors;
+      });
+    }
+  };
 
   // Clear cart after successful payment
   const clearCartAfterPayment = async () => {
@@ -2420,7 +2544,6 @@ function AgentCart() {
         localStorage.removeItem("payment_status");
       }
       fetchCartItems()
-
       
     } catch (error) {
       console.error("Error confirming payment:", error);
@@ -2586,16 +2709,51 @@ function AgentCart() {
       return;
     }
 
+    // Validate addresses
+    if (!validateAddresses()) {
+      showSnackbar("Please fill in all required address fields", "error");
+      // Mark all fields as touched to show errors
+      const allFields = {};
+      ['shipping', 'billing'].forEach(type => {
+        ['full_name', 'phone', 'address_line1', 'city', 'state', 'pincode'].forEach(field => {
+          if (!(type === 'billing' && sameAsShipping)) {
+            allFields[`${type}_${field}`] = true;
+          }
+        });
+      });
+      setAddressTouched(allFields);
+      return;
+    }
+
     setPaymentLoading(true);
     try {
       console.log("Initiating payment for user:", userId);
+      console.log("Payment method:", paymentMethod);
+
+      // Prepare payment payload
+      const paymentPayload = {
+        user_id: parseInt(userId),
+        payment_method: paymentMethod,
+        shipping_address: shippingAddress
+      };
+
+      // Add billing address (either same as shipping or separate)
+      if (sameAsShipping) {
+        paymentPayload.billing_address = shippingAddress;
+      } else {
+        paymentPayload.billing_address = billingAddress;
+      }
+
+      // Add redirect_url only for online payment
+      if (paymentMethod === "online") {
+        paymentPayload.redirect_url = `${redirecturl}/client-add-to-cart`;
+      }
+
+      console.log("Payment payload:", paymentPayload);
 
       const paymentResponse = await axios.post(
         `${baseurl}/product/initiate-payment/`,
-        {
-          user_id: parseInt(userId),
-          redirect_url: `${redirecturl}/client-add-to-cart`
-        },
+        paymentPayload,
         {
           headers: {
             'Content-Type': 'application/json'
@@ -2606,20 +2764,39 @@ function AgentCart() {
 
       console.log("Payment initiation response:", paymentResponse.data);
 
-      if (paymentResponse.data && paymentResponse.data.payment_url) {
-        // Save merchant order id to localStorage
-        localStorage.setItem('merchant_order_id', paymentResponse.data.merchant_order_id);
-        localStorage.setItem('order_id', paymentResponse.data.order_id);
-        
-        // Reset verification flag
-        paymentVerifiedRef.current = false;
-        setPaymentVerified(false);
-        
-        // Redirect to payment gateway
-        window.location.href = paymentResponse.data.payment_url;
+      if (paymentMethod === "online") {
+        // Online payment - redirect to payment gateway
+        if (paymentResponse.data && paymentResponse.data.payment_url) {
+          // Save merchant order id to localStorage
+          localStorage.setItem('merchant_order_id', paymentResponse.data.merchant_order_id);
+          localStorage.setItem('order_id', paymentResponse.data.order_id);
+          
+          // Reset verification flag
+          paymentVerifiedRef.current = false;
+          setPaymentVerified(false);
+          
+          // Redirect to payment gateway
+          window.location.href = paymentResponse.data.payment_url;
+        } else {
+          showSnackbar("Payment initialization failed", "error");
+        }
       } else {
-        showSnackbar("Payment initialization failed", "error");
+        // COD payment - show success message and clear cart
+        showSnackbar("Order placed successfully with COD!", "success");
+        
+        // Clear cart
+        await clearCartAfterPayment();
+        
+        // Show success message with order details
+        setPaymentSuccessInfo({
+          order_id: paymentResponse.data.order_id,
+          amount: calculateTotal(),
+          message: "Your order has been placed successfully with Cash on Delivery",
+          timestamp: new Date().toLocaleString()
+        });
+        setPaymentSuccessOpen(true);
       }
+      
     } catch (error) {
       console.error("Payment initiation error:", error);
       showSnackbar(
@@ -2661,6 +2838,140 @@ function AgentCart() {
       setPaymentVerified(false);
       confirmPayment(merchantOrderId);
     }
+  };
+
+  // Render address form with icons
+  const renderAddressForm = (type, address, title) => {
+    const prefix = type === 'shipping' ? 'shipping' : 'billing';
+    
+    return (
+      <div className="address-form-section">
+        <h6 className="address-form-title">
+          {type === 'shipping' ? <FaTruck className="me-2" /> : <FaCreditCard className="me-2" />}
+          {title}
+        </h6>
+        
+        <div className="address-form-grid">
+          <div className="form-group">
+            <label className="form-label">
+              <FaUser className="me-1" size={12} />
+              Full Name *
+            </label>
+            <input
+              type="text"
+              className={`form-control ${addressTouched[`${prefix}_full_name`] && addressErrors[`${prefix}_full_name`] ? 'is-invalid' : ''}`}
+              value={address.full_name}
+              onChange={(e) => handleAddressChange(type, 'full_name', e.target.value)}
+              onBlur={() => setAddressTouched(prev => ({ ...prev, [`${prefix}_full_name`]: true }))}
+              placeholder="Enter full name"
+            />
+            {addressTouched[`${prefix}_full_name`] && addressErrors[`${prefix}_full_name`] && (
+              <div className="invalid-feedback">{addressErrors[`${prefix}_full_name`]}</div>
+            )}
+          </div>
+          
+          <div className="form-group">
+            <label className="form-label">
+              <FaPhone className="me-1" size={12} />
+              Phone Number *
+            </label>
+            <input
+              type="tel"
+              className={`form-control ${addressTouched[`${prefix}_phone`] && addressErrors[`${prefix}_phone`] ? 'is-invalid' : ''}`}
+              value={address.phone}
+              onChange={(e) => handleAddressChange(type, 'phone', e.target.value)}
+              onBlur={() => setAddressTouched(prev => ({ ...prev, [`${prefix}_phone`]: true }))}
+              placeholder="Enter 10-digit phone number"
+              maxLength="10"
+            />
+            {addressTouched[`${prefix}_phone`] && addressErrors[`${prefix}_phone`] && (
+              <div className="invalid-feedback">{addressErrors[`${prefix}_phone`]}</div>
+            )}
+          </div>
+          
+          <div className="form-group full-width">
+            <label className="form-label">
+              <FaMapMarkerAlt className="me-1" size={12} />
+              Address Line 1 *
+            </label>
+            <input
+              type="text"
+              className={`form-control ${addressTouched[`${prefix}_address_line1`] && addressErrors[`${prefix}_address_line1`] ? 'is-invalid' : ''}`}
+              value={address.address_line1}
+              onChange={(e) => handleAddressChange(type, 'address_line1', e.target.value)}
+              onBlur={() => setAddressTouched(prev => ({ ...prev, [`${prefix}_address_line1`]: true }))}
+              placeholder="House number, street name"
+            />
+            {addressTouched[`${prefix}_address_line1`] && addressErrors[`${prefix}_address_line1`] && (
+              <div className="invalid-feedback">{addressErrors[`${prefix}_address_line1`]}</div>
+            )}
+          </div>
+          
+          <div className="form-group full-width">
+            <label className="form-label">Address Line 2</label>
+            <input
+              type="text"
+              className="form-control"
+              value={address.address_line2}
+              onChange={(e) => handleAddressChange(type, 'address_line2', e.target.value)}
+              placeholder="Landmark, area (optional)"
+            />
+          </div>
+          
+          <div className="form-group">
+            <label className="form-label">
+              <FaCity className="me-1" size={12} />
+              City *
+            </label>
+            <input
+              type="text"
+              className={`form-control ${addressTouched[`${prefix}_city`] && addressErrors[`${prefix}_city`] ? 'is-invalid' : ''}`}
+              value={address.city}
+              onChange={(e) => handleAddressChange(type, 'city', e.target.value)}
+              onBlur={() => setAddressTouched(prev => ({ ...prev, [`${prefix}_city`]: true }))}
+              placeholder="City"
+            />
+            {addressTouched[`${prefix}_city`] && addressErrors[`${prefix}_city`] && (
+              <div className="invalid-feedback">{addressErrors[`${prefix}_city`]}</div>
+            )}
+          </div>
+          
+          <div className="form-group">
+            <label className="form-label">
+              <FaFlag className="me-1" size={12} />
+              State *
+            </label>
+            <input
+              type="text"
+              className={`form-control ${addressTouched[`${prefix}_state`] && addressErrors[`${prefix}_state`] ? 'is-invalid' : ''}`}
+              value={address.state}
+              onChange={(e) => handleAddressChange(type, 'state', e.target.value)}
+              onBlur={() => setAddressTouched(prev => ({ ...prev, [`${prefix}_state`]: true }))}
+              placeholder="State"
+            />
+            {addressTouched[`${prefix}_state`] && addressErrors[`${prefix}_state`] && (
+              <div className="invalid-feedback">{addressErrors[`${prefix}_state`]}</div>
+            )}
+          </div>
+          
+          <div className="form-group">
+            <label className="form-label">Pincode *</label>
+            <input
+              type="text"
+              className={`form-control ${addressTouched[`${prefix}_pincode`] && addressErrors[`${prefix}_pincode`] ? 'is-invalid' : ''}`}
+              value={address.pincode}
+              onChange={(e) => handleAddressChange(type, 'pincode', e.target.value)}
+              onBlur={() => setAddressTouched(prev => ({ ...prev, [`${prefix}_pincode`]: true }))}
+              placeholder="6-digit pincode"
+              maxLength="6"
+            />
+            {addressTouched[`${prefix}_pincode`] && addressErrors[`${prefix}_pincode`] && (
+              <div className="invalid-feedback">{addressErrors[`${prefix}_pincode`]}</div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (!userId) {
@@ -2726,8 +3037,8 @@ function AgentCart() {
             <div className="payment-success-header">
               <FaCheckCircle className="text-success me-3" size={40} />
               <div>
-                <h3 className="mb-1">Payment Successful!</h3>
-                <p className="text-muted mb-0">Your order has been placed successfully</p>
+                <h3 className="mb-1">Order Placed Successfully!</h3>
+                <p className="text-muted mb-0">{paymentSuccessInfo.message}</p>
               </div>
               <button 
                 className="btn-close ms-auto"
@@ -2745,15 +3056,11 @@ function AgentCart() {
               </div>
               
               <p className="success-message text-center">
-                Thank you for your purchase! Your payment has been confirmed.
+                Thank you for your purchase!
               </p>
               
               <div className="payment-details-card">
-                <h5 className="mb-3">Payment Details</h5>
-                <div className="payment-detail-item">
-                  <span className="detail-label">Merchant Order ID:</span>
-                  <span className="detail-value">{paymentSuccessInfo.merchant_order_id}</span>
-                </div>
+                <h5 className="mb-3">Order Details</h5>
                 {paymentSuccessInfo.order_id && (
                   <div className="payment-detail-item">
                     <span className="detail-label">Order ID:</span>
@@ -2761,7 +3068,7 @@ function AgentCart() {
                   </div>
                 )}
                 <div className="payment-detail-item">
-                  <span className="detail-label">Amount Paid:</span>
+                  <span className="detail-label">Amount:</span>
                   <span className="detail-value">₹{paymentSuccessInfo.amount.toFixed(2)}</span>
                 </div>
                 <div className="payment-detail-item">
@@ -2881,13 +3188,14 @@ function AgentCart() {
             )}
           </div>
         ) : (
-          <div className="agent-cart-content">
-            <div className="cart-items-section">
-              <div className="cart-items-header">
+          <div className="agent-cart-content split-layout">
+            {/* Left Column - Cart Items */}
+            <div className="cart-items-column">
+              <div className="cart-items-header sticky-header">
                 <h3>Cart Items ({cartItems.length})</h3>
               </div>
               
-              <div className="cart-items-list">
+              <div className="cart-items-list scrollable-list">
                 {cartItems.map((item) => {
                   const variant = item.variant_details;
                   const mrp = parseFloat(variant.mrp || 0);
@@ -2899,7 +3207,7 @@ function AgentCart() {
                   ).join(', ');
 
                   return (
-                    <div key={item.id} className="cart-item-card">
+                    <div key={item.id} className="cart-item-card compact">
                       <div className="cart-item-image">
                         <img 
                           src={getProductImage(item)} 
@@ -2912,9 +3220,9 @@ function AgentCart() {
                       
                       <div className="cart-item-details">
                         <div className="item-header">
-                          <h5 className="item-title">
+                          <h6 className="item-title">
                             {variant.sku}
-                          </h5>
+                          </h6>
                           <button 
                             className="btn btn-danger btn-sm remove-btn"
                             onClick={() => handleRemoveItem(item.id)}
@@ -2991,12 +3299,12 @@ function AgentCart() {
               </div>
             </div>
             
-            {/* Order Summary */}
-            <div className="order-summary-section">
-              <div className="order-summary-card">
+            {/* Right Column - Order Summary with Payment and Address */}
+            <div className="order-summary-column">
+              <div className="order-summary-card compact">
                 <h3 className="summary-title">Order Summary</h3>
                 
-                <div className="summary-details">
+                <div className="summary-details compact">
                   <div className="summary-row">
                     <span>Subtotal ({cartItems.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
                     <span>₹{calculateSubtotal().toFixed(2)}</span>
@@ -3019,8 +3327,68 @@ function AgentCart() {
                     <span className="total-amount">₹{calculateTotal().toFixed(2)}</span>
                   </div>
                 </div>
+
+                {/* Payment Method Selection */}
+                <div className="payment-method-section compact">
+                  <h6 className="payment-method-title">Select Payment Method</h6>
+                  <div className="payment-method-options compact">
+                    <label className={`payment-method-option compact ${paymentMethod === 'online' ? 'selected' : ''}`}>
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="online"
+                        checked={paymentMethod === 'online'}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                      />
+                      <FaCreditCard className="payment-icon" />
+                      <div className="payment-method-info">
+                        <span className="payment-method-name">Online Payment</span>
+                      </div>
+                    </label>
+
+                    <label className={`payment-method-option compact ${paymentMethod === 'cod' ? 'selected' : ''}`}>
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="cod"
+                        checked={paymentMethod === 'cod'}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                      />
+                      <FaMoneyBillWave className="payment-icon" />
+                      <div className="payment-method-info">
+                        <span className="payment-method-name">Cash on Delivery</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Address Section */}
+                <div className="address-section compact">
+                  <h6 className="address-section-title">Delivery Address</h6>
+                  
+                  {/* Shipping Address */}
+                  {renderAddressForm('shipping', shippingAddress, 'Shipping Address')}
+                  
+                  {/* Billing Address */}
+                  <div className="billing-address-section">
+                    <div className="form-check mb-2">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="sameAsShipping"
+                        checked={sameAsShipping}
+                        onChange={handleSameAsShippingChange}
+                      />
+                      <label className="form-check-label small" htmlFor="sameAsShipping">
+                        Billing address same as shipping
+                      </label>
+                    </div>
+                    
+                    {!sameAsShipping && renderAddressForm('billing', billingAddress, 'Billing Address')}
+                  </div>
+                </div>
                 
-                <div className="checkout-actions">
+                <div className="checkout-actions compact">
                   <button 
                     className="btn btn-primary checkout-btn"
                     onClick={handleCheckout}
@@ -3033,18 +3401,10 @@ function AgentCart() {
                       </>
                     ) : (
                       <>
-                        <FaCreditCard className="me-2" />
-                        Proceed to Checkout
+                        {paymentMethod === 'online' ? <FaCreditCard className="me-2" /> : <FaMoneyBillWave className="me-2" />}
+                        {paymentMethod === 'online' ? 'Pay Now' : 'Place Order (COD)'}
                       </>
                     )}
-                  </button>
-                  
-                  <button 
-                    className="btn btn-outline-secondary continue-btn"
-                    onClick={handleContinueShopping}
-                  >
-                    <FaArrowLeft className="me-2" />
-                    Continue Shopping
                   </button>
                 </div>
               </div>
@@ -3056,4 +3416,4 @@ function AgentCart() {
   );
 }
 
-export default AgentCart;
+export default ClientCart;
