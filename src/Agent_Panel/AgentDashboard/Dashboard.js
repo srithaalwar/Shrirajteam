@@ -362,7 +362,7 @@ const AgentDashboard = () => {
           label: "Total Bookings", 
           value: property_summary.bookings.count || 0, 
           icon: iconMap["Total Bookings"], 
-          path: "/agent-bookings" 
+          path: "/agent-properties" 
         }
       );
     }
@@ -373,7 +373,7 @@ const AgentDashboard = () => {
           label: "Properties Purchased", 
           value: property_summary.buyied_or_purchased.count || 0, 
           icon: iconMap["Properties Purchased"], 
-          path: "/agent-purchases" 
+          path: "/agent-properties" 
         }
       );
     }
@@ -427,13 +427,13 @@ const AgentDashboard = () => {
           label: "Total Subscriptions", 
           value: subscription_summary.total_subscriptions || 0, 
           icon: iconMap["Total Subscriptions"], 
-          path: "/agent-subscriptions" 
+          path: "/agent-subscription-plan" 
         },
         { 
           label: "Active Subscriptions", 
           value: subscription_summary.active || 0, 
           icon: iconMap["Active Subscriptions"], 
-          path: "/agent-subscriptions?status=active" 
+          path: "/agent-subscription-plan" 
         }
       );
     }
@@ -444,7 +444,7 @@ const AgentDashboard = () => {
         label: "Transaction History", 
         value: "View All", 
         icon: iconMap["Transaction History"], 
-        path: "/agent-transaction-history" 
+        path: "/agent-transactions" 
       }
     );
 

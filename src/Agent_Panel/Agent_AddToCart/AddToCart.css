@@ -492,3 +492,158 @@
   width: 3rem;
   height: 3rem;
 }
+
+/* Payment Method Styles */
+.payment-method-section {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.payment-method-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.payment-method-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-method-option {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.payment-method-option:hover {
+  border-color: #007bff;
+  background-color: #f8f9fa;
+}
+
+.payment-method-option.selected {
+  border-color: #007bff;
+  background-color: #e3f2fd;
+}
+
+.payment-method-option input[type="radio"] {
+  margin-right: 15px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.payment-icon {
+  font-size: 24px;
+  margin-right: 15px;
+  color: #007bff;
+}
+
+.payment-method-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-method-name {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+/* Address Form Styles */
+.address-section {
+  padding: 20px;
+}
+
+.address-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.address-form-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #555;
+  display: flex;
+  align-items: center;
+}
+
+.address-form-title svg {
+  font-size: 1.1rem;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+  outline: none;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  font-size: 0.8rem;
+  color: #dc3545;
+  margin-top: 4px;
+}
+
+.form-check-input {
+  cursor: pointer;
+}
+
+.form-check-label {
+  font-size: 0.9rem;
+  color: #555;
+  cursor: pointer;
+}
+
+/* Billing Address Section */
+.billing-address-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px dashed #ddd;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .payment-method-option {
+    padding: 12px;
+  }
+  
+  .payment-icon {
+    font-size: 20px;
+  }
+  
+  .payment-method-name {
+    font-size: 0.9rem;
+  }
+  
+  .address-form-title {
+    font-size: 0.9rem;
+  }
+}
