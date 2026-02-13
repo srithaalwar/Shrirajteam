@@ -1085,7 +1085,7 @@ function Subscription() {
                   width: '400px'
                 }}
               />
-              <span style={{
+              {/* <span style={{
                 position: 'absolute',
                 left: '12px',
                 top: '50%',
@@ -1093,7 +1093,7 @@ function Subscription() {
                 color: '#666'
               }}>
                 🔍
-              </span>
+              </span> */}
               {searchQuery && (
                 <button 
                   className="clear-search"

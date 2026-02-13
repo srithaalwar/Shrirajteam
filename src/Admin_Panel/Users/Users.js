@@ -417,10 +417,9 @@ const UserList = () => {
                   border: '1px solid #ddd',
                   borderRadius: '4px',
                   fontSize: '14px',
-                  width: '300px'
                 }}
               />
-              <span style={{
+              {/* <span style={{
                 position: 'absolute',
                 left: '12px',
                 top: '50%',
@@ -428,7 +427,7 @@ const UserList = () => {
                 color: '#666'
               }}>
                 🔍
-              </span>
+              </span> */}
               {searchQuery && (
                 <button 
                   className="clear-search"

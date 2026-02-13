@@ -448,7 +448,7 @@ function TableProductCategory() {
                   setCurrentPage(1); // Reset to first page when searching
                 }}
               />
-              <span className="search-icon">🔍</span>
+              {/* <span className="search-icon">🔍</span> */}
             </div>
 
             <div className="filter-box">

@@ -74,7 +74,7 @@
   gap: 10px;
 }
 
-.option-row {
+/* .option-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -85,7 +85,7 @@
   transition: background 0.2s,
     border 0.2s;
   border: 1px solid transparent;
-}
+} */
 
 .option-row input {
   margin-right: 10px;
@@ -95,10 +95,10 @@
   background: rgba(255, 255, 255, 0.8);
 }
 
-.option-row.selected {
+/* .option-row.selected {
   border: 1px solid #001e3c;
   background: rgba(255, 255, 255, 0.9);
-}
+} */
 
 .option-row.disabled {
   opacity: 0.7;
@@ -126,10 +126,10 @@
   gap: 8px;
 }
 
-.option-price {
+/* .option-price {
   font-size: 14px;
   font-weight: 600;
-}
+} */
 
 /* Fixed Footer */
 .fixed-footer {
@@ -249,20 +249,20 @@
   pointer-events: none;
 }
 
-.option-row.disabled {
+/* .option-row.disabled {
   background-color: #f8f9fa !important;
   cursor: not-allowed !important;
-}
+} */
 
 .option-row.disabled input[type="radio"] {
   cursor: not-allowed !important;
 }
 
-.option-row.disabled .option-duration,
+/* .option-row.disabled .option-duration,
 .option-row.disabled .option-permonth,
 .option-row.disabled .option-price {
   color: #6c757d !important;
-}
+} */
 
 .alert {
   margin: 20px auto;
@@ -273,4 +273,124 @@
 /* Override for active subscription state */
 .option-row input[type="radio"]:disabled + div {
   opacity: 0.6;
+}
+
+
+
+
+/* Updated Option Row Styles */
+.option-row {
+  display: flex;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 12px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+  border: 1px solid transparent;
+  width: 100%;
+}
+
+.option-content-wrapper {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.option-radio-section {
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.option-radio-section input[type="radio"] {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.option-details-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+}
+
+.option-left {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.option-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+/* Rest of your existing styles remain the same */
+.option-duration {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.option-permonth {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.option-price {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* For disabled state */
+.option-row.disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background-color: #f8f9fa !important;
+}
+
+.option-row.disabled .option-radio-section input[type="radio"] {
+  cursor: not-allowed;
+}
+
+.option-row.disabled .option-duration,
+.option-row.disabled .option-permonth,
+.option-row.disabled .option-price {
+  color: #6c757d !important;
+}
+
+/* Hover effect */
+.option-row:hover:not(.disabled) {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Selected state */
+.option-row.selected {
+  border: 1px solid #001e3c;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Mobile responsive */
+@media (max-width: 576px) {
+  .option-details-section {
+    flex-wrap: wrap;
+  }
+  
+  .option-right {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  
+  .option-price {
+    font-size: 14px;
+  }
 }

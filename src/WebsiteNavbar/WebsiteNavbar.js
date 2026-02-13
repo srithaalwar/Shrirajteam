@@ -1139,7 +1139,7 @@ const WebsiteNavbar = () => {
           </div>
         </div>
 
-        <div className="wn-nav-right">
+        <div className="wn-nav-right web-nav-right">
           {/* Cart Icon with Link */}
           <Link to="/cart" className="wn-cart-link">
             <div 

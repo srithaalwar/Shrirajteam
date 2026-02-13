@@ -165,3 +165,89 @@
   color: #ff2f6d;
   border-bottom: 2px solid #ff2f6d;
 }
+
+
+
+
+/* Shop Header Styles */
+.shop-header {
+  position: relative;
+}
+
+.shop-logo {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+.shop-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Working Hours Dropdown */
+.working-hours-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.working-hours-list div {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.working-hours-list div:last-child {
+  border-bottom: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .shop-header .container {
+    padding: 1rem;
+  }
+  
+  .shop-logo {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .shop-header h3 {
+    font-size: 1.25rem;
+  }
+  
+  .working-hours-dropdown {
+    min-width: 250px;
+    left: -50px !important;
+  }
+}
+
+/* Hover effect for status */
+.status-container:hover {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+/* Animation for dropdown */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.position-absolute.bg-white.shadow-lg.rounded.p-3 {
+  animation: slideDown 0.2s ease-out;
+}

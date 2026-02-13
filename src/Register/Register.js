@@ -3627,8 +3627,8 @@ const Register = () => {
       password: formData.password,
       phone_number: formData.phone_number.trim(),
       role_ids: formData.role_ids,
-      status: "active",
-      kyc_status: "pending"
+      // status: "active",
+      // kyc_status: "pending"
     };
 
     // Add sponsor ID exactly as entered in the form

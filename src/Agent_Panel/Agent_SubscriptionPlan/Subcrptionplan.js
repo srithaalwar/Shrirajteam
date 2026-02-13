@@ -1256,53 +1256,59 @@ const AgentSubcrptionplan = () => {
                         const isSelected = selectedVariantId === opt.variant_id;
 
                         return (
-                          <label
-                            key={opt.variant_id}
-                            className={`option-row ${isSelected ? 'selected' : ''} ${isBought ? 'disabled' : ''}`}
-                            onClick={() => !isBought && handleSelection(
-                              plan.name,
-                              opt.duration,
-                              opt.price,
-                              opt.variant_id
-                            )}
-                          >
-                            <input
-                              type="radio"
-                              name="subscription-plan"
-                              value={opt.variant_id}
-                              disabled={isBought}
-                              checked={isSelected}
-                              onChange={() => {}} // Handled by label onClick
-                            />
+                        <label
+  key={opt.variant_id}
+  className={`option-row ${isSelected ? 'selected' : ''} ${isBought ? 'disabled' : ''}`}
+  onClick={() => !isBought && handleSelection(
+    plan.name,
+    opt.duration,
+    opt.price,
+    opt.variant_id
+  )}
+>
+  <div className="option-content-wrapper">
+    <div className="option-radio-section">
+      <input
+        type="radio"
+        name="subscription-plan"
+        value={opt.variant_id}
+        disabled={isBought}
+        checked={isSelected}
+        onChange={() => {}} // Handled by label onClick
+      />
+    </div>
 
-                            <div className="option-left">
-                              <div className="option-duration">
-                                {opt.duration}
-                                {opt.isPopular && (
-                                  <span className="badge bg-warning text-dark ms-2">Popular</span>
-                                )}
-                              </div>
-                              <div className="option-permonth">
-                                {opt.perMonth}
-                              </div>
-                            </div>
+    <div className="option-details-section">
+      <div className="option-left">
+        <div className="option-duration">
+          {opt.duration}
+          {opt.isPopular && (
+            <span className="badge bg-warning text-dark ms-2">Popular</span>
+          )}
+        </div>
+        <div className="option-permonth">
+          {opt.perMonth}
+        </div>
+      </div>
 
-                            <div className="option-right">
-                              <div className="option-price">
-                                ₹{opt.price}
-                              </div>
-                              {isBought ? (
-                                <span className="badge bg-success">
-                                  <i className="bi bi-check-circle me-1"></i>
-                                  Active
-                                </span>
-                              ) : (
-                                <span className="badge bg-secondary">
-                                  Select
-                                </span>
-                              )}
-                            </div>
-                          </label>
+      <div className="option-right">
+        <div className="option-price">
+          ₹{opt.price}
+        </div>
+        {isBought ? (
+          <span className="badge bg-success">
+            <i className="bi bi-check-circle me-1"></i>
+            Active
+          </span>
+        ) : (
+          <span className="badge bg-secondary">
+            Select
+          </span>
+        )}
+      </div>
+    </div>
+  </div>
+</label>
                         );
                       })}
                     </div>
@@ -1317,8 +1323,7 @@ const AgentSubcrptionplan = () => {
         {selectedPlan.name && subscribedVariants.length === 0 && (
           <div className="fixed-footer">
             <div>
-              <div className="footer-title">
-                <i className="bi bi-cart-check me-2"></i>
+<div className="footer-title" style={{ color: 'black' }}>                <i className="bi bi-cart-check me-2"></i>
                 {selectedPlan.name} • {selectedPlan.duration}
               </div>
               <div className="footer-sub">

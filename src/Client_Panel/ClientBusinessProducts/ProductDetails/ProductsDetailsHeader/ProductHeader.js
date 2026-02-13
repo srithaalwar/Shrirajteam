@@ -67,15 +67,140 @@
 
 
 
+// import React, { useEffect, useState } from "react";
+// import "./ProductHeader.css";
+// import { FaStar, FaTruck, FaStore } from "react-icons/fa";
+// import { MdLocationOn } from "react-icons/md";
+// import { baseurl } from "../../../../BaseURL/BaseURL";
+
+// const ShopHeader = ({ businessId }) => {
+//   const [business, setBusiness] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     if (!businessId) {
+//       setLoading(false);
+//       return;
+//     }
+
+//     const apiUrl = `${baseurl}/business/${businessId}/`;
+//     console.log("🏪 Fetching Business:", apiUrl);
+
+//     fetch(apiUrl)
+//       .then(res => res.json())
+//       .then(data => {
+//         console.log("✅ Business API Response:", data);
+//         setBusiness(data);
+//         setLoading(false);
+//       })
+//       .catch(err => {
+//         console.error("❌ Business fetch error:", err);
+//         setLoading(false);
+//       });
+//   }, [businessId]);
+
+//   if (loading || !business) return null;
+
+//   return (
+//     <div className="shop-header bg-white border-bottom">
+//       <div className="container py-4">
+//         <div className="d-flex align-items-center gap-4">
+
+//           {/* LOGO */}
+//           <div className="shop-logo">
+//             <img
+//               src={
+//                 business.logo
+//                   ? `${baseurl}${business.logo}`
+//                   : "/logo.png"
+//               }
+//               alt={business.business_name}
+//             />
+//           </div>
+
+//           {/* INFO */}
+//           <div className="flex-grow-1">
+//             <h3 className="fw-bold mb-1">
+//               {business.business_name}
+//             </h3>
+
+//             <div className="text-muted d-flex align-items-center gap-1 mb-2">
+//               <MdLocationOn />
+//               {business.city}, {business.state}
+//             </div>
+
+//             <div className="d-flex align-items-center gap-4 flex-wrap">
+
+//               {/* RATINGS */}
+//               <div>
+//                 <small className="text-muted">Ratings</small>
+//                 <div className="text-warning">
+//                   {Array.from({ length: 5 }).map((_, i) => (
+//                     <FaStar
+//                       key={i}
+//                       className={
+//                         i < Math.round(business.rating || 0)
+//                           ? ""
+//                           : "text-secondary"
+//                       }
+//                     />
+//                   ))}
+//                 </div>
+//               </div>
+
+//               {/* AVAILABILITY */}
+//               <div className="border-start ps-3">
+//                 <small className="text-muted">Availability</small>
+//                 <div className="text-success">
+//                   <FaTruck /> Deliverable
+//                 </div>
+//               </div>
+
+//               {/* STATUS */}
+//               <div className="border-start ps-3">
+//                 <small className="text-muted">Status</small>
+//                 <div className="text-success">
+//                   <FaStore /> {business.is_active ? "Open" : "Closed"}
+//                 </div>
+//               </div>
+
+//               {/* SHIPPING */}
+//               <div className="border-start ps-3">
+//                 <small className="text-muted">Shipping</small>
+//                 <div className="text-success">
+//                   <FaTruck /> Free Shipping
+//                 </div>
+//               </div>
+
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ShopHeader;
+
+
+
+
+
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import "./ProductHeader.css";
-import { FaStar, FaTruck, FaStore } from "react-icons/fa";
+import { FaStar, FaTruck, FaStore, FaChevronDown, FaChevronUp, FaClock } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { baseurl } from "../../../../BaseURL/BaseURL";
+import {
+  ArrowLeft
+} from "lucide-react";
 
 const ShopHeader = ({ businessId }) => {
   const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showHours, setShowHours] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!businessId) {
@@ -99,12 +224,88 @@ const ShopHeader = ({ businessId }) => {
       });
   }, [businessId]);
 
+  // Function to format time from "11:00:00" to "11:00 AM"
+  const formatTime = (timeString) => {
+    if (!timeString) return "Closed";
+    
+    // Extract hours and minutes
+    const [hours, minutes] = timeString.split(':');
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour % 12 || 12;
+    
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
+  // Function to format working hours for display
+  const formatWorkingHours = (hours) => {
+    if (!hours || hours.length === 0) return "Hours not available";
+    
+    // Sort days in correct order
+    const dayOrder = {
+      'monday': 1,
+      'tuesday': 2,
+      'wednesday': 3,
+      'thursday': 4,
+      'friday': 5,
+      'saturday': 6,
+      'sunday': 7
+    };
+    
+    const sortedHours = [...hours].sort((a, b) => dayOrder[a.day] - dayOrder[b.day]);
+    
+    return sortedHours.map(hour => {
+      const dayName = hour.day.charAt(0).toUpperCase() + hour.day.slice(1);
+      
+      if (hour.is_closed) {
+        return (
+          <div key={hour.id} className="d-flex justify-content-between py-1">
+            <span className="fw-medium">{dayName}</span>
+            <span className="text-danger">Closed</span>
+          </div>
+        );
+      } else {
+        return (
+          <div key={hour.id} className="d-flex justify-content-between py-1">
+            <span className="fw-medium">{dayName}</span>
+            <span className="text-success">
+              {formatTime(hour.opens_at)} - {formatTime(hour.closes_at)}
+            </span>
+          </div>
+        );
+      }
+    });
+  };
+
+  // Get today's status
+  const getTodayStatus = () => {
+    if (!business || !business.working_hours) return "Hours not available";
+    
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const today = days[new Date().getDay()];
+    
+    const todayHours = business.working_hours.find(h => h.day === today);
+    
+    if (!todayHours) return "Hours not available";
+    if (todayHours.is_closed) return "Closed Today";
+    
+    const openTime = formatTime(todayHours.opens_at);
+    const closeTime = formatTime(todayHours.closes_at);
+    return `Open Today: ${openTime} - ${closeTime}`;
+  };
+
   if (loading || !business) return null;
 
   return (
     <div className="shop-header bg-white border-bottom">
       <div className="container py-4">
         <div className="d-flex align-items-center gap-4">
+          <button
+            className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft size={16} /> Back
+          </button>
 
           {/* LOGO */}
           <div className="shop-logo">
@@ -140,7 +341,7 @@ const ShopHeader = ({ businessId }) => {
                       key={i}
                       className={
                         i < Math.round(business.rating || 0)
-                          ? ""
+                          ? "text-warning"
                           : "text-secondary"
                       }
                     />
@@ -156,12 +357,48 @@ const ShopHeader = ({ businessId }) => {
                 </div>
               </div>
 
-              {/* STATUS */}
-              <div className="border-start ps-3">
+              {/* STATUS WITH DROPDOWN */}
+              <div className="border-start ps-3 position-relative">
                 <small className="text-muted">Status</small>
-                <div className="text-success">
-                  <FaStore /> {business.is_active ? "Open" : "Closed"}
+                <div 
+                  className="d-flex align-items-center gap-2 cursor-pointer"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => setShowHours(!showHours)}
+                >
+                  <span className={business.is_active ? "text-success" : "text-danger"}>
+                    <FaStore className="me-1" />
+                    {business.is_active ? "Open" : "Closed"}
+                  </span>
+                  {business.working_hours && business.working_hours.length > 0 && (
+                    showHours ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />
+                  )}
                 </div>
+
+                {/* WORKING HOURS DROPDOWN */}
+                {showHours && business.working_hours && business.working_hours.length > 0 && (
+                  <div 
+                    className="position-absolute bg-white shadow-lg rounded p-3"
+                    style={{
+                      top: '100%',
+                      left: '0',
+                      minWidth: '280px',
+                      zIndex: 1000,
+                      marginTop: '8px',
+                      border: '1px solid #e0e0e0'
+                    }}
+                  >
+                    <div className="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom">
+                      <FaClock className="text-primary" />
+                      <span className="fw-bold">Working Hours</span>
+                    </div>
+                    <div className="working-hours-list">
+                      {formatWorkingHours(business.working_hours)}
+                    </div>
+                    <div className="mt-2 pt-2 border-top small text-muted">
+                      {getTodayStatus()}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* SHIPPING */}

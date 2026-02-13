@@ -578,6 +578,12 @@
         display: none;
         width: 81px;
     }
+.wn-navbar
+    .web-nav-right{
+      /* margin-left: 10px; */
+              margin-right: -158px;
+              gap: 9px !important;
+    }
 }
 
 /* Small Mobile (up to 600px) */
