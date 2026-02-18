@@ -2316,7 +2316,7 @@ import { baseurl } from "../BaseURL/BaseURL";
 import { Share2, ShoppingCart } from "lucide-react";
 import Swal from "sweetalert2";
 
-const ProductDetails = () => {
+const WebProductDetails = () => {
   /* ================= ROUTE PARAMS ================= */
   const { productId } = useParams();
   const [searchParams] = useSearchParams();
@@ -2773,5 +2773,5 @@ const ProductDetails = () => {
   );
 };
 
-export default ProductDetails;
+export default WebProductDetails;
 

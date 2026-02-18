@@ -640,7 +640,7 @@ const Register = () => {
             )}
 
             <Form onSubmit={handleSubmit}>
-              <div className="register-form-grid">
+              <div className="register-form-grid mb-4">
                 <div className="form-group-container">
                   <Form.Control
                     type="text"
