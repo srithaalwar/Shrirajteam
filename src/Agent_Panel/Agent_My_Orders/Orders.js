@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+import AgentNavbar from "../Agent_Navbar/Agent_Navbar";
 import { baseurl } from '../../BaseURL/BaseURL';
 import "./Orders.css";
 import { 
@@ -23,7 +23,7 @@ import {
   FaSearch
 } from "react-icons/fa";
 
-function AgentOrders() {
+function AgentMyOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -845,4 +845,4 @@ function AgentOrders() {
   );
 }
 
-export default AgentOrders;
+export default AgentMyOrders;

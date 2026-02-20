@@ -1495,7 +1495,7 @@ const AdminDashboard = () => {
     if (agentCount > 0) {
       metrics.push(
         { 
-          label: "Agent Users", 
+          label: "Team Users", 
           value: agentCount, 
           icon: iconMap["Agent Users"], 
           path: "/a-activeagents" 

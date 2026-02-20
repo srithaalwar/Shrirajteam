@@ -234,7 +234,7 @@ import AdminMeetingRequests from './Admin_Panel/Admin_Meetings/MeetingRequests'
 import AdminSheduleMeetings from './Admin_Panel/Admin_Meetings/SheduleMeeting'
 import AdminBusinessProductDetails from "./Admin_Panel/Admin_Business/BusinessProductDetails";
 import AdminAddBusinessForm from './Admin_Panel/AdminBusiness/AddBusiness';
-
+import AdminReports from './Admin_Panel/Admin_Reports/Reports'
 // import AdminAddProductCategory from './Admin_Panel/Product_Category/AddCategory';
 // import AdminEditProductCategory from './Admin_Panel/Product_Category/EditCategory';
 // import AdminProductCategory from './Admin_Panel/Product_Category/TableCategory';
@@ -259,6 +259,7 @@ import AgentbusinessCategory from './Agent_Panel/AgentBusinessProducts/AgentBusi
 import AgentSubCategory from './Agent_Panel/AgentBusinessProducts/SubCategories'
 import AgentProductDetails from './Agent_Panel/AgentBusinessProducts/ProductDetails/ProductDetails'
 import AgentAddProductForm from './Agent_Panel/AgentAddProduct/AddProductForm'
+import AgentAddVariantForm from "./Agent_Panel/Agent_Variant/AgentVariantForm"
 import MyTeam from './Agent_Panel/Agent_MyTeam/MyTeam';
 import Sitevisit from './Agent_Panel/Agent_SiteVisits/Site_Visits'
 import AddSitevisit from './Agent_Panel/Agent_SiteVisits/Add_SiteVisitForm'
@@ -274,7 +275,7 @@ import MeetingRequestForm from './Agent_Panel/Agent_Meetings/MeetingRequestForm'
 import AgentAddToCart from './Agent_Panel/Agent_AddToCart/AddToCart'
 import AgentWishlist from './Agent_Panel/Agent_Wishlist/AgentWishlist'
 import AgentTransactions from './Agent_Panel/Agent_Transactions/TransactionSummary'
-
+import AgentMySubscriptionPlans from './Agent_Panel/Agent_My_Plans/MySubscriptionPlan'
 
 import ClientDashboard from './Client_Panel/Client_Dashboard/Dashboard'
 import ClientAddPropertyForm from "./Client_Panel/Client_AddProperty/Add_Property";
@@ -319,7 +320,9 @@ import BusinessList from './Agent_Panel/AgentMyBusiness/MyBusiness';
 import AddBusinessForm from './Agent_Panel/AgentBusiness/AddBusiness';
 
 import AdminOrders from "./Admin_Panel/Admin_Orders/Orders"
+import AgentMyOrders from "./Agent_Panel/Agent_My_Orders/Orders"
 import AgentOrders from "./Agent_Panel/Agent_Orders/Orders"
+
 
 
 import ClientOrders from "./Client_Panel/Client_Orders/Orders"
@@ -377,6 +380,7 @@ function App() {
 
         {/* Admin-panel */}
         <Route path="/admin-add-property" element={<Add_Property />} />
+        <Route path="/admin-reports" element={<AdminReports />} />
 
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin-properties" element={<PropertiesList />} />
@@ -439,6 +443,7 @@ function App() {
 <Route path="/editproductcategory/:id" element={<EditProductCategory />} />
         <Route path="/admin-transactions" element={<AdminTransactions />} />
         <Route path="/admin-orders" element={<AdminOrders />} />
+        <Route path="/agent-my-orders" element={<AgentMyOrders />} />
         <Route path="/agent-orders" element={<AgentOrders />} />
         <Route path="/client-orders" element={<ClientOrders />} />
 
@@ -460,8 +465,10 @@ function App() {
 
         {/* Business Routes - Updated to use the new components */}
         <Route path="/agent-add-business-form" element={<AgentAddBusinessForm />} />
+        <Route path="/agent-add-variant-form" element={<AgentAddVariantForm />} />
         <Route path="/agent-my-business" element={<AgentBusinesslist />} />
         <Route path="/agent-subscription-plan" element={<AgentSubscriptionPlan />} />
+        <Route path="/agent-my-subscription-plans" element={<AgentMySubscriptionPlans />} />
 
         {/* New Business Routes for general use */}
         <Route path="/businesses" element={<BusinessList />} />
