@@ -59,7 +59,7 @@ function AgentOrders() {
       // Use user_id parameter as per the API endpoint
       const response = await axios.get(`${baseurl}/orders/`, {
         params: { 
-          user_id: userId  // Changed from 'user' to 'user_id'
+          seller_id: userId  // Changed from 'user' to 'user_id'
         },
         timeout: 10000
       });
@@ -387,7 +387,7 @@ function AgentOrders() {
         <div className="agent-orders-header">
           <h1 className="agent-orders-title">
             <FaShoppingBag className="me-2" />
-            My Orders
+           Orders
             {orders.length > 0 && (
               <span className="orders-count-badge">{orders.length}</span>
             )}
@@ -613,7 +613,7 @@ function AgentOrders() {
                         
                         <div className="order-actions-collapse">
                           <button 
-                            className="btn btn-sm btn-outline-primary view-details-btn"
+                            className="btn btn-sm btn-outline-primary view-details-btn order-button-view"
                             onClick={(e) => {
                               e.stopPropagation();
                               toggleOrderDetails(order.order_id);

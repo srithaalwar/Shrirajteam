@@ -6353,7 +6353,7 @@ const AgentNavbar = () => {
     },
     { 
       path: "/agent-add-variant-form", 
-      name: "Add Variant", 
+      name: "Add Product Variant", 
       icon: <FaPlusCircle />,
       onClick: handleAddVariantClick,
       requiresSubscription: true
