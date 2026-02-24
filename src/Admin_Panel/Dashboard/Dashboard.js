@@ -1407,19 +1407,19 @@ const AdminDashboard = () => {
           label: "Total Transactions", 
           value: transaction_summary.total_transactions || 0, 
           icon: iconMap["Total Transactions"], 
-          path: "/a-transactions" 
+          path: "/admin-transactions" 
         },
         { 
           label: "Successful Transactions", 
           value: transaction_summary.success || 0, 
           icon: iconMap["Successful Transactions"], 
-          path: "/a-transactions" 
+          path: "/admin-transactions" 
         },
         { 
           label: "Total Revenue", 
           value: `$${transaction_summary.total_revenue || 0}`, 
           icon: iconMap["Total Revenue"], 
-          path: "/a-transactions" 
+          path: "/admin-transactions" 
         }
       );
     }
@@ -1431,7 +1431,7 @@ const AdminDashboard = () => {
           label: "Total Orders", 
           value: order_summary.total_orders || 0, 
           icon: faReceipt, 
-          path: "/a-orders" 
+          path: "/admin-orders" 
         }
       );
     }
@@ -1443,13 +1443,13 @@ const AdminDashboard = () => {
           label: "Total Subscriptions", 
           value: subscription_summary.total_subscriptions || 0, 
           icon: iconMap["Total Subscriptions"], 
-          path: "/a-subscriptions" 
+          path: "/users-subscriptions" 
         },
         { 
           label: "Active Subscriptions", 
           value: subscription_summary.active || 0, 
           icon: iconMap["Active Subscriptions"], 
-          path: "/a-subscriptions" 
+          path: "/users-subscriptions" 
         }
       );
     }
@@ -1460,19 +1460,19 @@ const AdminDashboard = () => {
         label: "Total Users", 
         value: user_summary.total_users || 0, 
         icon: iconMap["Total Users"], 
-        path: "/a-activeagents" 
+        path: "/admin-users" 
       },
       { 
         label: "Active Users", 
         value: user_summary.active || 0, 
         icon: iconMap["Active Users"], 
-        path: "/a-activeagents" 
+        path: "/admin-users" 
       },
       { 
         label: "Inactive Users", 
         value: user_summary.inactive || 0, 
         icon: iconMap["Inactive Users"], 
-        path: "/a-Inactiveagents" 
+        path: "/admin-users" 
       }
     );
 
@@ -1487,7 +1487,7 @@ const AdminDashboard = () => {
           label: "Admin Users", 
           value: adminCount, 
           icon: iconMap["Admin Users"], 
-          path: "/a-activeagents" 
+          path: "/admin-users" 
         }
       );
     }
@@ -1498,7 +1498,7 @@ const AdminDashboard = () => {
           label: "Team Users", 
           value: agentCount, 
           icon: iconMap["Agent Users"], 
-          path: "/a-activeagents" 
+          path: "/admin-users" 
         }
       );
     }
@@ -1509,7 +1509,7 @@ const AdminDashboard = () => {
           label: "Client Users", 
           value: clientCount, 
           icon: iconMap["Client Users"], 
-          path: "/a-activeagents" 
+          path: "/admin-users" 
         }
       );
     }

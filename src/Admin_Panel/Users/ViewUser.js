@@ -82,7 +82,8 @@ const ViewUser = () => {
             <h4 className="mb-3">User Not Found</h4>
             <button 
               className="btn btn-primary mt-3"
-              onClick={() => navigate("/admin-users")}
+              // onClick={() => navigate("-1")}
+                 onClick={() => navigate(-1)}
             >
               Back to Users
             </button>
@@ -102,7 +103,8 @@ const ViewUser = () => {
             <h4 className="mb-0">User Details</h4>
             <button
               className="btn btn-outline-secondary"
-              onClick={() => navigate("/admin-users")}
+              // onClick={() => navigate("/admin-users")}
+                 onClick={() => navigate(-1)}
             >
               Back to List
             </button>

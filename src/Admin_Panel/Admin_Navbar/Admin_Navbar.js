@@ -2939,6 +2939,7 @@ const AdminNavbar = () => {
         // { path: "/", name: "Company Payout", icon: <FaMoneyBillWave /> },
         // { path: "/", name: "Team Payout", icon: <FaHandHoldingUsd /> },
         { path: "/admin-subscriptions", name: "Subscription", icon: <FaCreditCard /> },
+       { path: "/users-subscriptions", name: "Users Subscription", icon: <FaCreditCard /> },
         { path: "/a-bookingslab", name: "Booking Slab", icon: <FaLayerGroup /> },
         { path: "/admin-trainingmaterial", name: "Training Material", icon: <FaGraduationCap /> },
         { path: "/", name: "How it works", icon: <FaQuestionCircle /> },

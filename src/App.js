@@ -235,6 +235,8 @@ import AdminSheduleMeetings from './Admin_Panel/Admin_Meetings/SheduleMeeting'
 import AdminBusinessProductDetails from "./Admin_Panel/Admin_Business/BusinessProductDetails";
 import AdminAddBusinessForm from './Admin_Panel/AdminBusiness/AddBusiness';
 import AdminReports from './Admin_Panel/Admin_Reports/Reports'
+import AdminUsersSubscriptions from './Admin_Panel/Users_Subscriptions/MySubscriptionPlan'
+
 // import AdminAddProductCategory from './Admin_Panel/Product_Category/AddCategory';
 // import AdminEditProductCategory from './Admin_Panel/Product_Category/EditCategory';
 // import AdminProductCategory from './Admin_Panel/Product_Category/TableCategory';
@@ -435,6 +437,8 @@ function App() {
         <Route path="/admin-admiteditsite/:id" element={<AdminEditSitevisit />} />
         <Route path="/admin-meetings" element={<AdminMeetingRequests />} />
         <Route path="/shedulemeet/:agentId" element={<AdminSheduleMeetings />} />
+         <Route path="/users-subscriptions" element={<AdminUsersSubscriptions />} />
+
 
          {/* <Route path="/admin/categories" element={<AdminProductCategory />} />
           <Route path="/admin/categories/add" element={<AdminAddProductCategory />} />
