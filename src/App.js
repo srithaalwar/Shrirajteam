@@ -296,6 +296,7 @@ import ClientMeetingRequestForm from './Client_Panel/Client_Meetings/MeetingRequ
 import ClientAddToCart from './Client_Panel/Client_AddToCart/AddToCart'
 import ClientWishlist from "./Client_Panel/Client_Wishlist/ClientWishlist";
 import ClientTransactions from './Client_Panel/Client_Transactions/TransactionSummary'
+import ClientPlans from './Client_Panel/Client_My_Plans/MySubscriptionPlan'
 
 
 import UserList from "./Admin_Panel/Users/Users";
@@ -527,6 +528,7 @@ function App() {
           <Route path="/client-add-to-cart" element={<ClientAddToCart />} />
          <Route path="/client-wishlist" element={<ClientWishlist />} />
         <Route path="/client-transactions" element={<ClientTransactions />} />
+        <Route path="/client-my-plans" element={<ClientPlans />} />
 
 
         <Route path="/admin-users" element={<UserList />} />
