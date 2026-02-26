@@ -555,7 +555,7 @@
   font-weight: 500;
   margin-right: 15px;
   transition: background-color 0.3s ease;
-  width:max-content;
+  /* width:max-content; */
 }
 
 .wn-refer-now-btn:hover {
@@ -646,7 +646,7 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   transition: background-color 0.3s;
   margin-right: 15px;

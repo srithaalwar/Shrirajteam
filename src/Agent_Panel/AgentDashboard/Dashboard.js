@@ -427,13 +427,13 @@ const AgentDashboard = () => {
           label: "Total Subscriptions", 
           value: subscription_summary.total_subscriptions || 0, 
           icon: iconMap["Total Subscriptions"], 
-          path: "/agent-subscription-plan" 
+          path: "/agent-my-subscription-plans" 
         },
         { 
           label: "Active Subscriptions", 
           value: subscription_summary.active || 0, 
           icon: iconMap["Active Subscriptions"], 
-          path: "/agent-subscription-plan" 
+          path: "/agent-my-subscription-plans" 
         }
       );
     }

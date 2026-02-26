@@ -3113,7 +3113,7 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
     if (e) e.preventDefault();
 
     if (isViewing) {
-      navigate('/admin-my-business'); // Changed to business list page
+      navigate('/admin-business'); // Changed to business list page
       return;
     }
 
@@ -3218,7 +3218,7 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
         confirmButtonColor: '#3085d6',
       });
       // Navigate to Business List page after success
-      navigate("/admin-my-business");
+      navigate("/admin-business");
 
     } catch (error) {
       console.error('Detailed submission error:', error);
@@ -3271,7 +3271,7 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
                       <button 
                         type="button" 
                         className="btn btn-secondary me-2"
-                        onClick={() => navigate('/admin-my-business')} // Changed to business list
+                        onClick={() => navigate('/admin-business')} // Changed to business list
                         disabled={isSubmitting}
                       >
                         Cancel
@@ -3295,7 +3295,7 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
                     <button 
                       type="button" 
                       className="btn btn-secondary"
-                      onClick={() => navigate('/admin-my-business')} // Changed to business list
+                      onClick={() => navigate('/admin-business')} // Changed to business list
                     >
                       Back to List
                     </button>

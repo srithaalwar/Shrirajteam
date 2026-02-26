@@ -206,7 +206,7 @@ function Footer() {
               
               <div className="app-badges">
                 <a 
-                  href="https://play.google.com/store/apps/details?id=com.shrirajteam" 
+                  href="https://play.google.com/store/apps/details?id=com.yasla.shrirajteam" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="app-badge-link"

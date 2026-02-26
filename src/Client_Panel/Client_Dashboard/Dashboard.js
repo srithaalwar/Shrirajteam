@@ -603,69 +603,69 @@ const ClientDashboard = () => {
           label: "Total Properties", 
           value: myProps.total_added || 0, 
           icon: iconMap["Total Properties"], 
-          path: "/agent-properties" 
+          path: "/client-properties" 
         },
         { 
           label: "Available Properties", 
           value: myProps.available || 0, 
           icon: iconMap["Available Properties"], 
-          path: "/agent-properties?status=available" 
+          path: "/client-properties?status=available" 
         },
         { 
           label: "Sold Properties", 
           value: myProps.sold || 0, 
           icon: iconMap["Sold Properties"], 
-          path: "/agent-properties?status=sold" 
+          path: "/client-properties?status=sold" 
         },
         { 
           label: "Booked Properties", 
           value: myProps.booked || 0, 
           icon: iconMap["Booked Properties"], 
-          path: "/agent-properties?status=booked" 
+          path: "/client-properties?status=booked" 
         },
         { 
           label: "Pending Properties", 
           value: myProps.pending || 0, 
           icon: iconMap["Pending Properties"], 
-          path: "/agent-properties?status=pending" 
+          path: "/client-properties?status=pending" 
         },
         { 
           label: "Verified Properties", 
           value: myProps.verified || 0, 
           icon: iconMap["Verified Properties"], 
-          path: "/agent-properties?status=verified" 
+          path: "/client-properties?status=verified" 
         },
         { 
           label: "Rejected Properties", 
           value: myProps.rejected || 0, 
           icon: iconMap["Rejected Properties"], 
-          path: "/agent-properties?status=rejected" 
+          path: "/client-properties?status=rejected" 
         }
       );
     }
 
     // Bookings and Purchases
-    if (property_summary.bookings) {
-      metrics.push(
-        { 
-          label: "Total Bookings", 
-          value: property_summary.bookings.count || 0, 
-          icon: iconMap["Total Bookings"], 
-          path: "/agent-bookings" 
-        }
-      );
-    }
+    // if (property_summary.bookings) {
+    //   metrics.push(
+    //     { 
+    //       label: "Total Bookings", 
+    //       value: property_summary.bookings.count || 0, 
+    //       icon: iconMap["Total Bookings"], 
+    //       path: "/agent-bookings" 
+    //     }
+    //   );
+    // }
 
-    if (property_summary.buyied_or_purchased) {
-      metrics.push(
-        { 
-          label: "Properties Purchased", 
-          value: property_summary.buyied_or_purchased.count || 0, 
-          icon: iconMap["Properties Purchased"], 
-          path: "/agent-purchases" 
-        }
-      );
-    }
+    // if (property_summary.buyied_or_purchased) {
+    //   metrics.push(
+    //     { 
+    //       label: "Properties Purchased", 
+    //       value: property_summary.buyied_or_purchased.count || 0, 
+    //       icon: iconMap["Properties Purchased"], 
+    //       path: "/agent-purchases" 
+    //     }
+    //   );
+    // }
 
     // Transaction Metrics
     if (transaction_summary) {
@@ -674,19 +674,19 @@ const ClientDashboard = () => {
           label: "Total Transactions", 
           value: transaction_summary.total_transactions || 0, 
           icon: iconMap["Total Transactions"], 
-          path: "/agent-transactions" 
+          path: "/client-transactions" 
         },
         { 
           label: "Successful Transactions", 
           value: transaction_summary.success || 0, 
           icon: iconMap["Successful Transactions"], 
-          path: "/agent-transactions?status=success" 
+          path: "/client-transactions?status=success" 
         },
         { 
           label: "Total Revenue", 
           value: `$${transaction_summary.total_revenue || 0}`, 
           icon: iconMap["Total Revenue"], 
-          path: "/agent-transactions" 
+          path: "/client-transactions" 
         }
       );
     }
@@ -698,13 +698,13 @@ const ClientDashboard = () => {
           label: "Total Orders", 
           value: order_summary.total_orders || 0, 
           icon: iconMap["Total Orders"], 
-          path: "/agent-orders" 
+          path: "/client-orders" 
         },
         { 
           label: "Paid Orders", 
           value: order_summary.paid || 0, 
           icon: iconMap["Paid Orders"], 
-          path: "/agent-orders?status=paid" 
+          path: "/client-orders?status=paid" 
         }
       );
     }
@@ -716,13 +716,13 @@ const ClientDashboard = () => {
           label: "Total Subscriptions", 
           value: subscription_summary.total_subscriptions || 0, 
           icon: iconMap["Total Subscriptions"], 
-          path: "/agent-subscriptions" 
+          path: "/client-my-plans" 
         },
         { 
           label: "Active Subscriptions", 
           value: subscription_summary.active || 0, 
           icon: iconMap["Active Subscriptions"], 
-          path: "/agent-subscriptions?status=active" 
+          path: "/client-my-plans?status=active" 
         }
       );
     }
