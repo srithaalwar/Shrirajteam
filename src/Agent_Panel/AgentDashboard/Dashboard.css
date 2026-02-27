@@ -309,6 +309,16 @@
   margin: 0;
 }
 
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .statistics-grid {
@@ -377,10 +387,32 @@
   .quick-stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .form-select-dashboard {
     width: 100% !important;
   }
+}
+
+@media (max-width: 767px) {
+    .chart-controls
+  .filter-control
+.form-select-dashboard {
+  width: 120px !important;
+  border: 2px solid #e4e8f0;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
+  .chart-controls
+  .filter-control
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
 }
 
 @media (max-width: 576px) {
@@ -404,6 +436,8 @@
   .welcome-title {
     font-size: 24px;
   }
+  
+
 }
 
 /* Animation for cards */

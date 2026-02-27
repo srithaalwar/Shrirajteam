@@ -601,7 +601,7 @@ function MySubscriptionPlan() {
           <div className="search-box">
             <input
               type="text"
-              placeholder="Search by Plan Name, Status, or Email"
+              placeholder="Search by Plan Name, Status..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
