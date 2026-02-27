@@ -1,47 +1,115 @@
-/* Whole row */
-.categories-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+/* ================================================ */
+/* ====  MANI-AS  ·  Categories Strip  ============ */
+/* ================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap');
+
+.mani-as-cat-section {
   width: 100%;
-  margin-bottom: 20px;
+  background: #fffcdd;
+  border-bottom: 1px solid #ececec;
+  padding: 12px 0 8px;
 }
 
-/* Categories grid */
-.categories-row {
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  gap: 15px;
-  flex: 1;
-}
-
-/* Arrow buttons */
-.category-arrow {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: none;
-  font-size: 26px;
-  font-weight: 300;
-  color: #111;
-  cursor: pointer;
+/* ── Scrollable row ── */
+.mani-as-cat-scroll-row {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 4px 16px 8px;
+  gap: 0;
+}
+
+.mani-as-cat-scroll-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Single item ── */
+.mani-as-cat-item {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  transition: all 0.25s ease;
+  gap: 6px;
+  width: 76px;
+  padding: 6px 4px;
+  border-radius: 10px;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: background 0.15s ease;
+  animation: mani-as-cat-rise 0.4s ease both;
 }
 
-/* Hover effect */
-.category-arrow:hover:not(.disabled) {
-  background: #f7f7f7;
-  transform: scale(1.05);
+.mani-as-cat-item:hover {
+  background: #f5f5f5;
 }
 
-/* Disabled */
-.category-arrow.disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
+.mani-as-cat-item:active {
+  background: #eeeeee;
+  transform: scale(0.95);
+}
+
+/* ── Icon — just the image, no wrapper ── */
+.mani-as-cat-icon-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+/* ── Fallback MUI icon ── */
+.mani-as-cat-icon-svg {
+  color: #555555 !important;
+  font-size: 28px !important;
+}
+
+/* ── Label ── */
+.mani-as-cat-name {
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #333333;
+  text-align: center;
+  line-height: 1.3;
+  max-width: 72px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+/* ── Entry animation ── */
+@keyframes mani-as-cat-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ================================================ */
+/* ===============  RESPONSIVE  =================== */
+/* ================================================ */
+
+@media (max-width: 768px) {
+  .mani-as-cat-section    { padding: 10px 0 6px; }
+  .mani-as-cat-scroll-row { padding: 4px 10px 6px; }
+  .mani-as-cat-item       { width: 68px; }
+  .mani-as-cat-icon-img   { width: 42px; height: 42px; }
+  .mani-as-cat-name       { font-size: 10.5px; }
+}
+
+@media (max-width: 480px) {
+  .mani-as-cat-item       { width: 62px; }
+  .mani-as-cat-icon-img   { width: 38px; height: 38px; }
+  .mani-as-cat-icon-svg   { font-size: 24px !important; }
+  .mani-as-cat-name       { font-size: 10px; max-width: 58px; }
+}
+
+@media (max-width: 360px) {
+  .mani-as-cat-item       { width: 58px; }
+  .mani-as-cat-icon-img   { width: 34px; height: 34px; }
+  .mani-as-cat-name       { font-size: 9.5px; }
 }

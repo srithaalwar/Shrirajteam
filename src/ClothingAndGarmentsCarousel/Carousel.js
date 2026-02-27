@@ -514,18 +514,18 @@ const OfferCarousel = ({ categorySlug = "clothing-garments" }) => {
     navigate(`/category/${categorySlug}`);
   };
 
-  if (loading) {
+   if (loading) {
     return (
-      <div className="offer-carousel-wrapper">
-        <div className="loading-text">Loading offers...</div>
+      <div className="mani-as-offer-wrapper">
+        <div className="mani-as-offer-loading">Loading offers...</div>
       </div>
     );
   }
 
   if (businesses.length === 0) {
     return (
-      <div className="offer-carousel-wrapper">
-        <div className="no-offers-text">No offers available for this category.</div>
+      <div className="mani-as-offer-wrapper">
+        <div className="mani-as-offer-empty">No offers available for this category.</div>
       </div>
     );
   }
@@ -533,25 +533,26 @@ const OfferCarousel = ({ categorySlug = "clothing-garments" }) => {
   // Take only first 3 businesses
   const displayBusinesses = businesses.slice(0, 3);
 
-  return (
-    <div className="offer-carousel-wrapper">
-      {/* Dynamic Category Heading */}
-      <div className="carousel-header">
-        <h2 className="category-heading">
+   return (
+    <div className="mani-as-offer-wrapper">
+      {/* Header */}
+      <div className="mani-as-offer-header">
+        <h2 className="mani-as-offer-heading">
           {categoryLoading ? (
-            <span className="loading-dots">Loading Category</span>
+            <span className="mani-as-offer-loading-dots">Loading Category</span>
           ) : (
             categoryName || "Special Offers"
           )}
         </h2>
-        <div className="view-all-link">
-          <button onClick={handleViewAll} className="view-all-button">
-            View All →
-          </button>
-        </div>
+         <div className="mani-as-offer-viewall-wrap">
+  <button onClick={handleViewAll} className="mani-as-offer-viewall-btn">
+   
+    <span className="mani-as-viewall-circle">→</span>
+  </button>
+</div>
       </div>
 
-      <div className="three-cards-grid">
+      <div className="mani-as-offer-cards-grid">
         {displayBusinesses.map((business) => {
           const offer = offersMap[business.offer];
           const discount = offer?.value
@@ -565,19 +566,19 @@ const OfferCarousel = ({ categorySlug = "clothing-garments" }) => {
               : DEFAULT_BANNER;
 
           return (
-            <div className="offer-card-item" key={business.business_id}>
+           <div className="mani-as-offer-card-item" key={business.business_id}>
               <div
-                className="offer-card"
+                className="mani-as-offer-card"
                 style={{ backgroundImage: `url(${bannerImage})` }}
               >
-                <div className="offer-content">
-                  <p className="upto">UPTO</p>
-                  <h2>{discount}</h2>
-                  <p className="off">OFF</p>
-                  <button className="shop-btn">Shop Now</button>
+                <div className="mani-as-offer-card-content">
+                  <p className="mani-as-offer-upto">UPTO</p>
+                  <h2 className="mani-as-offer-discount">{discount}</h2>
+                  <p className="mani-as-offer-off">OFF</p>
+                  <button className="mani-as-offer-shop-btn">Shop Now</button>
                 </div>
               </div>
-            </div>
+            </div> 
           );
         })}
       </div>

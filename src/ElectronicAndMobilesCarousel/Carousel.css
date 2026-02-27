@@ -1,337 +1,282 @@
-.offer-carousel-wrapper {
+/* ========================================= */
+/* ===== MANI-AS Offer Carousel Styles ===== */
+/* ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.mani-as-offer-wrapper {
   max-width: 100%;
-  margin: 40px auto;
-  padding: 0 20px;
-  position: relative;
+  margin: 0 auto;
+  padding: 16px 16px 10px;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* ===== HEADER ===== */
-.carousel-header {
+.mani-as-offer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 14px;
 }
 
-.category-heading {
-  font-size: 28px;
+.mani-as-offer-heading {
+  font-size: 18px;
   font-weight: 700;
-  color: #004d40;
+  color: #1a1a1a;
   margin: 0;
 }
 
-.view-all-link {
+/* ===== VIEW ALL BUTTON ===== */
+.mani-as-offer-viewall-wrap {
   text-align: right;
 }
 
-.view-all-button {
+.mani-as-offer-viewall-btn {
   background: transparent;
   border: none;
-  color: #004d40;
-  font-size: 16px;
-  font-weight: 600;
   cursor: pointer;
-  padding: 8px 16px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
+  padding: 0;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  transition: gap 0.2s ease;
 }
 
-.view-all-button:hover {
-  background: #004d40;
-  color: white;
-  transform: translateX(5px);
+.mani-as-offer-viewall-btn:hover { gap: 12px; }
+
+.mani-as-viewall-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b35, #f7290b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 1;
+  box-shadow: 0 3px 10px rgba(255, 107, 53, 0.4);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  flex-shrink: 0;
 }
 
-/* ===== 3 CARDS GRID ===== */
-.three-cards-grid {
+.mani-as-offer-viewall-btn:hover .mani-as-viewall-circle {
+  transform: translateX(4px) scale(1.1);
+  box-shadow: 0 5px 16px rgba(255, 107, 53, 0.55);
+}
+
+/* ===== CARDS GRID — DESKTOP: 3 columns ===== */
+.mani-as-offer-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
+  gap: 16px;
   width: 100%;
 }
 
-.offer-card-item {
+/* ===== SINGLE CARD ITEM ===== */
+.mani-as-offer-card-item {
   width: 100%;
 }
 
-/* ===== CARD = FULL IMAGE BANNER ===== */
-.offer-card {
+/* ===== CARD — image as background ===== */
+.mani-as-offer-card {
   position: relative;
-  height: 260px;
   width: 100%;
-  border-radius: 18px;
-  background-size: cover;
-  background-position: center;
+  /* 
+    Use padding-top trick based on image ratio (500x281 ≈ 56.2%)
+    This makes the card always the exact right height for the image 
+  */
+  padding-top: 56.2%;
+  border-radius: 12px;
+  background-size: cover;           /* fill card fully */
+  background-position: center top;  /* show top of image first */
   background-repeat: no-repeat;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
 }
 
-.offer-card:hover {
+.mani-as-offer-card:hover {
   transform: scale(1.02);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
 }
 
-/* ===== TEXT OVERLAY ===== */
-.offer-content {
+/* ===== OVERLAY CONTENT (positioned inside padding-top card) ===== */
+.mani-as-offer-card-content {
   position: absolute;
-  left: 20px;
-  top: 60%;
-  transform: translateY(-50%);
-  color: #004d40;
-  max-width: 70%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 12px 14px;
 }
 
-.offer-content .upto {
-  font-size: 12px;
-  letter-spacing: 1px;
-  margin-bottom: 2px;
+.mani-as-offer-upto {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  color: #004D40;
+  text-transform: uppercase;
+  margin-bottom: 1px;
+ 
 }
 
-.offer-content h2 {
-  font-size: 25px;
-  font-weight: 700;
+.mani-as-offer-discount {
+  font-size: 22px;
+  font-weight: 800;
+  color: #004D40;
   margin: 0;
+  line-height: 1.1;
+
 }
 
-.offer-content .off {
-  font-size: 14px;
-  margin-bottom: 12px;
-  width: 50px;
+.mani-as-offer-off {
+  font-size: 11px;
+  font-weight: 600;
+  color: #004D40;
+  margin-bottom: 10px;
+
 }
 
-/* ===== BUTTON ===== */
-.shop-btn {
-  background: #ffffff;
+/* ===== SHOP NOW BUTTON ===== */
+.mani-as-offer-shop-btn {
+  background: #ff5400;
   border-radius: 30px;
-  padding: 8px 22px;
-  font-size: 14px;
+  padding: 6px 18px;
+  font-size: 12px;
+  font-weight: 600;
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transition: all 0.22s ease;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  align-self: flex-start;
 }
 
-.shop-btn:hover {
-  background: #004d40;
-  color: white;
+.mani-as-offer-shop-btn:hover {
+  background: #ff6b35;
+  color: #fff;
   transform: translateY(-2px);
 }
 
-/* ===== LOADING & NO OFFERS ===== */
-.loading-text {
+/* ===== LOADING / EMPTY ===== */
+.mani-as-offer-loading {
   text-align: center;
   padding: 40px;
-  color: #666;
-  font-size: 18px;
+  color: #888;
+  font-size: 15px;
 }
 
-.no-offers-text {
+.mani-as-offer-empty {
   text-align: center;
   padding: 40px;
-  color: #666;
-  font-size: 18px;
+  color: #888;
+  font-size: 15px;
   border: 2px dashed #ddd;
   border-radius: 10px;
 }
 
-.loading-dots:after {
+.mani-as-offer-loading-dots::after {
   content: '...';
-  animation: dots 1.5s steps(4, end) infinite;
+  animation: mani-as-dots 1.5s steps(4, end) infinite;
 }
 
-@keyframes dots {
-  0%, 20% { content: '.'; }
-  40% { content: '..'; }
-  60%, 100% { content: '...'; }
+@keyframes mani-as-dots {
+  0%, 20%  { content: '.';   }
+  40%      { content: '..';  }
+  60%, 100%{ content: '...'; }
 }
 
-/* ================================================= */
-/* ================= RESPONSIVE ==================== */
-/* ================================================= */
+/* ========================================= */
+/* ============= RESPONSIVE ================ */
+/* ========================================= */
 
-/* ===== TABLET VIEW ===== */
-/* @media (max-width: 991px) {
-  .three-cards-grid {
-    gap: 20px;
-  }
-  
-  .offer-card {
-    height: 220px;
-  }
-
-  .offer-content h2 {
-    font-size: 22px;
-  }
-
-  .category-heading {
-    font-size: 24px;
-  }
-} */
-
-
-/* ================================================= */
-/* ================= RESPONSIVE ==================== */
-/* ================================================= */
-
-/* ===== DESKTOP: DEFAULT ===== */
-.three-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-  width: 100%;
-}
-
-/* ===== TABLET VIEW (768px to 1024px): 2 cards per row ===== */
+/* Tablet (768px – 1024px): 2 columns */
 @media (min-width: 768px) and (max-width: 1024px) {
-  .three-cards-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
-    gap: 20px;
-  }
-  
-  .offer-card {
-    height: 220px;
+  .mani-as-offer-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
   }
 
-  .offer-content h2 {
-    font-size: 22px;
-  }
-
-  .category-heading {
-    font-size: 24px;
-  }
+  .mani-as-offer-heading { font-size: 17px; }
 }
 
-/* ===== LARGE MOBILE (481px to 767px): 2 cards per row ===== */
+/* ── MOBILE: horizontal scroll ── */
+
+/* Large mobile (481px – 767px) */
 @media (min-width: 481px) and (max-width: 767px) {
-  .three-cards-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns for large mobile */
-    gap: 18px;
-  }
-  
-  .offer-card {
-    height: 200px;
+  .mani-as-offer-wrapper { padding: 14px 12px 10px; }
+
+  .mani-as-offer-cards-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    padding-bottom: 8px;
+    scrollbar-width: none;
   }
 
-  .carousel-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 20px;
+  .mani-as-offer-cards-grid::-webkit-scrollbar { display: none; }
+
+  .mani-as-offer-card-item {
+    flex: 0 0 70vw;
+    max-width: 300px;
+    scroll-snap-align: start;
   }
 
-  .view-all-link {
-    align-self: flex-end;
-  }
-
-  .offer-content h2 {
-    font-size: 24px;
-  }
-
-  .shop-btn {
-    padding: 7px 18px;
-    font-size: 13px;
-  }
+  /* card height auto from padding-top ratio — no override needed */
+  .mani-as-offer-heading { font-size: 16px; }
 }
 
-/* ===== SMALL MOBILE (480px and below): 1 card per row ===== */
+/* Small mobile (≤ 480px) */
 @media (max-width: 480px) {
-  .three-cards-grid {
-    grid-template-columns: 1fr; /* 1 column for small mobile */
-    gap: 20px;
-  }
-  
-  .offer-card {
-    height: 180px;
-  }
+  .mani-as-offer-wrapper { padding: 12px 10px 8px; }
 
-  .offer-carousel-wrapper {
-    padding: 0 15px;
-  }
+  .mani-as-offer-header  { margin-bottom: 10px; }
+  .mani-as-offer-heading { font-size: 15px; }
 
-  .carousel-header {
-    flex-direction: column;
-    align-items: flex-start;
+  .mani-as-viewall-circle { width: 28px; height: 28px; font-size: 14px; }
+
+  /* horizontal scroll */
+  .mani-as-offer-cards-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
     gap: 10px;
-    margin-bottom: 20px;
+    padding-bottom: 6px;
+    scrollbar-width: none;
   }
 
-  .view-all-link {
-    align-self: flex-end;
+  .mani-as-offer-cards-grid::-webkit-scrollbar { display: none; }
+
+  .mani-as-offer-card-item {
+    flex: 0 0 78vw;          /* shows peek of next card */
+    max-width: 260px;
+    scroll-snap-align: start;
   }
 
-  .offer-content h2 {
-    font-size: 22px;
-  }
-
-  .offer-content .off {
-    font-size: 12px;
-  }
-
-  .category-heading {
-    font-size: 20px;
-  }
-}
-/* ===== MOBILE VIEW ===== */
-@media (max-width: 767px) {
-  .three-cards-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  .offer-card {
-    height: 200px;
-  }
-
-  .carousel-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .view-all-link {
-    align-self: flex-end;
-  }
-
-  .offer-content {
-    left: 16px;
-    right: 16px;
-    max-width: 100%;
-  }
-
-  .offer-content h2 {
-    font-size: 28px;
-  }
-
-  .shop-btn {
-    padding: 7px 18px;
-    font-size: 13px;
-  }
+  .mani-as-offer-discount { font-size: 18px; }
+  .mani-as-offer-shop-btn { padding: 5px 14px; font-size: 11px; }
 }
 
-/* ===== SMALL MOBILE ===== */
-@media (max-width: 480px) {
-  .offer-carousel-wrapper {
-    padding: 0 15px;
-  }
-  
-  .offer-card {
-    height: 180px;
+/* Tiny (≤ 360px) */
+@media (max-width: 360px) {
+  .mani-as-offer-card-item {
+    flex: 0 0 84vw;
   }
 
-  .offer-content h2 {
-    font-size: 24px;
-  }
-
-  .offer-content .off {
-    font-size: 12px;
-  }
-
-  .category-heading {
-    font-size: 20px;
-  }
+  .mani-as-offer-heading { font-size: 14px; }
+  .mani-as-offer-discount { font-size: 16px; }
 }

@@ -1,100 +1,56 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
-import './Categories.css'
+import "./Categories.css";
 import { baseurl } from "../BaseURL/BaseURL";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
   const navigate = useNavigate();
-  const categoriesRowRef = useRef(null);
+  const rowRef = useRef(null);
+
+  const getIconUrl = (iconPath) => {
+    if (!iconPath) return null;
+    if (iconPath.startsWith("http")) return iconPath;
+    return `${baseurl}${iconPath}`;
+  };
 
   useEffect(() => {
-    // Using baseurl for the API endpoint
     fetch(`${baseurl}/categories/?level=global`)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         const filtered = data.results
-          .filter(cat => cat.level === "global" && cat.is_active)
+          .filter((cat) => cat.level === "global" && cat.is_active)
           .sort((a, b) => a.display_order - b.display_order);
-
         setCategories(filtered);
       })
-      .catch(error => {
-        console.error("Error fetching categories:", error);
-      });
+      .catch((err) => console.error("Error fetching categories:", err));
   }, []);
 
-  // Calculate total pages
-  const itemsPerPage = 9;
-  const totalPages = Math.ceil(categories.length / itemsPerPage);
-
-  // Get current page categories
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentCategories = categories.slice(startIndex, endIndex);
-
-  const handleNext = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage(prev => prev + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentPage > 0) {
-      setCurrentPage(prev => prev - 1);
-    }
-  };
-
   return (
-    <div className="categories-wrapper">
-      {/* LEFT ARROW */}
-      <button
-        className={`category-arrow ${currentPage === 0 ? "disabled" : ""}`}
-        onClick={handlePrev}
-        disabled={currentPage === 0}
-      >
-        ‹
-      </button>
-
-      {/* CATEGORIES */}
-      <div className="categories-row" ref={categoriesRowRef}>
-        {currentCategories.map(cat => (
+    <div className="mani-as-cat-section">
+      <div className="mani-as-cat-scroll-row" ref={rowRef}>
+        {categories.map((cat, index) => (
           <div
-            className="category-item"
             key={cat.category_id}
+            className="mani-as-cat-item"
+            style={{ animationDelay: `${index * 40}ms` }}
             onClick={() => navigate(`/w-subcategory/${cat.category_id}`)}
           >
-            <div className="category-icon">
-              <BusinessCenterIcon />
-            </div>
-            <p>{cat.name}</p>
+            {cat.icon ? (
+              <img
+                src={getIconUrl(cat.icon)}
+                alt={cat.name}
+                className="mani-as-cat-icon-img"
+                onError={(e) => { e.target.style.display = "none"; }}
+              />
+            ) : (
+              <BusinessCenterIcon className="mani-as-cat-icon-svg" />
+            )}
+            <span className="mani-as-cat-name">{cat.name}</span>
           </div>
         ))}
       </div>
-
-      {/* RIGHT ARROW */}
-      <button
-        className={`category-arrow ${currentPage === totalPages - 1 ? "disabled" : ""}`}
-        onClick={handleNext}
-        disabled={currentPage === totalPages - 1}
-      >
-        ›
-      </button>
-
-      {/* Optional: Dots indicator - Remove if not needed */}
-      {totalPages > 1 && (
-        <div className="category-dots">
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <span
-              key={index}
-              className={`category-dot ${index === currentPage ? "active" : ""}`}
-              onClick={() => setCurrentPage(index)}
-            ></span>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

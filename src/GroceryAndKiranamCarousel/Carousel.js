@@ -515,73 +515,73 @@ const OfferCarousel = ({ categorySlug = "grocery-kirana" }) => {
 
   if (loading) {
     return (
-      <div className="offer-carousel-wrapper">
-        <div className="loading-text">Loading offers...</div>
+      <div className="mani-as-offer-wrapper">
+        <div className="mani-as-offer-loading">Loading offers...</div>
       </div>
     );
   }
 
   if (businesses.length === 0) {
     return (
-      <div className="offer-carousel-wrapper">
-        <div className="no-offers-text">No offers available for this category.</div>
+      <div className="mani-as-offer-wrapper">
+        <div className="mani-as-offer-empty">No offers available for this category.</div>
       </div>
     );
   }
 
-  // Take only first 3 businesses
-  const displayBusinesses = businesses.slice(0, 3);
-
-  return (
-    <div className="offer-carousel-wrapper">
-      {/* Dynamic Category Heading */}
-      <div className="carousel-header">
-        <h2 className="category-heading">
-          {categoryLoading ? (
-            <span className="loading-dots">Loading Category</span>
-          ) : (
-            categoryName || "Special Offers"
-          )}
-        </h2>
-        <div className="view-all-link">
-          <button onClick={handleViewAll} className="view-all-button">
-            View All →
-          </button>
+    const displayBusinesses = businesses.slice(0, 3);
+  
+    return (
+      <div className="mani-as-offer-wrapper">
+        {/* Header */}
+        <div className="mani-as-offer-header">
+          <h2 className="mani-as-offer-heading">
+            {categoryLoading ? (
+              <span className="mani-as-offer-loading-dots">Loading Category</span>
+            ) : (
+              categoryName || "Special Offers"
+            )}
+          </h2>
+            <div className="mani-as-offer-viewall-wrap">
+  <button onClick={handleViewAll} className="mani-as-offer-viewall-btn">
+   
+    <span className="mani-as-viewall-circle">→</span>
+  </button>
+</div>
+        </div>
+  
+        {/* Cards */}
+        <div className="mani-as-offer-cards-grid">
+          {displayBusinesses.map((business) => {
+            const offer = offersMap[business.offer];
+            const discount = offer?.value ? `${offer.value}%` : "0%";
+  
+            const bannerImage =
+              business.banner && business.banner.trim() !== ""
+                ? `${baseurl}${business.banner}`
+                : DEFAULT_BANNER;
+  
+            return (
+              <div className="mani-as-offer-card-item" key={business.business_id}>
+                <div
+                  className="mani-as-offer-card"
+                  style={{ backgroundImage: `url(${bannerImage})` }}
+                >
+                  <div className="mani-as-offer-card-content">
+                    <p className="mani-as-offer-upto">UPTO</p>
+                    <h2 className="mani-as-offer-discount">{discount}</h2>
+                    <p className="mani-as-offer-off">OFF</p>
+                    <button className="mani-as-offer-shop-btn">Shop Now</button>
+                  </div>
+                </div>
+              </div> 
+            );
+          })}
         </div>
       </div>
-
-      <div className="three-cards-grid">
-        {displayBusinesses.map((business) => {
-          const offer = offersMap[business.offer];
-          const discount = offer?.value
-            ? `${offer.value}%`
-            : "0%";
-
-          // ✅ SAFE banner logic
-          const bannerImage =
-            business.banner && business.banner.trim() !== ""
-              ? `${baseurl}${business.banner}`
-              : DEFAULT_BANNER;
-
-          return (
-            <div className="offer-card-item" key={business.business_id}>
-              <div
-                className="offer-card"
-                style={{ backgroundImage: `url(${bannerImage})` }}
-              >
-                <div className="offer-content">
-                  <p className="upto">UPTO</p>
-                  <h2>{discount}</h2>
-                  <p className="off">OFF</p>
-                  <button className="shop-btn">Shop Now</button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
-export default OfferCarousel;
+    );
+  };
+  
+  export default OfferCarousel;
+  
+  

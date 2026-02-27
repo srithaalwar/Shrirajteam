@@ -1,436 +1,241 @@
-/* WebHome Container */
-.webhome-container {
-  padding: 20px;
-  background: #f9fafb;
-  width: 95%;
-  max-width: 1400px;
-  margin: 2px auto;
+/* ================================================ */
+/* ====  MANI-AS  ·  WebHome Layout & Carousel  == */
+/* ================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Page wrapper ── */
+.mani-as-home-wrap {
+  font-family: 'Nunito', sans-serif;
+  background: #f4f5f7;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
 }
 
-/* Categories */
-.categories-row {
-  display: flex;
-  gap: 24px;
-  overflow-x: auto;
-  padding-bottom: 10px;
+/* ================================================ */
+/* ════════  BANNER CAROUSEL  ════════════════════ */
+/* ================================================ */
+
+.mani-as-banner-wrap {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+  background: #fff;
+  user-select: none;
 }
 
-.category-item {
-  text-align: center;
-  min-width: 100px;
+/* ── Media container ── */
+.mani-as-banner-media {
+  width: 100%;
+  height: 100%;
 }
 
-.category-icon {
-  width: 70px;
-  height: 70px;
+/* ── Image: contain = never crops, full image always visible ── */
+.mani-as-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        /* desktop: fills edge to edge */
+  object-position: center;
+  display: block;
+  animation: mani-as-fade-in 0.5s ease;
+}
+
+@keyframes mani-as-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Video ── */
+.mani-as-video-box {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.mani-as-banner-vid {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.mani-as-vid-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
-  background: #fdecef;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
-  margin: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
 }
 
-.category-item p {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 500;
+.mani-as-video-box:hover .mani-as-vid-icon {
+  opacity: 1;
 }
 
-/* Section Titles */
-.section-title {
-  margin: 25px 0 15px;
-  font-size: 22px;
-  font-weight: 600;
-}
-
-.deals-heading {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 30px 0 16px;
-  color: #1a1a1a;
-}
-
-/* Products */
-.products-row {
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-}
-
-.product-card {
-  background: #fff;
-  width: 240px;
-  border-radius: 12px;
-  padding: 10px;
-  position: relative;
-  flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.product-card img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-/* Discount badge */
-.discount-badge {
+/* ── Gradient overlay ── */
+.mani-as-banner-overlay {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  background: #2e7d32;
-  color: #fff;
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 6px;
-  font-weight: bold;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.22) 0%,
+    transparent 45%
+  );
+  pointer-events: none;
 }
 
-/* Card Buttons */
-.card-btn {
-  position: absolute;
-  bottom: 95px;
-  right: 12px;
-  padding: 6px 14px;
-  border: none;
-  border-radius: 20px;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.card-btn.add {
-  background: #ff9800;
-}
-
-.card-btn.view {
-  background: #1976d2;
-}
-
-.card-btn.closed {
-  background: #d32f2f;
-}
-
-/* Product info */
-.product-info {
-  margin-top: 10px;
-}
-
-.product-name {
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.3;
-  margin-bottom: 6px;
-}
-
-.price-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.price {
-  font-weight: bold;
-  color: #000;
-}
-
-.old-price {
-  text-decoration: line-through;
-  color: #888;
-  font-size: 13px;
-}
-
-/* Product Image Cards (for additional product displays) */
-.product-image-card {
-  min-width: 140px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.product-image-card img {
-  width: 140px;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 14px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.product-image-title {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-}
-
-/* ===== HOME DEALS CAROUSEL AS BANNER ===== */
-.hdc-carousel-banner {
-  position: relative;
-  width: 100%;
-  /* height: 400px; */
-  overflow: hidden;
-  border-radius: 24px;
-  margin: 20px 0;
-}
-
-.hdc-banner-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.hdc-banner-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: opacity 0.5s ease;
-}
-
-.hdc-banner-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.1) 100%);
-  display: flex;
-  align-items: center;
-  padding: 0 60px;
-}
-
-.hdc-banner-content {
-  max-width: 600px;
-  color: white;
-  z-index: 2;
-}
-
-.hdc-banner-content h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  margin-bottom: 20px;
-  line-height: 1.2;
-}
-
-.hdc-banner-content p {
-  font-size: 1.2rem;
-  margin-bottom: 30px;
-  line-height: 1.5;
-}
-
-.hdc-banner-content .hdc-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.hdc-banner-content .hdc-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* Carousel Arrows */
-.hdc-arrow {
+/* ── Arrow buttons ── */
+.mani-as-slide-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.2);
+  z-index: 10;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
   border: none;
-  color: white;
-  font-size: 2rem;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  color: #222;
+  font-size: 1.7rem;
+  line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 10;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
-.hdc-arrow:hover {
-  background: rgba(255, 255, 255, 0.3);
+.mani-as-slide-btn:hover {
+  background: #fff;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.24);
+  transform: translateY(-50%) scale(1.1);
 }
 
-.hdc-arrow.hdc-left {
-  left: 20px;
-}
+.mani-as-slide-prev { left: 14px; }
+.mani-as-slide-next { right: 14px; }
 
-.hdc-arrow.hdc-right {
-  right: 20px;
-}
-
-/* Dots indicator */
-.hdc-dots {
+/* ── Dot indicators ── */
+.mani-as-dots-row {
   position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  gap: 7px;
   z-index: 10;
-}
-
-.hdc-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.hdc-dot.active {
-  background: white;
-  transform: scale(1.2);
-}
-
-.hdc-dot:hover {
-  background: rgba(255, 255, 255, 0.8);
-}
-
-/* Loading and Error States */
-.loading-spinner,
-.error-message,
-.no-images {
-  display: flex;
   align-items: center;
-  justify-content: center;
-  height: 500px;
-  color: white;
-  font-size: 1.2rem;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
 }
 
-.error-message {
-  color: #ff6b6b;
+.mani-as-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s, width 0.3s ease, border-radius 0.3s ease;
 }
 
-
-@media (min-width: 768px) and (max-width: 1024px) {
-.webhome-container {
-  padding: 20px;
-  background: #f9fafb;
-  width: 100%;
-  margin: 2px auto;
-}
+.mani-as-dot--active {
+  background: #ffffff;
+  width: 24px;
+  border-radius: 4px;
+  border-color: #fff;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  /* .hdc-carousel-banner {
-    height: 400px;
-  } */
-  
-  .hdc-banner-overlay {
-    padding: 0 20px;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 100%);
-  }
-  
-  .hdc-banner-content h1 {
-    font-size: 2rem;
-  }
-  
-  .hdc-banner-content p {
-    font-size: 1rem;
-  }
-  
-  .hdc-arrow {
-    width: 40px;
-    height: 40px;
-    font-size: 1.5rem;
-  }
-  
-  .product-card {
-    width: 200px;
-  }
-  
-  .category-item {
-    min-width: 80px;
-  }
-  
-  .category-icon {
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
-  }
-}
-.hdc-banner-background {
-  position: relative;
-  width: 100%;
-  height: 100%;
+/* ================================================ */
+/* ════════  PRODUCT SECTION CARDS  ══════════════ */
+/* ================================================ */
+
+.mani-as-section-card {
+  background: #ffffff;
+  margin: 14px 12px;
+  border-radius: 18px;
   overflow: hidden;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.055);
+  transition: box-shadow 0.2s;
 }
 
-.hdc-banner-image,
-.hdc-banner-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.mani-as-section-card:hover {
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.09);
 }
 
-/* Prevent video controls */
-.hdc-banner-video {
-  pointer-events: none;
-}
-.hdc-video-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
+/* ================================================ */
+/* ════════  RESPONSIVE BREAKPOINTS  ═════════════ */
+/* ================================================ */
+
+/* Large desktop */
+@media (min-width: 1280px) {
+  .mani-as-banner-wrap { height: 480px; }
 }
 
-.hdc-video-play-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 64px;
-  color: rgba(255, 255, 255, 0.85);
-  background: rgba(0, 0, 0, 0.45);
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none; /* prevent blocking carousel clicks */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-}
-.hdc-video-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
+/* Tablet landscape */
+@media (max-width: 1024px) {
+  .mani-as-banner-wrap { height: 360px; }
 }
 
-.hdc-video-control-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 60px;
-  color: rgba(255, 255, 255, 0.9);
-  background: rgba(0, 0, 0, 0.45);
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+/* Tablet portrait */
+@media (max-width: 768px) {
+  .mani-as-banner-wrap { height: 300px; }
+
+  .mani-as-slide-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 1.4rem;
+  }
+
+  .mani-as-slide-prev { left: 8px; }
+  .mani-as-slide-next { right: 8px; }
+
+  .mani-as-dot         { width: 6px; height: 6px; }
+  .mani-as-dot--active { width: 18px; }
+
+  .mani-as-section-card { margin: 10px 8px; border-radius: 14px; }
+}
+
+/* Large phone */
+@media (max-width: 600px) {
+  .mani-as-banner-wrap { height: 240px; }
+}
+
+/* Small phone */
+@media (max-width: 480px) {
+  .mani-as-banner-wrap { height: 210px; }
+
+  .mani-as-slide-btn { display: none; }
+
+  .mani-as-dots-row     { bottom: 10px; gap: 5px; }
+  .mani-as-dot          { width: 5px; height: 5px; }
+  .mani-as-dot--active  { width: 14px; }
+
+  .mani-as-vid-icon     { width: 44px; height: 44px; font-size: 1.2rem; }
+  .mani-as-section-card { margin: 8px 6px; border-radius: 12px; }
+}
+
+/* Tiny phone */
+@media (max-width: 390px) {
+  .mani-as-banner-wrap { height: 185px; }
+}
+
+@media (max-width: 360px) {
+  .mani-as-banner-wrap { height: 165px; }
 }
