@@ -286,7 +286,6 @@
 
 
 
-
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
@@ -320,13 +319,13 @@ import {
   faCreditCard,
   faReceipt,
   faUserTag,
-  faDollarSign,
   faShoppingCart,
   faChartLine,
   faHomeUser,
   faHandHoldingUsd,
   faFileContract,
-  faHistory
+  faHistory,
+  faIndianRupeeSign
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -349,7 +348,7 @@ const cardColors = [
   "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"
 ];
 
-// Icon mapping for agent-specific metrics
+// Icon mapping for client-specific metrics
 const iconMap = {
   "Total Properties": faHome,
   "Available Properties": faHomeUser,
@@ -364,7 +363,7 @@ const iconMap = {
   "Successful Transactions": faCheckCircle,
   "Failed Transactions": faTimesCircle,
   "Refunded Transactions": faReceipt,
-  "Total Revenue": faDollarSign,
+  "Total Revenue": faIndianRupeeSign,
   "Total Orders": faFileContract,
   "Paid Orders": faCheckCircle,
   "Pending Orders": faHourglassHalf,
@@ -373,7 +372,7 @@ const iconMap = {
   "Total Subscriptions": faChartLine,
   "Active Subscriptions": faCheckCircle,
   "Expired Subscriptions": faTimesCircle,
-  "Subscription Revenue": faDollarSign,
+  "Subscription Revenue": faIndianRupeeSign,
   "Transaction History": faHistory
 };
 
@@ -400,7 +399,7 @@ const ClientDashboard = () => {
     setUserInfo(storedUserInfo);
   }, []);
 
-  // Fetch agent summary
+  // Fetch client summary
   useEffect(() => {
     if (!userInfo.user_id) return;
 
@@ -411,7 +410,7 @@ const ClientDashboard = () => {
     
     axios.get(apiEndpoint)
       .then(res => {
-        console.log("Agent API Response:", res.data);
+        console.log("Client API Response:", res.data);
         
         if (res.data) {
           setSummary(res.data);
@@ -421,8 +420,8 @@ const ClientDashboard = () => {
         }
       })
       .catch(err => {
-        console.error("Error fetching agent summary:", err);
-        // Fallback to mock data structure based on agent API response
+        console.error("Error fetching client summary:", err);
+        // Fallback to mock data structure based on client API response
         const fallbackData = {
           filters_applied: {
             user_id: userInfo.user_id,
@@ -477,7 +476,7 @@ const ClientDashboard = () => {
       });
   }, [userInfo.user_id]);
 
-  // Prepare chart data from agent summary
+  // Prepare chart data from client summary
   const prepareChartData = (summaryData) => {
     if (!summaryData || !summaryData.property_summary) {
       console.log("No property summary data available");
@@ -507,7 +506,7 @@ const ClientDashboard = () => {
       rejected
     });
 
-    // Colors for agent dashboard
+    // Colors for client dashboard
     const colors = {
       Available: "#4caf50", 
       Sold: "#e53935",    
@@ -572,7 +571,7 @@ const ClientDashboard = () => {
     setChartData(chartDataConfig);
   };
 
-  // Prepare metrics from agent summary data
+  // Prepare metrics from client summary data
   const prepareMetrics = () => {
     if (!summary) {
       console.log("No summary available for metrics");
@@ -644,29 +643,6 @@ const ClientDashboard = () => {
       );
     }
 
-    // Bookings and Purchases
-    // if (property_summary.bookings) {
-    //   metrics.push(
-    //     { 
-    //       label: "Total Bookings", 
-    //       value: property_summary.bookings.count || 0, 
-    //       icon: iconMap["Total Bookings"], 
-    //       path: "/agent-bookings" 
-    //     }
-    //   );
-    // }
-
-    // if (property_summary.buyied_or_purchased) {
-    //   metrics.push(
-    //     { 
-    //       label: "Properties Purchased", 
-    //       value: property_summary.buyied_or_purchased.count || 0, 
-    //       icon: iconMap["Properties Purchased"], 
-    //       path: "/agent-purchases" 
-    //     }
-    //   );
-    // }
-
     // Transaction Metrics
     if (transaction_summary) {
       metrics.push(
@@ -684,7 +660,7 @@ const ClientDashboard = () => {
         },
         { 
           label: "Total Revenue", 
-          value: `$${transaction_summary.total_revenue || 0}`, 
+          value: `₹${transaction_summary.total_revenue || 0}`, 
           icon: iconMap["Total Revenue"], 
           path: "/client-transactions" 
         }
@@ -723,6 +699,12 @@ const ClientDashboard = () => {
           value: subscription_summary.active || 0, 
           icon: iconMap["Active Subscriptions"], 
           path: "/client-my-plans?status=active" 
+        },
+        { 
+          label: "Subscription Revenue", 
+          value: `₹${subscription_summary.subscription_revenue || 0}`, 
+          icon: iconMap["Subscription Revenue"], 
+          path: "/client-my-plans" 
         }
       );
     }
@@ -733,7 +715,7 @@ const ClientDashboard = () => {
         label: "Transaction History", 
         value: "View All", 
         icon: iconMap["Transaction History"], 
-        path: "/agent-transaction-history" 
+        path: "/client-transaction-history" 
       }
     );
 
@@ -830,7 +812,7 @@ const ClientDashboard = () => {
         <div className="agent-dashboard-content">
           {/* Welcome Header */}
           {/* <div className="welcome-header">
-            <h1 className="welcome-title">Welcome back, {userInfo.user_name || 'Agent'}!</h1>
+            <h1 className="welcome-title">Welcome back, {userInfo.user_name || 'Client'}!</h1>
             <p className="welcome-subtitle">
               Here's your performance overview. Referral ID: <strong>{userInfo.referral_id}</strong>
             </p>
@@ -945,7 +927,7 @@ const ClientDashboard = () => {
                     </div>
                     <div className="quick-stat">
                       <h4>Total Revenue</h4>
-                      <p>${summary.transaction_summary?.total_revenue || 0}</p>
+                      <p>₹{summary.transaction_summary?.total_revenue || 0}</p>
                     </div>
                   </div>
                 </div>

@@ -1680,7 +1680,7 @@ function AgentTransactionSummary() {
             "Property Name",
             "Plan Name",
             "Transaction For",
-            "Paid Amount",
+            "Paid Amount (₹)",
             "Payment Mode",
             "Status",
             "Document Number",
@@ -1700,7 +1700,7 @@ function AgentTransactionSummary() {
                     `"${item.property_name}"`,
                     `"${item.plan_name}"`,
                     `"${mapTransactionFor(item.transaction_for)}"`,
-                    `"₹${parseFloat(item.paid_amount || 0).toLocaleString('en-IN')}"`,
+                    `"${parseFloat(item.paid_amount || 0).toLocaleString('en-IN')}"`,
                     `"${item.payment_mode || 'N/A'}"`,
                     `"${formatStatus(item.status)}"`,
                     `"${item.document_number || ''}"`,
@@ -1887,7 +1887,7 @@ function AgentTransactionSummary() {
                     </div>
                 </div>
 
-                {/* Summary Cards - FIXED: Total amount now only shows completed transactions */}
+                {/* Summary Cards - FIXED: Total amount now only shows completed transactions with ₹ symbol */}
                 <div className="summary-cards" style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -1903,18 +1903,18 @@ function AgentTransactionSummary() {
                         gap: '16px',
                         boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                     }}>
-                        <div className="card-icon" style={{ 
-                            background: '#e0f2fe',
-                            width: '48px',
-                            height: '48px',
-                            borderRadius: '50%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '24px'
-                        }}>
-                            <span style={{ color: '#0284c7' }}>💰</span>
-                        </div>
+                      <div className="card-icon" style={{ 
+    background: '#e0f2fe',
+    width: '48px',
+    height: '48px',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '24px'
+}}>
+    <span style={{ color: '#0284c7' }}>₹</span>
+</div>
                         <div className="card-content">
                             <div className="card-value" style={{ fontSize: '24px', fontWeight: 'bold' }}>
                                 {filteredTransactions.length}
@@ -1944,7 +1944,7 @@ function AgentTransactionSummary() {
                             justifyContent: 'center',
                             fontSize: '24px'
                         }}>
-                            <span style={{ color: '#16a34a' }}>✓</span>
+                            <span style={{ color: '#16a34a' }}>₹</span>
                         </div>
                         <div className="card-content">
                             <div className="card-value" style={{ fontSize: '24px', fontWeight: 'bold' }}>
@@ -2075,7 +2075,7 @@ function AgentTransactionSummary() {
                                 <th style={{ padding: '12px', textAlign: 'left' }}>PROPERTY NAME</th>
                                 <th style={{ padding: '12px', textAlign: 'left' }}>PLAN NAME</th>
                                 <th style={{ padding: '12px', textAlign: 'left' }}>TRANSACTION FOR</th>
-                                <th style={{ padding: '12px', textAlign: 'left' }}>AMOUNT</th>
+                                <th style={{ padding: '12px', textAlign: 'left' }}>AMOUNT (₹)</th>
                                 <th style={{ padding: '12px', textAlign: 'left' }}>PAYMENT MODE</th>
                                 <th style={{ padding: '12px', textAlign: 'left' }}>DOCUMENT NO.</th>
                                 <th style={{ padding: '12px', textAlign: 'left' }}>STATUS</th>
@@ -2131,7 +2131,10 @@ function AgentTransactionSummary() {
                                             </span>
                                         </td>
                                         <td className="amount-cell" style={{ padding: '12px', fontWeight: 'bold' }}>
-                                            <strong>₹{parseFloat(transaction.paid_amount || 0).toLocaleString('en-IN')}</strong>
+                                            <strong>₹{parseFloat(transaction.paid_amount || 0).toLocaleString('en-IN', {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2
+                                            })}</strong>
                                         </td>
                                         <td style={{ padding: '12px' }}>
                                             <span className="mode-badge" style={{

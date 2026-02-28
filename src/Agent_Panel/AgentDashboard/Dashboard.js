@@ -35,9 +35,9 @@ import {
   faShoppingCart,
   faChartLine,
   faHomeUser,
-  faHandHoldingUsd,
   faFileContract,
-  faHistory
+  faHistory,
+  faIndianRupeeSign
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -70,12 +70,12 @@ const iconMap = {
   "Verified Properties": faCheck,
   "Rejected Properties": faBan,
   "Total Bookings": faShoppingCart,
-  "Properties Purchased": faHandHoldingUsd,
+  "Properties Purchased": faIndianRupeeSign,
   "Total Transactions": faCreditCard,
   "Successful Transactions": faCheckCircle,
   "Failed Transactions": faTimesCircle,
   "Refunded Transactions": faReceipt,
-  "Total Revenue": faDollarSign,
+  "Total Revenue": faIndianRupeeSign,
   "Total Orders": faFileContract,
   "Paid Orders": faCheckCircle,
   "Pending Orders": faHourglassHalf,
@@ -84,7 +84,7 @@ const iconMap = {
   "Total Subscriptions": faChartLine,
   "Active Subscriptions": faCheckCircle,
   "Expired Subscriptions": faTimesCircle,
-  "Subscription Revenue": faDollarSign,
+  "Subscription Revenue": faIndianRupeeSign,
   "Transaction History": faHistory
 };
 
@@ -395,7 +395,7 @@ const AgentDashboard = () => {
         },
         { 
           label: "Total Revenue", 
-          value: `$${transaction_summary.total_revenue || 0}`, 
+          value: `₹${transaction_summary.total_revenue || 0}`, 
           icon: iconMap["Total Revenue"], 
           path: "/agent-transactions" 
         }
@@ -433,6 +433,12 @@ const AgentDashboard = () => {
           label: "Active Subscriptions", 
           value: subscription_summary.active || 0, 
           icon: iconMap["Active Subscriptions"], 
+          path: "/agent-my-subscription-plans" 
+        },
+        { 
+          label: "Subscription Revenue", 
+          value: `₹${subscription_summary.subscription_revenue || 0}`, 
+          icon: iconMap["Subscription Revenue"], 
           path: "/agent-my-subscription-plans" 
         }
       );
@@ -539,7 +545,7 @@ const AgentDashboard = () => {
       <AgentNavbar />
       <div className="agent-dashboard-container">
         <div className="agent-dashboard-content">
-          {/* Welcome Header */}
+          {/* Welcome Header - Commented out as in original */}
           {/* <div className="welcome-header">
             <h1 className="welcome-title">Welcome back, {userInfo.user_name || 'Agent'}!</h1>
             <p className="welcome-subtitle">
@@ -656,7 +662,7 @@ const AgentDashboard = () => {
                     </div>
                     <div className="quick-stat">
                       <h4>Total Revenue</h4>
-                      <p>${summary.transaction_summary?.total_revenue || 0}</p>
+                      <p>₹{summary.transaction_summary?.total_revenue || 0}</p>
                     </div>
                   </div>
                 </div>

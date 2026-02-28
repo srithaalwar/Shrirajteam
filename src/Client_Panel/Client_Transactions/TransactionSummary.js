@@ -1171,7 +1171,7 @@ function ClientTransactionSummary() {
                             justifyContent: 'center',
                             fontSize: '24px'
                         }}>
-                            <span style={{ color: '#0284c7' }}>💰</span>
+                            <span style={{ color: '#0284c7' }}>₹</span>
                         </div>
                         <div className="card-content">
                             <div className="card-value" style={{ fontSize: '24px', fontWeight: 'bold' }}>
