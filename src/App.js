@@ -236,7 +236,7 @@ import AdminBusinessProductDetails from "./Admin_Panel/Admin_Business/BusinessPr
 import AdminAddBusinessForm from './Admin_Panel/AdminBusiness/AddBusiness';
 import AdminReports from './Admin_Panel/Admin_Reports/Reports'
 import AdminUsersSubscriptions from './Admin_Panel/Users_Subscriptions/MySubscriptionPlan'
-
+import AdminAddingCarousel from './Admin_Panel/AddCarousel'
 // import AdminAddProductCategory from './Admin_Panel/Product_Category/AddCategory';
 // import AdminEditProductCategory from './Admin_Panel/Product_Category/EditCategory';
 // import AdminProductCategory from './Admin_Panel/Product_Category/TableCategory';
@@ -410,6 +410,8 @@ function App() {
         <Route path="/admin-edittrainingmaterial" element={<AdminEditTrainingMaterial />} />
 
         <Route path="/admin-subscriptions" element={<AdminSubscription />} />
+                <Route path="/admin-add-carousel" element={<AdminAddingCarousel />} />
+
         <Route path="/admin-addsubscriptions" element={<AdminAddSubscription />} />
         <Route path="/admin-edit-subscription/:id" element={<AdminEditSubscription />} />
 

@@ -60,7 +60,7 @@
   min-width: 0; /* Allow shrinking on mobile */
 }
 
-/* 🔥 FIXED SEARCH BOX */
+/* 🔥 FIXED SEARCH BOX - Simplified */
 .wn-search-box {
   width: 100%;
   max-width: 720px;
@@ -69,95 +69,9 @@
   align-items: center;
   background: #fff;
   border-radius: 999px;
-  padding: 0 12px;
+  padding: 0 16px; /* Increased padding slightly */
   border: 1px solid #e5e7eb;
   position: relative;
-}
-
-/* ---------- CATEGORY DROPDOWN ---------- */
-.wn-category-dropdown {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #1f2937;
-  cursor: pointer;
-  position: relative;
-  padding-right: 4px;
-  min-width: 80px;
-}
-
-.wn-category-text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 80px;
-}
-
-/* PERFECT ONDC STYLE ARROW */
-.wn-dropdown-arrow {
-  width: 6px;
-  height: 6px;
-  border-right: 2px solid #374151;
-  border-bottom: 2px solid #374151;
-  transform: rotate(45deg);
-  margin-left: 6px;
-  transition: transform 0.25s ease;
-  flex-shrink: 0;
-}
-
-/* Rotate on open */
-.wn-dropdown-arrow.open {
-  transform: rotate(-135deg);
-}
-
-/* ---------- DROPDOWN MENU ---------- */
-.wn-category-menu {
-  position: absolute;
-  top: 52px;
-  left: 0;
-  width: 260px;
-  max-height: 360px;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15);
-  overflow-y: auto;
-  z-index: 2000;
-  padding: 8px 0;
-}
-
-/* 🔥 LEFT-ALIGNED ITEMS */
-.wn-category-item {
-  padding: 12px 18px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #111827;
-  cursor: pointer;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-}
-
-/* Optional: Ensure text doesn't wrap awkwardly */
-.wn-category-item span {
-  text-align: left;
-  width: 100%;
-}
-
-.wn-category-item:hover {
-  background: #f3f4f6;
-}
-
-/* ---------- DIVIDER ---------- */
-.wn-search-divider {
-  width: 1px;
-  height: 24px;
-  background: #e5e7eb;
-  margin: 0 10px;
-  flex-shrink: 0;
 }
 
 /* ---------- SEARCH INPUT ---------- */
@@ -168,18 +82,20 @@
   font-size: 14px;
   color: #374151;
   min-width: 0; /* Allow shrinking */
+  width: 100%; /* Take full width */
 }
 
 .wn-search-box input::placeholder {
   color: #9ca3af;
 }
 
-/* ---------- SEARCH ICON ---------- */
+/* ---------- SEARCH ICON (Optional - if you want to add a search icon) ---------- */
 .wn-search-icon {
   font-size: 18px;
   color: #9ca3af;
   cursor: pointer;
   flex-shrink: 0;
+  margin-left: 8px;
 }
 
 /* ===================== RIGHT SIDE ===================== */

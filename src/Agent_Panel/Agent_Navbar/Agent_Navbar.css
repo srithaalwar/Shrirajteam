@@ -667,3 +667,105 @@
   align-items: center;
   position: relative;
 }
+
+
+
+/* Submenu styles */
+.wn-submenu {
+  list-style: none;
+  padding-left: 32px; /* Indent submenu items */
+  margin: 8px 0;
+}
+
+.wn-submenu li {
+  margin: 4px 0;
+}
+
+.wn-submenu-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  color: #4a5568;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.wn-submenu-link:hover {
+  background-color: #f0f7ff;
+  color: #273c75;
+  transform: translateX(4px);
+}
+
+.wn-submenu-icon {
+  font-size: 14px;
+  min-width: 20px;
+  text-align: center;
+  color: #718096;
+}
+
+.wn-submenu-text {
+  flex: 1;
+}
+
+/* Menu header styles for items with submenu */
+.wn-menu-item-with-submenu {
+  margin-bottom: 4px;
+}
+
+.wn-menu-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  color: #333;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  background-color: transparent;
+}
+
+.wn-menu-header:hover {
+  background-color: #f5f7fa;
+  color: #273c75;
+  transform: translateX(4px);
+}
+
+.wn-menu-arrow {
+  margin-left: auto;
+  font-size: 14px;
+  color: #718096;
+}
+
+/* Active state for menu header */
+.wn-menu-header.active {
+  color: #273c75;
+  font-weight: 600;
+  background-color: #f0f7ff;
+}
+
+/* Adjust spacing for main menu items */
+.wn-menu-list {
+  padding: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wn-submenu {
+    padding-left: 24px;
+  }
+  
+  .wn-submenu-link {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  
+  .wn-menu-header {
+    padding: 12px 10px;
+    font-size: 14px;
+  }
+}

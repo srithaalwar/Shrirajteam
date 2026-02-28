@@ -6336,49 +6336,129 @@ const AgentNavbar = () => {
   };
 
   // Define your navigation items
-  const menuItems = [
-    { path: "/agent-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
-    { path: "/agent-add-property", name: "Add Property", icon: <FaHome /> },
-    { path: "/agent-my-properties", name: "My Properties", icon: <FaBuilding /> },
-    { path: "/agent-properties", name: "Properties", icon: <FaClipboardList /> },
-    { path: "/agent-my-products", name: "My Products", icon: <FaBriefcase /> },
-    { path: "/agent-my-business", name: "My Business", icon: <FaUserTie /> },
-    { path: "/agent-busineess-category", name: "Products", icon: <FaUserTie /> },
-    { 
-      path: "/agent-add-product-form", 
-      name: "Add Product", 
-      icon: <FaPlusCircle />,
-      onClick: handleAddProductClick,
-      requiresSubscription: true
-    },
-    { 
-      path: "/agent-add-variant-form", 
-      name: "Add Product Variant", 
-      icon: <FaPlusCircle />,
-      onClick: handleAddVariantClick,
-      requiresSubscription: true
-    },
-    {
-      name: "Operations",
-      icon: <FaCogs />,
-      subMenu: [
-        { path: "/agent-payout", name: "Payout", icon: <FaMoneyBillWave /> },
-        { path: "/agent-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
-        { path: "/agent-my-subscription-plans", name: "My Plans", icon: <FaCreditCard /> },
-        { path: "/agent-training-material", name: "Training Material", icon: <FaGraduationCap /> },
-        { path: "/agent-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
-        { path: "/agent-site-visits", name: "Site Visits", icon: <FaEye /> },
-        { path: "/agent-my-team", name: "My Team", icon: <FaUsers /> },
-      ],
-    },
-    { path: "/p-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
-    { path: "/agent-offers", name: "Offers", icon: <FaTag /> },
-    { path: "/agent-my-orders", name: "My Orders", icon: <FaTag /> },
-    { path: "/agent-orders", name: "Orders", icon: <FaTag /> },
-    { path: "/agent-wishlist", name: "My Wishlist", icon: <FaHeart /> },
-    { path: "/agent-add-to-cart", name: "My Cart", icon: <FaShoppingCart /> },
-    { path: "/agent-profile", name: "Profile", icon: <FaUserCircle /> },
-  ];
+  // const menuItems = [
+  //   { path: "/agent-dashboard", name: "Dashboard", icon: <FaTachometerAlt /> },
+  //   { path: "/agent-add-property", name: "Add Property", icon: <FaHome /> },
+  //   { path: "/agent-my-properties", name: "My Properties", icon: <FaBuilding /> },
+  //   { path: "/agent-properties", name: "Properties", icon: <FaClipboardList /> },
+  //   { path: "/agent-my-products", name: "My Products", icon: <FaBriefcase /> },
+  //   { path: "/agent-my-business", name: "My Business", icon: <FaUserTie /> },
+  //   { path: "/agent-busineess-category", name: "Products", icon: <FaUserTie /> },
+  //   { 
+  //     path: "/agent-add-product-form", 
+  //     name: "Add Product", 
+  //     icon: <FaPlusCircle />,
+  //     onClick: handleAddProductClick,
+  //     requiresSubscription: true
+  //   },
+  //   { 
+  //     path: "/agent-add-variant-form", 
+  //     name: "Add Product Variant", 
+  //     icon: <FaPlusCircle />,
+  //     onClick: handleAddVariantClick,
+  //     requiresSubscription: true
+  //   },
+  //   {
+  //     name: "Operations",
+  //     icon: <FaCogs />,
+  //     subMenu: [
+  //       { path: "/agent-payout", name: "Payout", icon: <FaMoneyBillWave /> },
+  //       { path: "/agent-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
+  //       { path: "/agent-my-subscription-plans", name: "My Plans", icon: <FaCreditCard /> },
+  //       { path: "/agent-training-material", name: "Training Material", icon: <FaGraduationCap /> },
+  //       { path: "/agent-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
+  //       { path: "/agent-site-visits", name: "Site Visits", icon: <FaEye /> },
+  //       { path: "/agent-my-team", name: "My Team", icon: <FaUsers /> },
+  //     ],
+  //   },
+  //   { path: "/p-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
+  //   { path: "/agent-offers", name: "Offers", icon: <FaTag /> },
+  //   { path: "/agent-my-orders", name: "My Orders", icon: <FaTag /> },
+  //   { path: "/agent-orders", name: "Orders", icon: <FaTag /> },
+  //   { path: "/agent-wishlist", name: "My Wishlist", icon: <FaHeart /> },
+  //   { path: "/agent-add-to-cart", name: "My Cart", icon: <FaShoppingCart /> },
+  //   { path: "/agent-profile", name: "Profile", icon: <FaUserCircle /> },
+  // ];
+
+
+  //===========
+
+  // Define your navigation items with better categorization
+const menuItems = [
+  { 
+    path: "/agent-dashboard", 
+    name: "Dashboard", 
+    icon: <FaTachometerAlt /> 
+  },
+  
+  // Properties Main Category
+  {
+    name: "Properties",
+    icon: <FaBuilding />,
+    subMenu: [
+      { path: "/agent-add-property", name: "Add Property", icon: <FaPlusCircle /> },
+      { path: "/agent-my-properties", name: "My Properties", icon: <FaHome /> },
+      { path: "/agent-properties", name: "All Properties", icon: <FaClipboardList /> },
+      { path: "/agent-site-visits", name: "Site Visits", icon: <FaEye /> }
+    ],
+  },
+  
+  // Products Main Category
+  {
+    name: "Products",
+    icon: <FaBriefcase />,
+    subMenu: [
+      { 
+        path: "/agent-add-product-form", 
+        name: "Add Product", 
+        icon: <FaPlusCircle />,
+        onClick: handleAddProductClick,
+        requiresSubscription: true
+      },
+      { 
+        path: "/agent-add-variant-form", 
+        name: "Add Product Variant", 
+        icon: <FaPlusCircle />,
+        onClick: handleAddVariantClick,
+        requiresSubscription: true
+      },
+      { path: "/agent-my-products", name: "My Products", icon: <FaTag /> },
+      { path: "/agent-busineess-category", name: "Product Categories", icon: <FaLayerGroup /> }
+    ],
+  },
+  
+  // Orders Main Category
+  {
+    name: "Orders",
+    icon: <FaShoppingCart />,
+    subMenu: [
+      { path: "/agent-my-orders", name: "My Orders", icon: <FaClipboardList /> },
+      { path: "/agent-orders", name: "All Orders", icon: <FaDatabase /> },
+      { path: "/agent-add-to-cart", name: "Cart", icon: <FaShoppingCart /> },
+      { path: "/agent-wishlist", name: "Wishlist", icon: <FaHeart /> }
+    ],
+  },
+  
+  // Operations Main Category (Your existing Operations menu)
+  {
+    name: "Operations",
+    icon: <FaCogs />,
+    subMenu: [
+      { path: "/agent-payout", name: "Payout", icon: <FaMoneyBillWave /> },
+      { path: "/agent-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
+      { path: "/agent-my-subscription-plans", name: "My Plans", icon: <FaCreditCard /> },
+      { path: "/agent-training-material", name: "Training Material", icon: <FaGraduationCap /> },
+      { path: "/agent-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
+      { path: "/agent-my-team", name: "My Team", icon: <FaUsers /> },
+    ],
+  },
+  
+  // Other standalone items
+  { path: "/agent-my-business", name: "My Business", icon: <FaUserTie /> },
+  { path: "/p-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
+  { path: "/agent-offers", name: "Offers", icon: <FaTag /> },
+  { path: "/agent-profile", name: "Profile", icon: <FaUserCircle /> },
+];
 
   // Helper function to render menu item with click handler
   const renderMenuItem = (item) => {

@@ -1094,7 +1094,7 @@ const WebsiteNavbar = () => {
           </div>
         </div>
 
-        <div className="wn-nav-center">
+        {/* <div className="wn-nav-center">
           <div className="wn-search-box">
             <div 
               className="wn-category-dropdown"
@@ -1137,7 +1137,15 @@ const WebsiteNavbar = () => {
               placeholder="What are you looking for?"
             />
           </div>
-        </div>
+        </div> */}
+        <div className="wn-nav-center">
+  <div className="wn-search-box">
+    <input
+      type="text"
+      placeholder="What are you looking for?"
+    />
+  </div>
+</div>
 
         <div className="wn-nav-right web-nav-right">
           {/* Cart Icon with Link */}
