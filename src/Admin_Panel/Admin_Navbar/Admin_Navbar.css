@@ -39,7 +39,7 @@
 }
 
 .wn-logo-img {
-  height: 67px;
+  height: 60px;
   width: auto;
 }
 
@@ -77,10 +77,10 @@
   border-color: #1e40af;
 }
 
-.wn-category-dropdown {
+/* .wn-category-dropdown {
   position: relative;
   min-width: 140px;
-}
+} */
 
 .wn-dropdown-toggle-area {
   padding: 8px 16px;
@@ -130,12 +130,12 @@
   background: #f3f4f6;
 }
 
-.wn-search-divider {
+/* .wn-search-divider {
   width: 1px;
   height: 24px;
   background: #e5e7eb;
   margin: 0 8px;
-}
+} */
 
 .wn-search-box input {
   flex: 1;
