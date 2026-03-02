@@ -629,11 +629,32 @@ function CarouselList() {
     });
   };
 
-  // Get media type icon and info
-  const getMediaInfo = (item) => {
-    if (item.image) return { type: 'image', icon: '🖼️', url: item.image };
-    if (item.video) return { type: 'video', icon: '🎥', url: item.video };
-    return { type: 'none', icon: '📁', url: null };
+  // Get media info and return appropriate display
+  const getMediaDisplay = (item) => {
+    if (item.image) {
+      // Check if it's a full URL or just a path
+      const imageUrl = item.image.startsWith('http') 
+        ? item.image 
+        : `${baseurl}${item.image}`;
+      
+      return {
+        type: 'image',
+        url: imageUrl,
+        thumbnail: true
+      };
+    }
+    if (item.video) {
+      const videoUrl = item.video.startsWith('http') 
+        ? item.video 
+        : `${baseurl}${item.video}`;
+      
+      return {
+        type: 'video',
+        url: videoUrl,
+        thumbnail: false
+      };
+    }
+    return { type: 'none', url: null };
   };
 
   // Truncate text
@@ -684,6 +705,7 @@ function CarouselList() {
                 <th>S.No.</th>
                 <th>ID</th>
                 <th>Media</th>
+                <th>Preview</th>
                 <th>Title</th>
                 <th>Description</th>
                 <th>Link</th>
@@ -697,19 +719,43 @@ function CarouselList() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="10" className="no-data">
+                  <td colSpan="11" className="no-data">
                     Loading...
                   </td>
                 </tr>
               ) : filteredCarousels.length ? (
                 filteredCarousels.map((item, index) => {
-                  const mediaInfo = getMediaInfo(item);
+                  const mediaDisplay = getMediaDisplay(item);
                   return (
                     <tr key={item.id}>
                       <td>{startIndex + index}</td>
                       <td>{item.id}</td>
-                      <td className="media-icon" title={`${mediaInfo.type} file`}>
-                        {mediaInfo.icon}
+                      <td className="media-icon" title={`${mediaDisplay.type} file`}>
+                        {mediaDisplay.type === 'image' ? '🖼️' : mediaDisplay.type === 'video' ? '🎥' : '📁'}
+                      </td>
+                      <td>
+                        {mediaDisplay.type === 'image' && mediaDisplay.url ? (
+                          <div style={{ width: '60px', height: '40px', overflow: 'hidden' }}>
+                            <img 
+                              src={mediaDisplay.url} 
+                              alt={item.title}
+                              style={{ 
+                                width: '100%', 
+                                height: '100%', 
+                                objectFit: 'cover',
+                                borderRadius: '4px'
+                              }}
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = 'https://via.placeholder.com/60x40?text=Error';
+                              }}
+                            />
+                          </div>
+                        ) : mediaDisplay.type === 'video' ? (
+                          <span title="Video file">📹</span>
+                        ) : (
+                          <span className="text-muted">-</span>
+                        )}
                       </td>
                       <td>
                         <span className="title-cell" title={item.title}>
@@ -771,7 +817,7 @@ function CarouselList() {
                 })
               ) : (
                 <tr>
-                  <td colSpan="10" className="no-data">
+                  <td colSpan="11" className="no-data">
                     No carousel items found
                   </td>
                 </tr>
@@ -779,7 +825,7 @@ function CarouselList() {
             </tbody>
           </table>
           
-          {/* Pagination Controls - Same as BookingSlab */}
+          {/* Pagination Controls */}
           {totalItems > 0 && (
             <div className="pagination-container" style={{
               display: 'flex',

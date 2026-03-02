@@ -1579,7 +1579,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { baseurl } from '../../BaseURL/BaseURL';
 import WebsiteNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
-
+import { Country, State, City } from "country-state-city";
 const AdminAddPropertyForm = ({ user, mode = 'add' }) => {  
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('basic-details');
@@ -1606,6 +1606,11 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
   const [receivables, setReceivables] = useState(0);
   const [payables, setPayables] = useState(0);
   const [error, setError] = useState(null);
+// Add these state variables after your existing useState declarations
+const [countries, setCountries] = useState([]);
+const [states, setStates] = useState([]);
+const [cities, setCities] = useState([]);
+
 
   // Define tabs matching the image layout
   const tabs = [
@@ -1756,6 +1761,49 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
     }
   };
 
+  // Load countries when component mounts
+useEffect(() => {
+  const allCountries = Country.getAllCountries();
+  setCountries(allCountries);
+}, []);
+// Load states when country changes
+useEffect(() => {
+  if (formData.country) {
+    const statesOfCountry = State.getStatesOfCountry(formData.country);
+    setStates(statesOfCountry);
+    
+    // Reset state and city when country changes
+    if (!isViewing) {
+      setFormData(prev => ({
+        ...prev,
+        state: '',
+        city: ''
+      }));
+    }
+  } else {
+    setStates([]);
+    setCities([]);
+  }
+}, [formData.country, isViewing]);
+
+
+// Load cities when state changes
+useEffect(() => {
+  if (formData.country && formData.state) {
+    const citiesOfState = City.getCitiesOfState(formData.country, formData.state);
+    setCities(citiesOfState);
+    
+    // Reset city when state changes
+    if (!isViewing) {
+      setFormData(prev => ({
+        ...prev,
+        city: ''
+      }));
+    }
+  } else {
+    setCities([]);
+  }
+}, [formData.country, formData.state, isViewing]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -1914,19 +1962,19 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
         if (!formData.areaUnit?.trim()) newErrors.areaUnit = 'Area Unit is required';
         if (!formData.plotArea || formData.plotArea <= 0) newErrors.plotArea = 'Valid Area is required';
         if (!formData.pricePerUnit || formData.pricePerUnit <= 0) newErrors.pricePerUnit = 'Valid Price Per Unit is required';
-        if (!formData.length || formData.length <= 0) newErrors.length = 'Valid Length is required';
-        if (!formData.breadth || formData.breadth <= 0) newErrors.breadth = 'Valid Breadth is required';
-        if (showBuiltupArea && (!formData.builtupArea || formData.builtupArea <= 0)) {
-          newErrors.builtupArea = 'Valid Built-up Area is required';
-        }
-        if (!formData.facing?.trim()) newErrors.facing = 'Facing Direction is required';
-        if (!formData.ownershipType?.trim()) newErrors.ownershipType = 'Ownership Type is required';
-        if (formData.openSides === null || formData.openSides === undefined || formData.openSides < 0) {
-          newErrors.openSides = 'Valid Open Sides is required';
-        }
-        if (formData.numberOfRoads === null || formData.numberOfRoads === undefined || formData.numberOfRoads < 0) {
-          newErrors.numberOfRoads = 'Valid Number of Roads is required';
-        }
+        // if (!formData.length || formData.length <= 0) newErrors.length = 'Valid Length is required';
+        // if (!formData.breadth || formData.breadth <= 0) newErrors.breadth = 'Valid Breadth is required';
+        // if (showBuiltupArea && (!formData.builtupArea || formData.builtupArea <= 0)) {
+        //   newErrors.builtupArea = 'Valid Built-up Area is required';
+        // }
+        // if (!formData.facing?.trim()) newErrors.facing = 'Facing Direction is required';
+        // if (!formData.ownershipType?.trim()) newErrors.ownershipType = 'Ownership Type is required';
+        // if (formData.openSides === null || formData.openSides === undefined || formData.openSides < 0) {
+        //   newErrors.openSides = 'Valid Open Sides is required';
+        // }
+        // if (formData.numberOfRoads === null || formData.numberOfRoads === undefined || formData.numberOfRoads < 0) {
+        //   newErrors.numberOfRoads = 'Valid Number of Roads is required';
+        // }
         break;
         
       case 'media-upload':
@@ -2397,330 +2445,775 @@ const AdminAddPropertyForm = ({ user, mode = 'add' }) => {
           </div>
         );
 
+      // case 'location-details':
+      //   return (
+      //     <div className="form-section">
+      //       <div className="form-section-content">
+      //         <div className="row">
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               type: 'select',
+      //               name: 'country',
+      //               label: 'Country',
+      //               options: [
+      //                 { value: 'IN', label: 'India' },
+      //                 { value: 'US', label: 'United States' },
+      //                 { value: 'GB', label: 'United Kingdom' },
+      //                 { value: 'CA', label: 'Canada' },
+      //                 { value: 'AU', label: 'Australia' }
+      //               ]
+      //             })}
+      //           </div>
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               name: 'state',
+      //               label: 'State',
+      //               required: true
+      //             })}
+      //           </div>
+      //         </div>
+
+      //         <div className="row">
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               name: 'city',
+      //               label: 'City',
+      //               required: true
+      //             })}
+      //           </div>
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               name: 'pinCode',
+      //               label: 'Pin Code',
+      //               required: false
+      //             })}
+      //           </div>
+      //         </div>
+
+      //         <div className="row">
+      //           <div className="col-12">
+      //             {renderField({
+      //               type: 'textarea',
+      //               name: 'address',
+      //               label: 'Full Address',
+      //               rows: 3
+      //             })}
+      //           </div>
+      //         </div>
+      //       </div>
+      //     </div>
+      //   );
+
       case 'location-details':
-        return (
-          <div className="form-section">
-            <div className="form-section-content">
-              <div className="row">
-                <div className="col-md-6">
-                  {renderField({
-                    type: 'select',
-                    name: 'country',
-                    label: 'Country',
-                    options: [
-                      { value: 'IN', label: 'India' },
-                      { value: 'US', label: 'United States' },
-                      { value: 'GB', label: 'United Kingdom' },
-                      { value: 'CA', label: 'Canada' },
-                      { value: 'AU', label: 'Australia' }
-                    ]
-                  })}
+  return (
+    <div className="form-section">
+      <div className="form-section-content">
+        <div className="row">
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="admin-customer-form-label">Country *</label>
+              {isViewing ? (
+                <div className="view-mode-value">
+                  {countries.find(c => c.isoCode === formData.country)?.name || formData.country || 'N/A'}
                 </div>
-                <div className="col-md-6">
-                  {renderField({
-                    name: 'state',
-                    label: 'State',
-                    required: true
-                  })}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-md-6">
-                  {renderField({
-                    name: 'city',
-                    label: 'City',
-                    required: true
-                  })}
-                </div>
-                <div className="col-md-6">
-                  {renderField({
-                    name: 'pinCode',
-                    label: 'Pin Code',
-                    required: false
-                  })}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-12">
-                  {renderField({
-                    type: 'textarea',
-                    name: 'address',
-                    label: 'Full Address',
-                    rows: 3
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'property-profile':
-        return (
-          <div className="form-section">
-            <div className="form-section-content">
-              {showResidentialFields && (
+              ) : (
                 <>
-                  <div className="row">
-                    <div className="col-md-6">
-                      {renderField({
-                        type: 'number',
-                        name: 'numberOfFloors',
-                        label: 'Number of Floors',
-                        min: 1,
-                        required: false
-                      })}
-                    </div>
-                    <div className="col-md-6">
-                      {renderField({
-                        type: 'number',
-                        name: 'numberOfBedrooms',
-                        label: 'Number of Bedrooms',
-                        min: 0,
-                        required: false
-                      })}
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="col-md-6">
-                      {renderField({
-                        type: 'number',
-                        name: 'numberOfBalconies',
-                        label: 'Number of Balconies',
-                        min: 0,
-                        required: false
-                      })}
-                    </div>
-                    <div className="col-md-6">
-                      {renderField({
-                        type: 'number',
-                        name: 'numberOfBathrooms',
-                        label: 'Number of Bathrooms',
-                        min: 0,
-                        required: false
-                      })}
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="col-md-6">
-                      {renderField({
-                        type: 'number',
-                        name: 'floor',
-                        label: 'Floor',
-                        min: 0,
-                        required: false
-                      })}
-                    </div>
-                    <div className="col-md-6">
-                      {renderField({
-                        type: 'select',
-                        name: 'furnishing_status',
-                        label: 'Furnishing Status',
-                        options: [
-                          { value: '', label: 'Select' },
-                          { value: 'Semi-Furnished', label: 'Semi-Furnished' },
-                          { value: 'Fully-Furnished', label: 'Fully-Furnished' },
-                          { value: 'Unfurnished', label: 'Unfurnished' }
-                        ],
-                        required: false
-                      })}
-                    </div>
-                  </div>
+                  <select 
+                    className={`form-select customer-form-input ${errors.country ? 'is-invalid' : ''}`}
+                    name="country"
+                    value={formData.country || ''}
+                    onChange={(e) => {
+                      const selectedCountry = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        country: selectedCountry,
+                        state: '',
+                        city: ''
+                      }));
+                      if (errors.country) {
+                        setErrors(prev => ({ ...prev, country: '' }));
+                      }
+                    }}
+                    required
+                  >
+                    <option value="">Select Country</option>
+                    {countries.map(country => (
+                      <option key={country.isoCode} value={country.isoCode}>
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
+                  {renderError('country')}
                 </>
               )}
-
-              <div className="row">
-                <div className="col-md-6">
-                  {renderField({
-                    type: 'select',
-                    name: 'areaUnit',
-                    label: 'Area Unit',
-                    options: [
-                      { value: 'sq.ft.', label: 'Square Feet' },
-                      { value: 'sq.m.', label: 'Square Meters' },
-                      { value: 'sq.yd.', label: 'Square Yards' },
-                      { value: 'acres', label: 'Acres' },
-                      { value: 'hectares', label: 'Hectares' },
-                      { value: 'cents', label: 'Cents' }
-                    ]
-                  })}
-                </div>
-                <div className="col-md-6">
-                  {renderField({
-                    type: 'number',
-                    name: 'plotArea',
-                    label: 'Area',
-                    step: '0.01',
-                    min: 0
-                  })}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-md-6">
-                  {renderField({
-                    type: 'number',
-                    name: 'pricePerUnit',
-                    label: 'Price Per Unit',
-                    step: '0.01',
-                    min: 0
-                  })}
-                </div>
-                <div className="col-md-6">
-                  {renderField({
-                    type: 'number',
-                    name: 'length',
-                    label: 'Length (ft)',
-                    step: '0.01',
-                    min: 0
-                  })}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-md-6">
-                  {renderField({
-                    type: 'number',
-                    name: 'breadth',
-                    label: 'Breadth (ft)',
-                    step: '0.01',
-                    min: 0
-                  })}
-                </div>
-                {showBuiltupArea && (
-                  <div className="col-md-6">
-                    {renderField({
-                      type: 'number',
-                      name: 'builtupArea',
-                      label: 'Built-up Area',
-                      step: '0.01',
-                      min: 0
-                    })}
-                  </div>
-                )}
-              </div>
-
-              <div className="row">
-                <div className="col-md-6">
-                  {renderField({
-                    type: 'select',
-                    name: 'facing',
-                    label: 'Facing Direction',
-                    options: [
-                      { value: 'east', label: 'East' },
-                      { value: 'west', label: 'West' },
-                      { value: 'north', label: 'North' },
-                      { value: 'south', label: 'South' },
-                      { value: 'north-east', label: 'North-East' },
-                      { value: 'north-west', label: 'North-West' },
-                      { value: 'south-east', label: 'South-East' },
-                      { value: 'south-west', label: 'South-West' }
-                    ]
-                  })}
-                </div>
-                <div className="col-md-6">
-                  {renderField({
-                    type: 'select',
-                    name: 'ownershipType',
-                    label: 'Ownership Type',
-                    options: [
-                      { value: 'Freehold', label: 'Freehold' },
-                      { value: 'Leasehold', label: 'Leasehold' },
-                      { value: 'Cooperative', label: 'Cooperative' },
-                      { value: 'Condominium', label: 'Condominium' }
-                    ]
-                  })}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-md-6">
-                  {renderField({
-                    type: 'number',
-                    name: 'openSides',
-                    label: 'Number of Open Sides',
-                    min: 0,
-                    max: 4
-                  })}
-                </div>
-                <div className="col-md-6">
-                  {renderField({
-                    type: 'number',
-                    name: 'numberOfRoads',
-                    label: 'Number of Roads',
-                    min: 0,
-                    max: 2
-                  })}
-                </div>
-              </div>
-
-              {formData.numberOfRoads >= 1 && (
-                <div className="row">
-                  <div className="col-md-6">
-                    {renderField({
-                      type: 'number',
-                      name: 'roadWidth1',
-                      label: 'Road 1 Width (ft)',
-                      step: '0.01',
-                      min: 0,
-                      required: false
-                    })}
-                  </div>
-                  {formData.numberOfRoads >= 2 && (
-                    <div className="col-md-6">
-                      {renderField({
-                        type: 'number',
-                        name: 'roadWidth2',
-                        label: 'Road 2 Width (ft)',
-                        step: '0.01',
-                        min: 0,
-                        required: false
-                      })}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              <div className="row">
-                <div className="col-6">
-                  {renderField({
-                    type: 'textarea',
-                    name: 'propertyUniqueness',
-                    label: 'Property Uniqueness',
-                    rows: 3,
-                    required: false
-                  })}
-                </div>
-                <div className="col-6">
-                  {renderField({
-                    type: 'textarea',
-                    name: 'locationAdvantages',
-                    label: 'Location Advantages',
-                    rows: 3,
-                    required: false
-                  })}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-12">
-                  {renderField({
-                    type: 'textarea',
-                    name: 'otherFeatures',
-                    label: 'Other Features',
-                    rows: 3,
-                    required: false
-                  })}
-                </div>
-              </div>
-
-              {renderAmenitiesField()}
             </div>
           </div>
-        );
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="admin-customer-form-label">State *</label>
+              {isViewing ? (
+                <div className="view-mode-value">
+                  {states.find(s => s.isoCode === formData.state)?.name || formData.state || 'N/A'}
+                </div>
+              ) : (
+                <>
+                  <select 
+                    className={`form-select customer-form-input ${errors.state ? 'is-invalid' : ''}`}
+                    name="state"
+                    value={formData.state || ''}
+                    onChange={(e) => {
+                      const selectedState = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        state: selectedState,
+                        city: ''
+                      }));
+                      if (errors.state) {
+                        setErrors(prev => ({ ...prev, state: '' }));
+                      }
+                    }}
+                    disabled={!formData.country}
+                    required
+                  >
+                    <option value="">Select State</option>
+                    {states.map(state => (
+                      <option key={state.isoCode} value={state.isoCode}>
+                        {state.name}
+                      </option>
+                    ))}
+                  </select>
+                  {renderError('state')}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="admin-customer-form-label">City *</label>
+              {isViewing ? (
+                <div className="view-mode-value">
+                  {formData.city || 'N/A'}
+                </div>
+              ) : (
+                <>
+                  <select 
+                    className={`form-select customer-form-input ${errors.city ? 'is-invalid' : ''}`}
+                    name="city"
+                    value={formData.city || ''}
+                    onChange={(e) => {
+                      setFormData(prev => ({
+                        ...prev,
+                        city: e.target.value
+                      }));
+                      if (errors.city) {
+                        setErrors(prev => ({ ...prev, city: '' }));
+                      }
+                    }}
+                    disabled={!formData.state}
+                    required
+                  >
+                    <option value="">Select City</option>
+                    {cities.map(city => (
+                      <option key={city.name} value={city.name}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                  {renderError('city')}
+                </>
+              )}
+            </div>
+          </div>
+          <div className="col-md-6">
+            {renderField({
+              name: 'pinCode',
+              label: 'Pin Code',
+              required: false
+            })}
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            {renderField({
+              type: 'textarea',
+              name: 'address',
+              label: 'Full Address',
+              rows: 3
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+      // case 'property-profile':
+      //   return (
+      //     <div className="form-section">
+      //       <div className="form-section-content">
+      //         {showResidentialFields && (
+      //           <>
+      //             <div className="row">
+      //               <div className="col-md-6">
+      //                 {renderField({
+      //                   type: 'number',
+      //                   name: 'numberOfFloors',
+      //                   label: 'Number of Floors',
+      //                   min: 1,
+      //                   required: false
+      //                 })}
+      //               </div>
+      //               <div className="col-md-6">
+      //                 {renderField({
+      //                   type: 'number',
+      //                   name: 'numberOfBedrooms',
+      //                   label: 'Number of Bedrooms',
+      //                   min: 0,
+      //                   required: false
+      //                 })}
+      //               </div>
+      //             </div>
+
+      //             <div className="row">
+      //               <div className="col-md-6">
+      //                 {renderField({
+      //                   type: 'number',
+      //                   name: 'numberOfBalconies',
+      //                   label: 'Number of Balconies',
+      //                   min: 0,
+      //                   required: false
+      //                 })}
+      //               </div>
+      //               <div className="col-md-6">
+      //                 {renderField({
+      //                   type: 'number',
+      //                   name: 'numberOfBathrooms',
+      //                   label: 'Number of Bathrooms',
+      //                   min: 0,
+      //                   required: false
+      //                 })}
+      //               </div>
+      //             </div>
+
+      //             <div className="row">
+      //               <div className="col-md-6">
+      //                 {renderField({
+      //                   type: 'number',
+      //                   name: 'floor',
+      //                   label: 'Floor',
+      //                   min: 0,
+      //                   required: false
+      //                 })}
+      //               </div>
+      //               <div className="col-md-6">
+      //                 {renderField({
+      //                   type: 'select',
+      //                   name: 'furnishing_status',
+      //                   label: 'Furnishing Status',
+      //                   options: [
+      //                     { value: '', label: 'Select' },
+      //                     { value: 'Semi-Furnished', label: 'Semi-Furnished' },
+      //                     { value: 'Fully-Furnished', label: 'Fully-Furnished' },
+      //                     { value: 'Unfurnished', label: 'Unfurnished' }
+      //                   ],
+      //                   required: false
+      //                 })}
+      //               </div>
+      //             </div>
+      //           </>
+      //         )}
+
+      //         <div className="row">
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               type: 'select',
+      //               name: 'areaUnit',
+      //               label: 'Area Unit',
+      //               options: [
+      //                 { value: 'sq.ft.', label: 'Square Feet' },
+      //                 { value: 'sq.m.', label: 'Square Meters' },
+      //                 { value: 'sq.yd.', label: 'Square Yards' },
+      //                 { value: 'acres', label: 'Acres' },
+      //                 { value: 'hectares', label: 'Hectares' },
+      //                 { value: 'cents', label: 'Cents' }
+      //               ]
+      //             })}
+      //           </div>
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               type: 'number',
+      //               name: 'plotArea',
+      //               label: 'Area',
+      //               step: '0.01',
+      //               min: 0
+      //             })}
+      //           </div>
+      //         </div>
+
+      //         <div className="row">
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               type: 'number',
+      //               name: 'pricePerUnit',
+      //               label: 'Price Per Unit',
+      //               step: '0.01',
+      //               min: 0
+      //             })}
+      //           </div>
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               type: 'number',
+      //               name: 'length',
+      //               label: 'Length (ft)',
+      //               step: '0.01',
+      //               min: 0
+      //             })}
+      //           </div>
+      //         </div>
+
+      //         <div className="row">
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               type: 'number',
+      //               name: 'breadth',
+      //               label: 'Breadth (ft)',
+      //               step: '0.01',
+      //               min: 0
+      //             })}
+      //           </div>
+      //           {showBuiltupArea && (
+      //             <div className="col-md-6">
+      //               {renderField({
+      //                 type: 'number',
+      //                 name: 'builtupArea',
+      //                 label: 'Built-up Area',
+      //                 step: '0.01',
+      //                 min: 0
+      //               })}
+      //             </div>
+      //           )}
+      //         </div>
+
+      //         <div className="row">
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               type: 'select',
+      //               name: 'facing',
+      //               label: 'Facing Direction',
+      //               options: [
+      //                 { value: 'east', label: 'East' },
+      //                 { value: 'west', label: 'West' },
+      //                 { value: 'north', label: 'North' },
+      //                 { value: 'south', label: 'South' },
+      //                 { value: 'north-east', label: 'North-East' },
+      //                 { value: 'north-west', label: 'North-West' },
+      //                 { value: 'south-east', label: 'South-East' },
+      //                 { value: 'south-west', label: 'South-West' }
+      //               ]
+      //             })}
+      //           </div>
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               type: 'select',
+      //               name: 'ownershipType',
+      //               label: 'Ownership Type',
+      //               options: [
+      //                 { value: 'Freehold', label: 'Freehold' },
+      //                 { value: 'Leasehold', label: 'Leasehold' },
+      //                 { value: 'Cooperative', label: 'Cooperative' },
+      //                 { value: 'Condominium', label: 'Condominium' }
+      //               ]
+      //             })}
+      //           </div>
+      //         </div>
+
+      //         <div className="row">
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               type: 'number',
+      //               name: 'openSides',
+      //               label: 'Number of Open Sides',
+      //               min: 0,
+      //               max: 4
+      //             })}
+      //           </div>
+      //           <div className="col-md-6">
+      //             {renderField({
+      //               type: 'number',
+      //               name: 'numberOfRoads',
+      //               label: 'Number of Roads',
+      //               min: 0,
+      //               max: 2
+      //             })}
+      //           </div>
+      //         </div>
+
+      //         {formData.numberOfRoads >= 1 && (
+      //           <div className="row">
+      //             <div className="col-md-6">
+      //               {renderField({
+      //                 type: 'number',
+      //                 name: 'roadWidth1',
+      //                 label: 'Road 1 Width (ft)',
+      //                 step: '0.01',
+      //                 min: 0,
+      //                 required: false
+      //               })}
+      //             </div>
+      //             {formData.numberOfRoads >= 2 && (
+      //               <div className="col-md-6">
+      //                 {renderField({
+      //                   type: 'number',
+      //                   name: 'roadWidth2',
+      //                   label: 'Road 2 Width (ft)',
+      //                   step: '0.01',
+      //                   min: 0,
+      //                   required: false
+      //                 })}
+      //               </div>
+      //             )}
+      //           </div>
+      //         )}
+
+      //         <div className="row">
+      //           <div className="col-6">
+      //             {renderField({
+      //               type: 'textarea',
+      //               name: 'propertyUniqueness',
+      //               label: 'Property Uniqueness',
+      //               rows: 3,
+      //               required: false
+      //             })}
+      //           </div>
+      //           <div className="col-6">
+      //             {renderField({
+      //               type: 'textarea',
+      //               name: 'locationAdvantages',
+      //               label: 'Location Advantages',
+      //               rows: 3,
+      //               required: false
+      //             })}
+      //           </div>
+      //         </div>
+
+      //         <div className="row">
+      //           <div className="col-12">
+      //             {renderField({
+      //               type: 'textarea',
+      //               name: 'otherFeatures',
+      //               label: 'Other Features',
+      //               rows: 3,
+      //               required: false
+      //             })}
+      //           </div>
+      //         </div>
+
+      //         {renderAmenitiesField()}
+      //       </div>
+      //     </div>
+      //   );
+
+      case 'property-profile':
+  return (
+    <div className="form-section">
+      <div className="form-section-content">
+        {showResidentialFields && (
+          <>
+            <div className="row">
+              <div className="col-md-6">
+                {renderField({
+                  type: 'number',
+                  name: 'numberOfFloors',
+                  label: 'Number of Floors',
+                  min: 1,
+                  required: false
+                })}
+              </div>
+              <div className="col-md-6">
+                {renderField({
+                  type: 'number',
+                  name: 'numberOfBedrooms',
+                  label: 'Number of Bedrooms',
+                  min: 0,
+                  required: false
+                })}
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-md-6">
+                {renderField({
+                  type: 'number',
+                  name: 'numberOfBalconies',
+                  label: 'Number of Balconies',
+                  min: 0,
+                  required: false
+                })}
+              </div>
+              <div className="col-md-6">
+                {renderField({
+                  type: 'number',
+                  name: 'numberOfBathrooms',
+                  label: 'Number of Bathrooms',
+                  min: 0,
+                  required: false
+                })}
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-md-6">
+                {renderField({
+                  type: 'number',
+                  name: 'floor',
+                  label: 'Floor',
+                  min: 0,
+                  required: false
+                })}
+              </div>
+              <div className="col-md-6">
+                {renderField({
+                  type: 'select',
+                  name: 'furnishing_status',
+                  label: 'Furnishing Status',
+                  options: [
+                    { value: '', label: 'Select' },
+                    { value: 'Semi-Furnished', label: 'Semi-Furnished' },
+                    { value: 'Fully-Furnished', label: 'Fully-Furnished' },
+                    { value: 'Unfurnished', label: 'Unfurnished' }
+                  ],
+                  required: false
+                })}
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Area and Price Information - ONLY these are mandatory */}
+        <div className="row">
+          <div className="col-md-4">
+            {renderField({
+              type: 'select',
+              name: 'areaUnit',
+              label: 'Area Unit',
+              options: [
+                { value: 'sq.ft.', label: 'Square Feet' },
+                { value: 'sq.m.', label: 'Square Meters' },
+                { value: 'sq.yd.', label: 'Square Yards' },
+                { value: 'acres', label: 'Acres' },
+                { value: 'hectares', label: 'Hectares' },
+                { value: 'cents', label: 'Cents' }
+              ],
+              required: true  // MANDATORY
+            })}
+          </div>
+          <div className="col-md-4">
+            {renderField({
+              type: 'number',
+              name: 'plotArea',
+              label: 'Area',
+              step: '0.01',
+              min: 0,
+              required: true  // MANDATORY
+            })}
+          </div>
+          <div className="col-md-4">
+            {renderField({
+              type: 'number',
+              name: 'pricePerUnit',
+              label: 'Price Per Unit',
+              step: '0.01',
+              min: 0,
+              required: true  // MANDATORY
+            })}
+          </div>
+        </div>
+
+        {/* Length and Breadth in same row - BOTH OPTIONAL */}
+        <div className="row">
+          <div className="col-md-6">
+            {renderField({
+              type: 'number',
+              name: 'length',
+              label: 'Length (ft)',
+              step: '0.01',
+              min: 0,
+              required: false  // OPTIONAL
+            })}
+          </div>
+          <div className="col-md-6">
+            {renderField({
+              type: 'number',
+              name: 'breadth',
+              label: 'Breadth (ft)',
+              step: '0.01',
+              min: 0,
+              required: false  // OPTIONAL
+            })}
+          </div>
+        </div>
+
+        {/* Built-up Area - OPTIONAL */}
+        {showBuiltupArea && (
+          <div className="row">
+            <div className="col-md-6">
+              {renderField({
+                type: 'number',
+                name: 'builtupArea',
+                label: 'Built-up Area',
+                step: '0.01',
+                min: 0,
+                required: false  // OPTIONAL
+              })}
+            </div>
+            <div className="col-md-6">
+              {renderField({
+                type: 'select',
+                name: 'facing',
+                label: 'Facing Direction',
+                options: [
+                  { value: 'east', label: 'East' },
+                  { value: 'west', label: 'West' },
+                  { value: 'north', label: 'North' },
+                  { value: 'south', label: 'South' },
+                  { value: 'north-east', label: 'North-East' },
+                  { value: 'north-west', label: 'North-West' },
+                  { value: 'south-east', label: 'South-East' },
+                  { value: 'south-west', label: 'South-West' }
+                ],
+                required: false  // OPTIONAL
+              })}
+            </div>
+          </div>
+        )}
+
+        {!showBuiltupArea && (
+          <div className="row">
+            <div className="col-md-6">
+              {renderField({
+                type: 'select',
+                name: 'facing',
+                label: 'Facing Direction',
+                options: [
+                  { value: 'east', label: 'East' },
+                  { value: 'west', label: 'West' },
+                  { value: 'north', label: 'North' },
+                  { value: 'south', label: 'South' },
+                  { value: 'north-east', label: 'North-East' },
+                  { value: 'north-west', label: 'North-West' },
+                  { value: 'south-east', label: 'South-East' },
+                  { value: 'south-west', label: 'South-West' }
+                ],
+                required: false  // OPTIONAL
+              })}
+            </div>
+            <div className="col-md-6">
+              {renderField({
+                type: 'number',
+                name: 'openSides',
+                label: 'Number of Open Sides',
+                min: 0,
+                max: 4,
+                required: false  // OPTIONAL
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Open Sides and Number of Roads - BOTH OPTIONAL */}
+        {showBuiltupArea && (
+          <div className="row">
+            <div className="col-md-6">
+              {renderField({
+                type: 'number',
+                name: 'openSides',
+                label: 'Number of Open Sides',
+                min: 0,
+                max: 4,
+                required: false  // OPTIONAL
+              })}
+            </div>
+            <div className="col-md-6">
+              {renderField({
+                type: 'number',
+                name: 'numberOfRoads',
+                label: 'Number of Roads',
+                min: 0,
+                max: 2,
+                required: false  // OPTIONAL
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Road Widths - OPTIONAL */}
+        {formData.numberOfRoads >= 1 && (
+          <div className="row">
+            <div className="col-md-6">
+              {renderField({
+                type: 'number',
+                name: 'roadWidth1',
+                label: 'Road 1 Width (ft)',
+                step: '0.01',
+                min: 0,
+                required: false  // OPTIONAL
+              })}
+            </div>
+            {formData.numberOfRoads >= 2 && (
+              <div className="col-md-6">
+                {renderField({
+                  type: 'number',
+                  name: 'roadWidth2',
+                  label: 'Road 2 Width (ft)',
+                  step: '0.01',
+                  min: 0,
+                  required: false  // OPTIONAL
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Text Areas - ALL OPTIONAL */}
+        <div className="row">
+          <div className="col-6">
+            {renderField({
+              type: 'textarea',
+              name: 'propertyUniqueness',
+              label: 'Property Uniqueness',
+              rows: 3,
+              required: false  // OPTIONAL
+            })}
+          </div>
+          <div className="col-6">
+            {renderField({
+              type: 'textarea',
+              name: 'locationAdvantages',
+              label: 'Location Advantages',
+              rows: 3,
+              required: false  // OPTIONAL
+            })}
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            {renderField({
+              type: 'textarea',
+              name: 'otherFeatures',
+              label: 'Other Features',
+              rows: 3,
+              required: false  // OPTIONAL
+            })}
+          </div>
+        </div>
+
+        {renderAmenitiesField()}
+      </div>
+    </div>
+  );
 
       case 'media-upload':
         return (
