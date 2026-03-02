@@ -3657,7 +3657,7 @@ const AdminNavbar = () => {
         { path: "/admin-commissionmaster", name: "Payout Master", icon: <FaDatabase /> },
         { path: "/a-departments", name: "Departments", icon: <FaSitemap /> },
         { path: "/admin-chatbot", name: "Chat Bot", icon: <FaRobot /> },
-        { path: "/admin-add-carousel", name: "How it works", icon: <FaQuestionCircle /> }
+        { path: "/admin-carousel-list", name: "Add Carousel", icon: <FaQuestionCircle /> }
       ],
     },
     

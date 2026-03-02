@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AdminNavbar from "../Admin_Panel/Admin_Navbar/Admin_Navbar";
 import { baseurl } from "../BaseURL/BaseURL";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const AddCarousel = () => {
+const AddEditCarousel = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -14,15 +14,69 @@ const AddCarousel = () => {
     order: "",
     active: true,
     image: null,
-    video: null
+    video: null,
+    existing_image: null,
+    existing_video: null
   });
 
   const [loading, setLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
   const [mediaType, setMediaType] = useState("image"); // 'image' or 'video'
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const navigate = useNavigate();
+  const { id } = useParams(); // Get ID from URL if in edit mode
+
+  // Check if we're in edit mode
+  useEffect(() => {
+    if (id) {
+      setIsEditMode(true);
+      fetchCarouselItem();
+    }
+  }, [id]);
+
+  // Fetch carousel item for editing
+  const fetchCarouselItem = async () => {
+    setFetchLoading(true);
+    try {
+      const res = await axios.get(`${baseurl}/carousel/${id}/`);
+      const item = res.data;
+      
+      // Set form data with existing values
+      setFormData({
+        title: item.title || "",
+        description: item.description || "",
+        link: item.link || "",
+        order: item.order || "",
+        active: item.active !== undefined ? item.active : true,
+        image: null,
+        video: null,
+        existing_image: item.image || null,
+        existing_video: item.video || null
+      });
+
+      // Set media type based on existing media
+      if (item.video) {
+        setMediaType("video");
+        setVideoPreview(item.video);
+      } else if (item.image) {
+        setMediaType("image");
+        setImagePreview(item.image);
+      }
+      
+    } catch (error) {
+      console.error("Error fetching carousel item:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to load carousel item",
+        confirmButtonColor: "#273c75",
+      }).then(() => navigate("/admin-carousel-list"));
+    }
+    setFetchLoading(false);
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -58,7 +112,13 @@ const AddCarousel = () => {
         return;
       }
 
-      setFormData({ ...formData, image: file, video: null });
+      setFormData({ 
+        ...formData, 
+        image: file, 
+        video: null,
+        existing_image: null,
+        existing_video: null 
+      });
       setMediaType("image");
       
       // Create preview
@@ -97,7 +157,13 @@ const AddCarousel = () => {
         return;
       }
 
-      setFormData({ ...formData, video: file, image: null });
+      setFormData({ 
+        ...formData, 
+        video: file, 
+        image: null,
+        existing_image: null,
+        existing_video: null 
+      });
       setMediaType("video");
       
       // Create preview
@@ -124,7 +190,11 @@ const AddCarousel = () => {
       return;
     }
 
-    if (!formData.image && !formData.video) {
+    // Check if media exists (either new or existing)
+    const hasNewMedia = formData.image || formData.video;
+    const hasExistingMedia = formData.existing_image || formData.existing_video;
+    
+    if (!hasNewMedia && !hasExistingMedia) {
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -155,6 +225,7 @@ const AddCarousel = () => {
       
       formDataObj.append('active', formData.active);
       
+      // Only append new files if they exist
       if (formData.image) {
         formDataObj.append('image', formData.image);
       }
@@ -163,25 +234,36 @@ const AddCarousel = () => {
         formDataObj.append('video', formData.video);
       }
 
-      await axios.post(`${baseurl}/carousel/`, formDataObj, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      if (isEditMode) {
+        // Update existing item
+        await axios.put(`${baseurl}/carousel/${id}/`, formDataObj, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+      } else {
+        // Create new item
+        await axios.post(`${baseurl}/carousel/`, formDataObj, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+      }
 
-      // SUCCESS SWEETALERT
+      // Success message
       Swal.fire({
         icon: "success",
         title: "Success",
-        text: "Carousel item created successfully",
+        text: isEditMode ? "Carousel item updated successfully" : "Carousel item created successfully",
         confirmButtonColor: "#273c75",
         confirmButtonText: "OK",
-      }).then(() => navigate("/carousel-list")); // Change this to your carousel list route
+      }).then(() => navigate("/admin-carousel-list"));
+
     } catch (err) {
-      console.error("Error creating carousel item:", err);
+      console.error("Error saving carousel item:", err);
       
       // Handle validation errors
-      let errorMessage = "Failed to create carousel item";
+      let errorMessage = isEditMode ? "Failed to update carousel item" : "Failed to create carousel item";
       if (err.response?.data) {
         if (typeof err.response.data === 'object') {
           const errors = Object.values(err.response.data).flat().join(', ');
@@ -206,12 +288,32 @@ const AddCarousel = () => {
     setFormData({
       ...formData,
       image: null,
-      video: null
+      video: null,
+      existing_image: null,
+      existing_video: null
     });
     setImagePreview(null);
     setVideoPreview(null);
     setMediaType("image");
   };
+
+  const handleMediaTypeChange = (type) => {
+    setMediaType(type);
+    clearMediaSelection();
+  };
+
+  if (fetchLoading) {
+    return (
+      <>
+        <AdminNavbar />
+        <div className="container my-4 text-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -219,7 +321,9 @@ const AddCarousel = () => {
 
       <div className="container my-4">
         <div className="card p-4">
-          <h4 className="text-center mb-4">Add Carousel Item</h4>
+          <h4 className="text-center mb-4">
+            {isEditMode ? "Edit Carousel Item" : "Add Carousel Item"}
+          </h4>
 
           <form onSubmit={handleSubmit}>
             {/* Title + Order in one row */}
@@ -301,10 +405,7 @@ const AddCarousel = () => {
                       name="mediaType"
                       value="image"
                       checked={mediaType === "image"}
-                      onChange={(e) => {
-                        setMediaType(e.target.value);
-                        clearMediaSelection();
-                      }}
+                      onChange={(e) => handleMediaTypeChange(e.target.value)}
                       className="form-check-input"
                       disabled={loading}
                     />
@@ -319,10 +420,7 @@ const AddCarousel = () => {
                       name="mediaType"
                       value="video"
                       checked={mediaType === "video"}
-                      onChange={(e) => {
-                        setMediaType(e.target.value);
-                        clearMediaSelection();
-                      }}
+                      onChange={(e) => handleMediaTypeChange(e.target.value)}
                       className="form-check-input"
                       disabled={loading}
                     />
@@ -339,7 +437,7 @@ const AddCarousel = () => {
               <div className="row mb-3">
                 <div className="col-md-6">
                   <label className="form-label">
-                    Carousel Image <span className="text-danger">*</span>
+                    Carousel Image {!isEditMode && <span className="text-danger">*</span>}
                   </label>
                   <input
                     type="file"
@@ -350,20 +448,28 @@ const AddCarousel = () => {
                     disabled={loading}
                   />
                   <small className="text-muted">
-                    Required. Max 5MB. Supported: JPEG, PNG, GIF, WebP
+                    {isEditMode ? "Leave empty to keep existing image. " : ""}
+                    Max 5MB. Supported: JPEG, PNG, GIF, WebP
                   </small>
                 </div>
                 
-                {imagePreview && (
+                {(imagePreview || formData.existing_image) && (
                   <div className="col-md-6">
-                    <label className="form-label">Preview</label>
-                    <div className="icon-preview">
+                    <label className="form-label">
+                      {imagePreview ? "New Preview" : "Current Image"}
+                    </label>
+                    <div>
                       <img 
-                        src={imagePreview} 
+                        src={imagePreview || formData.existing_image} 
                         alt="Preview" 
                         className="img-thumbnail"
                         style={{ maxWidth: '200px', maxHeight: '150px', objectFit: 'cover' }}
                       />
+                      {formData.existing_image && !imagePreview && (
+                        <p className="text-muted mt-1">
+                          <small>Existing image (will be kept if no new image selected)</small>
+                        </p>
+                      )}
                     </div>
                   </div>
                 )}
@@ -375,7 +481,7 @@ const AddCarousel = () => {
               <div className="row mb-3">
                 <div className="col-md-6">
                   <label className="form-label">
-                    Carousel Video <span className="text-danger">*</span>
+                    Carousel Video {!isEditMode && <span className="text-danger">*</span>}
                   </label>
                   <input
                     type="file"
@@ -386,22 +492,30 @@ const AddCarousel = () => {
                     disabled={loading}
                   />
                   <small className="text-muted">
-                    Required. Max 20MB. Supported: MP4, WebM, OGG, MOV
+                    {isEditMode ? "Leave empty to keep existing video. " : ""}
+                    Max 20MB. Supported: MP4, WebM, OGG, MOV
                   </small>
                 </div>
                 
-                {videoPreview && (
+                {(videoPreview || formData.existing_video) && (
                   <div className="col-md-6">
-                    <label className="form-label">Preview</label>
-                    <div className="video-preview">
+                    <label className="form-label">
+                      {videoPreview ? "New Preview" : "Current Video"}
+                    </label>
+                    <div>
                       <video 
-                        src={videoPreview} 
+                        src={videoPreview || formData.existing_video} 
                         controls
                         className="img-thumbnail"
                         style={{ maxWidth: '200px', maxHeight: '150px' }}
                       >
                         Your browser does not support the video tag.
                       </video>
+                      {formData.existing_video && !videoPreview && (
+                        <p className="text-muted mt-1">
+                          <small>Existing video (will be kept if no new video selected)</small>
+                        </p>
+                      )}
                     </div>
                   </div>
                 )}
@@ -438,7 +552,7 @@ const AddCarousel = () => {
                   <button
                     type="button"
                     className="btn btn-outline-secondary"
-                    onClick={() => navigate("/carousel-list")} // Change this to your carousel list route
+                    onClick={() => navigate("/admin-carousel-list")}
                     disabled={loading}
                   >
                     Cancel
@@ -455,7 +569,8 @@ const AddCarousel = () => {
                     }}
                     disabled={loading}
                   >
-                    {loading ? "Creating..." : "Create Carousel Item"}
+                    {loading ? (isEditMode ? "Updating..." : "Creating...") : 
+                     (isEditMode ? "Update Carousel" : "Create Carousel")}
                   </button>
                 </div>
               </div>
@@ -467,4 +582,4 @@ const AddCarousel = () => {
   );
 };
 
-export default AddCarousel;
+export default AddEditCarousel;
