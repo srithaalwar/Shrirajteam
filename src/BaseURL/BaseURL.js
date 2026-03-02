@@ -12,7 +12,7 @@ export const baseurl = "https://test.shrirajteam.com:85";
 
 // export const redirecturl = "https://shrirajteam.com";
 
-// export const redirecturl = "https://test.shrirajteam.com";
+export const redirecturl = "https://test.shrirajteam.com";
 
-export const redirecturl = "http://localhost:3000";
+// export const redirecturl = "http://localhost:3000";
 

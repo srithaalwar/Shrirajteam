@@ -5222,7 +5222,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
 
 // ============= Main Filters Page Component =============
 const AgentProperties = () => {
-  const [viewMode, setViewMode] = useState("grid-4");
+  const [viewMode, setViewMode] = useState("grid-3");
   const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [loading, setLoading] = useState(true);
