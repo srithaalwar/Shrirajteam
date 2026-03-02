@@ -3039,13 +3039,13 @@ const FilterSidebar = ({
   isMobile = false
 }) => {
   const [activeFilters, setActiveFilters] = useState({
-    transaction: true,
-    role: true,
-    categories: true,
-    price: true,
-    type: true,
-    location: true,
-    sort: true
+    transaction: false,
+    role: false,
+    categories: false,
+    price: false,
+    type: false,
+    location: false,
+    sort: false
   });
 
   const [categorySearch, setCategorySearch] = useState("");

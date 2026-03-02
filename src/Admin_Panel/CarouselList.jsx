@@ -704,7 +704,7 @@ function CarouselList() {
               <tr>
                 <th>S.No.</th>
                 <th>ID</th>
-                <th>Media</th>
+                {/* <th>Media</th> */}
                 <th>Preview</th>
                 <th>Title</th>
                 <th>Description</th>
@@ -730,9 +730,9 @@ function CarouselList() {
                     <tr key={item.id}>
                       <td>{startIndex + index}</td>
                       <td>{item.id}</td>
-                      <td className="media-icon" title={`${mediaDisplay.type} file`}>
+                      {/* <td className="media-icon" title={`${mediaDisplay.type} file`}>
                         {mediaDisplay.type === 'image' ? '🖼️' : mediaDisplay.type === 'video' ? '🎥' : '📁'}
-                      </td>
+                      </td> */}
                       <td>
                         {mediaDisplay.type === 'image' && mediaDisplay.url ? (
                           <div style={{ width: '60px', height: '40px', overflow: 'hidden' }}>

@@ -3178,11 +3178,20 @@ useEffect(() => {
 
         {/* Text Areas - ALL OPTIONAL */}
         <div className="row">
-          <div className="col-6">
+          {/* <div className="col-6">
             {renderField({
               type: 'textarea',
               name: 'propertyUniqueness',
               label: 'Property Uniqueness',
+              rows: 3,
+              required: false  // OPTIONAL
+            })}
+          </div> */}
+          <div className="col-6">
+            {renderField({
+              type: 'textarea',
+              name: 'otherFeatures',
+              label: 'Other Features',
               rows: 3,
               required: false  // OPTIONAL
             })}
@@ -3198,7 +3207,7 @@ useEffect(() => {
           </div>
         </div>
 
-        <div className="row">
+        {/* <div className="row">
           <div className="col-12">
             {renderField({
               type: 'textarea',
@@ -3208,7 +3217,7 @@ useEffect(() => {
               required: false  // OPTIONAL
             })}
           </div>
-        </div>
+        </div> */}
 
         {renderAmenitiesField()}
       </div>
@@ -3343,7 +3352,7 @@ useEffect(() => {
                 <div className="col-md-6">
                   {renderField({
                     name: 'ownerContact',
-                    label: 'Owner Contact (Phone)'
+                    label: 'Owner Phone Number'
                   })}
                 </div>
               </div>
