@@ -239,6 +239,14 @@
   .mani-as-banner-img {
     object-fit: contain;
   }
+
+  .mani-as-home-wrap {
+  font-family: 'Nunito', sans-serif;
+  background: #f4f5f7;
+  min-height: auto;
+  width: 100%;
+  overflow-x: hidden;
+}
 }
 
 /* Tiny phone */
