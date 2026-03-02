@@ -6423,7 +6423,7 @@ const menuItems = [
         requiresSubscription: true
       },
       { path: "/agent-my-products", name: "My Products", icon: <FaTag /> },
-      { path: "/agent-busineess-category", name: "Product Categories", icon: <FaLayerGroup /> }
+      { path: "/agent-busineess-category", name: "All Products ", icon: <FaLayerGroup /> }
     ],
   },
   

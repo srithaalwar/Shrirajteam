@@ -1028,8 +1028,6 @@
 // export default AdminDashboard;
 
 
-
-
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
@@ -1069,7 +1067,7 @@ import {
   faUserTag,
   faUserTie,
   faUser,
-  faDollarSign
+  faIndianRupeeSign
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -1114,7 +1112,7 @@ const iconMap = {
   "Successful Transactions": faCheckCircle,
   "Failed Transactions": faTimesCircle,
   "Refunded Transactions": faReceipt,
-  "Total Revenue": faDollarSign,
+  "Total Revenue": faIndianRupeeSign,
   "Total Users": faUsers,
   "Admin Users": faUserTie,
   "Agent Users": faUserTag,
@@ -1122,7 +1120,7 @@ const iconMap = {
   "Total Subscriptions": faCalendarCheck,
   "Active Subscriptions": faCheckCircle,
   "Expired Subscriptions": faTimesCircle,
-  "Subscription Revenue": faDollarSign,
+  "Subscription Revenue": faIndianRupeeSign,
 };
 
 const AdminDashboard = () => {
@@ -1417,7 +1415,7 @@ const AdminDashboard = () => {
         },
         { 
           label: "Total Revenue", 
-          value: `$${transaction_summary.total_revenue || 0}`, 
+          value: `₹${transaction_summary.total_revenue || 0}`, 
           icon: iconMap["Total Revenue"], 
           path: "/admin-transactions" 
         }
@@ -1449,6 +1447,12 @@ const AdminDashboard = () => {
           label: "Active Subscriptions", 
           value: subscription_summary.active || 0, 
           icon: iconMap["Active Subscriptions"], 
+          path: "/users-subscriptions" 
+        },
+        { 
+          label: "Subscription Revenue", 
+          value: `₹${subscription_summary.subscription_revenue || 0}`, 
+          icon: iconMap["Subscription Revenue"], 
           path: "/users-subscriptions" 
         }
       );

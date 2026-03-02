@@ -209,14 +209,6 @@
   cursor: pointer;
 }
 
-.status-dropdown-main {
-  top: 100%;
-  left: -100px;
-  min-width: 280px;
-  z-index: 1000;
-  margin-top: 8px;
-  border: 1px solid #e0e0e0;
-}
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .shop-header .container {
@@ -259,19 +251,3 @@
 .position-absolute.bg-white.shadow-lg.rounded.p-3 {
   animation: slideDown 0.2s ease-out;
 }
-
-@media (max-width: 767px) {
-
-.status-dropdown-main {
-  top: 100%;
-  left: -180px !important;
-  min-width: 280px;
-  z-index: 1000;
-  margin-top: 8px;
-  border: 1px solid #e0e0e0;
-}
-}
-
-
-
-

@@ -639,212 +639,216 @@ const Register = () => {
               </div>
             )}
 
-            <Form onSubmit={handleSubmit}>
-              <div className="register-form-grid mb-4">
-                <div className="form-group-container">
-                  <Form.Control
-                    type="text"
-                    name="first_name"
-                    placeholder="First Name *"
-                    className="register-input"
-                    value={formData.first_name}
-                    onChange={handleChange}
-                  />
-                </div>
-                
-                <div className="form-group-container">
-                  <Form.Control
-                    type="text"
-                    name="last_name"
-                    placeholder="Last Name *"
-                    className="register-input"
-                    value={formData.last_name}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
+           <Form onSubmit={handleSubmit}>
+  {/* Row 1: First Name & Last Name */}
+  <div className="register-form-grid">
+    <div className="form-group-container">
+      <Form.Control
+        type="text"
+        name="first_name"
+        placeholder="First Name *"
+        className="register-input"
+        value={formData.first_name}
+        onChange={handleChange}
+      />
+    </div>
+    
+    <div className="form-group-container">
+      <Form.Control
+        type="text"
+        name="last_name"
+        placeholder="Last Name *"
+        className="register-input"
+        value={formData.last_name}
+        onChange={handleChange}
+      />
+    </div>
+  </div>
 
-              <div className="register-form-grid">
-                <div className="form-group-container">
-                  <Form.Control
-                    type="email"
-                    name="email"
-                    placeholder="Email *"
-                    className="register-input"
-                    value={formData.email}
-                    onChange={handleChange}
-                    isInvalid={!!errors.email}
-                  />
-                  <Form.Control.Feedback type="invalid" className="error-feedback">
-                    {errors.email}
-                  </Form.Control.Feedback>
-                </div>
+  {/* Row 2: Email & Password */}
+  <div className="register-form-grid">
+    <div className="form-group-container">
+      <Form.Control
+        type="email"
+        name="email"
+        placeholder="Email *"
+        className="register-input"
+        value={formData.email}
+        onChange={handleChange}
+        isInvalid={!!errors.email}
+      />
+      {errors.email && (
+        <div className="error-feedback">{errors.email}</div>
+      )}
+    </div>
 
-                <div className="form-group-container">
-                  <InputGroup>
-                    <Form.Control
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      placeholder="Password * (min 6 characters)"
-                      className="register-input"
-                      value={formData.password}
-                      onChange={handleChange}
-                    />
-                    <InputGroup.Text
-                      className="register-eye eye-icon"
-                      onClick={() => setShowPassword(!showPassword)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      {showPassword ? <EyeSlash /> : <Eye />}
-                    </InputGroup.Text>
-                  </InputGroup>
-                </div>
-              </div>
+    <div className="form-group-container">
+      <InputGroup className="input-group">
+        <Form.Control
+          type={showPassword ? "text" : "password"}
+          name="password"
+          placeholder="Password *"
+          className="register-input"
+          value={formData.password}
+          onChange={handleChange}
+        />
+        <InputGroup.Text
+          className="register-eye"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <EyeSlash /> : <Eye />}
+        </InputGroup.Text>
+      </InputGroup>
+    </div>
+  </div>
 
-              <div className="register-form-grid">
-                <div className="form-group-container">
-                  <Form.Control
-                    type="tel"
-                    name="phone_number"
-                    placeholder="Phone Number * (10 digits)"
-                    className="register-input"
-                    value={formData.phone_number}
-                    onChange={handleChange}
-                    isInvalid={!!errors.phone_number}
-                  />
-                  <Form.Control.Feedback type="invalid" className="error-feedback">
-                    {errors.phone_number}
-                  </Form.Control.Feedback>
-                </div>
+  {/* Row 3: Phone Number & Role */}
+  <div className="register-form-grid">
+    <div className="form-group-container">
+      <Form.Control
+        type="tel"
+        name="phone_number"
+        placeholder="Phone Number * (10 digits)"
+        className="register-input"
+        value={formData.phone_number}
+        onChange={handleChange}
+        isInvalid={!!errors.phone_number}
+      />
+      {errors.phone_number && (
+        <div className="error-feedback">{errors.phone_number}</div>
+      )}
+    </div>
 
-                <div className="form-group-container">
-                  {fetchingRoles ? (
-                    <div className="spinner-wrapper">
-                      <Spinner animation="border" size="sm" />
-                      <span className="ms-2">Loading roles...</span>
-                    </div>
-                  ) : (
-                    <Form.Select 
-                      className="register-input"
-                      value={formData.role_ids[0] || ""}
-                      onChange={(e) => handleRoleChange(e.target.value)}
-                    >
-                      <option value="">Select Role *</option>
-                      {roles.length > 0 ? (
-                        roles.map((role) => (
-                          <option key={role.role_id} value={role.role_id}>
-                            {role.role_name === "Agent"
-                              ? "Team"
-                              : role.role_name === "Client"
-                              ? "User"
-                              : role.role_name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>No roles available</option>
-                      )}
-                    </Form.Select>
-                  )}
-                </div>
-              </div>
+    <div className="form-group-container">
+      {fetchingRoles ? (
+        <div className="spinner-wrapper">
+          <Spinner animation="border" size="sm" />
+          <span className="ms-2">Loading roles...</span>
+        </div>
+      ) : (
+        <Form.Select 
+          className="register-input"
+          value={formData.role_ids[0] || ""}
+          onChange={(e) => handleRoleChange(e.target.value)}
+        >
+          <option value="">Select Role *</option>
+          {roles.length > 0 ? (
+            roles.map((role) => (
+              <option key={role.role_id} value={role.role_id}>
+                {role.role_name === "Agent"
+                  ? "Team"
+                  : role.role_name === "Client"
+                  ? "User"
+                  : role.role_name}
+              </option>
+            ))
+          ) : (
+            <option value="" disabled>No roles available</option>
+          )}
+        </Form.Select>
+      )}
+    </div>
+  </div>
 
-              {showSponsorField && (
-                <div className="register-form-grid full-width">
-                  <div className="form-group-container">
-                    <Form.Control
-                      type="text"
-                      name="referred_by"
-                      placeholder="Enter Sponsor ID (Optional)"
-                      className="register-input"
-                      value={formData.referred_by}
-                      onChange={handleChange}
-                      isInvalid={!!sponsorError && formData.referred_by !== ""}
-                    />
-                    
-                    {sponsorError && formData.referred_by !== "" && (
-                      <Form.Control.Feedback type="invalid" className="error-feedback">
-                        {sponsorError}
-                      </Form.Control.Feedback>
-                    )}
-                    
-                    {(checkingSponsor || autoChecking) && (
-                      <div className="sponsor-loading sponsor-feedback">
-                        <Spinner animation="border" size="sm" className="me-1" />
-                        Checking sponsor ID...
-                      </div>
-                    )}
-                    
-                    {sponsorInfo && !sponsorError && (
-                      <div className="sponsor-valid sponsor-feedback">
-                        ✓ Valid Sponsor ID: <strong>{formData.referred_by}</strong>
-                        <div className="sponsor-details">
-                          {sponsorInfo.first_name} {sponsorInfo.last_name}
-                          {sponsorInfo.phone_number && ` (${sponsorInfo.phone_number})`}
-                        </div>
-                      </div>
-                    )}
-                    
-                    {!sponsorError && !checkingSponsor && !autoChecking && !sponsorInfo && formData.referred_by === "" && (
-                      <div className="sponsor-loading sponsor-feedback">
-                        Enter the Referral ID of your sponsor (optional)
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+  {/* Sponsor Field */}
+  {showSponsorField && (
+    <div className="register-form-grid full-width">
+      <div className="form-group-container">
+        <Form.Control
+          type="text"
+          name="referred_by"
+          placeholder="Enter Sponsor ID (Optional)"
+          className="register-input"
+          value={formData.referred_by}
+          onChange={handleChange}
+          isInvalid={!!sponsorError && formData.referred_by !== ""}
+        />
+        
+        {sponsorError && formData.referred_by !== "" && (
+          <div className="error-feedback">{sponsorError}</div>
+        )}
+        
+        {(checkingSponsor || autoChecking) && (
+          <div className="sponsor-loading sponsor-feedback">
+            <Spinner animation="border" size="sm" className="me-1" />
+            Checking sponsor ID...
+          </div>
+        )}
+        
+        {sponsorInfo && !sponsorError && (
+          <div className="sponsor-valid sponsor-feedback">
+            ✓ Valid Sponsor ID: <strong>{formData.referred_by}</strong>
+            <div className="sponsor-details">
+              {sponsorInfo.first_name} {sponsorInfo.last_name}
+              {sponsorInfo.phone_number && ` (${sponsorInfo.phone_number})`}
+            </div>
+          </div>
+        )}
+        
+        {!sponsorError && !checkingSponsor && !autoChecking && !sponsorInfo && formData.referred_by === "" && (
+          <div className="sponsor-loading sponsor-feedback">
+            Enter the Referral ID of your sponsor (optional)
+          </div>
+        )}
+      </div>
+    </div>
+  )}
 
-              <div className="register-terms-container">
-                <Form.Check
-                  type="checkbox"
-                  className="register-terms"
-                  checked={agree}
-                  onChange={() => setAgree(!agree)}
-                  label={
-                    <>
-                      I agree to the{" "}
-                      <span className="register-link" onClick={handleTermsClick}>
-                        Terms & Conditions
-                      </span>{" "}
-                      and{" "}
-                      <span className="register-link" onClick={handlePrivacyClick}>
-                        Privacy Policy
-                      </span>
-                    </>
-                  }
-                />
-              </div>
+  {/* Terms and Conditions */}
+  <div className="register-terms-container">
+    <Form.Check
+      type="checkbox"
+      id="terms-checkbox"
+      className="register-terms"
+      checked={agree}
+      onChange={() => setAgree(!agree)}
+      label={
+        <span>
+          I agree to the{" "}
+          <span className="register-link" onClick={handleTermsClick}>
+            Terms & Conditions
+          </span>{" "}
+          and{" "}
+          <span className="register-link" onClick={handlePrivacyClick}>
+            Privacy Policy
+          </span>
+        </span>
+      }
+    />
+  </div>
 
-              <div className="register-helpline">
-                Helpline Number: <strong>{helplineNumber || "9399492809"}</strong>
-              </div>
+  {/* Helpline */}
+  <div className="register-helpline">
+    Helpline Number: <strong>{helplineNumber || "9399492809"}</strong>
+  </div>
 
-              <Button 
-                className="register-btn" 
-                type="submit"
-                disabled={!agree || loading || fetchingRoles || (showSponsorField && autoChecking)}
-                style={{ backgroundColor: "#273c75", borderColor: "#273c75" }}
-              >
-                {loading ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    Registering...
-                  </>
-                ) : (
-                  "Register"
-                )}
-              </Button>
+  {/* Register Button */}
+  <Button 
+    className="register-btn" 
+    type="submit"
+    disabled={!agree || loading || fetchingRoles || (showSponsorField && autoChecking)}
+  >
+    {loading ? (
+      <>
+        <Spinner animation="border" size="sm" className="me-2" />
+        Registering...
+      </>
+    ) : (
+      "Register"
+    )}
+  </Button>
 
-              <div className="register-footer">
-                Already registered?{" "}
-                <span
-                  className="register-link"
-                  onClick={handleLoginClick}
-                  style={{ cursor: "pointer" }}
-                >
-                  Login
-                </span>
-              </div>
-            </Form>
+  {/* Footer */}
+  <div className="register-footer">
+    Already registered?{" "}
+    <span
+      className="register-link"
+      onClick={handleLoginClick}
+    >
+      Login
+    </span>
+  </div>
+</Form>
           </Card.Body>
         </Card>
       </Container>
