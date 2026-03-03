@@ -769,3 +769,136 @@
     font-size: 14px;
   }
 }
+
+
+
+/* ===================== SIDEBAR STATUS SECTION STYLES ===================== */
+.wn-sidebar-status-section {
+  padding: 16px 20px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 8px;
+}
+
+.wn-sidebar-subscription-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.wn-status-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.wn-status-value {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.wn-status-value.active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.wn-status-value.inactive {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.wn-sidebar-refer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+}
+
+.wn-sidebar-refer-btn:hover {
+  background: linear-gradient(135deg, #218838, #1e7b5c);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.wn-sidebar-refer-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+}
+
+/* Copy message notification (updated position) */
+.wn-copy-message {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background: #4CAF50;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  animation: slideDown 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.wn-copy-message:before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: 20px;
+  width: 10px;
+  height: 10px;
+  background: #4CAF50;
+  transform: rotate(45deg);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments for sidebar status section */
+@media (max-width: 768px) {
+  .wn-sidebar-status-section {
+    padding: 12px 16px;
+  }
+  
+  .wn-sidebar-subscription-status {
+    padding: 6px 10px;
+    margin-bottom: 10px;
+  }
+  
+  .wn-sidebar-refer-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  
+  .wn-status-label,
+  .wn-status-value {
+    font-size: 12px;
+  }
+}

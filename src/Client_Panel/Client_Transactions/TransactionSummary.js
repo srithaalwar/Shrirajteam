@@ -1315,7 +1315,7 @@ function ClientTransactionSummary() {
                 <div className="staff-table-wrapper" style={{
                     background: 'white',
                     borderRadius: '8px',
-                    overflow: 'hidden',
+                    overflow: 'scroll',
                     boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                 }}>
                     <table className="staff-table" style={{

@@ -4307,6 +4307,1146 @@
 
 
 
+// import React, { useEffect, useState, useCallback, useMemo } from "react";
+// import { useParams, useNavigate } from "react-router-dom";
+// import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
+// import {
+//   Search,
+//   X,
+//   Grid3X3,
+//   LayoutList,
+//   ChevronUp,
+//   ChevronDown,
+//   Tag,
+//   DollarSign,
+//   ArrowLeft,
+//   Info,
+//   Filter
+// } from "lucide-react";
+// import "./SubCategories.css";
+// import { baseurl } from "../BaseURL/BaseURL";
+
+// // ============= Commission Tooltip Component =============
+// const CommissionTooltip = ({ show, commissions, distributionCommission }) => {
+//   if (!show || !commissions || commissions.length === 0) return null;
+
+//   const calculateCommissions = () => {
+//     const commissionAmount = parseFloat(distributionCommission) || 0;
+//     return commissions.map(commission => ({
+//       level: commission.level_no,
+//       percentage: parseFloat(commission.percentage),
+//       amount: (commissionAmount * parseFloat(commission.percentage)) / 100
+//     }));
+//   };
+
+//   const commissionList = calculateCommissions();
+
+//   return (
+//     <div className="commission-tooltip">
+//       <div className="commission-tooltip-content">
+//         <div className="commission-body">
+//           {commissionList.map((commission) => (
+//             <div key={commission.level} className="d-flex justify-content-between align-items-center mb-2">
+//               <span className="fw-medium">Team {commission.level}: &nbsp;₹{commission.amount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// // ============= Filter Section Component =============
+// const FilterSection = ({ 
+//   title, 
+//   isOpen, 
+//   onToggle, 
+//   children,
+//   filterCount = 0
+// }) => {
+//   return (
+//     <div className="border rounded mb-3">
+//       <button
+//         onClick={onToggle}
+//         className="w-100 border-0 bg-transparent"
+//         style={{ 
+//           cursor: 'pointer',
+//           display: 'flex',
+//           alignItems: 'center',
+//           justifyContent: 'space-between',
+//           padding: '1rem',
+//           width: '100%',
+//           minHeight: '54px'
+//         }}
+//         aria-label={`Toggle ${title} filter section`}
+//         aria-expanded={isOpen}
+//       >
+//         <div className="d-flex align-items-center gap-2">
+//           <span className="fw-medium" style={{ whiteSpace: 'nowrap' }}>{title}</span>
+//           {filterCount > 0 && (
+//             <span className="badge bg-primary rounded-pill">{filterCount}</span>
+//           )}
+//         </div>
+//         <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+//           {isOpen ? (
+//             <ChevronUp size={20} className="text-muted" />
+//           ) : (
+//             <ChevronDown size={20} className="text-muted" />
+//           )}
+//         </div>
+//       </button>
+      
+//       {isOpen && (
+//         <div className="px-3 pb-3">
+//           {children}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// // ============= Filter Sidebar Component =============
+// const FilterSidebar = ({ 
+//   subCategories,
+//   selectedSubCategories,
+//   setSelectedSubCategories,
+//   selectedPriceRanges,
+//   setSelectedPriceRanges,
+//   selectedDiscountRanges,
+//   setSelectedDiscountRanges,
+//   onFilterChange,
+//   loading
+// }) => {
+//   const [activeFilters, setActiveFilters] = useState({
+//     subcategories: true,
+//     price: false,
+//     discount: false
+//   });
+
+//   const [subCategorySearch, setSubCategorySearch] = useState("");
+
+//   const priceRanges = [
+//     { value: "0-500", label: "Under ₹500" },
+//     { value: "500-1000", label: "₹500 - ₹1000" },
+//     { value: "1000-5000", label: "₹1000 - ₹5000" },
+//     { value: "5000-10000", label: "₹5000 - ₹10000" },
+//     { value: "10000+", label: "Over ₹10000" },
+//   ];
+
+//   const discountRanges = [
+//     { value: "0-10", label: "0-10%" },
+//     { value: "10-20", label: "10-20%" },
+//     { value: "20-30", label: "20-30%" },
+//     { value: "30-40", label: "30-40%" },
+//     { value: "40-50", label: "40-50%" },
+//     { value: "50-60", label: "50-60%" },
+//     { value: "60+", label: "60%+" },
+//   ];
+
+//   const toggleFilterSection = (section) => {
+//     setActiveFilters(prev => ({
+//       ...prev,
+//       [section]: !prev[section]
+//     }));
+//   };
+
+//   // const toggleSubCategory = useCallback((categoryId) => {
+//   //   setSelectedSubCategories((prev) => {
+//   //     const newSelection = prev.includes(categoryId)
+//   //       ? prev.filter(id => id !== categoryId)
+//   //       : [...prev, categoryId];
+      
+//   //     if (onFilterChange) {
+//   //       setTimeout(() => onFilterChange(), 0);
+//   //     }
+      
+//   //     return newSelection;
+//   //   });
+//   // }, [setSelectedSubCategories, onFilterChange]);
+
+
+//  const toggleSubCategory = useCallback((categoryId) => {
+//   setSelectedSubCategories((prev) => {
+//     const newSelection = prev.includes(categoryId)
+//       ? prev.filter(id => id !== categoryId)
+//       : [...prev, categoryId];
+    
+//     if (onFilterChange) {
+//       // Use setTimeout to ensure state update completes
+//       setTimeout(() => onFilterChange(), 0);
+//     }
+    
+//     return newSelection;
+//   });
+// }, [setSelectedSubCategories, onFilterChange]);
+//   const togglePriceRange = useCallback((range) => {
+//     setSelectedPriceRanges((prev) => {
+//       const newSelection = prev.includes(range)
+//         ? prev.filter(r => r !== range)
+//         : [...prev, range];
+      
+//       if (onFilterChange) {
+//         setTimeout(() => onFilterChange(), 0);
+//       }
+      
+//       return newSelection;
+//     });
+//   }, [setSelectedPriceRanges, onFilterChange]);
+
+//   const toggleDiscountRange = useCallback((range) => {
+//     setSelectedDiscountRanges((prev) => {
+//       const newSelection = prev.includes(range)
+//         ? prev.filter(r => r !== range)
+//         : [...prev, range];
+      
+//       if (onFilterChange) {
+//         setTimeout(() => onFilterChange(), 0);
+//       }
+      
+//       return newSelection;
+//     });
+//   }, [setSelectedDiscountRanges, onFilterChange]);
+
+//   const filteredSubCategories = useMemo(() => {
+//     if (!subCategorySearch.trim()) return subCategories;
+    
+//     return subCategories.filter((subCat) =>
+//       subCat.name.toLowerCase().includes(subCategorySearch.toLowerCase())
+//     );
+//   }, [subCategories, subCategorySearch]);
+
+//   const clearAllFilters = () => {
+//     setSelectedSubCategories([]);
+//     setSelectedPriceRanges([]);
+//     setSelectedDiscountRanges([]);
+//     setSubCategorySearch("");
+    
+//     if (onFilterChange) {
+//       setTimeout(() => onFilterChange(), 0);
+//     }
+//   };
+  
+
+//   const activeFilterCount = 
+//     selectedSubCategories.length + 
+//     selectedPriceRanges.length + 
+//     selectedDiscountRanges.length;
+
+//   return (
+//     <div className="w-100">
+//       <div className="d-flex justify-content-between align-items-center mb-4">
+//         <h5 className="fw-semibold mb-0 d-flex align-items-center gap-2">
+//           <Filter size={18} />
+//           Filters
+//         </h5>
+//         {activeFilterCount > 0 && (
+//           <button 
+//             onClick={clearAllFilters}
+//             className="btn btn-sm btn-outline-secondary"
+//             aria-label="Clear all filters"
+//           >
+//             Clear All ({activeFilterCount})
+//           </button>
+//         )}
+//       </div>
+
+//       {/* Subcategories Filter */}
+//       <FilterSection
+//         title="Subcategories"
+//         isOpen={activeFilters.subcategories}
+//         onToggle={() => toggleFilterSection('subcategories')}
+//         filterCount={selectedSubCategories.length}
+//       >
+//         <div className="input-group input-group-sm mb-3">
+//           <input
+//             type="text"
+//             className="form-control"
+//             placeholder="Search subcategories..."
+//             value={subCategorySearch}
+//             onChange={(e) => setSubCategorySearch(e.target.value)}
+//             aria-label="Search subcategories"
+//           />
+//         </div>
+//         <div className="overflow-y-auto" style={{ maxHeight: '300px' }}>
+//           {loading ? (
+//             <div className="text-center py-3">
+//               <div className="spinner-border spinner-border-sm text-primary" role="status">
+//                 <span className="visually-hidden">Loading subcategories...</span>
+//               </div>
+//               <p className="small text-muted mt-2">Loading subcategories...</p>
+//             </div>
+//           ) : filteredSubCategories.length === 0 ? (
+//             <p className="small text-muted text-center py-3">No subcategories found</p>
+//           ) : (
+//             filteredSubCategories.map((subCategory) => (
+//               <div
+//                 key={subCategory.category_id}
+//                 className="d-flex justify-content-between align-items-center mb-2 cursor-pointer"
+//                 style={{ cursor: 'pointer' }}
+//                 onClick={() => toggleSubCategory(subCategory.category_id)}
+//                 onKeyPress={(e) => e.key === 'Enter' && toggleSubCategory(subCategory.category_id)}
+//                 tabIndex={0}
+//                 role="checkbox"
+//                 aria-checked={selectedSubCategories.includes(subCategory.category_id)}
+//               >
+//                 <div className="d-flex align-items-center gap-2">
+//                   <input
+//                     type="checkbox"
+//                     className="form-check-input"
+//                     checked={selectedSubCategories.includes(subCategory.category_id)}
+//                     readOnly
+//                     tabIndex={-1}
+//                     onChange={() => {}}
+//                   />
+//                   <span className={`small ${selectedSubCategories.includes(subCategory.category_id) ? 'fw-semibold text-dark' : 'text-muted'}`}>
+//                     {subCategory.name}
+//                   </span>
+//                 </div>
+//               </div>
+//             ))
+//           )}
+//         </div>
+//       </FilterSection>
+
+//       {/* Price Range Filter */}
+//       <FilterSection
+//         title="Price Range"
+//         isOpen={activeFilters.price}
+//         onToggle={() => toggleFilterSection('price')}
+//         filterCount={selectedPriceRanges.length}
+//       >
+//         <div className="overflow-y-auto" style={{ maxHeight: '200px' }}>
+//           {priceRanges.map((range) => (
+//             <div
+//               key={range.value}
+//               className="d-flex justify-content-between align-items-center mb-2 cursor-pointer"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => togglePriceRange(range.value)}
+//               onKeyPress={(e) => e.key === 'Enter' && togglePriceRange(range.value)}
+//               tabIndex={0}
+//               role="checkbox"
+//               aria-checked={selectedPriceRanges.includes(range.value)}
+//             >
+//               <div className="d-flex align-items-center gap-2">
+//                 <input
+//                   type="checkbox"
+//                   className="form-check-input"
+//                   checked={selectedPriceRanges.includes(range.value)}
+//                   readOnly
+//                   tabIndex={-1}
+//                   onChange={() => {}}
+//                 />
+//                 <span className={`small ${selectedPriceRanges.includes(range.value) ? 'fw-semibold text-dark' : 'text-muted'}`}>
+//                   {range.label}
+//                 </span>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       </FilterSection>
+
+//       {/* Discount Range Filter */}
+//       <FilterSection
+//         title="Discount"
+//         isOpen={activeFilters.discount}
+//         onToggle={() => toggleFilterSection('discount')}
+//         filterCount={selectedDiscountRanges.length}
+//       >
+//         <div className="overflow-y-auto" style={{ maxHeight: '200px' }}>
+//           {discountRanges.map((range) => (
+//             <div
+//               key={range.value}
+//               className="d-flex justify-content-between align-items-center mb-2 cursor-pointer"
+//               style={{ cursor: 'pointer' }}
+//               onClick={() => toggleDiscountRange(range.value)}
+//               onKeyPress={(e) => e.key === 'Enter' && toggleDiscountRange(range.value)}
+//               tabIndex={0}
+//               role="checkbox"
+//               aria-checked={selectedDiscountRanges.includes(range.value)}
+//             >
+//               <div className="d-flex align-items-center gap-2">
+//                 <input
+//                   type="checkbox"
+//                   className="form-check-input"
+//                   checked={selectedDiscountRanges.includes(range.value)}
+//                   readOnly
+//                   tabIndex={-1}
+//                   onChange={() => {}}
+//                 />
+//                 <span className={`small ${selectedDiscountRanges.includes(range.value) ? 'fw-semibold text-dark' : 'text-muted'}`}>
+//                   {range.label}
+//                 </span>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       </FilterSection>
+
+//       {/* Active Filters Summary */}
+//       {activeFilterCount > 0 && (
+//         <div className="mt-4">
+//           <h6 className="fw-semibold mb-2 small">Active Filters:</h6>
+//           <div className="d-flex flex-wrap gap-2">
+//             {selectedSubCategories.map(catId => {
+//               const category = subCategories.find(c => c.category_id === catId);
+//               return category ? (
+//                 <span key={catId} className="badge bg-primary-subtle text-primary border border-primary d-flex align-items-center">
+//                   {category.name}
+//                   <button 
+//                     onClick={() => toggleSubCategory(catId)} 
+//                     className="btn-close btn-close-sm ms-1"
+//                     aria-label={`Remove ${category.name} filter`}
+//                     style={{ fontSize: '0.5rem' }}
+//                   ></button>
+//                 </span>
+//               ) : null;
+//             })}
+//             {selectedPriceRanges.map(range => {
+//               const priceRange = priceRanges.find(r => r.value === range);
+//               return (
+//                 <span key={range} className="badge bg-success-subtle text-success border border-success d-flex align-items-center">
+//                   <DollarSign size={12} className="me-1" />
+//                   {priceRange?.label || range}
+//                   <button 
+//                     onClick={() => togglePriceRange(range)} 
+//                     className="btn-close btn-close-sm ms-1"
+//                     aria-label={`Remove price filter`}
+//                     style={{ fontSize: '0.5rem' }}
+//                   ></button>
+//                 </span>
+//               );
+//             })}
+//             {selectedDiscountRanges.map(range => {
+//               const discountRange = discountRanges.find(r => r.value === range);
+//               return (
+//                 <span key={range} className="badge bg-warning-subtle text-warning border border-warning d-flex align-items-center">
+//                   <Tag size={12} className="me-1" />
+//                   {discountRange?.label || range}
+//                   <button 
+//                     onClick={() => toggleDiscountRange(range)} 
+//                     className="btn-close btn-close-sm ms-1"
+//                     aria-label={`Remove discount filter`}
+//                     style={{ fontSize: '0.5rem' }}
+//                   ></button>
+//                 </span>
+//               );
+//             })}
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// // ============= Product Card Component =============
+// const ProductCard = ({ product, variant, baseurl, commissionData }) => {
+//   const navigate = useNavigate();
+//   const [showCommissionTooltip, setShowCommissionTooltip] = useState(false);
+  
+//   const getDistributionCommission = () => {
+//     return parseFloat(variant.distribution_commission || 0);
+//   };
+
+//   const distributionCommission = getDistributionCommission();
+
+//   const handleMouseEnter = () => {
+//     setShowCommissionTooltip(true);
+//   };
+
+//   const handleMouseLeave = () => {
+//     setShowCommissionTooltip(false);
+//   };
+  
+//   const getProductImage = () => {
+//     if (variant.media && variant.media.length > 0) {
+//       return `${baseurl}${variant.media[0].file}`;
+//     }
+//     if (product.variants && product.variants.length > 0) {
+//       const variantWithMedia = product.variants.find(v => v.media && v.media.length > 0);
+//       if (variantWithMedia && variantWithMedia.media.length > 0) {
+//         return `${baseurl}${variantWithMedia.media[0].file}`;
+//       }
+//     }
+//     return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//   };
+
+//   const calculateDiscount = () => {
+//     const mrp = parseFloat(variant.mrp);
+//     const sellingPrice = parseFloat(variant.selling_price);
+//     if (mrp > 0 && sellingPrice < mrp) {
+//       return Math.round(((mrp - sellingPrice) / mrp) * 100);
+//     }
+//     return 0;
+//   };
+
+//   const discount = calculateDiscount();
+
+//   const getVariantName = () => {
+//     if (variant.attributes) {
+//       const attrDisplay = Object.values(variant.attributes).join(" ");
+//       if (attrDisplay.trim()) {
+//         return `${product.product_name} - ${attrDisplay}`;
+//       }
+//     }
+//     return product.product_name;
+//   };
+
+//   const getVariantDisplay = () => {
+//     if (variant.attributes) {
+//       return Object.entries(variant.attributes)
+//         .map(([key, value]) => `${value}`)
+//         .join(" • ");
+//     }
+//     return "";
+//   };
+
+//   return (
+//     <div className="card h-100 border rounded overflow-hidden">
+//       <div className="bg-light p-3 text-center position-relative" style={{ height: 200, cursor: "pointer" }}
+//            onClick={() => navigate(`/product/${product.product_id}?variant=${variant.id}`)}>
+//         <img
+//           src={getProductImage()}
+//           alt={getVariantName()}
+//           className="img-fluid"
+//           style={{ maxHeight: "100%", objectFit: "contain" }}
+//           onError={(e) => {
+//             e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//           }}
+//         />
+//         {discount > 0 && (
+//           <span className="badge bg-danger position-absolute top-0 end-0 m-2">
+//             {discount}% OFF
+//           </span>
+//         )}
+//       </div>
+
+//       <div className="card-body d-flex flex-column">
+//         <h6 className="fw-medium mb-1 line-clamp-2" style={{ fontSize: '0.875rem', cursor: "pointer" }}
+//             onClick={() => navigate(`/product/${product.product_id}/?variant=${variant.id}`)}>
+//           {getVariantName()}
+//         </h6>
+//         <small className="text-muted mb-2">{product.brand || "No Brand"}</small>
+
+//         {getVariantDisplay() && (
+//           <small className="text-info mb-2">
+//             {getVariantDisplay()}
+//           </small>
+//         )}
+
+//         <div className="mt-auto">
+//           <div className="d-flex align-items-center gap-2 mb-2">
+//             <span className="h5 fw-bold text-dark">
+//               ₹{parseFloat(variant.selling_price).toLocaleString('en-IN', { maximumFractionDigits: 2 })}
+//             </span>
+//             {parseFloat(variant.mrp) > parseFloat(variant.selling_price) && (
+//               <small className="text-muted text-decoration-line-through">
+//                 ₹{parseFloat(variant.mrp).toLocaleString('en-IN', { maximumFractionDigits: 2 })}
+//               </small>
+//             )}
+//           </div>
+
+//           {/* PAYOUT BUTTON with Commission Tooltip */}
+//           <div className="position-relative mb-2">
+//             <button 
+//               className="btn w-100 fw-semibold py-2 d-flex align-items-center justify-content-center gap-2"
+//               style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
+//               onMouseEnter={handleMouseEnter}
+//               onMouseLeave={handleMouseLeave}
+//               onFocus={handleMouseEnter}
+//               onBlur={handleMouseLeave}
+//             >
+//               <Info size={14} />
+//               PAYOUT
+//             </button>
+            
+//             <CommissionTooltip 
+//               show={showCommissionTooltip}
+//               commissions={commissionData}
+//               distributionCommission={distributionCommission}
+//             />
+//           </div>
+
+//           <button 
+//             className="btn w-100 fw-semibold py-2"
+//             style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: '#fff' }}
+//             onClick={() => navigate(`/product/${product.product_id}/?variant=${variant.id}`)}
+//           >
+//             VIEW DETAILS
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// // ============= Product Header Component =============
+// // const ProductHeader = ({ 
+// //   viewMode, 
+// //   onViewModeChange, 
+// //   search, 
+// //   setSearch,
+// //   totalProducts,
+// //   showingProducts
+// // }) => {
+// //   const views = [
+// //     { mode: "grid-3", icon: Grid3X3, label: "3 Columns" },
+// //     { mode: "grid-4", icon: LayoutList, label: "4 Columns" },
+// //   ];
+
+// //   const handleSearchChange = (e) => {
+// //     setSearch(e.target.value);
+// //   };
+
+// //   const handleClearSearch = () => {
+// //     setSearch("");
+// //   };
+
+// //   const handleKeyPress = (e) => {
+// //     if (e.key === 'Enter') {
+// //       // Search is already handled by the filter effect
+// //     }
+// //   };
+
+// //   return (
+// //     <div className="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+// //       {/* Left side - Title and count */}
+// //       <div className="d-flex align-items-center gap-3">
+// //         <h4 className="fw-bold mb-0">Products</h4>
+// //         <p className="mb-0 text-muted small">
+// //           Showing <span className="fw-semibold text-dark">{showingProducts}</span> of{" "}
+// //           <span className="fw-semibold text-primary">{totalProducts}</span> products
+// //         </p>
+// //       </div>
+
+// //       {/* Right side - Search and View modes */}
+// //       <div className="d-flex align-items-center gap-2 flex-wrap">
+// //         <div className="input-group" style={{ width: '250px' }}>
+// //           <span className="input-group-text bg-transparent border-end-0">
+// //             <Search size={16} className="text-muted" />
+// //           </span>
+// //           <input
+// //             type="text"
+// //             className="form-control border-start-0"
+// //             placeholder="Search products..."
+// //             value={search}
+// //             onChange={handleSearchChange}
+// //             onKeyPress={handleKeyPress}
+// //             aria-label="Search products"
+// //           />
+// //           {search && (
+// //             <button
+// //               onClick={handleClearSearch}
+// //               className="btn btn-outline-secondary border-start-0"
+// //               type="button"
+// //               aria-label="Clear search"
+// //             >
+// //               <X size={14} />
+// //             </button>
+// //           )}
+// //         </div>
+
+// //         <div className="btn-group" role="group" aria-label="View mode">
+// //           {views.map(({ mode, icon: Icon, label }) => (
+// //             <button
+// //               key={mode}
+// //               onClick={() => onViewModeChange(mode)}
+// //               className={`btn btn-outline-secondary ${
+// //                 viewMode === mode ? "active" : ""
+// //               }`}
+// //               style={{ padding: '0.375rem 0.75rem' }}
+// //               title={label}
+// //               aria-label={`Switch to ${label} view`}
+// //             >
+// //               <Icon size={16} />
+// //             </button>
+// //           ))}
+// //         </div>
+// //       </div>
+// //     </div>
+// //   );
+// // };
+
+
+// // ============= Product Header Component =============
+// const ProductHeader = ({ 
+//   viewMode, 
+//   onViewModeChange, 
+//   search, 
+//   setSearch,
+//   totalProducts,
+//   showingProducts
+// }) => {
+//   const views = [
+//     { mode: "grid-3", icon: Grid3X3, label: "3 Columns" },
+//     { mode: "grid-4", icon: LayoutList, label: "4 Columns" },
+//   ];
+
+//   const handleSearchChange = (e) => {
+//     setSearch(e.target.value);
+//   };
+
+//   const handleClearSearch = () => {
+//     setSearch("");
+//   };
+
+//   const handleKeyPress = (e) => {
+//     if (e.key === 'Enter') {
+//       // Search is already handled by the filter effect
+//     }
+//   };
+
+//   return (
+//     <div className="d-flex align-items-center justify-content-between mb-4">
+//       {/* Left side - Products and count */}
+//       <div className="d-flex align-items-center gap-3 flex-nowrap">
+//         <h4 className="fw-bold mb-0" style={{ whiteSpace: 'nowrap' }}>Products</h4>
+//         <p className="mb-0 text-muted small" style={{ whiteSpace: 'nowrap' }}>
+//           Showing <span className="fw-semibold text-dark">{showingProducts}</span> of{" "}
+//           <span className="fw-semibold text-primary">{totalProducts}</span> products
+//         </p>
+//       </div>
+
+//       {/* Right side - Search and View modes */}
+//       <div className="d-flex align-items-center gap-2 flex-nowrap">
+//         <div className="input-group" style={{ width: '250px' }}>
+//           <span className="input-group-text bg-transparent border-end-0">
+//             <Search size={16} className="text-muted" />
+//           </span>
+//           <input
+//             type="text"
+//             className="form-control border-start-0"
+//             placeholder="Search products..."
+//             value={search}
+//             onChange={handleSearchChange}
+//             onKeyPress={handleKeyPress}
+//             aria-label="Search products"
+//           />
+//           {search && (
+//             <button
+//               onClick={handleClearSearch}
+//               className="btn btn-outline-secondary border-start-0"
+//               type="button"
+//               aria-label="Clear search"
+//             >
+//               <X size={14} />
+//             </button>
+//           )}
+//         </div>
+
+//         <div className="btn-group" role="group" aria-label="View mode">
+//           {views.map(({ mode, icon: Icon, label }) => (
+//             <button
+//               key={mode}
+//               onClick={() => onViewModeChange(mode)}
+//               className={`btn btn-outline-secondary ${
+//                 viewMode === mode ? "active" : ""
+//               }`}
+//               style={{ padding: '0.375rem 0.75rem' }}
+//               title={label}
+//               aria-label={`Switch to ${label} view`}
+//             >
+//               <Icon size={16} />
+//             </button>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// // ============= Product Grid Component =============
+// const ProductGrid = ({ products, viewMode, baseurl, commissionData }) => {
+//   const getGridClasses = () => {
+//     switch (viewMode) {
+//       case "grid-3":
+//         return "row row-cols-1 row-cols-sm-2 row-cols-md-3";
+//       case "grid-4":
+//         return "row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4";
+//       default:
+//         return "row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4";
+//     }
+//   };
+
+//   return (
+//     <div className={getGridClasses()}>
+//       {products.map((item) => (
+//         <div key={`${item.product.product_id}-${item.variant.id}`} className="col mb-4">
+//           <ProductCard 
+//             product={item.product} 
+//             variant={item.variant} 
+//             baseurl={baseurl} 
+//             commissionData={commissionData}
+//           />
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+// // ============= Main SubCategories Component =============
+// const WebsiteSubCategories = () => {
+//   const { id } = useParams();
+//   const navigate = useNavigate();
+
+//   const [subCategories, setSubCategories] = useState([]);
+//   const [products, setProducts] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [productsLoading, setProductsLoading] = useState(true);
+//   const [commissionData, setCommissionData] = useState([]);
+//   const [categoryName, setCategoryName] = useState("");
+
+//   const [viewMode, setViewMode] = useState("grid-4");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [currentPage, setCurrentPage] = useState(1);
+
+//   // Filter states
+//   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
+//   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+//   const [selectedDiscountRanges, setSelectedDiscountRanges] = useState([]);
+
+//   // Page size based on view mode
+//   const pageSize = viewMode === "grid-3" ? 9 : 8;
+
+//   // Fetch commission data
+//   const fetchCommissionData = useCallback(async () => {
+//     try {
+//       const response = await fetch(`${baseurl}/commissions-master/`);
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! status: ${response.status}`);
+//       }
+//       const data = await response.json();
+//       setCommissionData(data.results || []);
+//     } catch (err) {
+//       console.error("Error fetching commission data:", err);
+//       setCommissionData([]);
+//     }
+//   }, []);
+
+//   // Fetch category details and subcategories
+//   useEffect(() => {
+//     const fetchCategoryData = async () => {
+//       setLoading(true);
+//       try {
+//         const response = await fetch(`${baseurl}/categories/${id}/`);
+//         const data = await response.json();
+//         setCategoryName(data.name || "Sub Categories");
+//         const filtered = (data.children || []).filter(sc => sc.is_active);
+//         setSubCategories(filtered);
+//       } catch (error) {
+//         console.error("Error fetching category:", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchCategoryData();
+//     fetchCommissionData();
+//   }, [id, fetchCommissionData]);
+// // Update the useEffect that fetches products
+// useEffect(() => {
+//   const fetchProducts = async () => {
+//     setProductsLoading(true);
+//     try {
+//       const params = new URLSearchParams();
+//       params.append('category_id', id);
+//       params.append('variant_verification_status', 'verified');
+      
+//       // Only fetch products if at least one subcategory is selected
+//       // If no subcategories are selected, we should fetch all products from the main category
+//       if (selectedSubCategories.length > 0) {
+//         // Fetch products for each selected subcategory
+//         const allProductItems = [];
+        
+//         // Use Promise.all to fetch products for all selected subcategories in parallel
+//         const promises = selectedSubCategories.map(async (subCatId) => {
+//           const subCatParams = new URLSearchParams();
+//           subCatParams.append('category_id', subCatId); // Use subcategory ID as category_id
+//           subCatParams.append('variant_verification_status', 'verified');
+          
+//           const response = await fetch(`${baseurl}/products/?${subCatParams.toString()}`);
+//           const data = await response.json();
+          
+//           return (data.results || []).map(product => {
+//             if (product.variants && product.variants.length > 0) {
+//               return product.variants.map(variant => ({ product, variant }));
+//             } else {
+//               return [{
+//                 product,
+//                 variant: {
+//                   id: product.product_id,
+//                   sku: product.product_id,
+//                   mrp: "0.00",
+//                   selling_price: "0.00",
+//                   attributes: {},
+//                   distribution_commission: "0.00"
+//                 }
+//               }];
+//             }
+//           }).flat();
+//         });
+        
+//         const results = await Promise.all(promises);
+//         // Flatten and deduplicate products (in case same product appears in multiple subcategories)
+//         const flatResults = results.flat();
+        
+//         // Remove duplicates based on product ID and variant ID
+//         const uniqueProducts = new Map();
+//         flatResults.forEach(item => {
+//           const key = `${item.product.product_id}-${item.variant.id}`;
+//           if (!uniqueProducts.has(key)) {
+//             uniqueProducts.set(key, item);
+//           }
+//         });
+        
+//         setProducts(Array.from(uniqueProducts.values()));
+//       } else {
+//         // If no subcategories selected, fetch all products from main category
+//         const response = await fetch(`${baseurl}/products/?${params.toString()}`);
+//         const data = await response.json();
+        
+//         const allProductItems = [];
+//         (data.results || []).forEach(product => {
+//           if (product.variants && product.variants.length > 0) {
+//             product.variants.forEach(variant => {
+//               allProductItems.push({ product, variant });
+//             });
+//           } else {
+//             allProductItems.push({
+//               product,
+//               variant: {
+//                 id: product.product_id,
+//                 sku: product.product_id,
+//                 mrp: "0.00",
+//                 selling_price: "0.00",
+//                 attributes: {},
+//                 distribution_commission: "0.00"
+//               }
+//             });
+//           }
+//         });
+//         setProducts(allProductItems);
+//       }
+//     } catch (error) {
+//       console.error("Error fetching products:", error);
+//     } finally {
+//       setProductsLoading(false);
+//     }
+//   };
+  
+//   fetchProducts();
+// }, [id, selectedSubCategories]); // Re-fetch when selected subcategories change
+
+//   // Handle filter change - reset to first page
+//   const handleFilterChange = useCallback(() => {
+//     setCurrentPage(1);
+//   }, []);
+
+//   // Filter products based on all criteria
+//   const filteredProducts = useMemo(() => {
+//     let filtered = [...products];
+
+//     // Apply search filter
+//     if (searchTerm.trim()) {
+//       const term = searchTerm.toLowerCase().trim();
+//       filtered = filtered.filter(item => {
+//         return (
+//           item.product.product_name.toLowerCase().includes(term) ||
+//           (item.product.brand && item.product.brand.toLowerCase().includes(term)) ||
+//           item.variant.sku.toLowerCase().includes(term)
+//         );
+//       });
+//     }
+
+//     // Apply price filters
+//     if (selectedPriceRanges.length > 0) {
+//       filtered = filtered.filter(item => {
+//         const price = parseFloat(item.variant.selling_price);
+//         return selectedPriceRanges.some(range => {
+//           if (range === "10000+") return price >= 10000;
+//           const [min, max] = range.split('-').map(Number);
+//           return price >= min && price <= max;
+//         });
+//       });
+//     }
+
+//     // Apply discount filters
+//     if (selectedDiscountRanges.length > 0) {
+//       filtered = filtered.filter(item => {
+//         const mrp = parseFloat(item.variant.mrp);
+//         const sellingPrice = parseFloat(item.variant.selling_price);
+//         let discount = 0;
+//         if (mrp > 0 && sellingPrice < mrp) {
+//           discount = Math.round(((mrp - sellingPrice) / mrp) * 100);
+//         }
+        
+//         return selectedDiscountRanges.some(range => {
+//           if (range === "60+") return discount >= 60;
+//           const [min, max] = range.split('-').map(Number);
+//           return discount >= min && discount <= max;
+//         });
+//       });
+//     }
+
+//     return filtered;
+//   }, [products, searchTerm, selectedPriceRanges, selectedDiscountRanges]);
+
+//   // Pagination
+//   const totalPages = Math.ceil(filteredProducts.length / pageSize);
+//   const paginatedProducts = filteredProducts.slice(
+//     (currentPage - 1) * pageSize,
+//     currentPage * pageSize
+//   );
+
+//   // Reset to first page when filters change
+//   useEffect(() => {
+//     setCurrentPage(1);
+//   }, [viewMode, searchTerm, selectedSubCategories, selectedPriceRanges, selectedDiscountRanges]);
+
+//   // Render pagination
+//   const renderPagination = () => {
+//     if (totalPages <= 1) return null;
+
+//     return (
+//       <nav aria-label="Products pagination" className="mt-5">
+//         <ul className="pagination justify-content-center flex-wrap">
+//           <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+//             <button 
+//               className="page-link" 
+//               onClick={() => setCurrentPage(p => p - 1)}
+//               disabled={currentPage === 1}
+//               aria-label="Go to previous page"
+//             >
+//               <span aria-hidden="true">&laquo;</span>
+//             </button>
+//           </li>
+          
+//           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+//             let pageNum;
+//             if (totalPages <= 5) {
+//               pageNum = i + 1;
+//             } else if (currentPage <= 3) {
+//               pageNum = i + 1;
+//             } else if (currentPage >= totalPages - 2) {
+//               pageNum = totalPages - 4 + i;
+//             } else {
+//               pageNum = currentPage - 2 + i;
+//             }
+            
+//             return (
+//               <li key={pageNum} className={`page-item ${currentPage === pageNum ? 'active' : ''}`}>
+//                 <button 
+//                   className="page-link" 
+//                   onClick={() => setCurrentPage(pageNum)}
+//                   aria-label={`Go to page ${pageNum}`}
+//                   aria-current={currentPage === pageNum ? 'page' : undefined}
+//                 >
+//                   {pageNum}
+//                 </button>
+//               </li>
+//             );
+//           })}
+          
+//           <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+//             <button 
+//               className="page-link" 
+//               onClick={() => setCurrentPage(p => p + 1)}
+//               disabled={currentPage === totalPages}
+//               aria-label="Go to next page"
+//             >
+//               <span aria-hidden="true">&raquo;</span>
+//             </button>
+//           </li>
+//         </ul>
+        
+//         <div className="text-center text-muted small mt-2">
+//           Page {currentPage} of {totalPages} • {filteredProducts.length} total products
+//         </div>
+//       </nav>
+//     );
+//   };
+
+//   return (
+//     <>
+//       <WebsiteNavbar />
+
+//       <div className="container py-4">
+//         {/* Back Button */}
+//         <div className="d-flex align-items-center mb-3">
+//           <button
+//             className="btn btn-link text-decoration-none p-0 d-flex align-items-center gap-2"
+//             onClick={() => navigate(-1)}
+//             style={{ color: '#273c75' }}
+//           >
+//             <ArrowLeft size={18} />
+//             <span>Back</span>
+//           </button>
+//         </div>
+
+//         <h2 className="fw-bold mb-4">{categoryName}</h2>
+
+//         <div className="row">
+//           {/* Filter Sidebar - Left Column */}
+//           <aside className="col-lg-3 mb-4 mb-lg-0">
+//             <div className="sticky-top" style={{ top: '20px' }}>
+//               <FilterSidebar
+//                 subCategories={subCategories}
+//                 selectedSubCategories={selectedSubCategories}
+//                 setSelectedSubCategories={setSelectedSubCategories}
+//                 selectedPriceRanges={selectedPriceRanges}
+//                 setSelectedPriceRanges={setSelectedPriceRanges}
+//                 selectedDiscountRanges={selectedDiscountRanges}
+//                 setSelectedDiscountRanges={setSelectedDiscountRanges}
+//                 onFilterChange={handleFilterChange}
+//                 loading={loading}
+//               />
+//             </div>
+//           </aside>
+
+//           {/* Products Grid - Right Column */}
+//           <div className="col-lg-9 col-12">
+//             <ProductHeader
+//               viewMode={viewMode}
+//               onViewModeChange={setViewMode}
+//               search={searchTerm}
+//               setSearch={setSearchTerm}
+//               totalProducts={filteredProducts.length}
+//               showingProducts={paginatedProducts.length}
+//             />
+
+//             {productsLoading ? (
+//               <div className="text-center py-5">
+//                 <div className="spinner-border text-primary" role="status">
+//                   <span className="visually-hidden">Loading...</span>
+//                 </div>
+//                 <p className="mt-3">Loading products...</p>
+//               </div>
+//             ) : filteredProducts.length === 0 ? (
+//               <div className="text-center py-5">
+//                 <h5>No products found</h5>
+//                 <p className="text-muted">Try adjusting your filters or search term.</p>
+//               </div>
+//             ) : (
+//               <>
+//                 <ProductGrid 
+//                   products={paginatedProducts} 
+//                   viewMode={viewMode} 
+//                   baseurl={baseurl}
+//                   commissionData={commissionData}
+//                 />
+//                 {renderPagination()}
+//               </>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default WebsiteSubCategories;
+
+
+
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
@@ -4317,6 +5457,7 @@ import {
   LayoutList,
   ChevronUp,
   ChevronDown,
+  ChevronRight,
   Tag,
   DollarSign,
   ArrowLeft,
@@ -4352,6 +5493,91 @@ const CommissionTooltip = ({ show, commissions, distributionCommission }) => {
           ))}
         </div>
       </div>
+    </div>
+  );
+};
+
+// ============= Nested Category Item Component =============
+const NestedCategoryItem = ({ 
+  category, 
+  level = 0,
+  selectedCategories,
+  onToggle,
+  onFilterChange
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const hasChildren = category.children && category.children.length > 0;
+  const isSelected = selectedCategories.includes(category.category_id);
+  
+  const handleToggle = (e) => {
+    e.stopPropagation();
+    onToggle(category.category_id);
+  };
+
+  const handleExpandToggle = (e) => {
+    e.stopPropagation();
+    setIsExpanded(!isExpanded);
+  };
+
+  return (
+    <div className="nested-category-item">
+      <div 
+        className={`d-flex align-items-center mb-2 ${level > 0 ? 'ms-3' : ''}`}
+        style={{ cursor: 'pointer' }}
+      >
+        {hasChildren && (
+          <button
+            onClick={handleExpandToggle}
+            className="btn btn-link p-0 me-1 text-muted"
+            style={{ minWidth: '20px' }}
+            aria-label={isExpanded ? "Collapse category" : "Expand category"}
+          >
+            {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+          </button>
+        )}
+        {!hasChildren && <div style={{ width: '20px' }} />}
+        
+        <div 
+          className="d-flex align-items-center gap-2 flex-grow-1"
+          onClick={handleToggle}
+          role="checkbox"
+          aria-checked={isSelected}
+          tabIndex={0}
+          onKeyPress={(e) => e.key === 'Enter' && handleToggle(e)}
+        >
+          <input
+            type="checkbox"
+            className="form-check-input"
+            checked={isSelected}
+            readOnly
+            tabIndex={-1}
+            onChange={() => {}}
+          />
+          <span className={`small ${isSelected ? 'fw-semibold text-dark' : 'text-muted'}`}>
+            {category.name}
+          </span>
+          {/* {category.level && (
+            <span className="badge bg-light text-muted ms-2" style={{ fontSize: '0.7rem' }}>
+              {category.level}
+            </span>
+          )} */}
+        </div>
+      </div>
+
+      {isExpanded && hasChildren && (
+        <div className="nested-category-children">
+          {category.children.map(child => (
+            <NestedCategoryItem
+              key={child.category_id}
+              category={child}
+              level={level + 1}
+              selectedCategories={selectedCategories}
+              onToggle={onToggle}
+              onFilterChange={onFilterChange}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -4407,9 +5633,9 @@ const FilterSection = ({
 
 // ============= Filter Sidebar Component =============
 const FilterSidebar = ({ 
-  subCategories,
-  selectedSubCategories,
-  setSelectedSubCategories,
+  categoryTree,
+  selectedCategories,
+  setSelectedCategories,
   selectedPriceRanges,
   setSelectedPriceRanges,
   selectedDiscountRanges,
@@ -4418,12 +5644,12 @@ const FilterSidebar = ({
   loading
 }) => {
   const [activeFilters, setActiveFilters] = useState({
-    subcategories: true,
+    categories: true,
     price: false,
     discount: false
   });
 
-  const [subCategorySearch, setSubCategorySearch] = useState("");
+  const [categorySearch, setCategorySearch] = useState("");
 
   const priceRanges = [
     { value: "0-500", label: "Under ₹500" },
@@ -4450,35 +5676,20 @@ const FilterSidebar = ({
     }));
   };
 
-  // const toggleSubCategory = useCallback((categoryId) => {
-  //   setSelectedSubCategories((prev) => {
-  //     const newSelection = prev.includes(categoryId)
-  //       ? prev.filter(id => id !== categoryId)
-  //       : [...prev, categoryId];
+  const toggleCategory = useCallback((categoryId) => {
+    setSelectedCategories((prev) => {
+      const newSelection = prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId];
       
-  //     if (onFilterChange) {
-  //       setTimeout(() => onFilterChange(), 0);
-  //     }
+      if (onFilterChange) {
+        setTimeout(() => onFilterChange(), 0);
+      }
       
-  //     return newSelection;
-  //   });
-  // }, [setSelectedSubCategories, onFilterChange]);
+      return newSelection;
+    });
+  }, [setSelectedCategories, onFilterChange]);
 
-
- const toggleSubCategory = useCallback((categoryId) => {
-  setSelectedSubCategories((prev) => {
-    const newSelection = prev.includes(categoryId)
-      ? prev.filter(id => id !== categoryId)
-      : [...prev, categoryId];
-    
-    if (onFilterChange) {
-      // Use setTimeout to ensure state update completes
-      setTimeout(() => onFilterChange(), 0);
-    }
-    
-    return newSelection;
-  });
-}, [setSelectedSubCategories, onFilterChange]);
   const togglePriceRange = useCallback((range) => {
     setSelectedPriceRanges((prev) => {
       const newSelection = prev.includes(range)
@@ -4507,28 +5718,44 @@ const FilterSidebar = ({
     });
   }, [setSelectedDiscountRanges, onFilterChange]);
 
-  const filteredSubCategories = useMemo(() => {
-    if (!subCategorySearch.trim()) return subCategories;
+  // Filter categories based on search
+  const filterCategoryTree = useCallback((categories, searchTerm) => {
+    if (!searchTerm.trim()) return categories;
     
-    return subCategories.filter((subCat) =>
-      subCat.name.toLowerCase().includes(subCategorySearch.toLowerCase())
-    );
-  }, [subCategories, subCategorySearch]);
+    return categories.filter(cat => {
+      const matches = cat.name.toLowerCase().includes(searchTerm.toLowerCase());
+      if (matches) return true;
+      
+      if (cat.children && cat.children.length > 0) {
+        const filteredChildren = filterCategoryTree(cat.children, searchTerm);
+        if (filteredChildren.length > 0) {
+          cat.children = filteredChildren;
+          return true;
+        }
+      }
+      
+      return false;
+    });
+  }, []);
+
+  const filteredCategoryTree = useMemo(() => {
+    if (!categorySearch.trim()) return categoryTree;
+    return filterCategoryTree([...categoryTree], categorySearch);
+  }, [categoryTree, categorySearch, filterCategoryTree]);
 
   const clearAllFilters = () => {
-    setSelectedSubCategories([]);
+    setSelectedCategories([]);
     setSelectedPriceRanges([]);
     setSelectedDiscountRanges([]);
-    setSubCategorySearch("");
+    setCategorySearch("");
     
     if (onFilterChange) {
       setTimeout(() => onFilterChange(), 0);
     }
   };
-  
 
   const activeFilterCount = 
-    selectedSubCategories.length + 
+    selectedCategories.length + 
     selectedPriceRanges.length + 
     selectedDiscountRanges.length;
 
@@ -4550,59 +5777,42 @@ const FilterSidebar = ({
         )}
       </div>
 
-      {/* Subcategories Filter */}
+      {/* Categories Filter */}
       <FilterSection
-        title="Subcategories"
-        isOpen={activeFilters.subcategories}
-        onToggle={() => toggleFilterSection('subcategories')}
-        filterCount={selectedSubCategories.length}
+        title="Categories"
+        isOpen={activeFilters.categories}
+        onToggle={() => toggleFilterSection('categories')}
+        filterCount={selectedCategories.length}
       >
         <div className="input-group input-group-sm mb-3">
           <input
             type="text"
             className="form-control"
-            placeholder="Search subcategories..."
-            value={subCategorySearch}
-            onChange={(e) => setSubCategorySearch(e.target.value)}
-            aria-label="Search subcategories"
+            placeholder="Search categories..."
+            value={categorySearch}
+            onChange={(e) => setCategorySearch(e.target.value)}
+            aria-label="Search categories"
           />
         </div>
-        <div className="overflow-y-auto" style={{ maxHeight: '300px' }}>
+        <div className="overflow-y-auto" style={{ maxHeight: '400px' }}>
           {loading ? (
             <div className="text-center py-3">
               <div className="spinner-border spinner-border-sm text-primary" role="status">
-                <span className="visually-hidden">Loading subcategories...</span>
+                <span className="visually-hidden">Loading categories...</span>
               </div>
-              <p className="small text-muted mt-2">Loading subcategories...</p>
+              <p className="small text-muted mt-2">Loading categories...</p>
             </div>
-          ) : filteredSubCategories.length === 0 ? (
-            <p className="small text-muted text-center py-3">No subcategories found</p>
+          ) : filteredCategoryTree.length === 0 ? (
+            <p className="small text-muted text-center py-3">No categories found</p>
           ) : (
-            filteredSubCategories.map((subCategory) => (
-              <div
-                key={subCategory.category_id}
-                className="d-flex justify-content-between align-items-center mb-2 cursor-pointer"
-                style={{ cursor: 'pointer' }}
-                onClick={() => toggleSubCategory(subCategory.category_id)}
-                onKeyPress={(e) => e.key === 'Enter' && toggleSubCategory(subCategory.category_id)}
-                tabIndex={0}
-                role="checkbox"
-                aria-checked={selectedSubCategories.includes(subCategory.category_id)}
-              >
-                <div className="d-flex align-items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    checked={selectedSubCategories.includes(subCategory.category_id)}
-                    readOnly
-                    tabIndex={-1}
-                    onChange={() => {}}
-                  />
-                  <span className={`small ${selectedSubCategories.includes(subCategory.category_id) ? 'fw-semibold text-dark' : 'text-muted'}`}>
-                    {subCategory.name}
-                  </span>
-                </div>
-              </div>
+            filteredCategoryTree.map((category) => (
+              <NestedCategoryItem
+                key={category.category_id}
+                category={category}
+                selectedCategories={selectedCategories}
+                onToggle={toggleCategory}
+                onFilterChange={onFilterChange}
+              />
             ))
           )}
         </div>
@@ -4687,19 +5897,19 @@ const FilterSidebar = ({
         <div className="mt-4">
           <h6 className="fw-semibold mb-2 small">Active Filters:</h6>
           <div className="d-flex flex-wrap gap-2">
-            {selectedSubCategories.map(catId => {
-              const category = subCategories.find(c => c.category_id === catId);
-              return category ? (
+            {selectedCategories.map(catId => {
+              // Find category name (simplified - you might want to store category names in state)
+              return (
                 <span key={catId} className="badge bg-primary-subtle text-primary border border-primary d-flex align-items-center">
-                  {category.name}
+                  Category {catId}
                   <button 
-                    onClick={() => toggleSubCategory(catId)} 
+                    onClick={() => toggleCategory(catId)} 
                     className="btn-close btn-close-sm ms-1"
-                    aria-label={`Remove ${category.name} filter`}
+                    aria-label={`Remove category filter`}
                     style={{ fontSize: '0.5rem' }}
                   ></button>
                 </span>
-              ) : null;
+              );
             })}
             {selectedPriceRanges.map(range => {
               const priceRange = priceRanges.find(r => r.value === range);
@@ -4847,7 +6057,7 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
 
           {/* PAYOUT BUTTON with Commission Tooltip */}
           <div className="position-relative mb-2">
-            <button 
+            {/* <button 
               className="btn w-100 fw-semibold py-2 d-flex align-items-center justify-content-center gap-2"
               style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
               onMouseEnter={handleMouseEnter}
@@ -4857,7 +6067,7 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
             >
               <Info size={14} />
               PAYOUT
-            </button>
+            </button> */}
             
             <CommissionTooltip 
               show={showCommissionTooltip}
@@ -4878,94 +6088,6 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
     </div>
   );
 };
-
-// ============= Product Header Component =============
-// const ProductHeader = ({ 
-//   viewMode, 
-//   onViewModeChange, 
-//   search, 
-//   setSearch,
-//   totalProducts,
-//   showingProducts
-// }) => {
-//   const views = [
-//     { mode: "grid-3", icon: Grid3X3, label: "3 Columns" },
-//     { mode: "grid-4", icon: LayoutList, label: "4 Columns" },
-//   ];
-
-//   const handleSearchChange = (e) => {
-//     setSearch(e.target.value);
-//   };
-
-//   const handleClearSearch = () => {
-//     setSearch("");
-//   };
-
-//   const handleKeyPress = (e) => {
-//     if (e.key === 'Enter') {
-//       // Search is already handled by the filter effect
-//     }
-//   };
-
-//   return (
-//     <div className="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
-//       {/* Left side - Title and count */}
-//       <div className="d-flex align-items-center gap-3">
-//         <h4 className="fw-bold mb-0">Products</h4>
-//         <p className="mb-0 text-muted small">
-//           Showing <span className="fw-semibold text-dark">{showingProducts}</span> of{" "}
-//           <span className="fw-semibold text-primary">{totalProducts}</span> products
-//         </p>
-//       </div>
-
-//       {/* Right side - Search and View modes */}
-//       <div className="d-flex align-items-center gap-2 flex-wrap">
-//         <div className="input-group" style={{ width: '250px' }}>
-//           <span className="input-group-text bg-transparent border-end-0">
-//             <Search size={16} className="text-muted" />
-//           </span>
-//           <input
-//             type="text"
-//             className="form-control border-start-0"
-//             placeholder="Search products..."
-//             value={search}
-//             onChange={handleSearchChange}
-//             onKeyPress={handleKeyPress}
-//             aria-label="Search products"
-//           />
-//           {search && (
-//             <button
-//               onClick={handleClearSearch}
-//               className="btn btn-outline-secondary border-start-0"
-//               type="button"
-//               aria-label="Clear search"
-//             >
-//               <X size={14} />
-//             </button>
-//           )}
-//         </div>
-
-//         <div className="btn-group" role="group" aria-label="View mode">
-//           {views.map(({ mode, icon: Icon, label }) => (
-//             <button
-//               key={mode}
-//               onClick={() => onViewModeChange(mode)}
-//               className={`btn btn-outline-secondary ${
-//                 viewMode === mode ? "active" : ""
-//               }`}
-//               style={{ padding: '0.375rem 0.75rem' }}
-//               title={label}
-//               aria-label={`Switch to ${label} view`}
-//             >
-//               <Icon size={16} />
-//             </button>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
 
 // ============= Product Header Component =============
 const ProductHeader = ({ 
@@ -5088,7 +6210,7 @@ const WebsiteSubCategories = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [subCategories, setSubCategories] = useState([]);
+  const [categoryTree, setCategoryTree] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [productsLoading, setProductsLoading] = useState(true);
@@ -5100,7 +6222,7 @@ const WebsiteSubCategories = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   // Filter states
-  const [selectedSubCategories, setSelectedSubCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [selectedDiscountRanges, setSelectedDiscountRanges] = useState([]);
 
@@ -5122,18 +6244,50 @@ const WebsiteSubCategories = () => {
     }
   }, []);
 
-  // Fetch category details and subcategories
+  // Function to recursively collect all category IDs from a tree
+  const collectAllCategoryIds = useCallback((categories) => {
+    let ids = [];
+    categories.forEach(cat => {
+      ids.push(cat.category_id);
+      if (cat.children && cat.children.length > 0) {
+        ids = [...ids, ...collectAllCategoryIds(cat.children)];
+      }
+    });
+    return ids;
+  }, []);
+
+  // Function to build category tree
+  const buildCategoryTree = useCallback((categories, parentId = null) => {
+    return categories
+      .filter(cat => cat.parent === parentId)
+      .map(cat => ({
+        ...cat,
+        children: buildCategoryTree(categories, cat.category_id)
+      }));
+  }, []);
+
+  // Fetch category details and build tree
   useEffect(() => {
     const fetchCategoryData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${baseurl}/categories/${id}/`);
+        const response = await fetch(`${baseurl}/categories/`);
         const data = await response.json();
-        setCategoryName(data.name || "Sub Categories");
-        const filtered = (data.children || []).filter(sc => sc.is_active);
-        setSubCategories(filtered);
+        
+        // Find the current category
+        const currentCategory = data.results.find(cat => cat.category_id === parseInt(id));
+        setCategoryName(currentCategory?.name || "Categories");
+        
+        // Build tree starting from children of the current category
+        const children = data.results.filter(cat => cat.parent === parseInt(id) && cat.is_active);
+        const tree = children.map(cat => ({
+          ...cat,
+          children: buildCategoryTree(data.results, cat.category_id)
+        }));
+        
+        setCategoryTree(tree);
       } catch (error) {
-        console.error("Error fetching category:", error);
+        console.error("Error fetching categories:", error);
       } finally {
         setLoading(false);
       }
@@ -5141,36 +6295,30 @@ const WebsiteSubCategories = () => {
 
     fetchCategoryData();
     fetchCommissionData();
-  }, [id, fetchCommissionData]);
-// Update the useEffect that fetches products
-useEffect(() => {
-  const fetchProducts = async () => {
-    setProductsLoading(true);
-    try {
-      const params = new URLSearchParams();
-      params.append('category_id', id);
-      params.append('variant_verification_status', 'verified');
-      
-      // Only fetch products if at least one subcategory is selected
-      // If no subcategories are selected, we should fetch all products from the main category
-      if (selectedSubCategories.length > 0) {
-        // Fetch products for each selected subcategory
-        const allProductItems = [];
-        
-        // Use Promise.all to fetch products for all selected subcategories in parallel
-        const promises = selectedSubCategories.map(async (subCatId) => {
-          const subCatParams = new URLSearchParams();
-          subCatParams.append('category_id', subCatId); // Use subcategory ID as category_id
-          subCatParams.append('variant_verification_status', 'verified');
+  }, [id, buildCategoryTree, fetchCommissionData]);
+
+  // Update the useEffect that fetches products
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setProductsLoading(true);
+      try {
+        // If no categories selected, fetch products from the main category
+        if (selectedCategories.length === 0) {
+          const params = new URLSearchParams();
+          params.append('category_id', id);
+          params.append('variant_verification_status', 'verified');
           
-          const response = await fetch(`${baseurl}/products/?${subCatParams.toString()}`);
+          const response = await fetch(`${baseurl}/products/?${params.toString()}`);
           const data = await response.json();
           
-          return (data.results || []).map(product => {
+          const allProductItems = [];
+          (data.results || []).forEach(product => {
             if (product.variants && product.variants.length > 0) {
-              return product.variants.map(variant => ({ product, variant }));
+              product.variants.forEach(variant => {
+                allProductItems.push({ product, variant });
+              });
             } else {
-              return [{
+              allProductItems.push({
                 product,
                 variant: {
                   id: product.product_id,
@@ -5180,61 +6328,64 @@ useEffect(() => {
                   attributes: {},
                   distribution_commission: "0.00"
                 }
-              }];
+              });
             }
-          }).flat();
-        });
-        
-        const results = await Promise.all(promises);
-        // Flatten and deduplicate products (in case same product appears in multiple subcategories)
-        const flatResults = results.flat();
-        
-        // Remove duplicates based on product ID and variant ID
-        const uniqueProducts = new Map();
-        flatResults.forEach(item => {
-          const key = `${item.product.product_id}-${item.variant.id}`;
-          if (!uniqueProducts.has(key)) {
-            uniqueProducts.set(key, item);
-          }
-        });
-        
-        setProducts(Array.from(uniqueProducts.values()));
-      } else {
-        // If no subcategories selected, fetch all products from main category
-        const response = await fetch(`${baseurl}/products/?${params.toString()}`);
-        const data = await response.json();
-        
-        const allProductItems = [];
-        (data.results || []).forEach(product => {
-          if (product.variants && product.variants.length > 0) {
-            product.variants.forEach(variant => {
-              allProductItems.push({ product, variant });
-            });
-          } else {
-            allProductItems.push({
-              product,
-              variant: {
-                id: product.product_id,
-                sku: product.product_id,
-                mrp: "0.00",
-                selling_price: "0.00",
-                attributes: {},
-                distribution_commission: "0.00"
+          });
+          setProducts(allProductItems);
+        } else {
+          // Fetch products for each selected category (including subcategories)
+          const allProductItems = [];
+          
+          const promises = selectedCategories.map(async (catId) => {
+            const catParams = new URLSearchParams();
+            catParams.append('category_id', catId);
+            catParams.append('variant_verification_status', 'verified');
+            
+            const response = await fetch(`${baseurl}/products/?${catParams.toString()}`);
+            const data = await response.json();
+            
+            return (data.results || []).map(product => {
+              if (product.variants && product.variants.length > 0) {
+                return product.variants.map(variant => ({ product, variant }));
+              } else {
+                return [{
+                  product,
+                  variant: {
+                    id: product.product_id,
+                    sku: product.product_id,
+                    mrp: "0.00",
+                    selling_price: "0.00",
+                    attributes: {},
+                    distribution_commission: "0.00"
+                  }
+                }];
               }
-            });
-          }
-        });
-        setProducts(allProductItems);
+            }).flat();
+          });
+          
+          const results = await Promise.all(promises);
+          const flatResults = results.flat();
+          
+          // Remove duplicates based on product ID and variant ID
+          const uniqueProducts = new Map();
+          flatResults.forEach(item => {
+            const key = `${item.product.product_id}-${item.variant.id}`;
+            if (!uniqueProducts.has(key)) {
+              uniqueProducts.set(key, item);
+            }
+          });
+          
+          setProducts(Array.from(uniqueProducts.values()));
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setProductsLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      setProductsLoading(false);
-    }
-  };
-  
-  fetchProducts();
-}, [id, selectedSubCategories]); // Re-fetch when selected subcategories change
+    };
+    
+    fetchProducts();
+  }, [id, selectedCategories]);
 
   // Handle filter change - reset to first page
   const handleFilterChange = useCallback(() => {
@@ -5300,7 +6451,7 @@ useEffect(() => {
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [viewMode, searchTerm, selectedSubCategories, selectedPriceRanges, selectedDiscountRanges]);
+  }, [viewMode, searchTerm, selectedCategories, selectedPriceRanges, selectedDiscountRanges]);
 
   // Render pagination
   const renderPagination = () => {
@@ -5389,9 +6540,9 @@ useEffect(() => {
           <aside className="col-lg-3 mb-4 mb-lg-0">
             <div className="sticky-top" style={{ top: '20px' }}>
               <FilterSidebar
-                subCategories={subCategories}
-                selectedSubCategories={selectedSubCategories}
-                setSelectedSubCategories={setSelectedSubCategories}
+                categoryTree={categoryTree}
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
                 selectedPriceRanges={selectedPriceRanges}
                 setSelectedPriceRanges={setSelectedPriceRanges}
                 selectedDiscountRanges={selectedDiscountRanges}

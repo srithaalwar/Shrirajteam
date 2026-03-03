@@ -344,4 +344,9 @@
   .delete-confirm-btn {
     width: 100%;
   }
+      .profile-actions {
+        flex-direction: row;
+        gap: 12px;
+    }
+
 }
