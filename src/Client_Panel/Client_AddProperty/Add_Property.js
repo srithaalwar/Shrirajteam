@@ -1991,8 +1991,8 @@ useEffect(() => {
         } else {
           if (!formData.rent_amount || formData.rent_amount <= 0) newErrors.rent_amount = 'Rent Amount is required';
         }
-        if (!formData.ownerName?.trim()) newErrors.ownerName = 'Owner Name is required';
-        if (!formData.ownerContact?.trim()) newErrors.ownerContact = 'Owner Contact is required';
+        // if (!formData.ownerName?.trim()) newErrors.ownerName = 'Owner Name is required';
+        // if (!formData.ownerContact?.trim()) newErrors.ownerContact = 'Owner Contact is required';
         break;
     }
     
@@ -3334,13 +3334,17 @@ useEffect(() => {
                 <div className="col-md-6">
                   {renderField({
                     name: 'ownerName',
-                    label: 'Owner Name'
+                    label: 'Owner Name',
+                   required: false
+
                   })}
                 </div>
                 <div className="col-md-6">
                   {renderField({
                     name: 'ownerContact',
-                    label: 'Owner Phone Number'
+                    label: 'Owner Phone Number',
+                   required: false
+
                   })}
                 </div>
               </div>

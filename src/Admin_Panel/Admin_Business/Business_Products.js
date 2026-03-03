@@ -5428,7 +5428,7 @@ import {
   Info
 } from "lucide-react";
 import { baseurl } from "../../BaseURL/BaseURL";
-
+import './Business_Products.css'
 // Custom hook to detect clicks outside of component
 const useClickOutside = (ref, callback) => {
   useEffect(() => {
@@ -6548,9 +6548,9 @@ const ProductHeader = ({
       </div>
 
       {/* Right side - Search and filters */}
-      <div className="d-flex align-items-center gap-2">
+      <div className="d-flex align-items-center gap-2 mobile-view-section">
         {/* Search input */}
-        <div className="input-group" style={{ width: '200px' }}>
+        <div className="input-group search-mobile" style={{ width: '200px' }}>
           <span className="input-group-text bg-transparent border-end-0">
             <Search size={16} />
           </span>
@@ -6566,7 +6566,6 @@ const ProductHeader = ({
             </button>
           )}
         </div>
-
         {/* Price filter dropdown */}
         <FilterDropdown
           title="Price"

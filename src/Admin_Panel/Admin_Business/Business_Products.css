@@ -1,0 +1,20 @@
+
+@media (max-width: 767px) {
+
+.mobile-view-section{
+
+        flex-direction: column;
+}
+
+.mobile-view-section
+.search-mobile{
+width: 300px !important;
+}
+.mobile-view-section
+.filteranddiscount{
+        flex-direction: row !important;
+
+}
+
+
+}
