@@ -53,7 +53,8 @@
 }
 
 .sticky-top {
-  position: sticky;
+  /* position: sticky; */
+  position: inherit; 
   top: 0;
   z-index: 1020;
 }
