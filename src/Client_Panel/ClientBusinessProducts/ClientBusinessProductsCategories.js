@@ -2351,7 +2351,7 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
           </button>
 
           {/* PAYOUT BUTTON with Commission Tooltip */}
-          <div className="position-relative mt-2">
+          {/* <div className="position-relative mt-2">
             <button 
               className="btn w-100 text-white d-flex align-items-center justify-content-center gap-2"
               style={{ background: "#28a745" }}
@@ -2369,7 +2369,7 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
               commissions={commissionData}
               distributionCommission={distributionCommission}
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
@@ -2547,7 +2547,7 @@ const ClientBusinessProductsCategories = () => {
   // Products states
   const [products, setProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
-  const [productsViewMode, setProductsViewMode] = useState("grid-4");
+  const [productsViewMode, setProductsViewMode] = useState("grid-3");
   const [productsSearch, setProductsSearch] = useState("");
   const [productsCurrentPage, setProductsCurrentPage] = useState(1);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
