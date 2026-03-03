@@ -1348,8 +1348,8 @@ const Login = () => {
 
   const navigateToDashboard = (role) => {
     if (role === "Admin") navigate("/admin-dashboard");
-    else if (role === "Agent") navigate("/agent-dashboard");
-    else if (role === "Client") navigate("/Client-dashboard");
+    else if (role === "Agent") navigate("/agent-busineess-category");
+    else if (role === "Client") navigate("/client-busineess-category");
     else if (role === "Super Admin") navigate("/admin-dashboard");
     else setError("Invalid role assigned. Please contact support.");
   };

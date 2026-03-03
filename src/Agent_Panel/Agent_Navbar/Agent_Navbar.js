@@ -6782,7 +6782,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Agent_Navbar.css";
-import logoImage from "../../Logos/logo1.png";
+import logoImage from "../../Logos/newone.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { baseurl } from "../../BaseURL/BaseURL";
@@ -7473,7 +7473,7 @@ const menuItems = [
   
   // Properties Main Category
   {
-    name: "Properties",
+    name: "Real Estate",
     icon: <FaBuilding />,
     subMenu: [
       { path: "/agent-add-property", name: "Add Property", icon: <FaPlusCircle /> },

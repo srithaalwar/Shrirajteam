@@ -3197,7 +3197,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Admin_Navbar.css";
-import logoImage from "../../Logos/logo1.png";
+import logoImage from "../../Logos/newone.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { baseurl } from "../../BaseURL/BaseURL";
@@ -3614,7 +3614,7 @@ const AdminNavbar = () => {
     
     // Properties Main Category
     {
-      name: "Properties",
+      name: "Real Estate",
       icon: <FaBuilding />,
       subMenu: [
         { path: "/admin-add-property", name: "Add Property", icon: <FaPlusCircle /> },
@@ -3657,7 +3657,9 @@ const AdminNavbar = () => {
         { path: "/admin-commissionmaster", name: "Payout Master", icon: <FaDatabase /> },
         { path: "/a-departments", name: "Departments", icon: <FaSitemap /> },
         { path: "/admin-chatbot", name: "Chat Bot", icon: <FaRobot /> },
-        { path: "/admin-carousel-list", name: "Add Carousel", icon: <FaQuestionCircle /> }
+        { path: "/admin-carousel-list", name: "Add Carousel", icon: <FaQuestionCircle /> },
+        { path: "/admin-amenities-list", name: " Amenities", icon: <FaQuestionCircle /> }
+
       ],
     },
     

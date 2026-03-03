@@ -238,7 +238,8 @@ import AdminReports from './Admin_Panel/Admin_Reports/Reports'
 import AdminUsersSubscriptions from './Admin_Panel/Users_Subscriptions/MySubscriptionPlan'
 import CarouselList from './Admin_Panel/CarouselList';
 import AddEditCarousel from './Admin_Panel/AddCarousel';
-
+import AmenitiesList from "./Admin_Panel/Admin_Amenities/AmenitiesList";
+import AddEditAmenities from "./Admin_Panel/Admin_Amenities/AddEditAmenities";
 
 // import AdminAddProductCategory from './Admin_Panel/Product_Category/AddCategory';
 // import AdminEditProductCategory from './Admin_Panel/Product_Category/EditCategory';
@@ -417,6 +418,10 @@ function App() {
     <Route path="/admin-carousel-list" element={<CarouselList />} />
 <Route path="/a-add-carousel" element={<AddEditCarousel />} />
 <Route path="/a-edit-carousel/:id" element={<AddEditCarousel />} />
+
+   <Route path="/admin-amenities-list" element={<AmenitiesList />} />
+<Route path="/a-add-amenity" element={<AddEditAmenities />} />
+<Route path="/a-edit-amenity/:id" element={<AddEditAmenities />} />
 
         <Route path="/admin-addsubscriptions" element={<AdminAddSubscription />} />
         <Route path="/admin-edit-subscription/:id" element={<AdminEditSubscription />} />
