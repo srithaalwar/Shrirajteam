@@ -1358,43 +1358,43 @@ const AdminDashboard = () => {
         label: "Total Properties", 
         value: property_summary.total_properties || 0, 
         icon: iconMap["Total Properties"], 
-        path: "/a-asset" 
+        // path: "/a-asset" 
       },
       { 
         label: "Available Properties", 
         value: property_summary.available || 0, 
         icon: iconMap["Available Properties"], 
-        path: "/a-availableassets" 
+        // path: "/a-availableassets" 
       },
       { 
         label: "Sold Properties", 
         value: property_summary.sold || 0, 
         icon: iconMap["Sold Properties"], 
-        path: "/a-soldassets" 
+        // path: "/a-soldassets" 
       },
       { 
         label: "Booked Properties", 
         value: property_summary.booked || 0, 
         icon: iconMap["Booked Properties"], 
-        path: "/a-bookedassets" 
+        // path: "/a-bookedassets" 
       },
       { 
         label: "Pending Properties", 
         value: property_summary.pending || 0, 
         icon: iconMap["Pending Properties"], 
-        path: "/a-pendingassets" 
+        // path: "/a-pendingassets" 
       },
       { 
         label: "Verified Properties", 
         value: property_summary.verified || 0, 
         icon: iconMap["Verified Properties"], 
-        path: "/a-approvedassets" 
+        // path: "/a-approvedassets" 
       },
       { 
         label: "Rejected Properties", 
         value: property_summary.rejected || 0, 
         icon: iconMap["Rejected Properties"], 
-        path: "/a-rejectedassets" 
+        // path: "/a-rejectedassets" 
       }
     );
 

@@ -6038,7 +6038,7 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
         <small className="text-muted mb-2">{product.brand || "No Brand"}</small>
 
         {getVariantDisplay() && (
-          <small className="text-info mb-2">
+          <small className="text-success mb-2">
             {getVariantDisplay()}
           </small>
         )}

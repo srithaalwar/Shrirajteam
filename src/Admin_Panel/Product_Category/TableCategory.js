@@ -489,7 +489,7 @@ function TableProductCategory() {
                   <th>CATEGORY NAME</th>
                   <th>SLUG</th>
                   <th>LEVEL</th>
-                  <th>PARENT</th>
+                  {/* <th>PARENT</th> */}
                   <th>STATUS</th>
                   <th>ORDER</th>
                   <th>ACTIONS</th>
@@ -515,7 +515,7 @@ function TableProductCategory() {
                       <td>{startIndex + index}</td>
                       <td className="name-cell">
                         {cat.name}
-                        {cat.icon && (
+                        {/* {cat.icon && (
                           <img 
                             src={cat.icon} 
                             alt={cat.name} 
@@ -528,7 +528,7 @@ function TableProductCategory() {
                               objectFit: 'cover'
                             }}
                           />
-                        )}
+                        )} */}
                       </td>
                       <td>
                         <code className="slug-text">{cat.slug}</code>
@@ -538,11 +538,11 @@ function TableProductCategory() {
                           {cat.level}
                         </span>
                       </td>
-                      <td>
+                      {/* <td>
                         <span className="parent-badge">
                           {getParentName(cat.parent)}
                         </span>
-                      </td>
+                      </td> */}
                       <td>
                         <span className={`status-badge ${cat.is_active ? 'active' : 'inactive'}`}>
                           {cat.is_active ? 'Active' : 'Inactive'}

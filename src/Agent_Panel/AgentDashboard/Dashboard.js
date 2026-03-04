@@ -435,12 +435,12 @@ const AgentDashboard = () => {
           icon: iconMap["Active Subscriptions"], 
           path: "/agent-my-subscription-plans" 
         },
-        { 
-          label: "Subscription Revenue", 
-          value: `₹${subscription_summary.subscription_revenue || 0}`, 
-          icon: iconMap["Subscription Revenue"], 
-          path: "/agent-my-subscription-plans" 
-        }
+        // { 
+        //   label: "Subscription Revenue", 
+        //   value: `₹${subscription_summary.subscription_revenue || 0}`, 
+        //   icon: iconMap["Subscription Revenue"], 
+        //   path: "/agent-my-subscription-plans" 
+        // }
       );
     }
 

@@ -700,12 +700,12 @@ const ClientDashboard = () => {
           icon: iconMap["Active Subscriptions"], 
           path: "/client-my-plans?status=active" 
         },
-        { 
-          label: "Subscription Revenue", 
-          value: `₹${subscription_summary.subscription_revenue || 0}`, 
-          icon: iconMap["Subscription Revenue"], 
-          path: "/client-my-plans" 
-        }
+        // { 
+        //   label: "Subscription Revenue", 
+        //   value: `₹${subscription_summary.subscription_revenue || 0}`, 
+        //   icon: iconMap["Subscription Revenue"], 
+        //   path: "/client-my-plans" 
+        // }
       );
     }
 
