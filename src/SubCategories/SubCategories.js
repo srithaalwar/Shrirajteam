@@ -7267,7 +7267,7 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
           </div>
 
           {/* PAYOUT BUTTON with Commission Tooltip */}
-          <div className="position-relative mb-2">
+          {/* <div className="position-relative mb-2">
             <button 
               className="btn w-100 fw-semibold py-2 d-flex align-items-center justify-content-center gap-2"
               style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
@@ -7285,7 +7285,7 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
               commissions={commissionData}
               distributionCommission={distributionCommission}
             />
-          </div>
+          </div> */}
 
           <button 
             className="btn w-100 fw-semibold py-2"

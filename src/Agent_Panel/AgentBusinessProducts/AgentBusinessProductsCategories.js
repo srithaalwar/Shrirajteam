@@ -4514,7 +4514,7 @@ const FilterSidebar = ({
   isMobile = false
 }) => {
   const [activeFilters, setActiveFilters] = useState({
-    categories: true,
+    categories: false,
     price: false,
     discount: false
   });

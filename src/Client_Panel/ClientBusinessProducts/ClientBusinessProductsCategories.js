@@ -3122,7 +3122,7 @@ const FilterSidebar = ({
   isMobile = false
 }) => {
   const [activeFilters, setActiveFilters] = useState({
-    categories: true,
+    categories: false,
     price: false,
     discount: false
   });
@@ -3553,7 +3553,7 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
           </button>
 
           {/* PAYOUT BUTTON with Commission Tooltip */}
-          <div className="position-relative mt-2">
+          {/* <div className="position-relative mt-2">
             <button 
               className="btn w-100 text-white d-flex align-items-center justify-content-center gap-2"
               style={{ background: "#28a745" }}
@@ -3571,7 +3571,8 @@ const ProductCard = ({ product, variant, baseurl, commissionData }) => {
               commissions={commissionData}
               distributionCommission={distributionCommission}
             />
-          </div>
+          </div> */}
+          
         </div>
       </div>
     </div>
