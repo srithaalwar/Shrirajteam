@@ -74,7 +74,7 @@ const BusinessList = () => {
           'Content-Type': 'application/json'
         }
       });
-      const businessCategories = Array.isArray(response.data) 
+      const businessCategories = Array.isArray(response.data)
         ? response.data.filter(cat => cat.level === 'business')
         : response.data.results?.filter(cat => cat.level === 'business') || [];
       setCategories(businessCategories);
@@ -136,17 +136,17 @@ const BusinessList = () => {
 
   const getWorkingHoursSummary = (workingHours) => {
     if (!workingHours || !workingHours.length) return 'No hours set';
-    
+
     const openDays = workingHours.filter(day => !day.is_closed && day.opens_at && day.closes_at);
     if (openDays.length === 0) return 'Closed all week';
-    
+
     const firstDay = openDays[0];
     const lastDay = openDays[openDays.length - 1];
-    
+
     if (openDays.length === 7) {
       return `Everyday ${formatTime(firstDay.opens_at)} - ${formatTime(firstDay.closes_at)}`;
     }
-    
+
     return `${openDays.length} days/week • ${formatTime(firstDay.opens_at)} - ${formatTime(firstDay.closes_at)}`;
   };
 
@@ -162,14 +162,14 @@ const BusinessList = () => {
 
   // Filter businesses based on search and filters
   const filteredBusinesses = businesses.filter(business => {
-    const matchesSearch = searchTerm === '' || 
+    const matchesSearch = searchTerm === '' ||
       business.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       business.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       business.city?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesType = filterType === 'all' || business.business_type === filterType;
     const matchesStatus = filterStatus === 'all' || business.verification_status === filterStatus;
-    
+
     return matchesSearch && matchesType && matchesStatus;
   });
 
@@ -198,14 +198,14 @@ const BusinessList = () => {
             'Content-Type': 'application/json'
           }
         });
-        
+
         Swal.fire({
           icon: 'success',
           title: 'Deleted!',
           text: 'Business has been deleted.',
           confirmButtonColor: '#3085d6',
         });
-        
+
         fetchBusinesses(); // Refresh list
       } catch (error) {
         console.error('Error deleting business:', error);
@@ -233,7 +233,7 @@ const BusinessList = () => {
   };
 
 
-  
+
   const handleAddNew = () => {
     navigate('/agent-add-business-form');
   };
@@ -255,7 +255,7 @@ const BusinessList = () => {
 
   return (
     <>
-      <AdminNavbar/>
+      <AdminNavbar />
       <div className="container-fluid business-list-container">
         {/* Header */}
         <div className="row mb-4">
@@ -264,7 +264,7 @@ const BusinessList = () => {
             <p className="business-list-subtitle">Manage your businesses and view details</p>
           </div>
           <div className="col-md-4 text-end">
-            <button 
+            <button
               className="btn btn-primary btn-add-business"
               onClick={handleAddNew}
             >
@@ -291,7 +291,7 @@ const BusinessList = () => {
             </div>
           </div>
           <div className="col-md-3">
-            <select 
+            <select
               className="form-select filter-select"
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
@@ -305,7 +305,7 @@ const BusinessList = () => {
             </select>
           </div>
           <div className="col-md-3">
-            <select 
+            <select
               className="form-select filter-select"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
@@ -325,27 +325,27 @@ const BusinessList = () => {
             <div className="business-stats">
               <div className="stat-card">
                 <div className="stat-number">{businesses.length}</div>
-<div className="stat-label" style={{ color: "black" }}>
-  Total Businesses
-</div>
+                <div className="stat-label" style={{ color: "black" }}>
+                  Total Businesses
+                </div>
               </div>
               <div className="stat-card">
                 <div className="stat-number">
                   {businesses.filter(b => b.verification_status === 'verified').length}
                 </div>
-                <div className="stat-label"  style={{ color: "black" }}>Verified</div>
+                <div className="stat-label" style={{ color: "black" }}>Verified</div>
               </div>
               <div className="stat-card">
                 <div className="stat-number">
                   {businesses.filter(b => b.is_featured).length}
                 </div>
-                <div className="stat-label"  style={{ color: "black" }}>Featured</div>
+                <div className="stat-label" style={{ color: "black" }}>Featured</div>
               </div>
               <div className="stat-card">
                 <div className="stat-number">
                   {businesses.filter(b => b.is_active).length}
                 </div>
-                <div className="stat-label"  style={{ color: "black" }}>Active</div>
+                <div className="stat-label" style={{ color: "black" }}>Active</div>
               </div>
             </div>
           </div>
@@ -359,12 +359,12 @@ const BusinessList = () => {
                 <i className="bi bi-buildings-fill display-1 text-muted"></i>
                 <h3 className="mt-3">No businesses found</h3>
                 <p className="text-muted">
-                  {searchTerm || filterType !== 'all' || filterStatus !== 'all' 
+                  {searchTerm || filterType !== 'all' || filterStatus !== 'all'
                     ? 'Try adjusting your search or filters'
                     : 'Start by adding your first business'}
                 </p>
                 {(!searchTerm && filterType === 'all' && filterStatus === 'all') && (
-                  <button 
+                  <button
                     className="btn btn-primary mt-3"
                     onClick={handleAddNew}
                   >
@@ -397,8 +397,8 @@ const BusinessList = () => {
                       {/* Banner/Logo */}
                       <div className="business-image-container">
                         {business.banner ? (
-                          <img 
-                            src={`${baseurl}${business.banner}`} 
+                          <img
+                            src={`${baseurl}${business.banner}`}
                             alt={business.business_name}
                             className="business-banner"
                             onError={(e) => {
@@ -413,8 +413,8 @@ const BusinessList = () => {
                         )}
                         {business.logo && (
                           <div className="business-logo-container">
-                            <img 
-                              src={`${baseurl}${business.logo}`} 
+                            <img
+                              src={`${baseurl}${business.logo}`}
                               alt="Logo"
                               className="business-logo"
                               onError={(e) => {
@@ -432,13 +432,13 @@ const BusinessList = () => {
                           <span className="info-label">Type:</span>
                           <span className="info-value">{getBusinessTypeLabel(business.business_type)}</span>
                         </div>
-                        
+
                         <div className="business-info-item">
                           <i className="bi bi-geo-alt me-2"></i>
                           <span className="info-label">Location:</span>
                           <span className="info-value">{business.city}, {business.state}</span>
                         </div>
-                        
+
                         <div className="business-info-item">
                           <i className="bi bi-tags me-2"></i>
                           <span className="info-label">Categories:</span>
@@ -446,7 +446,7 @@ const BusinessList = () => {
                             {getCategoryNames(business.categories) || 'No categories'}
                           </span>
                         </div>
-                        
+
                         <div className="business-info-item">
                           <i className="bi bi-clock me-2"></i>
                           <span className="info-label">Hours:</span>
@@ -454,13 +454,13 @@ const BusinessList = () => {
                             {getWorkingHoursSummary(business.working_hours)}
                           </span>
                         </div>
-                        
+
                         <div className="business-info-item">
                           <i className="bi bi-percent me-2"></i>
                           <span className="info-label">Commission:</span>
                           <span className="info-value">{business.commission_percent}%</span>
                         </div>
-                        
+
                         <div className="business-description">
                           <p className="description-text">
                             {business.description?.substring(0, 100) || 'No description available'}
@@ -474,7 +474,7 @@ const BusinessList = () => {
                     <div className="business-card-footer">
                       {/* View Products Button */}
                       <div className="view-products-section mb-3">
-                        <button 
+                        <button
                           className="btn btn-primary btn-sm w-100 d-flex align-items-center justify-content-center"
                           onClick={() => handleViewProducts(business.business_id)}
                           style={{
@@ -491,19 +491,19 @@ const BusinessList = () => {
 
                       {/* Action Buttons */}
                       <div className="business-actions mb-2">
-                        <button 
+                        <button
                           className="btn btn-sm btn-outline-primary"
                           onClick={() => handleView(business.business_id)}
                         >
                           <i className="bi bi-eye me-1"></i> View
                         </button>
-                        <button 
+                        <button
                           className="btn btn-sm btn-outline-secondary"
                           onClick={() => handleEdit(business.business_id)}
                         >
                           <i className="bi bi-pencil me-1"></i> Edit
                         </button>
-                        <button 
+                        <button
                           className="btn btn-sm btn-outline-danger"
                           onClick={() => handleDelete(business.business_id, business.business_name)}
                         >
@@ -529,7 +529,7 @@ const BusinessList = () => {
                   <nav className="business-pagination">
                     <ul className="pagination justify-content-center">
                       <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                        <button 
+                        <button
                           className="page-link"
                           onClick={() => setCurrentPage(currentPage - 1)}
                           disabled={currentPage === 1}
@@ -537,13 +537,13 @@ const BusinessList = () => {
                           <i className="bi bi-chevron-left"></i> Previous
                         </button>
                       </li>
-                      
+
                       {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                        <li 
-                          key={page} 
+                        <li
+                          key={page}
                           className={`page-item ${currentPage === page ? 'active' : ''}`}
                         >
-                          <button 
+                          <button
                             className="page-link"
                             onClick={() => setCurrentPage(page)}
                           >
@@ -551,9 +551,9 @@ const BusinessList = () => {
                           </button>
                         </li>
                       ))}
-                      
+
                       <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                        <button 
+                        <button
                           className="page-link"
                           onClick={() => setCurrentPage(currentPage + 1)}
                           disabled={currentPage === totalPages}

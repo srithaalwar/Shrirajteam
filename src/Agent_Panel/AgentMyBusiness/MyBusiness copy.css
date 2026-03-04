@@ -287,7 +287,7 @@
   margin: 0;
 }
 
-/* Card Footer - Updated for responsiveness */
+/* Card Footer */
 .business-card-footer {
   padding: 15px 20px;
   background: #f8f9fa;
@@ -295,102 +295,22 @@
   border-radius: 0 0 12px 12px;
 }
 
-/* View Products Button */
-.view-products-btn {
-  margin-bottom: 10px;
-  transition: all 0.2s ease;
-}
-
-.view-products-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(39, 60, 117, 0.3);
-}
-
-/* Business Actions - Updated for responsive layout */
 .business-actions {
   display: flex;
   gap: 8px;
-  width: 100%;
+  margin-bottom: 10px;
 }
 
-.action-btn {
+.business-actions .btn {
   flex: 1;
   padding: 6px 12px;
   font-size: 0.85rem;
   border-radius: 6px;
   transition: all 0.2s ease;
-  white-space: nowrap;
 }
 
-.action-btn:hover {
+.business-actions .btn:hover {
   transform: translateY(-2px);
-}
-
-/* iPad View (768px to 1024px) */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .business-actions {
-    flex-direction: row;
-    gap: 6px;
-  }
-  
-  .action-btn {
-    font-size: 0.8rem;
-    padding: 6px 8px;
-  }
-  
-  .action-btn i {
-    margin-right: 4px;
-  }
-}
-
-/* Mobile View (up to 767px) */
-@media (max-width: 767px) {
-  .view-products-btn {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  
-  .business-actions {
-    display: flex;
-    flex-direction: row;
-    gap: 6px;
-    width: 100%;
-  }
-  
-  .action-btn {
-    flex: 1;
-    font-size: 0.8rem;
-    padding: 6px 4px;
-  }
-  
-  .action-btn i {
-    margin-right: 4px;
-  }
-  
-  /* For very small screens, adjust text */
-  @media (max-width: 480px) {
-    .action-btn {
-      font-size: 0.75rem;
-      padding: 6px 2px;
-    }
-    
-    .action-btn i {
-      margin-right: 2px;
-    }
-  }
-}
-
-/* Desktop View (above 1024px) */
-@media (min-width: 1025px) {
-  .business-actions {
-    flex-direction: row;
-    gap: 8px;
-  }
-  
-  .action-btn {
-    font-size: 0.85rem;
-    padding: 6px 12px;
-  }
 }
 
 .business-meta {
@@ -499,6 +419,15 @@
   
   .business-card {
     margin-bottom: 20px;
+  }
+  
+  .business-actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .business-actions .btn {
+    width: 100%;
   }
 }
 
