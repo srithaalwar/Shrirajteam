@@ -2315,6 +2315,7 @@ import "./ProductDetails.css";
 import { baseurl } from "../BaseURL/BaseURL";
 import { Share2, ShoppingCart } from "lucide-react";
 import Swal from "sweetalert2";
+import ShareModal from "../ShareModal/ShareModal";
 
 const WebProductDetails = () => {
   /* ================= ROUTE PARAMS ================= */
@@ -2621,14 +2622,13 @@ const WebProductDetails = () => {
               <img src={selectedImage} alt={product.product_name} />
 
               <div className="floating-icons">
-                <div 
-                  className="icon-circle" 
-                  onClick={handleShareClick}
-                  style={{ cursor: "pointer" }}
-                  title="Share product URL"
-                >
-                  <Share2 size={20} />
-                </div>
+                         
+                  <ShareModal
+                  productId={productId}
+                  variantId={variantId}
+                  selectedVariant={selectedVariant}
+                  productTitle={product?.name || "Check out this product!"}
+                />
               </div>
             </div>
           </div>

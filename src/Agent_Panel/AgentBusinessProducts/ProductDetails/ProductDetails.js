@@ -3779,6 +3779,7 @@ import ShopHeader from "./ProductsDetailsHeader/ProductHeader";
 import "./ProductDetails.css";
 import { baseurl } from "../../../BaseURL/BaseURL";
 import { Heart, Share2 } from "lucide-react";
+import ShareModal from "../../../ShareModal/ShareModal";
 
 const AgentProductDetails = () => {
   /* ================= ROUTE PARAMS ================= */
@@ -4301,15 +4302,12 @@ const AgentProductDetails = () => {
                   />
                 </div>
                 
-                {/* Share Icon */}
-                <div 
-                  className="icon-circle" 
-                  onClick={handleShareClick}
-                  style={{ cursor: "pointer" }}
-                  title="Share product URL"
-                >
-                  <Share2 size={20} />
-                </div>
+               <ShareModal
+  productId={productId}
+  variantId={variantId}
+  selectedVariant={selectedVariant}
+  productTitle={product?.name || "Check out this product!"}
+/>
               </div>
             </div>
           </div>

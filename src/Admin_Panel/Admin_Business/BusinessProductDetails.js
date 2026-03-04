@@ -6,6 +6,7 @@ import ShopHeader from "../../Agent_Panel/AgentBusinessProducts/ProductDetails/P
 // import "./ProductDetails.css";
 import { baseurl } from "../../BaseURL/BaseURL";
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaCompress } from "react-icons/fa";
+import ShareModal from "../../ShareModal/ShareModal";
 
 const AgentProductDetails = () => {
   /* ================= ROUTE PARAMS ================= */
@@ -349,8 +350,32 @@ const AgentProductDetails = () => {
                   className="main-image"
                 />
               )}
-            </div>
-          </div>
+            {/* ✅ Floating Icons — Wishlist + Share (always visible on both image & video) */}
+    <div className="floating-icons">
+      {/* Wishlist Icon */}
+      {/* <div
+        className="icon-circle"
+        onClick={handleWishlistToggle}
+        style={{
+          cursor: wishlistLoading ? "not-allowed" : "pointer",
+          color: isInWishlist ? "#ff2e93" : "#666",
+          opacity: wishlistLoading ? 0.7 : 1,
+        }}
+        title={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+      >
+        <Heart size={20} fill={isInWishlist ? "#ff2e93" : "none"} />
+      </div> */}
+
+      {/* Share Icon */}
+      <ShareModal
+        productId={productId}
+        variantId={variantId}
+        selectedVariant={selectedVariant}
+        productTitle={product?.name || "Check out this product!"}
+      />
+    </div>
+  </div>
+</div>
 
           {/* ========== MIDDLE : DETAILS ========== */}
           <div className="details-section">
