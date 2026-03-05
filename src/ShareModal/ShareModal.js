@@ -185,16 +185,36 @@ const SHARE_SERVICES = [
 ];
 
 // ─── Main Share Modal Component ───────────────────────────────────────────────
-export default function ShareModal({ productId, variantId, selectedVariant, productTitle = "Check out this product!" }) {
+// Props:
+//   mode="product"  → uses productId + variantId to build URL (default)
+//   mode="custom"   → uses shareUrl directly (for referral links, etc.)
+//   triggerAs="button" → renders a styled <button> instead of the circle icon
+//   triggerLabel    → label text when triggerAs="button"
+export default function ShareModal({
+  // Product mode props
+  productId,
+  variantId,
+  selectedVariant,
+  productTitle = "Check out this product!",
+  // Custom URL mode props
+  mode = "product",       // "product" | "custom"
+  shareUrl = "",          // used when mode="custom"
+  // Trigger appearance
+  triggerAs = "icon",     // "icon" | "button"
+  triggerLabel = "Share", // label when triggerAs="button"
+  triggerClassName = "",  // extra class on trigger
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [copied, setCopied] = useState(false);
   const modalRef = useRef(null);
   const searchRef = useRef(null);
 
-  const currentUrl = typeof window !== "undefined"
-    ? `${window.location.origin}/product/${productId}/?variant=${variantId || selectedVariant?.id || ""}`
-    : "";
+  const currentUrl = mode === "custom"
+    ? shareUrl
+    : (typeof window !== "undefined"
+        ? `${window.location.origin}/product/${productId}/?variant=${variantId || selectedVariant?.id || ""}`
+        : "");
 
   const filteredServices = SHARE_SERVICES.filter(s =>
     s.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -264,6 +284,13 @@ export default function ShareModal({ productId, variantId, selectedVariant, prod
         }
         .share-trigger:hover { background: #f5f5f5; border-color: #bbb; color: #111; transform: scale(1.05); }
 
+        /* Button trigger — wraps whatever button the parent renders */
+        .share-trigger-btn {
+          display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+          cursor: pointer; border: none; background: transparent; padding: 0;
+          font: inherit; color: inherit; width: 100%;
+        }
+
         .share-overlay {
           position: fixed; inset: 0; background: rgba(0,0,0,0.35);
           backdrop-filter: blur(3px);
@@ -276,7 +303,8 @@ export default function ShareModal({ productId, variantId, selectedVariant, prod
         .share-modal {
           background: #fff; border-radius: 14px;
           width: 520px; max-width: 95vw;
-          padding: 20px 20px 16px;  
+          padding: 20px 20px 16px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08);
           animation: slideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
           position: relative;
         }
@@ -377,10 +405,20 @@ export default function ShareModal({ productId, variantId, selectedVariant, prod
       `}</style>
 
       <div className="share-root">
-        {/* Trigger Button */}
-        <div className="share-trigger" onClick={handleShareClick} title="Share product URL">
-          <Share2 size={18} />
-        </div>
+        {/* Trigger — icon circle (default) or styled button */}
+        {triggerAs === "button" ? (
+          <button
+            className={triggerClassName}
+            onClick={handleShareClick}
+            title="Share"
+          >
+            {triggerLabel}
+          </button>
+        ) : (
+          <div className="share-trigger" onClick={handleShareClick} title="Share product URL">
+            <Share2 size={18} />
+          </div>
+        )}
 
         {/* Modal */}
         {isOpen && (

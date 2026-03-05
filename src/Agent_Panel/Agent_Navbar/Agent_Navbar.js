@@ -6829,6 +6829,7 @@ import {
   FaCheck,
   FaPlusCircle
 } from "react-icons/fa";
+import ShareModal from "../../ShareModal/ShareModal";
 
 const AgentNavbar = () => {
   const [open, setOpen] = useState(false);
@@ -7768,24 +7769,19 @@ const menuItems = [
             </span>
           </div>
 
-          {/* Refer Now Button */}
-          <button 
-            className="wn-sidebar-refer-btn"
-            onClick={handleReferNowClick}
-            title="Refer Now"
-          >
-            {copyStatus.copied ? (
-              <>
-                <FaCheck style={{ marginRight: "8px" }} />
-                Copied!
-              </>
-            ) : (
-              <>
-                <FaUserPlus style={{ marginRight: "8px" }} />
-                Refer Now
-              </>
-            )}
-          </button>
+        <ShareModal
+  mode="custom"
+  shareUrl={`${window.location.origin}/register?referral_id=${userData.referral_id || "SRP000001"}`}
+  productTitle="Join using my referral link!"
+  triggerAs="button"
+  triggerClassName="wn-sidebar-refer-btn"
+  triggerLabel={
+    <>
+      <FaUserPlus style={{ marginRight: "8px" }} />
+      Refer Now
+    </>
+  }
+/>
         </div>
 
         {/* Navigation Items */}
