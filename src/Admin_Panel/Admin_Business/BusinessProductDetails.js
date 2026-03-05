@@ -8,7 +8,7 @@ import { baseurl } from "../../BaseURL/BaseURL";
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaExpand, FaCompress } from "react-icons/fa";
 import ShareModal from "../../ShareModal/ShareModal";
 
-const AgentProductDetails = () => {
+const AdminProductDetails = () => {
   /* ================= ROUTE PARAMS ================= */
   const { productId } = useParams();
   const [searchParams] = useSearchParams();
@@ -507,4 +507,4 @@ const AgentProductDetails = () => {
   );
 };
 
-export default AgentProductDetails;
+export default AdminProductDetails;

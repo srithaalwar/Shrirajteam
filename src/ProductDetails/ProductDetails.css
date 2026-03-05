@@ -488,7 +488,81 @@
     margin-top: 30px;
   }
   
-  .info-header h3 {
+  /* .info-header h3 {
     font-size: 18px;
+  } */
+}
+
+
+
+/* MOBILE BUY BOX DEFAULT HIDDEN */
+.mobile-buy-box {
+  display: none;
+}
+
+/* MOBILE VIEW */
+@media (max-width: 768px) {
+
+  .mobile-buy-box {
+    display: block;
+    margin-top: 15px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .mobile-price-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .mobile-price {
+    font-size: 22px;
+    font-weight: 700;
+    color: #222;
+  }
+
+  .mobile-mrp {
+    text-decoration: line-through;
+    color: #888;
+  }
+
+  .mobile-off {
+    color: green;
+    font-weight: 600;
+  }
+
+  .mobile-qty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .mobile-qty button {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 6px;
+  }
+
+  .mobile-cart-btn {
+    width: 100%;
+    background: #243b8f;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+
+  .Buy-box-mobile-view
+  {
+    display: none;
   }
 }

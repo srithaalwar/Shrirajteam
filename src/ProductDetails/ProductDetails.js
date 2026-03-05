@@ -10,7 +10,7 @@
 // ];
 
 // const ProductDetails = () => {
-    
+
 //   const [selectedImage, setSelectedImage] = useState(images[0].image);
 //   const [qty, setQty] = useState(1);
 //   const [openAbout, setOpenAbout] = useState(false);
@@ -88,9 +88,9 @@
 
 //             <a href="/" className="view-all">View full attributes</a>
 //           </div>
-          
 
-          
+
+
 //  {/* FIXED BUY BOX */}
 //           <div className="buy-box">
 //             <div className="price-row">
@@ -280,7 +280,7 @@
 //               <td>Importer address</td>
 //               <td>Epson India Pvt ltd, 12 th Floor, The Millenia, Tower A, No.1 Murphy Road, Ulsoor, Bangalore - 560008</td>
 //             </tr>
-          
+
 //           </tbody>
 //         </table>
 //       </div>
@@ -291,7 +291,7 @@
 
 // </div>
 //         </div>
-      
+
 
 
 //     </>
@@ -1033,7 +1033,7 @@
 // import { baseurl } from "../BaseURL/BaseURL";
 // import {
 //   Share2,
-  
+
 // } from "lucide-react";
 
 // const ProductDetails = () => {
@@ -1175,7 +1175,7 @@
 //               <img src={selectedImage} alt={product.product_name} />
 
 //               <div className="floating-icons">
-                
+
 //                 <div className="icon-circle">
 //                   <Share2 size={20} />
 //                 </div>
@@ -1185,7 +1185,7 @@
 
 //           {/* ========== MIDDLE : DETAILS ========== */}
 //           <div className="details-section">
-            
+
 
 //             <h1>{product.product_name}</h1>
 
@@ -1344,7 +1344,7 @@
 //   /* ================= SHARE FUNCTIONALITY ================= */
 //   const handleShareClick = () => {
 //     const currentUrl = window.location.href;
-    
+
 //     navigator.clipboard.writeText(currentUrl)
 //       .then(() => {
 //         alert("Product URL copied to clipboard!");
@@ -1653,12 +1653,12 @@
 //   /* ================= SHARE FUNCTIONALITY ================= */
 //   const handleShareClick = () => {
 //     const currentUrl = window.location.href;
-    
+
 //     navigator.clipboard.writeText(currentUrl)
 //       .then(() => {
 //         // Show custom alert/notification
 //         setShowCopyAlert(true);
-        
+
 //         // Auto-hide after 3 seconds
 //         setTimeout(() => {
 //           setShowCopyAlert(false);
@@ -1842,7 +1842,7 @@
 //                   </>
 //                 )}
 //               </div>
-              
+
 //               <div className="sku-stock-info">
 //                 <p className="sku">SKU: {selectedVariant.sku}</p>
 //                 <p className="stock">Stock Available: {selectedVariant.stock}</p>
@@ -2006,12 +2006,12 @@
 //   /* ================= SHARE FUNCTIONALITY ================= */
 //   const handleShareClick = () => {
 //     const currentUrl = window.location.href;
-    
+
 //     navigator.clipboard.writeText(currentUrl)
 //       .then(() => {
 //         // Show custom alert/notification
 //         setShowCopyAlert(true);
-        
+
 //         // Auto-hide after 3 seconds
 //         setTimeout(() => {
 //           setShowCopyAlert(false);
@@ -2337,7 +2337,7 @@ const WebProductDetails = () => {
   /* ================= SHARE FUNCTIONALITY ================= */
   const handleShareClick = () => {
     const currentUrl = window.location.href;
-    
+
     navigator.clipboard.writeText(currentUrl)
       .then(() => {
         setShowCopyAlert(true);
@@ -2518,7 +2518,7 @@ const WebProductDetails = () => {
     if (existingItemIndex >= 0) {
       // Update quantity if item exists
       const newQty = guestCart[existingItemIndex].quantity + qty;
-      
+
       // Check stock for updated quantity
       if (newQty > selectedVariant.stock) {
         Swal.fire({
@@ -2530,7 +2530,7 @@ const WebProductDetails = () => {
         });
         return;
       }
-      
+
       guestCart[existingItemIndex].quantity = newQty;
       guestCart[existingItemIndex].addedAt = new Date().toISOString();
     } else {
@@ -2622,8 +2622,8 @@ const WebProductDetails = () => {
               <img src={selectedImage} alt={product.product_name} />
 
               <div className="floating-icons">
-                         
-                  <ShareModal
+
+                <ShareModal
                   productId={productId}
                   variantId={variantId}
                   selectedVariant={selectedVariant}
@@ -2635,45 +2635,82 @@ const WebProductDetails = () => {
 
           {/* ========== MIDDLE : DETAILS ========== */}
           <div className="details-section">
-            <h1>{product.product_name}</h1>
+            <h2>{product.product_name}</h2>
 
-            {product.description && (
-              <p className="desc">{product.description}</p>
-            )}
+            {/* MOBILE BUY SECTION */}
+            <div className="mobile-buy-box">
 
-            {/* PRODUCT ATTRIBUTES */}
-            {product.attributes && (
+              <div className="mobile-price-row">
+                <span className="mobile-price">₹{pricing.price.toFixed(2)}</span>
+
+                {pricing.mrp > pricing.price && (
+                  <>
+                    <span className="mobile-mrp">₹{pricing.mrp.toFixed(2)}</span>
+                    <span className="mobile-off">{pricing.discount}% OFF</span>
+                  </>
+                )}
+              </div>
+
+              <div className="mobile-qty">
+                <button onClick={() => setQty(q => q - 1)} disabled={qty === 1}>
+                  −
+                </button>
+
+                <span>{qty}</span>
+
+                <button
+                  onClick={() => setQty(q => q + 1)}
+                  disabled={qty >= selectedVariant.stock}
+                >
+                  +
+                </button>
+              </div>
+
+              <button
+                className="mobile-cart-btn"
+                onClick={handleAddToCart}
+                disabled={selectedVariant.stock <= 0}
+              >
+                <ShoppingCart size={18} style={{ marginRight: "8px" }} />
+                ADD TO CART
+              </button>
+
+            </div>
+
+
+
+            {/* KEY ATTRIBUTES */}
+            {(product.attributes || selectedVariant?.attributes) && (
               <>
-                <h3>Product Attributes</h3>
-                <div className="attributes">
-                  {Object.entries(product.attributes).map(([k, v]) => (
-                    <div key={k}>
-                      <span>{k.replace(/_/g, " ")}</span>
-                      <span>{v}</span>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
+                <h6 style={{ fontWeight: 600 }}>Key Attributes</h6>
 
-            {/* VARIANT ATTRIBUTES */}
-            {selectedVariant.attributes && (
-              <>
-                <h3>Variant Details</h3>
                 <div className="attributes">
-                  {Object.entries(selectedVariant.attributes).map(([k, v]) => (
-                    <div key={k}>
-                      <span>{k.replace(/_/g, " ")}</span>
-                      <span>{v}</span>
-                    </div>
-                  ))}
+
+                  {/* Product Attributes */}
+                  {product.attributes &&
+                    Object.entries(product.attributes).map(([k, v]) => (
+                      <div key={`product-${k}`}>
+                        <span>{k.replace(/_/g, " ")}</span>
+                        <span>{v}</span>
+                      </div>
+                    ))}
+
+                  {/* Variant Attributes */}
+                  {selectedVariant.attributes &&
+                    Object.entries(selectedVariant.attributes).map(([k, v]) => (
+                      <div key={`variant-${k}`}>
+                        <span>{k.replace(/_/g, " ")}</span>
+                        <span>{v}</span>
+                      </div>
+                    ))}
+
                 </div>
               </>
             )}
           </div>
 
           {/* ========== RIGHT : BUY BOX ========== */}
-          <div className="buy-box">
+          <div className="buy-box Buy-box-mobile-view">
             <div className="price-row">
               <span className="price">₹{pricing.price.toFixed(2)}</span>
               {pricing.mrp > pricing.price && (
@@ -2684,12 +2721,12 @@ const WebProductDetails = () => {
               )}
             </div>
 
-            <p className="unit">SKU: {selectedVariant.sku}</p>
+            {/* <p className="unit">SKU: {selectedVariant.sku}</p> */}
             <p className="stock-status">
-              {selectedVariant.stock > 10 
-                ? "In Stock" 
-                : selectedVariant.stock > 0 
-                  ? `Only ${selectedVariant.stock} left` 
+              {selectedVariant.stock > 10
+                ? "In Stock"
+                : selectedVariant.stock > 0
+                  ? `Only ${selectedVariant.stock} left`
                   : "Out of Stock"}
             </p>
 
@@ -2706,7 +2743,7 @@ const WebProductDetails = () => {
               </button>
             </div>
 
-            <button 
+            <button
               className="cart-btn"
               onClick={handleAddToCart}
               disabled={selectedVariant.stock <= 0}
@@ -2715,11 +2752,11 @@ const WebProductDetails = () => {
               ADD TO CART
             </button>
 
-            <p className="secure">
+            {/* <p className="secure">
               <span style={{ color: selectedVariant.stock > 0 ? 'green' : 'red' }}>
                 {selectedVariant.stock > 0 ? '✓ In Stock' : '✗ Out of Stock'}
               </span>
-            </p>
+            </p> */}
           </div>
         </div>
 
