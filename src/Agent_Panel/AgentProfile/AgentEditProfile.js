@@ -2152,7 +2152,7 @@ const AgentEditProfile = () => {
 
                 <div className="col-md-6 mb-3">
                   <label className="form-label">
-                    Nominee Reference To <span className="text-danger">*</span>
+                    Nominee Name<span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -2160,7 +2160,7 @@ const AgentEditProfile = () => {
                     value={formData.nominee_reference_to}
                     onChange={handleChange}
                     className={`form-control ${errors.nominee_reference_to ? 'is-invalid' : ''}`}
-                    placeholder="Enter reference"
+                    placeholder="Enter nominee name"
                     disabled={loading}
                   />
                   {errors.nominee_reference_to && <div className="invalid-feedback">{errors.nominee_reference_to}</div>}
