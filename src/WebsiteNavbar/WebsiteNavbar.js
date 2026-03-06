@@ -1087,13 +1087,16 @@ const WebsiteNavbar = () => {
     <>
       <header className="wn-navbar">
         <div className="wn-nav-left">
-          <div className="wn-logo">
-            <img 
-              src={logoImage} 
-              alt="Shriraj Logo" 
-              className="wn-logo-img"
-            />
-          </div>
+        <div className="wn-logo">
+  <Link to="/">
+    <img 
+      src={logoImage} 
+      alt="Shriraj Logo" 
+      className="wn-logo-img"
+      style={{ cursor: "pointer" }}
+    />
+  </Link>
+</div>
         </div>
 
         {/* <div className="wn-nav-center">

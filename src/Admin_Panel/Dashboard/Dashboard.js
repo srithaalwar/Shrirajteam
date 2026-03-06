@@ -1510,7 +1510,7 @@ const AdminDashboard = () => {
     if (clientCount > 0) {
       metrics.push(
         { 
-          label: "Client Users", 
+          label: " Users", 
           value: clientCount, 
           icon: iconMap["Client Users"], 
           path: "/admin-users" 

@@ -3667,7 +3667,7 @@ const AdminNavbar = () => {
     { path: "/admin-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/a-leads", name: "Leads", icon: <FaChartLine /> },
     { path: "/admin-reports", name: "Reports", icon: <FaFileAlt /> },
-    { path: "/a-settings", name: "Prefix Settings", icon: <FaTag /> },
+    // { path: "/a-settings", name: "Prefix Settings", icon: <FaTag /> },
     { path: "/admin-profile", name: "Profile", icon: <FaUserCircle /> },
   ];
 

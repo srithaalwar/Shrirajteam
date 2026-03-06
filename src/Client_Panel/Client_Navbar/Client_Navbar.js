@@ -5212,7 +5212,7 @@ const ClientNavbar = () => {
 
         {/* Navigation Items */}
         <div className="wn-nav-section">
-          <div className="wn-section-title">Client Menu</div>
+          <div className="wn-section-title">User Menu</div>
           <ul className="wn-menu-list">
             {menuItems.map((item, index) => (
               <li key={item.name || item.path}>

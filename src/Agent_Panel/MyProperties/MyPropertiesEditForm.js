@@ -190,7 +190,7 @@ const PropertyEditForm = () => {
 
       if (res.ok) {
         Swal.fire("Success", "Property updated successfully", "success");
-        navigate("/agent-properties");
+        navigate("/agent-my-properties");
       } else {
         Swal.fire("Error", "Update failed", "error");
       }

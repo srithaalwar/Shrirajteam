@@ -5995,9 +5995,9 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
     pan_number: '',
     
     // Marketplace
-    commission_percent: '5.00',
+    // commission_percent: '5.00',
     settlement_cycle_days: 3,
-    min_order_value: '50.00',
+    min_order_value: '100.00',
     
     // Working Hours - Initialize with default values
     working_hours: DAYS.map(day => ({
@@ -6315,9 +6315,9 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
         break;
         
       case 'marketplace':
-        if (!formData.commission_percent || parseFloat(formData.commission_percent) < 0) {
-          newErrors.commission_percent = 'Valid commission percentage is required';
-        }
+        // if (!formData.commission_percent || parseFloat(formData.commission_percent) < 0) {
+        //   newErrors.commission_percent = 'Valid commission percentage is required';
+        // }
         if (!formData.settlement_cycle_days || parseInt(formData.settlement_cycle_days) <= 0) {
           newErrors.settlement_cycle_days = 'Valid settlement days is required';
         }
@@ -6760,7 +6760,7 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
             {/* <h3 className="form-section-title">Marketplace Settings</h3> */}
             <div className="form-section-content">
               <div className="row">
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   {renderField({
                     type: 'number',
                     name: 'commission_percent',
@@ -6770,8 +6770,8 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
                     max: 100,
                     required: true
                   })}
-                </div>
-                <div className="col-md-4">
+                </div> */}
+                <div className="col-md-6">
                   {renderField({
                     type: 'number',
                     name: 'settlement_cycle_days',
@@ -6780,7 +6780,7 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
                     required: true
                   })}
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-6">
                   {renderField({
                     type: 'number',
                     name: 'min_order_value',
