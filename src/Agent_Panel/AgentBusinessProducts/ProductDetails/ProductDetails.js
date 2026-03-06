@@ -3774,12 +3774,11 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import WebsiteNavbar from "../../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+import AgentNavbar from "../../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import ShopHeader from "./ProductsDetailsHeader/ProductHeader";
 import "./ProductDetails.css";
 import { baseurl } from "../../../BaseURL/BaseURL";
 import { Heart, Share2 } from "lucide-react";
-import ShareModal from "../../../ShareModal/ShareModal";
 
 const AgentProductDetails = () => {
   /* ================= ROUTE PARAMS ================= */
@@ -4218,7 +4217,7 @@ const AgentProductDetails = () => {
   if (loading) {
     return (
       <>
-        <WebsiteNavbar />
+        <AgentNavbar />
         <div className="text-center py-5">Loading product...</div>
       </>
     );
@@ -4228,7 +4227,7 @@ const AgentProductDetails = () => {
   if (error) {
     return (
       <>
-        <WebsiteNavbar />
+        <AgentNavbar />
         <div className="text-center py-5 text-danger">{error}</div>
       </>
     );
@@ -4237,7 +4236,7 @@ const AgentProductDetails = () => {
   /* ================= UI ================= */
   return (
     <>
-      <WebsiteNavbar />
+      <AgentNavbar />
       <ShopHeader businessId={product.business} />
 
       {/* Copy Alert Notification */}
@@ -4302,25 +4301,27 @@ const AgentProductDetails = () => {
                   />
                 </div>
                 
-               <ShareModal
-  productId={productId}
-  variantId={variantId}
-  selectedVariant={selectedVariant}
-  productTitle={product?.name || "Check out this product!"}
-/>
+                {/* Share Icon */}
+                <div 
+                  className="icon-circle" 
+                  onClick={handleShareClick}
+                  style={{ cursor: "pointer" }}
+                  title="Share product URL"
+                >
+                  <Share2 size={20} />
+                </div>
               </div>
             </div>
           </div>
 
           {/* ========== MIDDLE : DETAILS ========== */}
-          <div className="details-section product-details-section">
+          {/* <div className="details-section product-details-section">
             <h1>{product.product_name}</h1>
 
             {product.description && (
               <p className="desc">{product.description}</p>
             )}
 
-            {/* PRODUCT ATTRIBUTES */}
             {product.attributes && (
               <>
                 <h2>Product Attributes</h2>
@@ -4335,7 +4336,6 @@ const AgentProductDetails = () => {
               </>
             )}
 
-            {/* VARIANT ATTRIBUTES */}
             {selectedVariant.attributes && (
               <>
                 <h2>Variant Details</h2>
@@ -4349,7 +4349,133 @@ const AgentProductDetails = () => {
                 </div>
               </>
             )}
-          </div>
+          </div> */}
+
+          <div className="details-section product-details-section">
+  <h1>{product.product_name}</h1>
+
+  {/* MOBILE BUY SECTION */}
+  <div className="mobile-buy-box">
+
+    <div className="mobile-price-row">
+      <span className="mobile-price">₹{pricing.price.toFixed(2)}</span>
+
+      {pricing.mrp > pricing.price && (
+        <>
+          <span className="mobile-mrp">₹{pricing.mrp.toFixed(2)}</span>
+          <span className="mobile-off">{pricing.discount}% OFF</span>
+        </>
+      )}
+    </div>
+
+    <div className="mobile-qty">
+      <button
+        onClick={() => setQty(q => Math.max(1, q - 1))}
+        disabled={cartLoading}
+      >
+        −
+      </button>
+
+      <span>{qty}</span>
+
+      <button
+        onClick={() => setQty(q => q + 1)}
+        disabled={qty >= selectedVariant.stock || cartLoading}
+      >
+        +
+      </button>
+    </div>
+
+    <button
+      className="mobile-cart-btn"
+      onClick={handleAddToCart}
+      disabled={cartLoading}
+    >
+      {cartLoading ? "ADDING..." : "ADD TO CART"}
+    </button>
+
+     <button 
+              className={`wishlist-btn ${isInWishlist ? 'in-wishlist' : ''}`}
+              onClick={handleWishlistToggle}
+              disabled={wishlistLoading}
+              style={{
+                marginTop: '15px',
+                width: '100%',
+                padding: '12px',
+                backgroundColor: isInWishlist ? '#ff2e93' : '#f8f9fa',
+                color: isInWishlist ? 'white' : '#333',
+                border: `1px solid ${isInWishlist ? '#ff2e93' : '#ddd'}`,
+                borderRadius: '4px',
+                cursor: wishlistLoading ? 'not-allowed' : 'pointer',
+                fontWeight: '500',
+                fontSize: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              {wishlistLoading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm" role="status"></span>
+                  PROCESSING...
+                </>
+              ) : (
+                <>
+                  <Heart 
+                    size={16} 
+                    fill={isInWishlist ? 'white' : 'none'} 
+                    color={isInWishlist ? 'white' : '#666'}
+                  />
+                  {isInWishlist ? 'ADDED TO WISHLIST' : 'ADD TO WISHLIST'}
+                </>
+              )}
+            </button>
+
+  </div>
+
+
+  {/* KEY ATTRIBUTES */}
+  {(product.attributes || selectedVariant?.attributes) && (
+    <>
+      <h6 style={{ fontWeight: 600 }}>Key Attributes</h6>
+
+      <div className="attributes">
+
+        {/* Product Attributes */}
+        {product.attributes &&
+          Object.entries(product.attributes).map(([k, v]) => (
+            <div key={`product-${k}`} className="attribute-row">
+              <span className="attribute-key">
+                {k.replace(/_/g, " ")}
+              </span>
+
+              <span className="attribute-value">
+                {v}
+              </span>
+            </div>
+          ))}
+
+        {/* Variant Attributes */}
+        {selectedVariant.attributes &&
+          Object.entries(selectedVariant.attributes).map(([k, v]) => (
+            <div key={`variant-${k}`} className="attribute-row">
+              <span className="attribute-key">
+                {k.replace(/_/g, " ")}
+              </span>
+
+              <span className="attribute-value">
+                {v}
+              </span>
+            </div>
+          ))}
+
+      </div>
+    </>
+  )}
+
+</div>
 
           {/* ========== RIGHT : BUY BOX ========== */}
           <div className="buy-box">

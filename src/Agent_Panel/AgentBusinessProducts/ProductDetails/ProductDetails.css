@@ -810,4 +810,75 @@
 }
 
 
+/* MOBILE BUY BOX */
+.mobile-buy-box{
+display:none;
+margin-top:15px;
+}
+
+.mobile-price-row{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:10px;
+}
+
+.mobile-price{
+font-size:22px;
+font-weight:700;
+color:#000;
+}
+
+.mobile-mrp{
+text-decoration:line-through;
+color:#888;
+}
+
+.mobile-off{
+color:green;
+font-weight:600;
+}
+
+.mobile-qty{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:10px;
+}
+
+.mobile-qty button{
+width:32px;
+height:32px;
+border:1px solid #ddd;
+background:#fff;
+font-size:18px;
+cursor:pointer;
+}
+
+.mobile-cart-btn{
+width:100%;
+padding:12px;
+background:#243b8f;
+border:none;
+color:#fff;
+font-weight:600;
+border-radius:4px;
+cursor:pointer;
+}
+
+
+/* MOBILE RESPONSIVE */
+@media (max-width:768px){
+
+.buy-box{
+display:none;
+}
+
+.mobile-buy-box{
+display:block;
+}
+
+}
+
+
 

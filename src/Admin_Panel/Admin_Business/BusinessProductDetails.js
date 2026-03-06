@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import WebsiteNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
+import AdminNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
 import ShopHeader from "../../Agent_Panel/AgentBusinessProducts/ProductDetails/ProductsDetailsHeader/ProductHeader";
 // import "./ProductDetails.css";
 import { baseurl } from "../../BaseURL/BaseURL";
@@ -206,7 +206,7 @@ const AdminProductDetails = () => {
   if (loading) {
     return (
       <>
-        <WebsiteNavbar />
+        <AdminNavbar />
         <div className="text-center py-5">Loading product...</div>
       </>
     );
@@ -216,7 +216,7 @@ const AdminProductDetails = () => {
   if (error) {
     return (
       <>
-        <WebsiteNavbar />
+        <AdminNavbar />
         <div className="text-center py-5 text-danger">{error}</div>
       </>
     );
@@ -224,7 +224,7 @@ const AdminProductDetails = () => {
 
   return (
     <>
-      <WebsiteNavbar />
+      <AdminNavbar />
       <ShopHeader businessId={product.business} />
 
       <div className="product-wrapper">
@@ -383,39 +383,43 @@ const AdminProductDetails = () => {
 
             <h1 className="product-title">{product.product_name}</h1>
 
-            {product.description && (
+            {/* {product.description && (
               <p className="desc">{product.description}</p>
-            )}
+            )} */}
 
-            {/* PRODUCT ATTRIBUTES */}
-            {product.attributes && Object.keys(product.attributes).length > 0 && (
-              <>
-                <h3 className="section-title">Product Attributes</h3>
-                <div className="attributes">
-                  {Object.entries(product.attributes).map(([k, v]) => (
-                    <div key={k} className="attribute-row">
-                      <span className="attribute-key">{k.replace(/_/g, " ")}</span>
-                      <span className="attribute-value">{v}</span>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
+         {/* KEY ATTRIBUTES */}
+{((product.attributes && Object.keys(product.attributes).length > 0) ||
+  (selectedVariant.attributes &&
+    Object.keys(selectedVariant.attributes).length > 0)) && (
+  <>
+    <h3 className="section-title" style={{borderBottom:"none"}}>Key Attributes</h3>
 
-            {/* VARIANT ATTRIBUTES */}
-            {selectedVariant.attributes && Object.keys(selectedVariant.attributes).length > 0 && (
-              <>
-                <h3 className="section-title">Variant Details</h3>
-                <div className="attributes">
-                  {Object.entries(selectedVariant.attributes).map(([k, v]) => (
-                    <div key={k} className="attribute-row">
-                      <span className="attribute-key">{k.replace(/_/g, " ")}</span>
-                      <span className="attribute-value">{v}</span>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
+    <div className="attributes">
+
+      {/* Product Attributes */}
+      {product.attributes &&
+        Object.entries(product.attributes).map(([k, v]) => (
+          <div key={`product-${k}`} className="attribute-row">
+            <span className="attribute-key">
+              {k.replace(/_/g, " ")}
+            </span>
+            <span className="attribute-value">{v}</span>
+          </div>
+        ))}
+
+      {/* Variant Attributes */}
+      {selectedVariant.attributes &&
+        Object.entries(selectedVariant.attributes).map(([k, v]) => (
+          <div key={`variant-${k}`} className="attribute-row">
+            <span className="attribute-key">
+              {k.replace(/_/g, " ")}
+            </span>
+            <span className="attribute-value">{v}</span>
+          </div>
+        ))}
+    </div>
+  </>
+)}
           </div>
 
           {/* ========== RIGHT : BUY BOX ========== */}
