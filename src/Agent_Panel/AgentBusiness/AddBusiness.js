@@ -5909,7 +5909,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { baseurl } from '../../BaseURL/BaseURL';
-import AdminNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
+import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 
 const AddBusinessForm = ({ user, mode = 'add' }) => {  
   const { id } = useParams();
@@ -7024,7 +7024,7 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
 
   return (
     <>
-      <AdminNavbar/>
+      <AgentNavbar/>
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
