@@ -2875,7 +2875,7 @@ import {
 } from "lucide-react";
 import { baseurl } from "../../BaseURL/BaseURL";
 import ClientNavbar from "../Client_Navbar/Client_Navbar";
-
+import './new.css';
 // Custom hook to detect clicks outside of component
 const useClickOutside = (ref, callback) => {
   useEffect(() => {
@@ -3999,7 +3999,7 @@ const ClientBusinessProductsCategories = () => {
         {/* Back Button */}
         <div className="d-flex align-items-center mb-3">
           <button
-            className="btn btn-link text-decoration-none btn-outline-secondary d-flex align-items-center gap-2"
+            className="btn btn-link text-decoration-none btn-outline-secondary d-flex align-items-center gap-2 back-button-mobile-view"
             onClick={() => navigate(-1)}
             style={{ color: '#273c75' }}
           >

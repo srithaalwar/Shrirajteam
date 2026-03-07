@@ -161,7 +161,7 @@ import {
 import './Footer.css';
 
 // Import all 3 images
-import Logo from '../Logos/Footer-logo-removebg-preview.png'; // Your main logo
+import Logo from '../Logos/logo1.png'; // Your main logo
 import GooglePlayBadge from '../Logos/1.png'; // Google Play image
 import AppStoreBadge from '../Logos/2.png'; // App Store image
 

@@ -1,0 +1,6 @@
+/* Hide on mobile screens */
+@media (max-width: 767px) {
+  .back-button-mobile-view {
+    display: none !important;
+  }
+}

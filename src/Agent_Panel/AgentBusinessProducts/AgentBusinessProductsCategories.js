@@ -5390,7 +5390,7 @@ const AgentBusinessProductsCategories = () => {
         {/* Back Button */}
         <div className="d-flex align-items-center mb-3">
           <button
-            className="btn btn-link btn-outline-secondary  text-decoration-none d-flex align-items-center gap-2"
+            className="btn btn-link btn-outline-secondary  text-decoration-none d-flex align-items-center gap-2 back-button-mobile-view  "
             onClick={() => navigate(-1)}
             style={{ color: '#273c75' }}
           >

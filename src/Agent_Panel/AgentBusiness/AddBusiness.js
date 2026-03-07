@@ -5922,6 +5922,7 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
   
   const userId = localStorage.getItem('user_id');
   const token = localStorage.getItem('token');
+const [categorySearch, setCategorySearch] = useState('');
 
   // Define tabs
   const tabs = [
@@ -6013,6 +6014,16 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
 
   // Categories state
   const [categories, setCategories] = useState([]);
+
+  const handleCategorySearch = (e) => {
+  setCategorySearch(e.target.value);
+};
+
+const filteredCategories = Array.isArray(categories) 
+  ? categories.filter(category => 
+      category.name?.toLowerCase().includes(categorySearch.toLowerCase())
+    )
+  : [];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -6502,96 +6513,142 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
     }
 
     switch (activeTab) {
-      case 'basic-details':
-        return (
-          <div className="form-section">
-            {/* <h3 className="form-section-title">Basic Details</h3> */}
-            <div className="form-section-content">
-              <div className="row">
-                <div className="col-md-4">
-                  {renderField({
-                    name: 'business_name',
-                    label: 'Business Name',
-                    required: true
-                  })}
-                </div>
-                <div className="col-md-4">
-                  {renderField({
-                    name: 'legal_name',
-                    label: 'Legal Name',
-                    required: false
-                  })}
-                </div>
-                 <div className="col-md-4">
-                  {renderField({
-                    type: 'select',
-                    name: 'business_type',
-                    label: 'Business Type',
-                    options: BUSINESS_TYPES,
-                    required: true
-                  })}
-                </div>
-              </div>
+    case 'basic-details':
+  return (
+    <div className="form-section">
+      <div className="form-section-content">
+        <div className="row">
+          <div className="col-md-4">
+            {renderField({
+              name: 'business_name',
+              label: 'Business Name',
+              required: true
+            })}
+          </div>
+          <div className="col-md-4">
+            {renderField({
+              name: 'legal_name',
+              label: 'Legal Name',
+              required: false
+            })}
+          </div>
+           <div className="col-md-4">
+            {renderField({
+              type: 'select',
+              name: 'business_type',
+              label: 'Business Type',
+              options: BUSINESS_TYPES,
+              required: true
+            })}
+          </div>
+        </div>
 
-              <div className="row">
-                <div className="col-md-6">
-                  {renderField({
-                    type: 'file',
-                    name: 'logo',
-                    label: 'Business Logo',
-                    required: !isEditing,
-                    accept: 'image/jpeg,image/jpg,image/png,image/gif'
-                  })}
-                </div>
-                <div className="col-md-6">
-                  {renderField({
-                    type: 'file',
-                    name: 'banner',
-                    label: 'Business Banner',
-                    required: false,
-                    accept: 'image/jpeg,image/jpg,image/png,image/gif'
-                  })}
-                </div>
-              </div>
+        <div className="row">
+          <div className="col-md-6">
+            {renderField({
+              type: 'file',
+              name: 'logo',
+              label: 'Business Logo',
+              required: !isEditing,
+              accept: 'image/jpeg,image/jpg,image/png,image/gif'
+            })}
+          </div>
+          <div className="col-md-6">
+            {renderField({
+              type: 'file',
+              name: 'banner',
+              label: 'Business Banner',
+              required: false,
+              accept: 'image/jpeg,image/jpg,image/png,image/gif'
+            })}
+          </div>
+        </div>
 
-              <div className="row">
-                <div className="col-12">
-                  {renderField({
-                    type: 'textarea',
-                    name: 'description',
-                    label: 'Description',
-                    rows: 4,
-                    required: false
-                  })}
-                </div>
-              </div>
+        <div className="row">
+          <div className="col-12">
+            {renderField({
+              type: 'textarea',
+              name: 'description',
+              label: 'Description',
+              rows: 4,
+              required: false
+            })}
+          </div>
+        </div>
 
-              <div className="row">
-                <div className="col-12">
-                  <label className="customer-form-label">Business Categories</label>
-                  <div className="categories-checkbox-group">
-                    {Array.isArray(categories) && categories.map(category => (
-                      <div className="form-check form-check-inline" key={category.category_id}>
-                        <input 
-                          className="form-check-input" 
-                          type="checkbox" 
-                          id={`category-${category.category_id}`}
-                          checked={formData.categories.includes(parseInt(category.category_id))}
-                          onChange={() => handleCategoryChange(category.category_id)}
-                          disabled={isViewing}
-                        />
-                        <label className="form-check-label" htmlFor={`category-${category.category_id}`}>
-                          {category.name}
-                        </label>
-                      </div>
-                    ))}
+        <div className="row">
+          <div className="col-12">
+            <div className="categories-section">
+              <label className="customer-form-label">Business Categories</label>
+              
+              {/* Search Field */}
+              {!isViewing && (
+                <div className="category-search mb-3">
+                  <div className="input-group">
+                    <span className="input-group-text bg-white">
+                      <i className="bi bi-search"></i>
+                    </span>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Search categories..."
+                      value={categorySearch}
+                      onChange={handleCategorySearch}
+                      disabled={isViewing}
+                    />
+                    {categorySearch && (
+                      <button
+                        className="btn btn-outline-secondary"
+                        type="button"
+                        onClick={() => setCategorySearch('')}
+                      >
+                        <i className="bi bi-x"></i>
+                      </button>
+                    )}
                   </div>
                 </div>
+              )}
+              
+              {/* Categories Grid */}
+              <div className="categories-checkbox-group">
+                {filteredCategories.length > 0 ? (
+                  filteredCategories.map(category => (
+                    <div className="form-check category-item" key={category.category_id}>
+                      <input 
+                        className="form-check-input" 
+                        type="checkbox" 
+                        id={`category-${category.category_id}`}
+                        checked={formData.categories.includes(parseInt(category.category_id))}
+                        onChange={() => handleCategoryChange(category.category_id)}
+                        disabled={isViewing}
+                      />
+                      <label className="form-check-label" htmlFor={`category-${category.category_id}`}>
+                        {category.name}
+                      </label>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-muted text-center py-3">
+                    {categorySearch ? 'No categories found matching your search' : 'No categories available'}
+                  </div>
+                )}
               </div>
+              
+              {/* Selected Count */}
+              {!isViewing && formData.categories.length > 0 && (
+                <div className="selected-count mt-2 text-muted">
+                  <small>
+                    <i className="bi bi-check-circle-fill text-success me-1"></i>
+                    {formData.categories.length} categor{formData.categories.length === 1 ? 'y' : 'ies'} selected
+                  </small>
+                </div>
+              )}
             </div>
           </div>
-        );
-
+        </div>
+      </div>
+    </div>
+  );
       case 'contact-info':
         return (
           <div className="form-section">

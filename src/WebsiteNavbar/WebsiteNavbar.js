@@ -966,8 +966,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import "./WebsiteNavbar.css";
-// import logoImage from "../Logos/logo1.png";
-import logoImage from "../Logos/newone.png";
+import logoImage from "../Logos/logo1.png";
+// import logoImage from "../Logos/newone.png";
 
 import { Link, useNavigate } from "react-router-dom"; // Added useNavigate
 import { FaShoppingCart } from "react-icons/fa";

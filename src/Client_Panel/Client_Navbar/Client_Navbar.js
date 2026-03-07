@@ -4500,7 +4500,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Client_Navbar.css";
-import logoImage from "../../Logos/newone.png";
+import logoImage from "../../Logos/logo1.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { baseurl } from "../../BaseURL/BaseURL";

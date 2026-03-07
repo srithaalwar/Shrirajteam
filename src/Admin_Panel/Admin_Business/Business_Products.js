@@ -7074,7 +7074,7 @@ const MyProducts = () => {
 
       <div className="webhome-container" style={{ padding: "20px" }}>
         <button
-          className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
+          className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2 back-button-mobile-view "
           onClick={() => navigate(-1)}
         >
           <ArrowLeft size={16} /> Back
