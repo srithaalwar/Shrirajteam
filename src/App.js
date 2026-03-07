@@ -333,7 +333,7 @@ import AgentOrders from "./Agent_Panel/Agent_Orders/Orders"
 
 
 import ClientOrders from "./Client_Panel/Client_Orders/Orders"
-
+import Categoslug from './ElectronicAndMobilesCarousel/CategoryBySlug'
 function App() {
   return (
     <BrowserRouter>
@@ -347,7 +347,7 @@ function App() {
         <Route path="/shop-header" element={< ShopHeader />} />
         <Route path="/a-products" element={<AdminProducts />} />
 
-
+<Route path="/category/:slug" element={<Categoslug />} />
         <Route path="/properties" element={<Properties />} />
         <Route path="/property/:propertyId" element={<PropertyDetails />} />
 
@@ -359,6 +359,9 @@ function App() {
 
         {/* <Route path="/w-subcategory/:id" element={<SubCategories />} /> */}
         <Route path="/w-subcategory/:id" element={<SubCategories />} />
+
+
+
         <Route path="/website-business-product-details/:productId" element={<WebsiteProductDetails />} />
 
         <Route path="/products/:id" element={<AdminProducts />} />

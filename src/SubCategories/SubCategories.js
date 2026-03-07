@@ -7433,10 +7433,10 @@ const ProductGrid = ({ products, viewMode, baseurl, commissionData }) => {
 };
 
 // ============= Main SubCategories Component =============
-const WebsiteSubCategories = () => {
-  const { id } = useParams();
+const WebsiteSubCategories = ({ categoryId: propCategoryId }) => {
+  const { id: paramId } = useParams();
   const navigate = useNavigate();
-
+  const id = propCategoryId || paramId;
   const [categoryTree, setCategoryTree] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);

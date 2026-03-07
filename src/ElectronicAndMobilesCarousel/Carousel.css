@@ -45,7 +45,9 @@
   transition: gap 0.2s ease;
 }
 
-.mani-as-offer-viewall-btn:hover { gap: 12px; }
+.mani-as-offer-viewall-btn:hover { 
+  gap: 12px; 
+}
 
 .mani-as-viewall-circle {
   width: 32px;
@@ -79,92 +81,46 @@
 /* ===== SINGLE CARD ITEM ===== */
 .mani-as-offer-card-item {
   width: 100%;
+  cursor: pointer;
 }
 
 /* ===== CARD — image as background ===== */
 .mani-as-offer-card {
   position: relative;
   width: 100%;
-  /* 
-    Use padding-top trick based on image ratio (500x281 ≈ 56.2%)
-    This makes the card always the exact right height for the image 
-  */
   padding-top: 56.2%;
   border-radius: 12px;
-  background-size: cover;           /* fill card fully */
-  background-position: center top;  /* show top of image first */
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
   overflow: hidden;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.12);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-  cursor: pointer;
 }
 
-.mani-as-offer-card:hover {
+.mani-as-offer-card-item:hover .mani-as-offer-card {
   transform: scale(1.02);
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
 }
 
-/* ===== OVERLAY CONTENT (positioned inside padding-top card) ===== */
-.mani-as-offer-card-content {
+/* ===== DISCOUNT BADGE - TOP RIGHT ===== */
+.mani-as-offer-discount-badge {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 12px 14px;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  padding: 4px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
 }
 
-.mani-as-offer-upto {
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  font-weight: 600;
-  color: #004D40;
-  text-transform: uppercase;
-  margin-bottom: 1px;
- 
-}
-
-.mani-as-offer-discount {
-  font-size: 22px;
-  font-weight: 800;
-  color: #004D40;
-  margin: 0;
-  line-height: 1.1;
-
-}
-
-.mani-as-offer-off {
-  font-size: 11px;
-  font-weight: 600;
-  color: #004D40;
-  margin-bottom: 10px;
-
-}
-
-/* ===== SHOP NOW BUTTON ===== */
-.mani-as-offer-shop-btn {
-  background: #ff5400;
-  border-radius: 30px;
-  padding: 6px 18px;
+.mani-as-offer-discount-text {
   font-size: 12px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
-  transition: all 0.22s ease;
-  font-family: 'Poppins', sans-serif;
-  color: #fff;
-  align-self: flex-start;
-}
-
-.mani-as-offer-shop-btn:hover {
-  background: #ff6b35;
-  color: #fff;
-  transform: translateY(-2px);
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 /* ===== LOADING / EMPTY ===== */
@@ -173,15 +129,6 @@
   padding: 40px;
   color: #888;
   font-size: 15px;
-}
-
-.mani-as-offer-empty {
-  text-align: center;
-  padding: 40px;
-  color: #888;
-  font-size: 15px;
-  border: 2px dashed #ddd;
-  border-radius: 10px;
 }
 
 .mani-as-offer-loading-dots::after {
@@ -206,14 +153,16 @@
     gap: 14px;
   }
 
-  .mani-as-offer-heading { font-size: 17px; }
+  .mani-as-offer-heading { 
+    font-size: 17px; 
+  }
 }
-
-/* ── MOBILE: horizontal scroll ── */
 
 /* Large mobile (481px – 767px) */
 @media (min-width: 481px) and (max-width: 767px) {
-  .mani-as-offer-wrapper { padding: 14px 12px 10px; }
+  .mani-as-offer-wrapper { 
+    padding: 14px 12px 10px; 
+  }
 
   .mani-as-offer-cards-grid {
     display: flex;
@@ -226,7 +175,9 @@
     scrollbar-width: none;
   }
 
-  .mani-as-offer-cards-grid::-webkit-scrollbar { display: none; }
+  .mani-as-offer-cards-grid::-webkit-scrollbar { 
+    display: none; 
+  }
 
   .mani-as-offer-card-item {
     flex: 0 0 70vw;
@@ -234,20 +185,41 @@
     scroll-snap-align: start;
   }
 
-  /* card height auto from padding-top ratio — no override needed */
-  .mani-as-offer-heading { font-size: 16px; }
+  .mani-as-offer-heading { 
+    font-size: 16px; 
+  }
+
+  .mani-as-offer-discount-badge {
+    top: 10px;
+    right: 10px;
+    padding: 3px 8px;
+  }
+
+  .mani-as-offer-discount-text {
+    font-size: 11px;
+  }
 }
 
 /* Small mobile (≤ 480px) */
 @media (max-width: 480px) {
-  .mani-as-offer-wrapper { padding: 12px 10px 8px; }
+  .mani-as-offer-wrapper { 
+    padding: 12px 10px 8px; 
+  }
 
-  .mani-as-offer-header  { margin-bottom: 10px; }
-  .mani-as-offer-heading { font-size: 15px; }
+  .mani-as-offer-header { 
+    margin-bottom: 10px; 
+  }
+  
+  .mani-as-offer-heading { 
+    font-size: 15px; 
+  }
 
-  .mani-as-viewall-circle { width: 28px; height: 28px; font-size: 14px; }
+  .mani-as-viewall-circle { 
+    width: 28px; 
+    height: 28px; 
+    font-size: 14px; 
+  }
 
-  /* horizontal scroll */
   .mani-as-offer-cards-grid {
     display: flex;
     flex-direction: row;
@@ -259,16 +231,25 @@
     scrollbar-width: none;
   }
 
-  .mani-as-offer-cards-grid::-webkit-scrollbar { display: none; }
+  .mani-as-offer-cards-grid::-webkit-scrollbar { 
+    display: none; 
+  }
 
   .mani-as-offer-card-item {
-    flex: 0 0 78vw;          /* shows peek of next card */
+    flex: 0 0 78vw;
     max-width: 260px;
     scroll-snap-align: start;
   }
 
-  .mani-as-offer-discount { font-size: 18px; }
-  .mani-as-offer-shop-btn { padding: 5px 14px; font-size: 11px; }
+  .mani-as-offer-discount-badge {
+    top: 8px;
+    right: 8px;
+    padding: 2px 8px;
+  }
+
+  .mani-as-offer-discount-text {
+    font-size: 10px;
+  }
 }
 
 /* Tiny (≤ 360px) */
@@ -277,6 +258,25 @@
     flex: 0 0 84vw;
   }
 
-  .mani-as-offer-heading { font-size: 14px; }
-  .mani-as-offer-discount { font-size: 16px; }
+  .mani-as-offer-heading { 
+    font-size: 14px; 
+  }
+
+  .mani-as-offer-discount-badge {
+    top: 6px;
+    right: 6px;
+    padding: 2px 6px;
+  }
+
+  .mani-as-offer-discount-text {
+    font-size: 9px;
+  }
+}
+
+/* Hover effect for badge on desktop */
+@media (min-width: 1025px) {
+  .mani-as-offer-card-item:hover .mani-as-offer-discount-badge {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+  }
 }
