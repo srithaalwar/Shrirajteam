@@ -1074,11 +1074,11 @@ const FootWearCarousel = ({ categorySlug = "footwear" }) => {
             categoryName || "Special Offers"
           )}
         </h2>
-        <div className="mani-as-offer-viewall-wrap">
+        {/* <div className="mani-as-offer-viewall-wrap">
           <button onClick={handleViewAll} className="mani-as-offer-viewall-btn">
             <span className="mani-as-viewall-circle">→</span>
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Cards */}

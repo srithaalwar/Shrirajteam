@@ -1100,9 +1100,9 @@ const GroceryAndKiranamCarousel = ({ categorySlug = "grocery-kirana" }) => {
                 style={{ backgroundImage: `url(${bannerImage})` }}
               >
                 {/* Discount Badge - Top Right */}
-                <div className="mani-as-offer-discount-badge">
+                {/* <div className="mani-as-offer-discount-badge">
                   <span className="mani-as-offer-discount-text">{discount}</span>
-                </div>
+                </div> */}
               </div>
             </div> 
           );
