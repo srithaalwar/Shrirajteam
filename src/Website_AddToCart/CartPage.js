@@ -628,7 +628,7 @@ const WebsiteCartPage = () => {
     <>
       <WebsiteNavbar />
       <div className="cart-container">
-        <button onClick={handleGoBack} className="back-button">
+        <button onClick={handleGoBack} className="back-button btn btn-outline-secondary">
           ← Back
         </button>
         <h1 className="cart-title">Your Shopping Cart</h1>
