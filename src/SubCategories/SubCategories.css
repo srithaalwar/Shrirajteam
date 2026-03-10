@@ -388,12 +388,21 @@
 
 .msub-desktop-header {
   background: #f78e24;
-  padding: 14px 24px;
+  height: 140px;
+  display: flex;
+  align-items: center;   /* vertically center */
+  padding: 0 24px;       /* remove top padding */
 }
+
 .msub-desktop-header-inner {
-  max-width: 1400px; margin: 0 auto;
-  display: flex; align-items: center; gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
 }
+
 .msub-desktop-title {
   font-size: 20px; font-weight: 700; color: var(--msub-white); margin: 0;
 }

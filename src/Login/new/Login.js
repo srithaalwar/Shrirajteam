@@ -1212,127 +1212,143 @@ const Login = () => {
   };
 
   const handleNormalLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSpinnerTarget("login");
+  e.preventDefault();
+  setError("");
+  setSpinnerTarget("login");
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const mobileRegex = /^[6-9]\d{9}$/;
-    const referralRegex = /^(SRP|SRT)\d+$/i;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const mobileRegex = /^[6-9]\d{9}$/;
+  const referralRegex = /^(SRP|SRT)\d+$/i;
 
-    if (!email) {
-      setEmailError("Email, Mobile Number or Referral ID is required");
-      setSpinnerTarget("");
-      return;
-    } else if (!emailRegex.test(email) && !mobileRegex.test(email) && !referralRegex.test(email)) {
-      setEmailError("Enter a valid Email, Mobile Number, or Referral ID (starting with SRP or SRT)");
-      setSpinnerTarget("");
-      return;
-    } else {
-      setEmailError("");
-    }
+  if (!email) {
+    setEmailError("Email, Mobile Number or Referral ID is required");
+    setSpinnerTarget("");
+    return;
+  } else if (
+    !emailRegex.test(email) &&
+    !mobileRegex.test(email) &&
+    !referralRegex.test(email)
+  ) {
+    setEmailError(
+      "Enter a valid Email, Mobile Number, or Referral ID (starting with SRP or SRT)"
+    );
+    setSpinnerTarget("");
+    return;
+  } else {
+    setEmailError("");
+  }
 
-    if (!password) {
-      setError("Password is required");
-      setSpinnerTarget("");
-      return;
-    }
+  if (!password) {
+    setError("Password is required");
+    setSpinnerTarget("");
+    return;
+  }
 
-    try {
-      const response = await fetch(`${baseurl}/login/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email_or_phonenumber: email,
-          password,
-        }),
-      });
+  try {
+    const response = await fetch(`${baseurl}/login/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email_or_phonenumber: email,
+        password,
+      }),
+    });
 
-      const data = await response.json();
-      
-      if (response.ok) {
-        // Store user data in localStorage
-        localStorage.setItem("user_id", data.user_id || "");
-        localStorage.setItem("email", data.email || "");
-        localStorage.setItem("username", data.username || "");
-        localStorage.setItem("phone_number", data.phone_number || "");
-        localStorage.setItem("referral_id", data.referral_id || "");
-        localStorage.setItem("referred_by", data.referred_by || "");
-        localStorage.setItem("user_name", data.first_name || "");
-        
-        // Store user roles
-        const userRoles = data.roles || [];
-        localStorage.setItem("user_roles", JSON.stringify(userRoles));
-        
-        // Store authentication token if provided
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-        }
-        if (data.access_token) {
-          localStorage.setItem("access_token", data.access_token);
-        }
-        if (data.refresh_token) {
-          localStorage.setItem("refresh_token", data.refresh_token);
-        }
+    const data = await response.json();
 
-        // Check if user has items in cart
-        const guestCart = JSON.parse(localStorage.getItem("website_guest_cart") || "[]");
-        const hasItems = guestCart.length > 0;
+    if (response.ok) {
 
-        // Sync cart with backend if there are items
-        if (hasItems) {
-          await syncCartWithBackend(data.user_id);
-        }
+      // 🔥 Store user data in localStorage
+      localStorage.setItem("user_id", data.user_id || "");
+      localStorage.setItem("email", data.email || "");
+      localStorage.setItem("username", data.username || "");
+      localStorage.setItem("phone_number", data.phone_number || "");
+      localStorage.setItem("referral_id", data.referral_id || "");
+      localStorage.setItem("referred_by", data.referred_by || "");
+      localStorage.setItem("user_name", data.first_name || "");
 
-        // Check if redirected from cart (using localStorage)
-        const redirectedFromCart = localStorage.getItem('redirect_from_cart') === 'true';
-        
-        if (redirectedFromCart && hasItems) {
-          // Clear the redirect flag
-          localStorage.removeItem('redirect_from_cart');
-          
-          // Navigate to appropriate cart page based on role using the correct endpoints
-          if (userRoles.length > 1) {
-            selectUserRole(userRoles, true);
-          } else if (userRoles.length === 1) {
-            navigateToCartPage(userRoles[0]);
-          } else {
-            // If no roles, check referral ID
-            const referralId = data.referral_id || '';
-            if (referralId.toUpperCase().startsWith('SRP')) {
-              navigate('/agent-add-to-cart');
-            } else if (referralId.toUpperCase().startsWith('SRT')) {
-              navigate('/client-add-to-cart');
-            } else {
-              navigate('/checkout');
-            }
-          }
+      const userRoles = data.roles || [];
+      localStorage.setItem("user_roles", JSON.stringify(userRoles));
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+      if (data.access_token) {
+        localStorage.setItem("access_token", data.access_token);
+      }
+      if (data.refresh_token) {
+        localStorage.setItem("refresh_token", data.refresh_token);
+      }
+
+      // ✅ 🔥 SEND LOGIN DATA TO MOBILE APP (WebView)
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            user_id: data.user_id,
+            session_token: data.session_token || data.token || "",
+            username: data.username,
+          })
+        );
+      }
+
+      // Check if user has items in cart
+      const guestCart = JSON.parse(
+        localStorage.getItem("website_guest_cart") || "[]"
+      );
+      const hasItems = guestCart.length > 0;
+
+      if (hasItems) {
+        await syncCartWithBackend(data.user_id);
+      }
+
+      const redirectedFromCart =
+        localStorage.getItem("redirect_from_cart") === "true";
+
+      if (redirectedFromCart && hasItems) {
+        localStorage.removeItem("redirect_from_cart");
+
+        if (userRoles.length > 1) {
+          selectUserRole(userRoles, true);
+        } else if (userRoles.length === 1) {
+          navigateToCartPage(userRoles[0]);
         } else {
-          // Normal login navigation
-          if (userRoles.length > 1) {
-            selectUserRole(userRoles, false);
-          } else if (userRoles.length === 1) {
-            navigateToDashboard(userRoles[0]);
+          const referralId = data.referral_id || "";
+
+          if (referralId.toUpperCase().startsWith("SRP")) {
+            navigate("/agent-add-to-cart");
+          } else if (referralId.toUpperCase().startsWith("SRT")) {
+            navigate("/client-add-to-cart");
           } else {
-            if (email.toUpperCase().startsWith("SRP")) {
-              navigate("/agent-dashboard");
-            } else if (email.toUpperCase().startsWith("SRT")) {
-              navigate("/Client-dashboard");
-            } else {
-              setError("No roles assigned. Please contact support.");
-            }
+            navigate("/checkout");
           }
         }
       } else {
-        setError(data.error || "Invalid credentials");
+
+        if (userRoles.length > 1) {
+          selectUserRole(userRoles, false);
+        } else if (userRoles.length === 1) {
+          navigateToDashboard(userRoles[0]);
+        } else {
+          if (email.toUpperCase().startsWith("SRP")) {
+            navigate("/agent-dashboard");
+          } else if (email.toUpperCase().startsWith("SRT")) {
+            navigate("/Client-dashboard");
+          } else {
+            setError("No roles assigned. Please contact support.");
+          }
+        }
+
       }
-    } catch (error) {
-      console.error("Login error:", error);
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setSpinnerTarget("");
+    } else {
+      setError(data.error || "Invalid credentials");
     }
-  };
+  } catch (error) {
+    console.error("Login error:", error);
+    setError("Something went wrong. Please try again.");
+  } finally {
+    setSpinnerTarget("");
+  }
+};
 
   const navigateToCartPage = (role) => {
     if (role === "Agent") {

@@ -4995,34 +4995,42 @@ const ClientNavbar = () => {
     }
   };
 
-  const handleLogout = () => {
-    console.log("Client logged out");
-    // Clear all stored data
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userRole");
-    localStorage.removeItem("clientData");
-    localStorage.removeItem("user_id");
-    localStorage.removeItem("email");
-    localStorage.removeItem("username");
-    localStorage.removeItem("phone_number");
-    localStorage.removeItem("referral_id");
-    localStorage.removeItem("referred_by");
-    localStorage.removeItem("user_name");
-    localStorage.removeItem("token");
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    
-    sessionStorage.clear();
-    setOpen(false);
-    setNotifications([]);
-    setUnreadCount(0);
-    setCartItems([]);
-    setCartItemCount(0);
-    setCartTotalQuantity(0);
-    setWishlistItems([]);
-    setWishlistCount(0);
-    navigate("/");
-  };
+ const handleLogout = () => {
+  console.log("Client logged out");
+
+  // Clear all stored data
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("userRole");
+  localStorage.removeItem("clientData");
+  localStorage.removeItem("user_id");
+  localStorage.removeItem("email");
+  localStorage.removeItem("username");
+  localStorage.removeItem("phone_number");
+  localStorage.removeItem("referral_id");
+  localStorage.removeItem("referred_by");
+  localStorage.removeItem("user_name");
+  localStorage.removeItem("token");
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+
+  sessionStorage.clear();
+
+  setOpen(false);
+  setNotifications([]);
+  setUnreadCount(0);
+  setCartItems([]);
+  setCartItemCount(0);
+  setCartTotalQuantity(0);
+  setWishlistItems([]);
+  setWishlistCount(0);
+
+  // ✅ 🔥 Notify React Native app about logout
+  if (window.ReactNativeWebView) {
+    window.ReactNativeWebView.postMessage("");
+  }
+
+  navigate("/");
+};
 
   // Handle wishlist click
   const handleWishlistClick = () => {
