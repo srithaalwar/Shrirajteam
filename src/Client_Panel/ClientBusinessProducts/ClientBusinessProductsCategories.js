@@ -126,7 +126,7 @@ const CheckRow = ({ label, on, onClick }) => (
 
 // ============= Sidebar Section (Desktop) =============
 const SidebarSection = ({ title, count, children }) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   return (
     <div className="cbpc-sidebar-section">
       <button className="cbpc-sidebar-section-hd" onClick={() => setOpen(v => !v)}>

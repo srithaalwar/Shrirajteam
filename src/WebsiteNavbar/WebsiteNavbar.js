@@ -971,7 +971,7 @@ import logoImage from "../Logos/logo1.png";
 
 import { Link, useNavigate } from "react-router-dom"; // Added useNavigate
 import { FaShoppingCart } from "react-icons/fa";
-
+import { baseurl } from "../BaseURL/BaseURL";
 const WebsiteNavbar = () => {
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -986,7 +986,7 @@ const WebsiteNavbar = () => {
 
   // Fetch categories
   useEffect(() => {
-    fetch("https://test.shrirajteam.com:85/categories/?level=global")
+fetch(`${baseurl}/categories/?level=global`)
       .then(res => res.json())
       .then(data => {
         const filtered = data.results

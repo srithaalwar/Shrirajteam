@@ -366,7 +366,7 @@ import { Link, useNavigate } from "react-router-dom";
 import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
 import Swal from "sweetalert2";
 import "./CartPage.css";
-
+import { baseurl } from "../BaseURL/BaseURL";
 const WebsiteCartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -548,7 +548,10 @@ const WebsiteCartPage = () => {
       });
 
       // Send cart data to API
-      const response = await fetch('https://test.shrirajteam.com:85/cart/', {
+const response = await fetch(`${baseurl}/cart/`, {
+
+
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

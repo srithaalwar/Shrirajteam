@@ -2179,6 +2179,7 @@ import { useNavigate } from "react-router-dom";
 import WebsiteNavbar from "../WebsiteNavbar/WebsiteNavbar";
 import Swal from "sweetalert2";
 import "./CheckoutPage.css";
+import { baseurl } from "../BaseURL/BaseURL";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -2226,7 +2227,7 @@ const CheckoutPage = () => {
   const [total, setTotal] = useState(0);
 
   // Base URL - replace with your actual base URL
-  const baseurl = "https://test.shrirajteam.com:85/api";
+  // const baseurl = "https://test.shrirajteam.com:85/api";
 
   // Check if user is already logged in
   useEffect(() => {
@@ -2254,7 +2255,7 @@ const CheckoutPage = () => {
         confirmButtonText: 'Back to Shopping',
         confirmButtonColor: '#f76f2f',
       }).then(() => {
-        navigate("/products");
+        navigate("/");
       });
       return;
     }

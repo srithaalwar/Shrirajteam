@@ -475,3 +475,89 @@
   .abpc-sidebar { width: 260px; }
 }
 
+/* Additional styles for cart functionality */
+.abpc-stock-info {
+  font-size: 11px;
+  color: #ff6b6b;
+  padding: 4px 8px;
+  text-align: right;
+  border-top: 1px dashed #f0f0f0;
+}
+
+/* Ensure the card foot has proper spacing */
+.abpc-card-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 9px 9px;
+}
+
+/* Make the add button work well with the layout */
+.abpc-add-btn {
+  width: 100%;
+  background: var(--abpc-orange);
+  color: var(--abpc-white);
+  border: none;
+  border-radius: 8px;
+  padding: 9px 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.abpc-add-btn:hover:not(:disabled) {
+  background: var(--abpc-orange-dark);
+  transform: scale(1.02);
+}
+
+.abpc-add-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.abpc-add-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Pink qty control */
+.abpc-qty-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--abpc-pink);
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.abpc-qty-btn {
+  background: transparent;
+  border: none;
+  color: var(--abpc-white);
+  font-size: 20px;
+  font-weight: 700;
+  padding: 7px 14px;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.15s;
+}
+
+.abpc-qty-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.18);
+}
+
+.abpc-qty-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.abpc-qty-value {
+  color: var(--abpc-white);
+  font-size: 15px;
+  font-weight: 700;
+  min-width: 24px;
+  text-align: center;
+}
+
