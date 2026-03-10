@@ -2746,7 +2746,7 @@ function ClientCart() {
 
       // Add redirect_url only for online payment
       if (paymentMethod === "online") {
-        paymentPayload.redirect_url = `${redirecturl}/client-add-to-cart`;
+        paymentPayload.redirect_url = `${redirecturl}/`;
       }
 
       console.log("Payment payload:", paymentPayload);

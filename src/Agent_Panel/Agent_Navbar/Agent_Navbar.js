@@ -6827,7 +6827,8 @@ import {
   FaUserPlus,
   FaCopy,
   FaCheck,
-  FaPlusCircle
+  FaPlusCircle,
+    FaShareAlt,
 } from "react-icons/fa";
 import ShareModal from "../../ShareModal/ShareModal";
 
@@ -7777,7 +7778,7 @@ const menuItems = [
   triggerClassName="wn-sidebar-refer-btn"
   triggerLabel={
     <>
-      <FaUserPlus style={{ marginRight: "8px" }} />
+      <FaShareAlt  style={{ marginRight: "8px" }} />
       Refer Now
     </>
   }

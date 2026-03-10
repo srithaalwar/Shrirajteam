@@ -9940,7 +9940,7 @@ function AgentCart() {
 
       // Add redirect_url only for online payment
       if (paymentMethod === "online") {
-        paymentPayload.redirect_url = `${redirecturl}/agent-add-to-cart`;
+        paymentPayload.redirect_url = `${redirecturl}/`;
       }
 
       console.log("Payment payload:", paymentPayload);
@@ -10288,7 +10288,7 @@ function AgentCart() {
               </button>
               <button 
                 className="btn btn-outline-secondary"
-                onClick={() => navigate("/agent-orders")}
+                onClick={() => navigate("/agent-my-orders")}
               >
                 View Orders
               </button>
