@@ -457,7 +457,7 @@ const WebsiteSubCategories = () => {
 
   return (
     <>
-      {/* <WebsiteNavbar /> */}
+      <WebsiteNavbar />
 
       {/* ======= MOBILE ======= */}
       {isMobile && (
