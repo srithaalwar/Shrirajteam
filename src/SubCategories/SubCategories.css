@@ -388,7 +388,7 @@
 
 .msub-desktop-header {
   background: #f78e24;
-  height: 140px;
+  height: 60px;
   display: flex;
   align-items: center;   /* vertically center */
   padding: 0 24px;       /* remove top padding */

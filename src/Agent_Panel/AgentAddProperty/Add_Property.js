@@ -1865,20 +1865,49 @@ useEffect(() => {
     }
   }, [formData.category]);
 
-  useEffect(() => {
-    if (formData.propertyType && Array.isArray(propertyTypes)) {
-      const selectedType = propertyTypes.find(type => type.property_type_id === formData.propertyType);
-      if (selectedType) {
-        const typeName = selectedType.name.toLowerCase();
-        const shouldShowResidential = typeName.includes('flat') || typeName.includes('villa') ||
-          typeName.includes('apartment') || typeName.includes('house');
-        setShowResidentialFields(shouldShowResidential);
-        const shouldShowBuiltupArea = !typeName.includes('plot');
-        setShowBuiltupArea(shouldShowBuiltupArea);
-      }
-    }
-  }, [formData.propertyType, propertyTypes]);
+  // useEffect(() => {
+  //   if (formData.propertyType && Array.isArray(propertyTypes)) {
+  //     const selectedType = propertyTypes.find(type => type.property_type_id === formData.propertyType);
+  //     if (selectedType) {
+  //       const typeName = selectedType.name.toLowerCase();
+  //       const shouldShowResidential = typeName.includes('flat') || typeName.includes('villa') ||
+  //         typeName.includes('apartment') || typeName.includes('house');
+  //       setShowResidentialFields(shouldShowResidential);
+  //       const shouldShowBuiltupArea = !typeName.includes('plot');
+  //       setShowBuiltupArea(shouldShowBuiltupArea);
+  //     }
+  //   }
+  // }, [formData.propertyType, propertyTypes]);
 
+
+  useEffect(() => {
+  if (!formData.propertyType || !Array.isArray(propertyTypes)) return;
+
+  const selectedType = propertyTypes.find(
+    (type) => Number(type.property_type_id) === Number(formData.propertyType)
+  );
+
+  if (!selectedType) return;
+
+  const typeName = selectedType.name.toLowerCase();
+
+  const residentialTypes = [
+    "flat",
+    "house",
+    "apartment",
+    "villa"
+  ];
+
+  const isResidential = residentialTypes.some(type =>
+    typeName.includes(type)
+  );
+
+  setShowResidentialFields(isResidential);
+
+  // hide builtup area for plots
+  setShowBuiltupArea(!typeName.includes("plot"));
+
+}, [formData.propertyType, propertyTypes]);
   useEffect(() => {
     if (formData.lookingTo === 'sell') {
       const price = parseFloat(formData.price) || 0;
@@ -2910,49 +2939,46 @@ useEffect(() => {
       //     </div>
       //   );
 
-      case 'property-profile':
+  case 'property-profile':
   return (
     <div className="form-section">
       <div className="form-section-content">
         {showResidentialFields && (
           <>
             <div className="row">
-              <div className="col-md-6">
-                {renderField({
-                  type: 'number',
-                  name: 'numberOfFloors',
-                  label: 'Number of Floors',
-                  min: 1,
-                  required: false
-                })}
-              </div>
-              <div className="col-md-6">
+              <div className="col-md-3">
                 {renderField({
                   type: 'number',
                   name: 'numberOfBedrooms',
-                  label: 'Number of Bedrooms',
+                  label: 'Bedrooms',
                   min: 0,
                   required: false
                 })}
               </div>
-            </div>
-
-            <div className="row">
-              <div className="col-md-6">
-                {renderField({
-                  type: 'number',
-                  name: 'numberOfBalconies',
-                  label: 'Number of Balconies',
-                  min: 0,
-                  required: false
-                })}
-              </div>
-              <div className="col-md-6">
+              <div className="col-md-3">
                 {renderField({
                   type: 'number',
                   name: 'numberOfBathrooms',
-                  label: 'Number of Bathrooms',
+                  label: 'Bathrooms',
                   min: 0,
+                  required: false
+                })}
+              </div>
+              <div className="col-md-3">
+                {renderField({
+                  type: 'number',
+                  name: 'numberOfBalconies',
+                  label: 'Balconies',
+                  min: 0,
+                  required: false
+                })}
+              </div>
+              <div className="col-md-3">
+                {renderField({
+                  type: 'number',
+                  name: 'numberOfFloors',
+                  label: 'Total Floors',
+                  min: 1,
                   required: false
                 })}
               </div>
@@ -2963,7 +2989,7 @@ useEffect(() => {
                 {renderField({
                   type: 'number',
                   name: 'floor',
-                  label: 'Floor',
+                  label: 'Floor Number',
                   min: 0,
                   required: false
                 })}
@@ -2986,7 +3012,7 @@ useEffect(() => {
           </>
         )}
 
-        {/* Area and Price Information - ONLY these are mandatory */}
+        {/* Area and Price Information */}
         <div className="row">
           <div className="col-md-4">
             {renderField({
@@ -3001,7 +3027,7 @@ useEffect(() => {
                 { value: 'hectares', label: 'Hectares' },
                 { value: 'cents', label: 'Cents' }
               ],
-              required: true  // MANDATORY
+              required: true
             })}
           </div>
           <div className="col-md-4">
@@ -3011,7 +3037,7 @@ useEffect(() => {
               label: 'Area',
               step: '0.01',
               min: 0,
-              required: true  // MANDATORY
+              required: true
             })}
           </div>
           <div className="col-md-4">
@@ -3021,12 +3047,12 @@ useEffect(() => {
               label: 'Price Per Unit',
               step: '0.01',
               min: 0,
-              required: true  // MANDATORY
+              required: true
             })}
           </div>
         </div>
 
-        {/* Length and Breadth in same row - BOTH OPTIONAL */}
+        {/* Length and Breadth - OPTIONAL */}
         <div className="row">
           <div className="col-md-6">
             {renderField({
@@ -3035,7 +3061,7 @@ useEffect(() => {
               label: 'Length (ft)',
               step: '0.01',
               min: 0,
-              required: false  // OPTIONAL
+              required: false
             })}
           </div>
           <div className="col-md-6">
@@ -3045,7 +3071,7 @@ useEffect(() => {
               label: 'Breadth (ft)',
               step: '0.01',
               min: 0,
-              required: false  // OPTIONAL
+              required: false
             })}
           </div>
         </div>
@@ -3060,7 +3086,7 @@ useEffect(() => {
                 label: 'Built-up Area',
                 step: '0.01',
                 min: 0,
-                required: false  // OPTIONAL
+                required: false
               })}
             </div>
             <div className="col-md-6">
@@ -3078,7 +3104,7 @@ useEffect(() => {
                   { value: 'south-east', label: 'South-East' },
                   { value: 'south-west', label: 'South-West' }
                 ],
-                required: false  // OPTIONAL
+                required: false
               })}
             </div>
           </div>
@@ -3101,7 +3127,7 @@ useEffect(() => {
                   { value: 'south-east', label: 'South-East' },
                   { value: 'south-west', label: 'South-West' }
                 ],
-                required: false  // OPTIONAL
+                required: false
               })}
             </div>
             <div className="col-md-6">
@@ -3111,13 +3137,13 @@ useEffect(() => {
                 label: 'Number of Open Sides',
                 min: 0,
                 max: 4,
-                required: false  // OPTIONAL
+                required: false
               })}
             </div>
           </div>
         )}
 
-        {/* Open Sides and Number of Roads - BOTH OPTIONAL */}
+        {/* Open Sides and Number of Roads - OPTIONAL */}
         {showBuiltupArea && (
           <div className="row">
             <div className="col-md-6">
@@ -3127,7 +3153,7 @@ useEffect(() => {
                 label: 'Number of Open Sides',
                 min: 0,
                 max: 4,
-                required: false  // OPTIONAL
+                required: false
               })}
             </div>
             <div className="col-md-6">
@@ -3137,7 +3163,7 @@ useEffect(() => {
                 label: 'Number of Roads',
                 min: 0,
                 max: 2,
-                required: false  // OPTIONAL
+                required: false
               })}
             </div>
           </div>
@@ -3153,7 +3179,7 @@ useEffect(() => {
                 label: 'Road 1 Width (ft)',
                 step: '0.01',
                 min: 0,
-                required: false  // OPTIONAL
+                required: false
               })}
             </div>
             {formData.numberOfRoads >= 2 && (
@@ -3164,31 +3190,43 @@ useEffect(() => {
                   label: 'Road 2 Width (ft)',
                   step: '0.01',
                   min: 0,
-                  required: false  // OPTIONAL
+                  required: false
                 })}
               </div>
             )}
           </div>
         )}
 
-        {/* Text Areas - ALL OPTIONAL */}
+        {/* Ownership Type */}
         <div className="row">
-          {/* <div className="col-6">
+          <div className="col-md-6">
             {renderField({
-              type: 'textarea',
-              name: 'propertyUniqueness',
-              label: 'Property Uniqueness',
-              rows: 3,
-              required: false  // OPTIONAL
+              type: 'select',
+              name: 'ownershipType',
+              label: 'Ownership Type',
+              options: [
+                { value: 'Freehold', label: 'Freehold' },
+                { value: 'Leasehold', label: 'Leasehold' },
+                { value: 'Cooperative', label: 'Cooperative' },
+                { value: 'Condominium', label: 'Condominium' }
+              ],
+              required: false
             })}
-          </div> */}
+          </div>
+          <div className="col-md-6">
+            {/* Empty for alignment */}
+          </div>
+        </div>
+
+        {/* Text Areas - OPTIONAL */}
+        <div className="row">
           <div className="col-6">
             {renderField({
               type: 'textarea',
               name: 'otherFeatures',
               label: 'Other Features',
               rows: 3,
-              required: false  // OPTIONAL
+              required: false
             })}
           </div>
           <div className="col-6">
@@ -3197,22 +3235,10 @@ useEffect(() => {
               name: 'locationAdvantages',
               label: 'Location Advantages',
               rows: 3,
-              required: false  // OPTIONAL
+              required: false
             })}
           </div>
         </div>
-
-        {/* <div className="row">
-          <div className="col-12">
-            {renderField({
-              type: 'textarea',
-              name: 'otherFeatures',
-              label: 'Other Features',
-              rows: 3,
-              required: false  // OPTIONAL
-            })}
-          </div>
-        </div> */}
 
         {renderAmenitiesField()}
       </div>
@@ -3365,163 +3391,320 @@ useEffect(() => {
     }
   };
 
+  // const handleSubmit = async (e) => {
+  //   if (e) e.preventDefault();
+
+  //   if (isViewing) {
+  //     navigate('/a-dashboard');
+  //     return;
+  //   }
+
+  //   let isValid = true;
+  //   tabs.forEach(tab => {
+  //     setActiveTab(tab.id);
+  //     if (!validateCurrentTab()) {
+  //       isValid = false;
+  //     }
+  //   });
+
+  //   if (!isValid) {
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Incomplete Form',
+  //       text: 'Please complete all required fields in all steps',
+  //       confirmButtonColor: '#d33',
+  //     });
+  //     return;
+  //   }
+
+  //   setIsSubmitting(true);
+
+  //   try {
+  //     const payload = new FormData();
+
+  //     const formFields = {
+  //       looking_to: formData.lookingTo,
+  //       property_title: formData.propertyTitle,
+  //       description: formData.description || '',
+  //       address: formData.address,
+  //       city: formData.city,
+  //       state: formData.state,
+  //       country: formData.country,
+  //       pin_code: formData.pinCode,
+  //       latitude: formData.latitude || '12.120000',
+  //       longitude: formData.longitude || '12.120000',
+  //       area: formData.plotArea,
+  //       area_unit: formData.areaUnit,
+  //       price_per_unit: formData.pricePerUnit || '0.00',
+  //       builtup_area: formData.builtupArea || '0.00',
+  //       length_ft: formData.length || '0.00',
+  //       breadth_ft: formData.breadth || '0.00',
+  //       number_of_floors: formData.numberOfFloors,
+  //       number_of_open_sides: formData.openSides,
+  //       number_of_roads: formData.numberOfRoads,
+  //       road_width_1_ft: formData.roadWidth1 || '0.00',
+  //       road_width_2_ft: formData.roadWidth2 || '0.00',
+  //       facing: formData.facing,
+  //       ownership_type: formData.ownershipType,
+  //       property_value: formData.price,
+  //       property_uniqueness: formData.propertyUniqueness || '',
+  //       location_advantages: formData.locationAdvantages || '',
+  //       other_features: formData.otherFeatures || '',
+  //       owner_name: formData.ownerName,
+  //       owner_contact: formData.ownerContact,
+  //       owner_email: formData.ownerEmail || '',
+  //       is_featured: formData.isFeatured,
+  //       category: formData.category,
+  //       property_type: formData.propertyType,
+  //       user_id: userId,
+  //       referral_id: referralId,
+  //       number_of_bedrooms: formData.numberOfBedrooms || 0,
+  //       number_of_balconies: formData.numberOfBalconies || 0,
+  //       number_of_bathrooms: formData.numberOfBathrooms || 0,
+  //       floor: formData.floor || 0,
+  //       furnishing_status: formData.furnishing_status || '',
+  //       agent_commission: formData.agent_commission || '0.00',
+  //       total_property_value: formData.total_property_value,
+  //       username: username,
+  //       preferred_tenants: formData.preferred_tenants || '',
+  //       rent_amount: formData.rent_amount || '0.00',
+  //       deposit_amount: formData.deposit_amount || '0.00',
+  //       available_from: formData.available_from || '',
+  //     };
+
+  //     Object.entries(formFields).forEach(([key, value]) => {
+  //       if (value !== null && value !== undefined && value !== '') {
+  //         payload.append(key, value);
+  //       }
+  //     });
+
+  //     // Append amenities as separate entries
+  //     if (formData.amenities && formData.amenities.length > 0) {
+  //       formData.amenities.forEach((id) => {
+  //         payload.append("amenities", id.toString());
+  //       });
+  //     }
+
+  //     // Append files
+  //     formData.images.forEach((img) => {
+  //       if (img.file) {
+  //         payload.append('images', img.file, img.name);
+  //       }
+  //     });
+
+  //     formData.videos.forEach((vid) => {
+  //       if (vid.file) {
+  //         payload.append('videos', vid.file, vid.name);
+  //       }
+  //     });
+
+  //     formData.files.forEach((doc) => {
+  //       if (doc.file) {
+  //         payload.append('files', doc.file, doc.name);
+  //       }
+  //     });
+
+  //     if (formData.agreement_video?.file) {
+  //       payload.append('agreement_video', formData.agreement_video.file, formData.agreement_video.name);
+  //     }
+
+  //     if (formData.agreement_file?.file) {
+  //       payload.append('agreement_file', formData.agreement_file.file, formData.agreement_file.name);
+  //     }
+
+  //     const endpoint = isEditing ? `${baseurl}/property/${id}/` : `${baseurl}/property/`;
+  //     const method = isEditing ? 'put' : 'post';
+
+  //     const response = await axios[method](endpoint, payload, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data'
+  //       }
+  //     });
+
+  //     Swal.fire({
+  //       icon: 'success',
+  //       title: 'Success',
+  //       text: isEditing ? 'Property Updated Successfully!' : 'Property Added Successfully!',
+  //       confirmButtonColor: '#3085d6',
+  //     });
+  //     navigate("/agent-my-properties");
+
+  //   } catch (error) {
+  //     console.error('Detailed submission error:', error);
+      
+  //     let errorMessage = isEditing ? 'Error updating property' : 'Error adding property';
+  //     if (error.response?.data) {
+  //       errorMessage += `: ${JSON.stringify(error.response.data)}`;
+  //     }
+      
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Submission Failed',
+  //       text: errorMessage,
+  //       confirmButtonColor: '#d33',
+  //     });
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
+
   const handleSubmit = async (e) => {
-    if (e) e.preventDefault();
+  if (e) e.preventDefault();
 
-    if (isViewing) {
-      navigate('/a-dashboard');
-      return;
+  if (isViewing) {
+    navigate('/a-dashboard');
+    return;
+  }
+
+  let isValid = true;
+  tabs.forEach(tab => {
+    setActiveTab(tab.id);
+    if (!validateCurrentTab()) {
+      isValid = false;
     }
+  });
 
-    let isValid = true;
-    tabs.forEach(tab => {
-      setActiveTab(tab.id);
-      if (!validateCurrentTab()) {
-        isValid = false;
+  if (!isValid) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Incomplete Form',
+      text: 'Please complete all required fields in all steps',
+      confirmButtonColor: '#d33',
+    });
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  try {
+    const payload = new FormData();
+
+    const formFields = {
+      looking_to: formData.lookingTo,
+      property_title: formData.propertyTitle,
+      description: formData.description || '',
+      address: formData.address,
+      city: formData.city,
+      state: formData.state,
+      country: formData.country,
+      pin_code: formData.pinCode,
+      latitude: formData.latitude || '12.120000',
+      longitude: formData.longitude || '12.120000',
+      area: formData.plotArea,
+      area_unit: formData.areaUnit,
+      price_per_unit: formData.pricePerUnit || '0.00',
+      builtup_area: formData.builtupArea || '0.00',
+      length_ft: formData.length || '0.00',
+      breadth_ft: formData.breadth || '0.00',
+      number_of_floors: formData.numberOfFloors || 0,
+      number_of_open_sides: formData.openSides || 0,
+      number_of_roads: formData.numberOfRoads || 0,
+      road_width_1_ft: formData.roadWidth1 || '0.00',
+      road_width_2_ft: formData.roadWidth2 || '0.00',
+      facing: formData.facing,
+      ownership_type: formData.ownershipType,
+      property_value: formData.price,
+      property_uniqueness: formData.propertyUniqueness || '',
+      location_advantages: formData.locationAdvantages || '',
+      other_features: formData.otherFeatures || '',
+      owner_name: formData.ownerName,
+      owner_contact: formData.ownerContact,
+      owner_email: formData.ownerEmail || '',
+      is_featured: formData.isFeatured,
+      category: formData.category,
+      property_type: formData.propertyType,
+      user_id: userId,
+      referral_id: referralId,
+      number_of_bedrooms: formData.numberOfBedrooms || 0,
+      number_of_balconies: formData.numberOfBalconies || 0,
+      // number_of_bathrooms: formData.numberOfBathrooms || 0, // COMMENTED OUT
+      floor: formData.floor || 0,
+      furnishing_status: formData.furnishing_status || '',
+      agent_commission: formData.agent_commission || '0.00',
+      total_property_value: formData.total_property_value,
+      username: username,
+      preferred_tenants: formData.preferred_tenants || '',
+      rent_amount: formData.rent_amount || '0.00',
+      deposit_amount: formData.deposit_amount || '0.00',
+      available_from: formData.available_from || '',
+    };
+
+    Object.entries(formFields).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== '') {
+        payload.append(key, value);
       }
     });
 
-    if (!isValid) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Incomplete Form',
-        text: 'Please complete all required fields in all steps',
-        confirmButtonColor: '#d33',
+    // Append amenities as separate entries
+    if (formData.amenities && formData.amenities.length > 0) {
+      formData.amenities.forEach((id) => {
+        payload.append("amenities", id.toString());
       });
-      return;
     }
 
-    setIsSubmitting(true);
-
-    try {
-      const payload = new FormData();
-
-      const formFields = {
-        looking_to: formData.lookingTo,
-        property_title: formData.propertyTitle,
-        description: formData.description || '',
-        address: formData.address,
-        city: formData.city,
-        state: formData.state,
-        country: formData.country,
-        pin_code: formData.pinCode,
-        latitude: formData.latitude || '12.120000',
-        longitude: formData.longitude || '12.120000',
-        area: formData.plotArea,
-        area_unit: formData.areaUnit,
-        price_per_unit: formData.pricePerUnit || '0.00',
-        builtup_area: formData.builtupArea || '0.00',
-        length_ft: formData.length || '0.00',
-        breadth_ft: formData.breadth || '0.00',
-        number_of_floors: formData.numberOfFloors,
-        number_of_open_sides: formData.openSides,
-        number_of_roads: formData.numberOfRoads,
-        road_width_1_ft: formData.roadWidth1 || '0.00',
-        road_width_2_ft: formData.roadWidth2 || '0.00',
-        facing: formData.facing,
-        ownership_type: formData.ownershipType,
-        property_value: formData.price,
-        property_uniqueness: formData.propertyUniqueness || '',
-        location_advantages: formData.locationAdvantages || '',
-        other_features: formData.otherFeatures || '',
-        owner_name: formData.ownerName,
-        owner_contact: formData.ownerContact,
-        owner_email: formData.ownerEmail || '',
-        is_featured: formData.isFeatured,
-        category: formData.category,
-        property_type: formData.propertyType,
-        user_id: userId,
-        referral_id: referralId,
-        number_of_bedrooms: formData.numberOfBedrooms || 0,
-        number_of_balconies: formData.numberOfBalconies || 0,
-        number_of_bathrooms: formData.numberOfBathrooms || 0,
-        floor: formData.floor || 0,
-        furnishing_status: formData.furnishing_status || '',
-        agent_commission: formData.agent_commission || '0.00',
-        total_property_value: formData.total_property_value,
-        username: username,
-        preferred_tenants: formData.preferred_tenants || '',
-        rent_amount: formData.rent_amount || '0.00',
-        deposit_amount: formData.deposit_amount || '0.00',
-        available_from: formData.available_from || '',
-      };
-
-      Object.entries(formFields).forEach(([key, value]) => {
-        if (value !== null && value !== undefined && value !== '') {
-          payload.append(key, value);
-        }
-      });
-
-      // Append amenities as separate entries
-      if (formData.amenities && formData.amenities.length > 0) {
-        formData.amenities.forEach((id) => {
-          payload.append("amenities", id.toString());
-        });
+    // Append files
+    formData.images.forEach((img) => {
+      if (img.file) {
+        payload.append('images', img.file, img.name);
       }
+    });
 
-      // Append files
-      formData.images.forEach((img) => {
-        if (img.file) {
-          payload.append('images', img.file, img.name);
-        }
-      });
-
-      formData.videos.forEach((vid) => {
-        if (vid.file) {
-          payload.append('videos', vid.file, vid.name);
-        }
-      });
-
-      formData.files.forEach((doc) => {
-        if (doc.file) {
-          payload.append('files', doc.file, doc.name);
-        }
-      });
-
-      if (formData.agreement_video?.file) {
-        payload.append('agreement_video', formData.agreement_video.file, formData.agreement_video.name);
+    formData.videos.forEach((vid) => {
+      if (vid.file) {
+        payload.append('videos', vid.file, vid.name);
       }
+    });
 
-      if (formData.agreement_file?.file) {
-        payload.append('agreement_file', formData.agreement_file.file, formData.agreement_file.name);
+    formData.files.forEach((doc) => {
+      if (doc.file) {
+        payload.append('files', doc.file, doc.name);
       }
+    });
 
-      const endpoint = isEditing ? `${baseurl}/property/${id}/` : `${baseurl}/property/`;
-      const method = isEditing ? 'put' : 'post';
-
-      const response = await axios[method](endpoint, payload, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: isEditing ? 'Property Updated Successfully!' : 'Property Added Successfully!',
-        confirmButtonColor: '#3085d6',
-      });
-      navigate("/agent-my-properties");
-
-    } catch (error) {
-      console.error('Detailed submission error:', error);
-      
-      let errorMessage = isEditing ? 'Error updating property' : 'Error adding property';
-      if (error.response?.data) {
-        errorMessage += `: ${JSON.stringify(error.response.data)}`;
-      }
-      
-      Swal.fire({
-        icon: 'error',
-        title: 'Submission Failed',
-        text: errorMessage,
-        confirmButtonColor: '#d33',
-      });
-    } finally {
-      setIsSubmitting(false);
+    if (formData.agreement_video?.file) {
+      payload.append('agreement_video', formData.agreement_video.file, formData.agreement_video.name);
     }
-  };
 
+    if (formData.agreement_file?.file) {
+      payload.append('agreement_file', formData.agreement_file.file, formData.agreement_file.name);
+    }
+
+    const endpoint = isEditing ? `${baseurl}/property/${id}/` : `${baseurl}/property/`;
+    const method = isEditing ? 'put' : 'post';
+
+    const response = await axios[method](endpoint, payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: isEditing ? 'Property Updated Successfully!' : 'Property Added Successfully!',
+      confirmButtonColor: '#3085d6',
+    });
+    navigate("/agent-my-properties");
+
+  } catch (error) {
+    console.error('Detailed submission error:', error);
+    
+    let errorMessage = isEditing ? 'Error updating property' : 'Error adding property';
+    if (error.response?.data) {
+      errorMessage += `: ${JSON.stringify(error.response.data)}`;
+    }
+    
+    Swal.fire({
+      icon: 'error',
+      title: 'Submission Failed',
+      text: errorMessage,
+      confirmButtonColor: '#d33',
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
   const getTitle = () => {
     switch (mode) {
       case 'add': return "Add Property";
