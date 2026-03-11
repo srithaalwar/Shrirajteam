@@ -1280,16 +1280,15 @@ const Login = () => {
         localStorage.setItem("refresh_token", data.refresh_token);
       }
 
-      // ✅ 🔥 SEND LOGIN DATA TO MOBILE APP (WebView)
-      if (window.ReactNativeWebView) {
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({
-            user_id: data.user_id,
-            session_token: data.session_token || data.token || "",
-            username: data.username,
-          })
-        );
-      }
+     if (window.ReactNativeWebView) {
+  window.ReactNativeWebView.postMessage(
+    JSON.stringify({
+      user_id: data.user_id,
+      email: data.email,
+      username: data.user_name
+    })
+  );
+}
 
       // Check if user has items in cart
       const guestCart = JSON.parse(
