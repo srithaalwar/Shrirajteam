@@ -4313,6 +4313,7 @@ const AdminNavbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user_roles"); // Clear user roles if stored
     
     sessionStorage.clear();
     setOpen(false);

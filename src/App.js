@@ -334,13 +334,22 @@ import AgentOrders from "./Agent_Panel/Agent_Orders/Orders"
 
 import ClientOrders from "./Client_Panel/Client_Orders/Orders"
 import Categoslug from './ElectronicAndMobilesCarousel/CategoryBySlug'
+import AutoRedirect from "./components/AutoRedirect";
+import GuestRoute from "./components/GuestRoute";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/admin" element={<AdminLayout />} />
 
-        <Route path="/" element={<WebHome />} />
+      <Route
+  path="/"
+  element={
+    <AutoRedirect>
+      <WebHome />
+    </AutoRedirect>
+  }
+/>
         <Route path="/webhome" element={<WebHome />} />
         <Route path="/category/:id" element={<SubCategories />} />
         <Route path="/products" element={<Products />} />
@@ -365,7 +374,14 @@ function App() {
         <Route path="/website-business-product-details/:productId" element={<WebsiteProductDetails />} />
 
         <Route path="/products/:id" element={<AdminProducts />} />
-        <Route path="/login" element={<Login />} />
+       <Route
+  path="/login"
+  element={
+    <GuestRoute>
+      <Login />
+    </GuestRoute>
+  }
+/>
         <Route path="/loginwithemail" element={<LoginWithEmail />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/register" element={<Register />} />
