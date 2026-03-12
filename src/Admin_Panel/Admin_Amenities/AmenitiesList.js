@@ -214,6 +214,9 @@ function AmenitiesList() {
                       </span>
                     </td>
                     <td className="actions">
+
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+
                       <button 
                         className="edit-btn"
                         onClick={() => navigate(`/a-edit-amenity/${item.amenity_id}`)}
@@ -228,6 +231,7 @@ function AmenitiesList() {
                       >
                         🗑️
                       </button>
+                       </div>
                     </td>
                   </tr>
                 ))

@@ -4393,6 +4393,10 @@ const AdminNavbar = () => {
     },
     
     // Other standalone items
+        { path: "/a-service-categories", name: "Service Categories", icon: <FaCalendarAlt /> },
+                { path: "/admin-service-providers", name: "Service Providers", icon: <FaCalendarAlt /> },
+
+
     { path: "/admin-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/a-leads", name: "Leads", icon: <FaChartLine /> },
     { path: "/admin-reports", name: "Reports", icon: <FaFileAlt /> },

@@ -2563,6 +2563,8 @@ import { baseurl } from '../../BaseURL/BaseURL';
 import Swal from "sweetalert2";
 
 function TransactionSummary() {
+
+
     const [transactions, setTransactions] = useState([]);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -3248,7 +3250,7 @@ function TransactionSummary() {
                                     borderRadius: '4px',
                                     fontSize: '14px',
                                     width: '100%',
-                                    minWidth: '400px'
+                                    // minWidth: '400px'
                                 }}
                             />
                             <span style={{
@@ -3477,8 +3479,8 @@ function TransactionSummary() {
                 <div className="summary-cards">
                     <div className="summary-card">
                         <div className="card-icon" style={{ background: '#e0f2fe' }}>
-                            <span style={{ color: '#0284c7' }}>💰</span>
-                        </div>
+            <span style={{ color: '#0284c7' }}>₹</span>
+        </div>
                         <div className="card-content">
                             <div className="card-value">{totalItems}</div>
                             <div className="card-label">Total Transactions</div>
@@ -3660,6 +3662,8 @@ function TransactionSummary() {
                             )}
                         </tbody>
                     </table>
+                                    </div>
+
                     
                     {/* Pagination */}
                     {totalItems > 0 && !loading && (
@@ -3792,7 +3796,6 @@ function TransactionSummary() {
                             </div>
                         </div>
                     )}
-                </div>
             </div>
 
             {/* Add some CSS for the new elements */}

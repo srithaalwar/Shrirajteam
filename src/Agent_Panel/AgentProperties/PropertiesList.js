@@ -8717,7 +8717,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
             VIEW DETAILS
           </button>
           
-          {!hasActiveSubscription && (
+          {/* {!hasActiveSubscription && (
             <button 
               onClick={handleBuyNow}
               className="btn w-100 fw-semibold py-2"
@@ -8729,7 +8729,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
             >
               BUY NOW
             </button>
-          )}
+          )} */}
         </div>
       </div>
     </div>
@@ -9619,7 +9619,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                         VIEW DETAILS
                       </button>
                       
-                      {!hasActiveSubscription && (
+                      {/* {!hasActiveSubscription && (
                         <button 
                           onClick={handleBuyNow}
                           className="btn w-100 fw-semibold py-2"
@@ -9631,7 +9631,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                         >
                           BUY NOW
                         </button>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 </div>

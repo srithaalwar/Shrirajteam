@@ -1,0 +1,264 @@
+/* Add_ServiceProvider.css */
+
+/* Main container */
+.admin-add-property-main-div {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.property-form-container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  margin: 20px 0;
+}
+
+/* Form header */
+.admin-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e8e8e8;
+  background: #fafafa;
+  border-radius: 8px 8px 0 0;
+}
+
+.admin-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.form-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #262626;
+}
+
+textarea.customer-form-input {
+  min-height: 80px !important;
+  resize: vertical;
+}
+
+.form-section {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 11px;
+  margin-bottom: 25px;
+  border: 1px solid #e9ecef;
+}
+
+/* Tabs styling */
+.admin-form-tabs {
+  padding: 0 100px;
+  border-bottom: none;
+  display: flex;
+  gap: 4px;
+}
+
+.admin-form-tabs .nav-item {
+  margin-bottom: 0;
+}
+
+.admin-form-tabs .nav-link {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px 4px 0 0;
+  background: transparent;
+  color: #595959;
+  font-weight: 500;
+  font-size: 0.95rem;
+  border: 1px solid transparent;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  margin-bottom: -1px;
+}
+
+.admin-form-tabs .nav-link:hover {
+  color: #273c75;
+  background: #f0f7ff;
+  border-color: #e8e8e8 #e8e8e8 #273c75 #e8e8e8;
+}
+
+.admin-form-tabs .nav-link.active {
+  color: #273c75;
+  background: #fff;
+  border-color: #e8e8e8 #e8e8e8 #273c75 #e8e8e8;
+  border-bottom-width: 3px;
+  font-weight: 600;
+}
+
+/* Form body */
+.admin-form-body {
+  padding: 24px;
+  margin-top: -32px;
+}
+
+/* Form navigation */
+.admin-form-navigation {
+  margin-top: 20px;
+}
+
+/* Form controls */
+.admin-customer-form-label {
+  font-weight: 500;
+  color: #434343;
+  margin-bottom: 8px;
+  display: block;
+  font-size: 16px;
+}
+
+.customer-form-input {
+  border: 2px solid #198754 !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+  background-color: #f8f9fa !important;
+  font-size: 13px !important;
+  height: 45px !important;
+}
+
+.customer-form-input:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  outline: none;
+}
+
+textarea.customer-form-input {
+  min-height: 70px;
+  resize: vertical;
+}
+
+/* View mode styles */
+.view-mode {
+  background-color: #fafafa !important;
+  border: 1px solid #e8e8e8 !important;
+  color: #8c8c8c !important;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+.view-mode-label {
+  font-weight: 600;
+  color: #434343;
+  margin-bottom: 8px;
+  display: block;
+  font-size: 0.95rem;
+}
+
+.view-mode-value {
+  padding: 8px 12px;
+  background-color: #fafafa;
+  border-radius: 4px;
+  border: 1px solid #f0f0f0;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  word-break: break-word;
+  font-size: 0.95rem;
+  color: #595959;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  text-align: center;
+  padding: 3rem;
+  color: #8c8c8c;
+  font-size: 1rem;
+}
+
+/* Form validation */
+.invalid-feedback {
+  color: #ff4d4f;
+  font-size: 0.875rem;
+  margin-top: 4px;
+  display: block;
+}
+
+.is-invalid {
+  border-color: #ff4d4f !important;
+}
+
+.is-invalid:focus {
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2) !important;
+}
+
+/* Button styling */
+.btn {
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary {
+  background-color: #fafafa;
+  border-color: #d9d9d9;
+  color: #595959;
+}
+
+.btn-secondary:hover {
+  background-color: #f0f0f0;
+  border-color: #d9d9d9;
+  color: #262626;
+}
+
+/* Alert styling */
+.alert-info {
+  background-color: #e6f7ff;
+  border: 1px solid #91d5ff;
+  color: #0050b3;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+/* Animation for tab switching */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-section {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .admin-add-property-main-div {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  .admin-form-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .admin-form-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0 16px;
+  }
+
+  .admin-form-tabs .nav-link {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .admin-form-body {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 767px) {
+  .admin-add-property-main-div {
+    width: 100% !important;
+    margin: 0 auto;
+  }
+}

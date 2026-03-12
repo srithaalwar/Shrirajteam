@@ -1082,7 +1082,7 @@ function Subscription() {
                   border: '1px solid #ddd',
                   borderRadius: '4px',
                   fontSize: '14px',
-                  width: '400px'
+                  // width: '400px'
                 }}
               />
               {/* <span style={{
@@ -1187,6 +1187,10 @@ function Subscription() {
                         </span>
                       </td>
                       <td className="actions">
+
+                      <div style={{ display: 'flex', gap: '8px' }}>
+
+
                         <button
                           className="edit-btn"
                           onClick={() =>
@@ -1225,6 +1229,8 @@ function Subscription() {
                         >
                           🗑️
                         </button>
+                                              </div>
+
                       </td>
                     </tr>
                   );

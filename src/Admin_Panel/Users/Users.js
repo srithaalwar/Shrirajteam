@@ -1258,7 +1258,7 @@ const UserList = () => {
                   borderRadius: '4px',
                   fontSize: '14px',
                   width: '100%',
-                  minWidth: '400px'
+                  // minWidth: '400px'
                 }}
                 title="Search across all fields: name, email, phone, referral ID, status, role, date, user ID"
               />
@@ -1594,7 +1594,8 @@ const UserList = () => {
               )}
             </tbody>
           </table>
-          
+                  </div>
+
           {/* Pagination Controls */}
           {filteredStaff.length > 0 && totalPages > 1 && (
             <div className="pagination-container" style={{
@@ -1725,7 +1726,6 @@ const UserList = () => {
               </div>
             </div>
           )}
-        </div>
       </div>
     </>
   );

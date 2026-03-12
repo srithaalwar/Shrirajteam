@@ -7537,6 +7537,8 @@ const menuItems = [
   
   // Other standalone items
   { path: "/agent-my-business", name: "My Business", icon: <FaUserTie /> },
+    { path: "/a-service-providers", name: "Service Providers", icon: <FaUserTie /> },
+
   { path: "/p-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
   { path: "/agent-offers", name: "Offers", icon: <FaTag /> },
   { path: "/agent-profile", name: "Profile", icon: <FaUserCircle /> },

@@ -145,6 +145,10 @@ function CommissionLevels() {
                     <td>{formatPercent(level.percentage)}</td>
                     <td>{level.date || "N/A"}</td>
                     <td className="actions">
+
+
+                                                                  <div style={{ display: 'flex', gap: '8px' }}>
+
                       <button
                         className="edit-btn"
                         onClick={() =>
@@ -161,6 +165,8 @@ function CommissionLevels() {
                       >
                         🗑️
                       </button>
+</div>
+
                     </td>
                   </tr>
                 ))

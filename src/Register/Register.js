@@ -349,11 +349,9 @@ const Register = () => {
       return;
     }
 
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
+   if (formData.email.trim() && !emailRegex.test(formData.email)) {
+  newErrors.email = "Please enter a valid email address";
+}
 
     if (!formData.password.trim()) {
       Swal.fire({
@@ -431,7 +429,7 @@ const Register = () => {
     const submitData = {
       first_name: formData.first_name.trim(),
       last_name: formData.last_name.trim(),
-      email: formData.email.trim(),
+      // email: formData.email.trim(),
       password: formData.password,
       phone_number: formData.phone_number.trim(),
       role_ids: formData.role_ids,
@@ -671,7 +669,7 @@ const Register = () => {
       <Form.Control
         type="email"
         name="email"
-        placeholder="Email *"
+placeholder="Email (Optional)"
         className="register-input"
         value={formData.email}
         onChange={handleChange}

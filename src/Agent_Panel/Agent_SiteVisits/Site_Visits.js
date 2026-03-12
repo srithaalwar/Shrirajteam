@@ -665,6 +665,9 @@ const Sitevisit = () => {
                       )}
                     </td>
                     <td className="actions">
+
+                   <div style={{ display: 'flex', gap: '8px' }}>
+
                       <button 
                         className="edit-btn action-btn"
                         onClick={() => handleEdit(visit)}
@@ -679,6 +682,7 @@ const Sitevisit = () => {
                       >
                         🗑️
                       </button>
+                         </div>
                     </td>
                   </tr>
                 ))
