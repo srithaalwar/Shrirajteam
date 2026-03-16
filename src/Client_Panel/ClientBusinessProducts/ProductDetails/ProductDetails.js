@@ -4968,6 +4968,7 @@ import "./ProductDetails.css";
 import { baseurl } from "../../../BaseURL/BaseURL";
 import { Heart, Share2, ShoppingCart } from "lucide-react";
 import Swal from "sweetalert2";
+import ShareModal from "../../../ShareModal/ShareModal";
 
 const ClientProductDetails = () => {
   /* ================= ROUTE PARAMS ================= */
@@ -5522,16 +5523,14 @@ const ClientProductDetails = () => {
                     fill={isInWishlist ? '#ff2e93' : 'none'} 
                   />
                 </div>
+                 <ShareModal
+                                 productId={productId}
+                                 variantId={variantId}
+                                 selectedVariant={selectedVariant}
+                                 productTitle={product?.name || "Check out this product!"}
+                               />
                 
-                {/* Share Icon */}
-                <div 
-                  className="icon-circle" 
-                  onClick={handleShareClick}
-                  style={{ cursor: "pointer" }}
-                  title="Share product URL"
-                >
-                  <Share2 size={20} />
-                </div>
+               
               </div>
             </div>
           </div>

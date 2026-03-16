@@ -7413,6 +7413,7 @@ const AgentNavbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user_roles");
     
     sessionStorage.clear();
     setOpen(false);

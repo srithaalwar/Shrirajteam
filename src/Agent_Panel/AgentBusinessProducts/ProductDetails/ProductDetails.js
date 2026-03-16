@@ -4652,6 +4652,7 @@ import "./ProductDetails.css";
 import { baseurl } from "../../../BaseURL/BaseURL";
 import { Heart, Share2, ShoppingCart } from "lucide-react";
 import Swal from "sweetalert2";
+import ShareModal from "../../../ShareModal/ShareModal";
 
 const AgentProductDetails = () => {
   /* ================= ROUTE PARAMS ================= */
@@ -4685,7 +4686,7 @@ const AgentProductDetails = () => {
   // Get user from localStorage
   const userId = localStorage.getItem("user_id");
 
-  /* ================= SHARE FUNCTIONALITY ================= */
+  /* ================= SHARE FUNCTIONALITY ================= */ 
   const handleShareClick = () => {
     const currentUrl = `${window.location.origin}/agent-business-product-details/${productId}/?variant=${variantId || selectedVariant?.id}`;
     
@@ -5207,15 +5208,14 @@ const AgentProductDetails = () => {
                   />
                 </div>
                 
-                {/* Share Icon */}
-                <div 
-                  className="icon-circle" 
-                  onClick={handleShareClick}
-                  style={{ cursor: "pointer" }}
-                  title="Share product URL"
-                >
-                  <Share2 size={20} />
-                </div>
+                               
+               <ShareModal
+  productId={productId}
+  variantId={variantId}
+  selectedVariant={selectedVariant}
+  productTitle={product?.name || "Check out this product!"}
+/>
+
               </div>
             </div>
           </div>
