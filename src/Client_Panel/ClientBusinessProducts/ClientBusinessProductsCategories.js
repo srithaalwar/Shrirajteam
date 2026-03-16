@@ -1255,7 +1255,7 @@ const ClientBusinessProductsCategories = () => {
         <div className="cbpc-mobile">
           <div className="cbpc-mobile-topbar">
             <button className="cbpc-back" onClick={() => navigate(-1)}><ArrowLeft size={20} /></button>
-            <h1 className="cbpc-mobile-title">Categories</h1>
+            <h1 className="cbpc-mobile-title">categories</h1>
             <div style={{ width: 36 }} />
           </div>
 

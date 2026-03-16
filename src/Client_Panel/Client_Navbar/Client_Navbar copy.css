@@ -1,0 +1,1118 @@
+/* ===================== SIDEBAR LINK STYLES ===================== */
+
+.wn-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  color: #222;
+  text-decoration: none;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.wn-sidebar-link:hover {
+  color: #273c75;
+  background-color: #f8f9fa;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin: 0 -8px;
+  border-radius: 6px;
+}
+
+.wn-sidebar-icon {
+  font-size: 18px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.wn-sidebar-text {
+  flex: 1;
+}
+
+/* Sidebar list item adjustments */
+.wn-sidebar .wn-menu-list li {
+  padding: 0;
+  margin: 4px 0;
+}
+
+.wn-sidebar .wn-menu-list li a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Sidebar authentication section */
+.wn-sidebar-auth {
+  padding: 16px 0;
+  margin-top: 16px;
+}
+
+.wn-full-width {
+  width: 100%;
+}
+
+.wn-login-prompt {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #666;
+}
+
+.wn-login-prompt .wn-login-link {
+  color: #273c75;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.wn-login-prompt .wn-login-link:hover {
+  text-decoration: underline;
+}
+
+/* Active link style */
+.wn-sidebar-link.active {
+  color: #273c75;
+  font-weight: 600;
+  background-color: #f0f7ff;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin: 0 -8px;
+  border-radius: 6px;
+  border-left: 3px solid #273c75;
+}
+
+/* Separator for sidebar sections */
+.wn-sidebar-separator {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+  margin: 20px 0;
+}
+
+/* Category items in sidebar */
+.wn-sidebar .wn-category-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.wn-sidebar .wn-category-count {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+/* Responsive adjustments for sidebar links */
+@media (max-width: 768px) {
+  .wn-sidebar-link {
+    padding: 10px 0;
+    font-size: 14px;
+  }
+  
+  .wn-sidebar-icon {
+    font-size: 16px;
+  }
+  
+  .wn-sidebar-auth {
+    padding: 12px 0;
+  }
+}
+
+/* Hover effect for external links */
+.wn-sidebar-link[target="_blank"]::after {
+  content: "↗";
+  font-size: 12px;
+  margin-left: 4px;
+  opacity: 0.7;
+}
+
+/* Ensure proper spacing in sidebar sections */
+.wn-section-title {
+  margin-bottom: 12px;
+  margin-top: 16px;
+}
+
+.wn-section-title:first-child {
+  margin-top: 0;
+}
+
+/* Animation for link hover */
+.wn-sidebar-link {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* For touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .wn-sidebar-link:active {
+    background-color: #f0f7ff;
+    transform: scale(0.98);
+  }
+}
+
+/* ===================== SIMPLIFIED SIDEBAR STYLES ===================== */
+
+.wn-nav-section {
+  padding: 0 8px;
+}
+
+.wn-section-title {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-left: 8px;
+}
+
+/* Sidebar link styles */
+.wn-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  color: #333;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 4px;
+}
+
+.wn-sidebar-link:hover {
+  background-color: #f5f7fa;
+  color: #273c75;
+  transform: translateX(4px);
+}
+
+.wn-sidebar-icon {
+  font-size: 18px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.wn-sidebar-text {
+  flex: 1;
+  font-size: 14.5px;
+}
+
+/* Sidebar list item adjustments */
+.wn-sidebar .wn-menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.wn-sidebar .wn-menu-list li {
+  padding: 0;
+  margin: 0;
+}
+
+/* Logout Section */
+.wn-logout-section {
+  padding: 20px 8px;
+  margin-top: auto;
+  border-top: 1px solid #f0f0f0;
+}
+
+.wn-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 12px;
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wn-logout-btn:hover {
+  background-color: #fee2e2;
+  transform: translateX(4px);
+}
+
+.wn-logout-icon {
+  font-size: 18px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.wn-logout-text {
+  flex: 1;
+  font-size: 14.5px;
+  text-align: left;
+}
+
+/* Active link style */
+.wn-sidebar-link.active {
+  background-color: #273c75;
+  color: white;
+  font-weight: 600;
+}
+
+.wn-sidebar-link.active:hover {
+  background-color: #1e2e5a;
+  color: white;
+}
+
+/* Divider style */
+.wn-divider {
+  height: 1px;
+  background-color: #f0f0f0;
+  margin: 20px 0;
+  width: 100%;
+}
+
+/* Sidebar adjustments */
+.wn-sidebar {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+}
+
+/* For touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .wn-sidebar-link:active,
+  .wn-logout-btn:active {
+    background-color: #f0f7ff;
+    transform: scale(0.98);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wn-sidebar-link {
+    padding: 12px 10px;
+    font-size: 14.5px;
+  }
+  
+  .wn-logout-btn {
+    padding: 12px 10px;
+  }
+  
+  .wn-section-title {
+    font-size: 12px;
+  }
+}
+
+/* Animation for sidebar opening */
+.wn-sidebar {
+  transition: left 0.3s ease;
+}
+
+/* Remove old sidebar styles that might conflict */
+.wn-sidebar .wn-language-row,
+.wn-sidebar .wn-apps-section,
+.wn-sidebar .wn-seller-section,
+.wn-sidebar .wn-auth-section {
+  display: none;
+}
+
+
+
+
+
+
+/* Sidebar Header Styles */
+.wn-sidebar-header {
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 1px solid #dee2e6;
+}
+
+.wn-logo-with-user {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.wn-logo-img-sidebar {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.wn-user-info-compact {
+  flex: 1;
+  min-width: 0; /* Prevents overflow */
+}
+
+.wn-user-name-compact {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wn-user-details-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wn-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #4a5568;
+}
+
+.wn-detail-icon {
+  color: #718096;
+  flex-shrink: 0;
+}
+
+.wn-detail-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wn-close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #718096;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: 10px;
+  transition: color 0.2s;
+}
+
+.wn-close-btn:hover {
+  color: #1a202c;
+}
+
+/* Section Title */
+.wn-section-title {
+  padding: 15px 20px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: #f7fafc;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wn-logo-img-sidebar {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .wn-user-name-compact {
+    font-size: 14px;
+  }
+  
+  .wn-detail-item {
+    font-size: 10px;
+  }
+}
+
+
+
+
+/* ===================== ICON STYLES ===================== */
+.wn-notification, .wn-wishlist, .wn-cart {
+  padding: 8px 16px;
+  background: #f3f4f6;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.wn-notification:hover, .wn-wishlist:hover, .wn-cart:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+/* Notification badge (optional) */
+.wn-notification-badge, .wn-wishlist-count, .wn-cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+/* Different colors for different badges */
+.wn-wishlist-count {
+  background: #3b82f6; /* Blue for wishlist */
+}
+
+.wn-cart-count {
+  background: #10b981; /* Green for cart */
+}
+
+/* Nav right layout with all icons */
+.wn-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .wn-nav-right {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  
+  .wn-notification, .wn-wishlist, .wn-cart {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  /* Hide text on mobile for icons, show only icons */
+  .wn-notification span:not(.wn-notification-badge),
+  .wn-wishlist span:not(.wn-wishlist-count) {
+    display: none;
+  }
+  
+  .wn-cart span:not(.wn-cart-count) {
+    font-size: 12px;
+  }
+  
+  /* Adjust icon sizes for mobile */
+  .wn-notification svg,
+  .wn-wishlist svg,
+  .wn-cart svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wn-nav-right {
+    gap: 6px;
+    margin-left: 0px;
+  }
+}
+
+
+
+/* ===================== NOTIFICATION STYLES ===================== */
+.wn-notification-container {
+  position: relative;
+  display: inline-block;
+}
+
+.wn-notification {
+  position: relative;
+  padding: 8px 16px;
+  background: #f3f4f6;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wn-notification:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.wn-notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  padding: 0 3px;
+}
+
+/* Notifications Dropdown */
+.wn-notifications-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  width: 320px;
+  max-height: 400px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.wn-notifications-header {
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.wn-notifications-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.wn-mark-all-read {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.wn-mark-all-read:hover {
+  background: #eff6ff;
+}
+
+.wn-notifications-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.wn-notification-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  transition: background 0.2s;
+}
+
+.wn-notification-item:hover {
+  background: #f9fafb;
+}
+
+.wn-notification-item.wn-unread {
+  background: #f0f9ff;
+}
+
+.wn-notification-content {
+  flex: 1;
+  margin-right: 8px;
+}
+
+.wn-notification-message {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.wn-notification-time {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.wn-unread-dot {
+  width: 8px;
+  height: 8px;
+  background: #3b82f6;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.wn-no-notifications {
+  padding: 32px 16px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Scrollbar styling for notifications list */
+.wn-notifications-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.wn-notifications-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.wn-notifications-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.wn-notifications-list::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wn-notifications-dropdown {
+    width: 280px;
+    right: -50px;
+  }
+  
+  .wn-notification {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .wn-notification svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .wn-notification-badge {
+    font-size: 9px;
+    min-width: 14px;
+    height: 14px;
+  }
+}
+
+/* ===================== EXISTING STYLES (keep these) ===================== */
+.wn-wishlist, .wn-cart {
+  padding: 8px 16px;
+  background: #f3f4f6;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.wn-wishlist:hover, .wn-cart:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.wn-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .wn-nav-right {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  
+  .wn-notification, .wn-wishlist, .wn-cart {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  /* Hide text on mobile for icons, show only icons */
+  .wn-notification span:not(.wn-notification-badge),
+  .wn-wishlist span:not(.wn-wishlist-count) {
+    display: none;
+  }
+  
+  .wn-cart span:not(.wn-cart-count) {
+    font-size: 12px;
+  }
+  
+  /* Adjust icon sizes for mobile */
+  .wn-notification svg,
+  .wn-wishlist svg,
+  .wn-cart svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wn-nav-right {
+    gap: 6px;
+    margin-left: 0px;
+  }
+}
+
+
+
+
+
+
+
+
+
+/* Client_Navbar.css - Add these styles */
+
+/* Notification Container */
+.wn-notification-container {
+  position: relative;
+  margin-right: 20px;
+}
+
+.wn-notification-icon {
+  position: relative;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.wn-notification-icon:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.wn-notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #ff4757;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Notifications Dropdown */
+.wn-notifications-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 350px;
+  max-height: 500px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.wn-notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  background-color: #f8f9fa;
+}
+
+.wn-notifications-header h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+}
+
+.wn-mark-all-read {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.wn-mark-all-read:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+/* Notifications List */
+.wn-notifications-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.wn-notification-item {
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.wn-notification-item:hover {
+  background-color: #f8f9fa;
+}
+
+.wn-notification-item.wn-unread {
+  background-color: #f0f8ff;
+}
+
+.wn-notification-item.wn-unread:hover {
+  background-color: #e8f4ff;
+}
+
+.wn-notification-content {
+  flex: 1;
+}
+
+.wn-notification-message-content {
+  margin-bottom: 8px;
+  display:inline;
+}
+
+.wn-notification-title {
+  display: block;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.wn-notification-subtitle {
+  font-size: 12px;
+  color: #666;
+  background-color: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.wn-notification-time {
+  color: #888;
+  font-size: 12px;
+}
+
+.wn-unread-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #007bff;
+  border-radius: 50%;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+.wn-no-notifications {
+  padding: 30px 20px;
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}
+
+/* Notifications Footer */
+.wn-notifications-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.wn-view-all-notifications {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.wn-view-all-notifications:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  text-decoration: none;
+}
+
+/* Cart styles */
+.wn-cart {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  color: #333;
+  font-size: 14px;
+}
+
+.wn-cart:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.wn-cart-text {
+  margin-left: 6px;
+  font-weight: 500;
+}
+
+/* Wishlist styles */
+.wn-wishlist {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+  margin-right: 15px;
+  color: #333;
+}
+
+.wn-wishlist:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Scrollbar styling for notifications */
+.wn-notifications-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.wn-notifications-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.wn-notifications-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.wn-notifications-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .wn-notifications-dropdown {
+    width: 300px;
+    right: -50px;
+  }
+  
+  .wn-cart-text {
+    display: none;
+  }
+  
+  .wn-cart {
+    padding: 8px;
+  }
+
+
+  .wn-notification-container {
+  position: relative;
+  margin-right: 0px;
+}
+}
+
+
+/* Add these styles to your existing Client_Navbar.css */
+
+.wn-wishlist {
+  position: relative;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.wn-wishlist:hover {
+  background-color: rgba(255, 46, 147, 0.1);
+}
+
+.wn-wishlist-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ff2e93;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wn-cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wn-notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wn-notification-icon,
+.wn-wishlist,
+.wn-cart {
+  position: relative;
+  margin: 0 8px;
+}

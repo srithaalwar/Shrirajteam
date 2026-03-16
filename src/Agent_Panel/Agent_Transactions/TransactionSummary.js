@@ -2057,7 +2057,7 @@ function AgentTransactionSummary() {
                 <div className="staff-table-wrapper" style={{
                     background: 'white',
                     borderRadius: '8px',
-                    overflow: 'hidden',
+                    // overflow: 'hidden',
                     boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                 }}>
                     <table className="staff-table" style={{
@@ -2196,7 +2196,8 @@ function AgentTransactionSummary() {
                             )}
                         </tbody>
                     </table>
-                    
+                                    </div>
+
                     {/* Pagination */}
                     {totalItems > 0 && (
                         <div className="pagination-container" style={{
@@ -2328,7 +2329,6 @@ function AgentTransactionSummary() {
                             </div>
                         </div>
                     )}
-                </div>
             </div>
         </>
     );

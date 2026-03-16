@@ -529,14 +529,11 @@
     margin-left: -10px;
 }
 
-
-
 .wn-nav-left {
     display: flex;
     align-items: center;
     gap: 0px ;
 }
-
 
 }
 
@@ -901,4 +898,121 @@
   .wn-status-value {
     font-size: 12px;
   }
+}
+
+/* ===================== PROFILE IMAGE STYLES ===================== */
+
+/* Profile Image Container */
+.wn-profile-image-container {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  margin-left: 8px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+  flex-shrink: 0;
+}
+
+.wn-profile-image-container:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-color: #273c75;
+}
+
+/* Profile Image */
+.wn-profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Profile Image Fallback */
+.wn-profile-image-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4a5568;
+  background: linear-gradient(135deg, #e0e0e0, #d0d0d0);
+  border-radius: 50%;
+}
+
+.wn-profile-image-fallback svg {
+  width: 70%;
+  height: 70%;
+  color: #718096;
+}
+
+/* Update nav-right to accommodate the profile image */
+.wn-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+}
+
+/* Adjust spacing for existing icons */
+.wn-notification-container,
+.wn-wishlist,
+.wn-cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+.wn-notification-container:hover,
+.wn-wishlist:hover,
+.wn-cart:hover {
+  color: #273c75;
+}
+
+/* Responsive adjustments for profile image */
+@media (max-width: 768px) {
+  .wn-profile-image-container {
+    width: 32px;
+    height: 32px;
+    margin-left: 6px;
+  }
+}
+
+@media (max-width: 576px) {
+  .wn-profile-image-container {
+    width: 28px;
+    height: 28px;
+    margin-left: 4px;
+  }
+  
+  .wn-nav-right {
+    gap: 8px;
+  }
+}
+
+/* Animation for profile image */
+@keyframes profilePulse {
+  0% {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 4px 8px rgba(39, 60, 117, 0.3);
+  }
+  100% {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.wn-profile-image-container:active {
+  animation: profilePulse 0.3s ease;
 }

@@ -115,73 +115,129 @@ const Register = () => {
   };
 
   // Check sponsor ID for Agent role
-  const checkSponsorId = async (sponsorId, isAutoCheck = false) => {
-    if (!sponsorId || sponsorId.trim() === "") {
-      setSponsorInfo(null);
-      setSponsorError('');
-      if (!isAutoCheck) setCheckingSponsor(false);
-      return;
-    }
+  // const checkSponsorId = async (sponsorId, isAutoCheck = false) => {
+  //   if (!sponsorId || sponsorId.trim() === "") {
+  //     setSponsorInfo(null);
+  //     setSponsorError('');
+  //     if (!isAutoCheck) setCheckingSponsor(false);
+  //     return;
+  //   }
 
-    if (!isAutoCheck) setCheckingSponsor(true);
-    setAutoChecking(isAutoCheck);
-    setSponsorError('');
+  //   if (!isAutoCheck) setCheckingSponsor(true);
+  //   setAutoChecking(isAutoCheck);
+  //   setSponsorError('');
+  //   setSponsorInfo(null);
+
+  //   try {
+  //     const response = await fetch(`${baseurl}/users/search/?referral_id=${encodeURIComponent(sponsorId.trim())}`);
+      
+  //     if (!response.ok) {
+  //       throw new Error('Failed to fetch sponsor info');
+  //     }
+      
+  //     const data = await response.json();
+  //     console.log("Sponsor check API response:", data);
+
+  //     let foundAgent = null;
+      
+  //     if (Array.isArray(data) && data.length > 0) {
+  //       foundAgent = data[0];
+  //     } else if (data && data.results && Array.isArray(data.results) && data.results.length > 0) {
+  //       foundAgent = data.results[0];
+  //     }
+      
+  //     if (foundAgent) {
+  //       setSponsorInfo(foundAgent);
+  //       setSponsorError('');
+        
+  //       if (isAutoCheck) {
+  //         Swal.fire({
+  //           icon: "success",
+  //           title: "Valid Sponsor Found!",
+  //           text: `Sponsor: ${foundAgent.first_name} ${foundAgent.last_name}`,
+  //           confirmButtonColor: "#3085d6",
+  //           timer: 3000
+  //         });
+  //       }
+  //     } else {
+  //       setSponsorInfo(null);
+  //       setSponsorError('Invalid Sponsor ID');
+        
+  //       if (!isAutoCheck) {
+  //         Swal.fire({
+  //           icon: "error",
+  //           title: "Invalid Sponsor ID",
+  //           text: "Please enter a valid Sponsor ID or leave it blank",
+  //           confirmButtonColor: "#d33",
+  //           timer: 3000
+  //         });
+  //       }
+  //     }
+  //   } catch (error) {
+  //     setSponsorInfo(null);
+  //     setSponsorError('Error checking sponsor ID');
+  //     console.error('Error checking sponsor ID:', error);
+  //   } finally {
+  //     if (!isAutoCheck) setCheckingSponsor(false);
+  //     setAutoChecking(false);
+  //   }
+  // };
+// Check sponsor ID for Agent role
+const checkSponsorId = async (sponsorId, isAutoCheck = false) => {
+  if (!sponsorId || sponsorId.trim() === "") {
     setSponsorInfo(null);
+    setSponsorError('');
+    if (!isAutoCheck) setCheckingSponsor(false);
+    return;
+  }
 
-    try {
-      const response = await fetch(`${baseurl}/users/search/?referral_id=${encodeURIComponent(sponsorId.trim())}`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch sponsor info');
-      }
-      
-      const data = await response.json();
-      console.log("Sponsor check API response:", data);
+  if (!isAutoCheck) setCheckingSponsor(true);
+  setAutoChecking(isAutoCheck);
+  setSponsorError('');
+  setSponsorInfo(null);
 
-      let foundAgent = null;
-      
-      if (Array.isArray(data) && data.length > 0) {
-        foundAgent = data[0];
-      } else if (data && data.results && Array.isArray(data.results) && data.results.length > 0) {
-        foundAgent = data.results[0];
-      }
-      
-      if (foundAgent) {
-        setSponsorInfo(foundAgent);
-        setSponsorError('');
-        
-        if (isAutoCheck) {
-          Swal.fire({
-            icon: "success",
-            title: "Valid Sponsor Found!",
-            text: `Sponsor: ${foundAgent.first_name} ${foundAgent.last_name}`,
-            confirmButtonColor: "#3085d6",
-            timer: 3000
-          });
-        }
-      } else {
-        setSponsorInfo(null);
-        setSponsorError('Invalid Sponsor ID');
-        
-        if (!isAutoCheck) {
-          Swal.fire({
-            icon: "error",
-            title: "Invalid Sponsor ID",
-            text: "Please enter a valid Sponsor ID or leave it blank",
-            confirmButtonColor: "#d33",
-            timer: 3000
-          });
-        }
-      }
-    } catch (error) {
-      setSponsorInfo(null);
-      setSponsorError('Error checking sponsor ID');
-      console.error('Error checking sponsor ID:', error);
-    } finally {
-      if (!isAutoCheck) setCheckingSponsor(false);
-      setAutoChecking(false);
+  try {
+    const response = await fetch(`${baseurl}/users/search/?referral_id=${encodeURIComponent(sponsorId.trim())}`);
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch sponsor info');
     }
-  };
+    
+    const data = await response.json();
+    console.log("Sponsor check API response:", data);
+
+    let foundAgent = null;
+    
+    if (Array.isArray(data) && data.length > 0) {
+      foundAgent = data[0];
+    } else if (data && data.results && Array.isArray(data.results) && data.results.length > 0) {
+      foundAgent = data.results[0];
+    }
+    
+    if (foundAgent) {
+      setSponsorInfo(foundAgent);
+      setSponsorError('');
+      
+      if (isAutoCheck) {
+        // Optional: You can keep a small success indicator if needed
+        console.log(`Valid Sponsor Found: ${foundAgent.first_name} ${foundAgent.last_name}`);
+      }
+    } else {
+      setSponsorInfo(null);
+      setSponsorError('Invalid Sponsor ID');
+      // Removed the Swal.fire popup for invalid sponsor
+    }
+  } catch (error) {
+    setSponsorInfo(null);
+    setSponsorError('Error checking sponsor ID');
+    console.error('Error checking sponsor ID:', error);
+  } finally {
+    if (!isAutoCheck) setCheckingSponsor(false);
+    setAutoChecking(false);
+  }
+};
+
+
 
   // Handle role change
   const handleRoleChange = (roleId) => {
@@ -213,20 +269,55 @@ const Register = () => {
   };
 
   // Handle sponsor ID change with debounce
-  useEffect(() => {
-    if (showSponsorField && formData.referred_by) {
+  // useEffect(() => {
+  //   if (showSponsorField && formData.referred_by) {
+  //     const timer = setTimeout(() => {
+  //       checkSponsorId(formData.referred_by);
+  //     }, 800);
+
+  //     return () => clearTimeout(timer);
+  //   } else if (showSponsorField && !formData.referred_by) {
+  //     setSponsorInfo(null);
+  //     setSponsorError('');
+  //     setCheckingSponsor(false);
+  //     setAutoChecking(false);
+  //   }
+  // }, [formData.referred_by, showSponsorField]);
+
+  // Handle sponsor ID change with increased debounce time
+// Handle sponsor ID change with increased debounce time
+useEffect(() => {
+  if (showSponsorField && formData.referred_by) {
+    // Clear any existing error while typing
+    setSponsorError('');
+    setSponsorInfo(null);
+    setCheckingSponsor(false);
+    setAutoChecking(false);
+    
+    // Only check if there's actual text and length is reasonable
+    if (formData.referred_by.trim().length > 0) {
       const timer = setTimeout(() => {
-        checkSponsorId(formData.referred_by);
-      }, 800);
+        // Only validate if it's a reasonable length (at least 3 chars)
+        if (formData.referred_by.trim().length >= 3) {
+          checkSponsorId(formData.referred_by);
+        } else if (formData.referred_by.trim().length > 0) {
+          // Show message for too short IDs but don't call API
+          setSponsorError('Sponsor ID must be at least 3 characters');
+          setSponsorInfo(null);
+          setCheckingSponsor(false);
+          setAutoChecking(false);
+        }
+      }, 2000); // 2 seconds delay
 
       return () => clearTimeout(timer);
-    } else if (showSponsorField && !formData.referred_by) {
-      setSponsorInfo(null);
-      setSponsorError('');
-      setCheckingSponsor(false);
-      setAutoChecking(false);
     }
-  }, [formData.referred_by, showSponsorField]);
+  } else if (showSponsorField && !formData.referred_by) {
+    setSponsorInfo(null);
+    setSponsorError('');
+    setCheckingSponsor(false);
+    setAutoChecking(false);
+  }
+}, [formData.referred_by, showSponsorField]);
 
   // Fetch roles and helpline number on component mount
   useEffect(() => {
@@ -349,11 +440,9 @@ const Register = () => {
       return;
     }
 
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
+   if (formData.email.trim() && !emailRegex.test(formData.email)) {
+  newErrors.email = "Please enter a valid email address";
+}
 
     if (!formData.password.trim()) {
       Swal.fire({
@@ -431,7 +520,7 @@ const Register = () => {
     const submitData = {
       first_name: formData.first_name.trim(),
       last_name: formData.last_name.trim(),
-      email: formData.email.trim(),
+      // email: formData.email.trim(),
       password: formData.password,
       phone_number: formData.phone_number.trim(),
       role_ids: formData.role_ids,
@@ -671,7 +760,7 @@ const Register = () => {
       <Form.Control
         type="email"
         name="email"
-        placeholder="Email *"
+placeholder="Email (Optional)"
         className="register-input"
         value={formData.email}
         onChange={handleChange}

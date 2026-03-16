@@ -1,0 +1,910 @@
+/* ===================== SIDEBAR LINK STYLES ===================== */
+
+.wn-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  color: #222;
+  text-decoration: none;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.wn-sidebar-link:hover {
+  color: #273c75;
+  background-color: #f8f9fa;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin: 0 -8px;
+  border-radius: 6px;
+}
+
+.wn-sidebar-icon {
+  font-size: 18px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.wn-sidebar-text {
+  flex: 1;
+}
+
+/* Sidebar list item adjustments */
+.wn-sidebar .wn-menu-list li {
+  padding: 0;
+  margin: 4px 0;
+}
+
+.wn-sidebar .wn-menu-list li a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Sidebar authentication section */
+.wn-sidebar-auth {
+  padding: 16px 0;
+  margin-top: 16px;
+}
+
+.wn-full-width {
+  width: 100%;
+}
+
+.wn-login-prompt {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #666;
+}
+
+.wn-login-prompt .wn-login-link {
+  color: #273c75;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.wn-login-prompt .wn-login-link:hover {
+  text-decoration: underline;
+}
+
+/* Active link style */
+.wn-sidebar-link.active {
+  color: #273c75;
+  font-weight: 600;
+  background-color: #f0f7ff;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin: 0 -8px;
+  border-radius: 6px;
+  border-left: 3px solid #273c75;
+}
+
+/* Separator for sidebar sections */
+.wn-sidebar-separator {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+  margin: 20px 0;
+}
+
+/* Category items in sidebar */
+.wn-sidebar .wn-category-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.wn-sidebar .wn-category-count {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+/* Responsive adjustments for sidebar links */
+@media (max-width: 768px) {
+  .wn-sidebar-link {
+    padding: 10px 0;
+    font-size: 14px;
+  }
+  
+  .wn-sidebar-icon {
+    font-size: 16px;
+  }
+  
+  .wn-sidebar-auth {
+    padding: 12px 0;
+  }
+}
+
+/* Hover effect for external links */
+.wn-sidebar-link[target="_blank"]::after {
+  content: "↗";
+  font-size: 12px;
+  margin-left: 4px;
+  opacity: 0.7;
+}
+
+/* Ensure proper spacing in sidebar sections */
+.wn-section-title {
+  margin-bottom: 12px;
+  margin-top: 16px;
+}
+
+.wn-section-title:first-child {
+  margin-top: 0;
+}
+
+/* Animation for link hover */
+.wn-sidebar-link {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* For touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .wn-sidebar-link:active {
+    background-color: #f0f7ff;
+    transform: scale(0.98);
+  }
+}
+
+/* ===================== SIMPLIFIED SIDEBAR STYLES ===================== */
+
+.wn-nav-section {
+  padding: 0 8px;
+}
+
+.wn-section-title {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-left: 8px;
+}
+
+/* Sidebar link styles */
+.wn-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  color: #333;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 4px;
+}
+
+.wn-sidebar-link:hover {
+  background-color: #f5f7fa;
+  color: #273c75;
+  transform: translateX(4px);
+}
+
+.wn-sidebar-icon {
+  font-size: 18px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.wn-sidebar-text {
+  flex: 1;
+  font-size: 14.5px;
+}
+
+/* Sidebar list item adjustments */
+.wn-sidebar .wn-menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.wn-sidebar .wn-menu-list li {
+  padding: 0;
+  margin: 0;
+}
+
+/* Logout Section */
+.wn-logout-section {
+  padding: 20px 8px;
+  margin-top: auto;
+  border-top: 1px solid #f0f0f0;
+}
+
+.wn-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 12px;
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wn-logout-btn:hover {
+  background-color: #fee2e2;
+  transform: translateX(4px);
+}
+
+.wn-logout-icon {
+  font-size: 18px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.wn-logout-text {
+  flex: 1;
+  font-size: 14.5px;
+  text-align: left;
+}
+
+/* Active link style */
+.wn-sidebar-link.active {
+  background-color: #273c75;
+  color: white;
+  font-weight: 600;
+}
+
+.wn-sidebar-link.active:hover {
+  background-color: #1e2e5a;
+  color: white;
+}
+
+/* Divider style */
+.wn-divider {
+  height: 1px;
+  background-color: #f0f0f0;
+  margin: 20px 0;
+  width: 100%;
+}
+
+/* Sidebar adjustments */
+.wn-sidebar {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+}
+
+/* For touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .wn-sidebar-link:active,
+  .wn-logout-btn:active {
+    background-color: #f0f7ff;
+    transform: scale(0.98);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wn-sidebar-link {
+    padding: 12px 10px;
+    font-size: 14.5px;
+  }
+  
+  .wn-logout-btn {
+    padding: 12px 10px;
+  }
+  
+  .wn-section-title {
+    font-size: 12px;
+  }
+}
+
+/* Animation for sidebar opening */
+.wn-sidebar {
+  transition: left 0.3s ease;
+}
+
+/* Remove old sidebar styles that might conflict */
+.wn-sidebar .wn-language-row,
+.wn-sidebar .wn-apps-section,
+.wn-sidebar .wn-seller-section,
+.wn-sidebar .wn-auth-section {
+  display: none;
+}
+
+
+
+/* Sidebar Header Styles */
+.wn-sidebar-header {
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 1px solid #dee2e6;
+}
+
+.wn-logo-with-user {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.wn-logo-img-sidebar {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.wn-user-info-compact {
+  flex: 1;
+  min-width: 0; /* Prevents overflow */
+}
+
+.wn-user-name-compact {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wn-user-details-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wn-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #4a5568;
+}
+
+.wn-detail-icon {
+  color: #718096;
+  flex-shrink: 0;
+}
+
+.wn-detail-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wn-close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #718096;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: 10px;
+  transition: color 0.2s;
+}
+
+.wn-close-btn:hover {
+  color: #1a202c;
+}
+
+/* Section Title */
+.wn-section-title {
+  padding: 15px 20px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: #f7fafc;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wn-logo-img-sidebar {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .wn-user-name-compact {
+    font-size: 14px;
+  }
+  
+  .wn-detail-item {
+    font-size: 10px;
+  }
+}
+
+
+
+
+
+/* ===================== ICON STYLES ===================== */
+.wn-notification, .wn-wishlist, .wn-cart {
+  padding: 8px 16px;
+  background: #f3f4f6;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.wn-notification:hover, .wn-wishlist:hover, .wn-cart:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+/* Notification badge (optional) */
+.wn-notification-badge, .wn-wishlist-count, .wn-cart-count,.wn-cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+/* Different colors for different badges */
+.wn-wishlist-count {
+  background: #3b82f6; /* Blue for wishlist */
+}
+
+.wn-cart-count {
+  background: #10b981; /* Green for cart */
+}
+
+/* Nav right layout with all icons */
+.wn-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .wn-nav-right {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  
+  .wn-notification, .wn-wishlist, .wn-cart {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  /* Hide text on mobile for icons, show only icons */
+  .wn-notification span:not(.wn-notification-badge),
+  .wn-wishlist span:not(.wn-wishlist-count) {
+    display: none;
+  }
+  
+  .wn-cart span:not(.wn-cart-count) {
+    font-size: 12px;
+  }
+  
+  /* Adjust icon sizes for mobile */
+  .wn-notification svg,
+  .wn-wishlist svg,
+  .wn-cart svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wn-nav-right {
+    gap: 0px !important;
+    margin-left: 0px !important;
+  }
+
+  .wn-logo {
+    display: flex;
+    align-items: center;
+    margin-left: -10px;
+}
+
+
+
+.wn-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 0px ;
+}
+
+
+}
+
+
+/* Refer Now Button Styles */
+.wn-refer-now-btn {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #4CAF50; /* Green color for referral action */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 15px;
+  transition: background-color 0.3s ease;
+  /* width:max-content; */
+}
+
+.wn-refer-now-btn:hover {
+  background-color: #45a049;
+}
+
+.wn-refer-now-btn:active {
+  background-color: #3d8b40;
+}
+
+/* Update the nav-right to properly align items */
+.wn-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Existing notification, wishlist and cart styles */
+.wn-notification,
+.wn-wishlist,
+.wn-cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.wn-notification:hover,
+.wn-wishlist:hover,
+.wn-cart:hover {
+  color: #007bff;
+}
+
+
+
+/* Add these styles to your existing Agent_Navbar.css */
+
+/* Copy message notification */
+.wn-copy-message {
+  position: absolute;
+  top: 100%;
+  right: 120px;
+  background: #4CAF50;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  animation: slideDown 0.3s ease;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.wn-copy-message:before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: 20px;
+  width: 10px;
+  height: 10px;
+  background: #4CAF50;
+  transform: rotate(45deg);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Update refer now button style for copied state */
+.wn-refer-now-btn {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+  margin-right: 15px;
+  position: relative;
+}
+
+.wn-refer-now-btn:hover {
+  background-color: #218838;
+}
+
+.wn-refer-now-btn:active {
+  transform: scale(0.98);
+}
+
+/* Make nav-right relative for positioning the copy message */
+.wn-nav-right {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+
+
+/* Submenu styles */
+.wn-submenu {
+  list-style: none;
+  padding-left: 32px; /* Indent submenu items */
+  margin: 8px 0;
+}
+
+.wn-submenu li {
+  margin: 4px 0;
+}
+
+.wn-submenu-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  color: #4a5568;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.wn-submenu-link:hover {
+  background-color: #f0f7ff;
+  color: #273c75;
+  transform: translateX(4px);
+}
+
+.wn-submenu-icon {
+  font-size: 14px;
+  min-width: 20px;
+  text-align: center;
+  color: #718096;
+}
+
+.wn-submenu-text {
+  flex: 1;
+}
+
+/* Menu header styles for items with submenu */
+.wn-menu-item-with-submenu {
+  margin-bottom: 4px;
+}
+
+.wn-menu-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  color: #333;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  background-color: transparent;
+}
+
+.wn-menu-header:hover {
+  background-color: #f5f7fa;
+  color: #273c75;
+  transform: translateX(4px);
+}
+
+.wn-menu-arrow {
+  margin-left: auto;
+  font-size: 14px;
+  color: #718096;
+}
+
+/* Active state for menu header */
+.wn-menu-header.active {
+  color: #273c75;
+  font-weight: 600;
+  background-color: #f0f7ff;
+}
+
+/* Adjust spacing for main menu items */
+.wn-menu-list {
+  padding: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wn-submenu {
+    padding-left: 24px;
+  }
+  
+  .wn-submenu-link {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  
+  .wn-menu-header {
+    padding: 12px 10px;
+    font-size: 14px;
+  }
+}
+
+
+
+/* ===================== SIDEBAR STATUS SECTION STYLES ===================== */
+.wn-sidebar-status-section {
+  padding: 16px 20px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 8px;
+}
+
+.wn-sidebar-subscription-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.wn-status-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.wn-status-value {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.wn-status-value.active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.wn-status-value.inactive {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.wn-sidebar-refer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+}
+
+.wn-sidebar-refer-btn:hover {
+  background: linear-gradient(135deg, #218838, #1e7b5c);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.wn-sidebar-refer-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+}
+
+/* Copy message notification (updated position) */
+.wn-copy-message {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background: #4CAF50;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  animation: slideDown 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.wn-copy-message:before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: 20px;
+  width: 10px;
+  height: 10px;
+  background: #4CAF50;
+  transform: rotate(45deg);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments for sidebar status section */
+@media (max-width: 768px) {
+  .wn-sidebar-status-section {
+    padding: 12px 16px;
+  }
+  
+  .wn-sidebar-subscription-status {
+    padding: 6px 10px;
+    margin-bottom: 10px;
+  }
+  
+  .wn-sidebar-refer-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  
+  .wn-status-label,
+  .wn-status-value {
+    font-size: 12px;
+  }
+}
+
+
+
+
+
+

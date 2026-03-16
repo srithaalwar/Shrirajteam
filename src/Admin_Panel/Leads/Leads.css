@@ -245,4 +245,10 @@
     font-size: 12px;
     padding: 4px 8px;
   }
+  .data-table {
+  width: 100% !important;
+  min-width: auto !important;
+  border-collapse: collapse;
+}
+
 }

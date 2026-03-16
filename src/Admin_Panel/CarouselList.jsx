@@ -797,6 +797,9 @@ function CarouselList() {
                       </td>
                       <td>{formatDate(item.created_at)}</td>
                       <td className="actions">
+
+                                                                    <div style={{ display: 'flex', gap: '8px' }}>
+
                         <button 
                           className="edit-btn"
                           onClick={() => navigate(`/a-edit-carousel/${item.id}`)}
@@ -811,6 +814,9 @@ function CarouselList() {
                         >
                           🗑️
                         </button>
+        </div>
+
+
                       </td>
                     </tr>
                   );

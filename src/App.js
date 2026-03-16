@@ -240,10 +240,16 @@ import CarouselList from './Admin_Panel/CarouselList';
 import AddEditCarousel from './Admin_Panel/AddCarousel';
 import AmenitiesList from "./Admin_Panel/Admin_Amenities/AmenitiesList";
 import AddEditAmenities from "./Admin_Panel/Admin_Amenities/AddEditAmenities";
+import ServiceCategories from './Admin_Panel/Service_Categories/ServiceCategories';
+import AddServiceCategory from './Admin_Panel/Service_Categories/AddServiceCategory';
+import EditServiceCategory from './Admin_Panel/Service_Categories/EditServiceCategory';
 
+import AdminServiceProviders from './Admin_Panel/Admin_ServiceProvider/ServiceProviders';
+import AdminAddServiceProvider from './Admin_Panel/Admin_ServiceProvider/AddServiceProvider';
+import AdminEditServiceProvider from './Admin_Panel/Admin_ServiceProvider/EditServiceProvider';
 // import AdminAddProductCategory from './Admin_Panel/Product_Category/AddCategory';
 // import AdminEditProductCategory from './Admin_Panel/Product_Category/EditCategory';
-// import AdminProductCategory from './Admin_Panel/Product_Category/TableCategory';
+// import AdminProductCategory from './Adm/in_Panel/Product_Category/TableCategory';
 
 import TableProductCategory from './Admin_Panel/Product_Category/TableCategory';
 import ProductCategoryForm from './Admin_Panel/Product_Category/AddCategory';
@@ -330,6 +336,10 @@ import AdminOrders from "./Admin_Panel/Admin_Orders/Orders"
 import AgentMyOrders from "./Agent_Panel/Agent_My_Orders/Orders"
 import AgentOrders from "./Agent_Panel/Agent_Orders/Orders"
 
+// import AddServiceCategories from './Agent_Panel/Agent_ServiceProvider/AddServiceProvider';
+import ServiceProviders from './Agent_Panel/Agent_ServiceProvider/ServiceProviders';
+import AddServiceProvider from './Agent_Panel/Agent_ServiceProvider/AddServiceProvider';
+import EditServiceProvider from './Agent_Panel/Agent_ServiceProvider/EditServiceProvider';
 
 
 import ClientOrders from "./Client_Panel/Client_Orders/Orders"
@@ -420,6 +430,10 @@ function App() {
         <Route path="/a-add-booking-slab" element={<AddBookingSlab />} />
         <Route path="/a-edit-booking-slab/:id" element={<EditBookingSlab />} />
 
+         <Route path="/a-service-categories" element={<ServiceCategories />} />
+          <Route path="/a-add-service-category" element={<AddServiceCategory />} />
+          <Route path="/a-edit-service-category/:id" element={<EditServiceCategory />} />
+
         <Route path="/tablecategory" element={<TableCategory />} />
         <Route path="/propertycategoryform" element={<PropertyCategoryform />} />
         <Route path="/a-category" element={<Category />} />
@@ -459,7 +473,10 @@ function App() {
         <Route path="/admin-my-products" element={<AdminBusinessProductsDetails />} />
         <Route path="/admin-business-product-details/:productId" element={<AdminBusinessProductDetails />} />
 
-
+  <Route path="/admin-service-providers" element={<AdminServiceProviders />} />
+<Route path="/admin-add-service-provider" element={<AdminAddServiceProvider />} />
+<Route path="/admin-edit-service-provider/:id" element={<AdminEditServiceProvider />} />
+<Route path="/admin-view-service-provider/:id" element={<AdminEditServiceProvider mode="view" />} />
 
         <Route path="/admin-chatbot" element={<Chatbot />} />
         <Route path="/admin-createq&a" element={<CreateQA />} />
@@ -485,6 +502,11 @@ function App() {
         <Route path="/client-orders" element={<ClientOrders />} />
 
         {/* Agent-panel */}
+        {/* <Route path="/agent-service-providers" element={<AddServiceCategories />} /> */}
+        <Route path="/a-service-providers" element={<ServiceProviders />} />
+<Route path="/a-add-service-provider" element={<AddServiceProvider />} />
+<Route path="/a-edit-service-provider/:id" element={<EditServiceProvider />} />
+<Route path="/a-view-service-provider/:id" element={<EditServiceProvider mode="view" />} />
 
         <Route path="/agent-dashboard" element={<AgentDashboard />} />
         <Route path="/agent-add-property" element={<AgentAddProperty />} />

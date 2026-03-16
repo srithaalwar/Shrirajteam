@@ -599,6 +599,9 @@ function BookingSlab() {
                     <td>{formatCurrency(slab.max_value)}</td>
                     <td>{formatCurrency(slab.booking_amount)}</td>
                     <td className="actions">
+
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+
                       <button 
                         className="edit-btn"
                         onClick={() => navigate(`/a-edit-booking-slab/${slab.id}`)}
@@ -611,6 +614,7 @@ function BookingSlab() {
                       >
                         🗑️
                       </button>
+                        </div>
                     </td>
                   </tr>
                 ))

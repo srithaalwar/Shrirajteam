@@ -267,6 +267,8 @@ function TableOffers() {
                       </span>
                     </td>
                     <td className="actions">
+                                         <div style={{ display: 'flex', gap: '8px' }}>
+
                       <button 
                         className="edit-btn"
                         onClick={() => handleEdit(offer.id)}
@@ -281,6 +283,8 @@ function TableOffers() {
                       >
                         🗑️
                       </button>
+                                      </div>
+
                     </td>
                   </tr>
                 ))
