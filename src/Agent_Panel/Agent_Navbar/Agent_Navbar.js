@@ -7911,7 +7911,7 @@ import {
   FaPlusCircle,
   FaShareAlt,
 } from "react-icons/fa";
-import ShareModal from "../../ShareModal/ShareModal";
+import ShareModal from "./ShareModal/ShareModal";
 
 const AgentNavbar = () => {
   const [open, setOpen] = useState(false);

@@ -1477,6 +1477,7 @@ const AgentEditProfile = () => {
     account_number: "",
     account_type: "",
     ifsc_code: "",
+    upi_id: "", // Add this line
     pan_number: "",
     aadhaar_number: "",
     nominee_relationship: "",
@@ -1502,7 +1503,7 @@ const AgentEditProfile = () => {
   const requiredFields = [
     "first_name", "last_name", "email", "phone_number", "date_of_birth",
     "gender", "marital_status", "address", "city", "state", "country", "pin_code",
-    "account_holder_name", "bank_name", "branch_name", "account_number", "account_type", "ifsc_code",
+    "account_holder_name", "bank_name", "branch_name", "account_number", "account_type", "ifsc_code",   "upi_id", 
     "pan_number", "aadhaar_number", "nominee_reference_to", "nominee_relationship"
   ];
 
@@ -1901,7 +1902,7 @@ const AgentEditProfile = () => {
 
             {/* Rest of the form remains the same... */}
             {/* Address Details */}
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Address Details</h5>
               <div className="row">
                 <div className="col-12 mb-3">
@@ -1996,7 +1997,72 @@ const AgentEditProfile = () => {
                   {errors.pin_code && <div className="invalid-feedback">{errors.pin_code}</div>}
                 </div>
               </div>
-            </div>
+            </div> */}
+            {/* Banking Details */}
+<div className="mb-4">
+  <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Banking Details</h5>
+  <div className="row">
+    {[
+      { name: "account_holder_name", label: "Account Holder Name" },
+      { name: "bank_name", label: "Bank Name" },
+      { name: "branch_name", label: "Branch Name" },
+      { name: "account_number", label: "Account Number" },
+      { name: "ifsc_code", label: "IFSC Code" },
+    ].map(({ name, label }) => (
+      <div className="col-md-6 mb-3" key={name}>
+        <label className="form-label">
+          {label} <span className="text-danger">*</span>
+        </label>
+        <input
+          type="text"
+          name={name}
+          value={formData[name]}
+          onChange={handleChange}
+          className={`form-control ${errors[name] ? 'is-invalid' : ''}`}
+          placeholder={`Enter ${label.toLowerCase()}`}
+          disabled={loading}
+        />
+        {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
+      </div>
+    ))}
+
+    {/* Add UPI ID field here */}
+    <div className="col-md-6 mb-3">
+      <label className="form-label">
+        UPI ID {requiredFields.includes("upi_id") && <span className="text-danger">*</span>}
+      </label>
+      <input
+        type="text"
+        name="upi_id"
+        value={formData.upi_id}
+        onChange={handleChange}
+        className={`form-control ${errors.upi_id ? 'is-invalid' : ''}`}
+        placeholder="Enter UPI ID (e.g., name@bank)"
+        disabled={loading}
+      />
+      {errors.upi_id && <div className="invalid-feedback">{errors.upi_id}</div>}
+      <small className="text-muted">Example: username@okhdfcbank, 9876543210@paytm</small>
+    </div>
+
+    <div className="col-md-6 mb-3">
+      <label className="form-label">
+        Account Type <span className="text-danger">*</span>
+      </label>
+      <select
+        name="account_type"
+        value={formData.account_type}
+        onChange={handleChange}
+        className={`form-control ${errors.account_type ? 'is-invalid' : ''}`}
+        disabled={loading}
+      >
+        <option value="">Select Account Type</option>
+        <option value="Savings">Savings</option>
+        <option value="Current">Current</option>
+      </select>
+      {errors.account_type && <div className="invalid-feedback">{errors.account_type}</div>}
+    </div>
+  </div>
+</div>
 
             {/* Banking Details */}
             <div className="mb-4">

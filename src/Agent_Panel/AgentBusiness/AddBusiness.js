@@ -14,7 +14,7 @@
 //   const [loading, setLoading] = useState(mode !== 'add');
 //   const [isSubmitting, setIsSubmitting] = useState(false);
 //   const navigate = useNavigate();
-  
+
 //   const userId = localStorage.getItem('user_id');
 //   const token = localStorage.getItem('token');
 
@@ -58,13 +58,13 @@
 //     legal_name: '',
 //     business_type: '',
 //     description: '',
-    
+
 //     // Contact Info
 //     categories: [],
 //     support_email: '',
 //     support_phone: '',
 //     website: '',
-    
+
 //     // Address
 //     address_line1: '',
 //     address_line2: '',
@@ -72,7 +72,7 @@
 //     state: '',
 //     country: 'India',
 //     pincode: '',
-    
+
 //     // Bank & Compliance
 //     bank_account_name: '',
 //     bank_account_number: '',
@@ -80,12 +80,12 @@
 //     bank_name: '',
 //     gst_number: '',
 //     pan_number: '',
-    
+
 //     // Marketplace
 //     commission_percent: '5.00',
 //     settlement_cycle_days: 3,
 //     min_order_value: '50.00',
-    
+
 //     // Working Hours - Initialize with default values
 //     working_hours: DAYS.map(day => ({
 //       day: day.value,
@@ -93,7 +93,7 @@
 //       closes_at: day.value === 'sunday' ? null : '18:00',
 //       is_closed: day.value === 'sunday'
 //     })),
-    
+
 //     // System fields
 //     user: parseInt(userId) || 1
 //   });
@@ -111,11 +111,11 @@
 //             'Content-Type': 'application/json'
 //           }
 //         });
-        
+
 //         const businessCategories = Array.isArray(categoriesRes.data) 
 //           ? categoriesRes.data.filter(cat => cat.level === 'business')
 //           : categoriesRes.data.results?.filter(cat => cat.level === 'business') || [];
-        
+
 //         setCategories(businessCategories);
 
 //         // If editing/viewing, fetch business data
@@ -126,9 +126,9 @@
 //               'Content-Type': 'application/json'
 //             }
 //           });
-          
+
 //           const businessData = response.data;
-          
+
 //           // Format the data for the form
 //           const formattedData = {
 //             business_name: businessData.business_name || '',
@@ -181,7 +181,7 @@
 //                   is_closed: day.value === 'sunday'
 //                 }))
 //           };
-          
+
 //           setFormData(formattedData);
 //           setIsEditing(mode === 'edit');
 //           setIsViewing(mode === 'view');
@@ -203,9 +203,9 @@
 
 //   const handleChange = (e) => {
 //     if (isViewing) return;
-    
+
 //     const { name, value, type, checked } = e.target;
-    
+
 //     if (type === 'checkbox') {
 //       setFormData(prev => ({
 //         ...prev,
@@ -229,7 +229,7 @@
 
 //   const handleCategoryChange = (categoryId) => {
 //     if (isViewing) return;
-    
+
 //     setFormData(prev => {
 //       const numericId = parseInt(categoryId);
 //       const newCategories = prev.categories.includes(numericId)
@@ -241,10 +241,10 @@
 
 //   const handleWorkingHourChange = (index, field, value) => {
 //     if (isViewing) return;
-    
+
 //     setFormData(prev => {
 //       const updatedHours = [...prev.working_hours];
-      
+
 //       if (field === 'is_closed') {
 //         const isClosed = value === 'true';
 //         updatedHours[index] = {
@@ -259,7 +259,7 @@
 //           [field]: value
 //         };
 //       }
-      
+
 //       return { ...prev, working_hours: updatedHours };
 //     });
 //   };
@@ -270,15 +270,15 @@
 
 //   const validateCurrentTab = () => {
 //     if (isViewing) return true;
-    
+
 //     const newErrors = {};
-    
+
 //     switch (activeTab) {
 //       case 'basic-details':
 //         if (!formData.business_name?.trim()) newErrors.business_name = 'Business Name is required';
 //         if (!formData.business_type) newErrors.business_type = 'Business Type is required';
 //         break;
-        
+
 //       case 'contact-info':
 //         if (!formData.support_email?.trim()) newErrors.support_email = 'Support Email is required';
 //         if (!formData.support_phone?.trim()) newErrors.support_phone = 'Support Phone is required';
@@ -288,21 +288,21 @@
 //           newErrors.support_email = 'Invalid email format';
 //         }
 //         break;
-        
+
 //       case 'address':
 //         if (!formData.address_line1?.trim()) newErrors.address_line1 = 'Address Line 1 is required';
 //         if (!formData.city?.trim()) newErrors.city = 'City is required';
 //         if (!formData.state?.trim()) newErrors.state = 'State is required';
 //         if (!formData.pincode?.trim()) newErrors.pincode = 'Pincode is required';
 //         break;
-        
+
 //       case 'bank-compliance':
 //         if (!formData.bank_account_name?.trim()) newErrors.bank_account_name = 'Account Name is required';
 //         if (!formData.bank_account_number?.trim()) newErrors.bank_account_number = 'Account Number is required';
 //         if (!formData.bank_ifsc?.trim()) newErrors.bank_ifsc = 'IFSC Code is required';
 //         if (!formData.bank_name?.trim()) newErrors.bank_name = 'Bank Name is required';
 //         break;
-        
+
 //       case 'marketplace':
 //         if (!formData.commission_percent || parseFloat(formData.commission_percent) < 0) {
 //           newErrors.commission_percent = 'Valid commission percentage is required';
@@ -315,7 +315,7 @@
 //         }
 //         break;
 //     }
-    
+
 //     setErrors(prev => ({ ...prev, ...newErrors }));
 //     return Object.keys(newErrors).length === 0;
 //   };
@@ -330,7 +330,7 @@
 //       });
 //       return;
 //     }
-    
+
 //     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
 //     if (currentIndex < tabs.length - 1) {
 //       setActiveTab(tabs[currentIndex + 1].id);
@@ -366,13 +366,13 @@
 
 //   const renderField = (fieldConfig) => {
 //     const { type = 'text', name, label, required = true, options, multiline, rows, disabled = false, readOnly = false, ...props } = fieldConfig;
-    
+
 //     if (isViewing) {
 //       const value = formData[name];
 //       const displayValue = Array.isArray(value) 
 //         ? value.join(', ')
 //         : (value !== null && value !== undefined && value !== '' ? value.toString() : 'N/A');
-      
+
 //       return (
 //         <div className="mb-3">
 //           <label className="customer-form-label view-mode-label">{label}</label>
@@ -918,7 +918,7 @@
 
 //     } catch (error) {
 //       console.error('Detailed submission error:', error);
-      
+
 //       let errorMessage = isEditing ? 'Error updating business' : 'Error adding business';
 //       if (error.response?.data) {
 //         // Handle Django validation errors
@@ -931,7 +931,7 @@
 //           errorMessage += `: ${JSON.stringify(errors)}`;
 //         }
 //       }
-      
+
 //       Swal.fire({
 //         icon: 'error',
 //         title: 'Submission Failed',
@@ -1014,7 +1014,7 @@
 //             <div className="form-body">
 //               <form onSubmit={handleSubmit}>
 //                 {renderActiveTab()}
-                
+
 //                 {!isViewing && (
 //                   <div className="form-navigation">
 //                     <div className="row">
@@ -1096,7 +1096,7 @@
 //   const [loading, setLoading] = useState(mode !== 'add');
 //   const [isSubmitting, setIsSubmitting] = useState(false);
 //   const navigate = useNavigate();
-  
+
 //   const userId = localStorage.getItem('user_id');
 //   const token = localStorage.getItem('token');
 
@@ -1140,13 +1140,13 @@
 //     legal_name: '',
 //     business_type: '',
 //     description: '',
-    
+
 //     // Contact Info
 //     categories: [],
 //     support_email: '',
 //     support_phone: '',
 //     website: '',
-    
+
 //     // Address
 //     address_line1: '',
 //     address_line2: '',
@@ -1154,7 +1154,7 @@
 //     state: '',
 //     country: 'India',
 //     pincode: '',
-    
+
 //     // Bank & Compliance
 //     bank_account_name: '',
 //     bank_account_number: '',
@@ -1162,12 +1162,12 @@
 //     bank_name: '',
 //     gst_number: '',
 //     pan_number: '',
-    
+
 //     // Marketplace
 //     commission_percent: '5.00',
 //     settlement_cycle_days: 3,
 //     min_order_value: '50.00',
-    
+
 //     // Working Hours - Initialize with default values
 //     working_hours: DAYS.map(day => ({
 //       day: day.value,
@@ -1175,7 +1175,7 @@
 //       closes_at: day.value === 'sunday' ? null : '18:00',
 //       is_closed: day.value === 'sunday'
 //     })),
-    
+
 //     // System fields
 //     user: parseInt(userId) || 1
 //   });
@@ -1193,11 +1193,11 @@
 //             'Content-Type': 'application/json'
 //           }
 //         });
-        
+
 //         const businessCategories = Array.isArray(categoriesRes.data) 
 //           ? categoriesRes.data.filter(cat => cat.level === 'business')
 //           : categoriesRes.data.results?.filter(cat => cat.level === 'business') || [];
-        
+
 //         setCategories(businessCategories);
 
 //         // If editing/viewing, fetch business data
@@ -1208,9 +1208,9 @@
 //               'Content-Type': 'application/json'
 //             }
 //           });
-          
+
 //           const businessData = response.data;
-          
+
 //           // Format the data for the form
 //           const formattedData = {
 //             business_name: businessData.business_name || '',
@@ -1263,7 +1263,7 @@
 //                   is_closed: day.value === 'sunday'
 //                 }))
 //           };
-          
+
 //           setFormData(formattedData);
 //           setIsEditing(mode === 'edit');
 //           setIsViewing(mode === 'view');
@@ -1285,9 +1285,9 @@
 
 //   const handleChange = (e) => {
 //     if (isViewing) return;
-    
+
 //     const { name, value, type, checked } = e.target;
-    
+
 //     if (type === 'checkbox') {
 //       setFormData(prev => ({
 //         ...prev,
@@ -1311,7 +1311,7 @@
 
 //   const handleCategoryChange = (categoryId) => {
 //     if (isViewing) return;
-    
+
 //     setFormData(prev => {
 //       const numericId = parseInt(categoryId);
 //       const newCategories = prev.categories.includes(numericId)
@@ -1323,10 +1323,10 @@
 
 //   const handleWorkingHourChange = (index, field, value) => {
 //     if (isViewing) return;
-    
+
 //     setFormData(prev => {
 //       const updatedHours = [...prev.working_hours];
-      
+
 //       if (field === 'is_closed') {
 //         const isClosed = value === 'true';
 //         updatedHours[index] = {
@@ -1341,7 +1341,7 @@
 //           [field]: value
 //         };
 //       }
-      
+
 //       return { ...prev, working_hours: updatedHours };
 //     });
 //   };
@@ -1352,15 +1352,15 @@
 
 //   const validateCurrentTab = () => {
 //     if (isViewing) return true;
-    
+
 //     const newErrors = {};
-    
+
 //     switch (activeTab) {
 //       case 'basic-details':
 //         if (!formData.business_name?.trim()) newErrors.business_name = 'Business Name is required';
 //         if (!formData.business_type) newErrors.business_type = 'Business Type is required';
 //         break;
-        
+
 //       case 'contact-info':
 //         if (!formData.support_email?.trim()) newErrors.support_email = 'Support Email is required';
 //         if (!formData.support_phone?.trim()) newErrors.support_phone = 'Support Phone is required';
@@ -1370,21 +1370,21 @@
 //           newErrors.support_email = 'Invalid email format';
 //         }
 //         break;
-        
+
 //       case 'address':
 //         if (!formData.address_line1?.trim()) newErrors.address_line1 = 'Address Line 1 is required';
 //         if (!formData.city?.trim()) newErrors.city = 'City is required';
 //         if (!formData.state?.trim()) newErrors.state = 'State is required';
 //         if (!formData.pincode?.trim()) newErrors.pincode = 'Pincode is required';
 //         break;
-        
+
 //       case 'bank-compliance':
 //         if (!formData.bank_account_name?.trim()) newErrors.bank_account_name = 'Account Name is required';
 //         if (!formData.bank_account_number?.trim()) newErrors.bank_account_number = 'Account Number is required';
 //         if (!formData.bank_ifsc?.trim()) newErrors.bank_ifsc = 'IFSC Code is required';
 //         if (!formData.bank_name?.trim()) newErrors.bank_name = 'Bank Name is required';
 //         break;
-        
+
 //       case 'marketplace':
 //         if (!formData.commission_percent || parseFloat(formData.commission_percent) < 0) {
 //           newErrors.commission_percent = 'Valid commission percentage is required';
@@ -1397,7 +1397,7 @@
 //         }
 //         break;
 //     }
-    
+
 //     setErrors(prev => ({ ...prev, ...newErrors }));
 //     return Object.keys(newErrors).length === 0;
 //   };
@@ -1412,7 +1412,7 @@
 //       });
 //       return;
 //     }
-    
+
 //     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
 //     if (currentIndex < tabs.length - 1) {
 //       setActiveTab(tabs[currentIndex + 1].id);
@@ -1448,13 +1448,13 @@
 
 //   const renderField = (fieldConfig) => {
 //     const { type = 'text', name, label, required = true, options, multiline, rows, disabled = false, readOnly = false, ...props } = fieldConfig;
-    
+
 //     if (isViewing) {
 //       const value = formData[name];
 //       const displayValue = Array.isArray(value) 
 //         ? value.join(', ')
 //         : (value !== null && value !== undefined && value !== '' ? value.toString() : 'N/A');
-      
+
 //       return (
 //         <div className="mb-3">
 //           <label className="customer-form-label view-mode-label">{label}</label>
@@ -1978,7 +1978,7 @@
 
 //     } catch (error) {
 //       console.error('Detailed submission error:', error);
-      
+
 //       let errorMessage = isEditing ? 'Error updating business' : 'Error adding business';
 //       if (error.response?.data) {
 //         // Handle Django validation errors
@@ -1991,7 +1991,7 @@
 //           errorMessage += `: ${JSON.stringify(errors)}`;
 //         }
 //       }
-      
+
 //       Swal.fire({
 //         icon: 'error',
 //         title: 'Submission Failed',
@@ -2073,7 +2073,7 @@
 //               <div className="form-body">
 //                 <form onSubmit={handleSubmit}>
 //                   {renderActiveTab()}
-                  
+
 //                   {!isViewing && (
 //                     <div className="form-navigation">
 //                       <div className="row">
@@ -2153,7 +2153,7 @@
 //   const [loading, setLoading] = useState(mode !== 'add');
 //   const [isSubmitting, setIsSubmitting] = useState(false);
 //   const navigate = useNavigate();
-  
+
 //   const userId = localStorage.getItem('user_id');
 //   const token = localStorage.getItem('token');
 
@@ -2205,13 +2205,13 @@
 //     description: '',
 //     logo: '',
 //     banner: '',
-    
+
 //     // Contact Info
 //     categories: [],
 //     support_email: '',
 //     support_phone: '',
 //     website: '',
-    
+
 //     // Address
 //     address_line1: '',
 //     address_line2: '',
@@ -2219,7 +2219,7 @@
 //     state: '',
 //     country: 'India',
 //     pincode: '',
-    
+
 //     // Bank & Compliance
 //     bank_account_name: '',
 //     bank_account_number: '',
@@ -2227,12 +2227,12 @@
 //     bank_name: '',
 //     gst_number: '',
 //     pan_number: '',
-    
+
 //     // Marketplace
 //     commission_percent: '5.00',
 //     settlement_cycle_days: 3,
 //     min_order_value: '50.00',
-    
+
 //     // Working Hours - Initialize with default values
 //     working_hours: DAYS.map(day => ({
 //       day: day.value,
@@ -2240,7 +2240,7 @@
 //       closes_at: day.value === 'sunday' ? null : '18:00',
 //       is_closed: day.value === 'sunday'
 //     })),
-    
+
 //     // System fields
 //     user: parseInt(userId) || 1
 //   });
@@ -2258,11 +2258,11 @@
 //             'Content-Type': 'application/json'
 //           }
 //         });
-        
+
 //         const businessCategories = Array.isArray(categoriesRes.data) 
 //           ? categoriesRes.data.filter(cat => cat.level === 'business')
 //           : categoriesRes.data.results?.filter(cat => cat.level === 'business') || [];
-        
+
 //         setCategories(businessCategories);
 
 //         // If editing/viewing, fetch business data
@@ -2273,9 +2273,9 @@
 //               'Content-Type': 'application/json'
 //             }
 //           });
-          
+
 //           const businessData = response.data;
-          
+
 //           // Format the data for the form
 //           const formattedData = {
 //             business_name: businessData.business_name || '',
@@ -2330,9 +2330,9 @@
 //                   is_closed: day.value === 'sunday'
 //                 }))
 //           };
-          
+
 //           setFormData(formattedData);
-          
+
 //           // Set preview URLs for existing images
 //           if (businessData.logo) {
 //             setLogoPreview(`${baseurl}${businessData.logo}`);
@@ -2340,7 +2340,7 @@
 //           if (businessData.banner) {
 //             setBannerPreview(`${baseurl}${businessData.banner}`);
 //           }
-          
+
 //           setIsEditing(mode === 'edit');
 //           setIsViewing(mode === 'view');
 //         }
@@ -2361,9 +2361,9 @@
 
 //   const handleChange = (e) => {
 //     if (isViewing) return;
-    
+
 //     const { name, value, type, checked } = e.target;
-    
+
 //     if (type === 'checkbox') {
 //       setFormData(prev => ({
 //         ...prev,
@@ -2387,7 +2387,7 @@
 
 //   const handleLogoChange = (e) => {
 //     if (isViewing) return;
-    
+
 //     const file = e.target.files[0];
 //     if (file) {
 //       // Check file size (max 2MB)
@@ -2398,7 +2398,7 @@
 //         }));
 //         return;
 //       }
-      
+
 //       // Check file type
 //       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 //       if (!validTypes.includes(file.type)) {
@@ -2408,16 +2408,16 @@
 //         }));
 //         return;
 //       }
-      
+
 //       setLogoFile(file);
-      
+
 //       // Create preview
 //       const reader = new FileReader();
 //       reader.onloadend = () => {
 //         setLogoPreview(reader.result);
 //       };
 //       reader.readAsDataURL(file);
-      
+
 //       // Clear error
 //       if (errors.logo) {
 //         setErrors(prev => ({
@@ -2430,7 +2430,7 @@
 
 //   const handleBannerChange = (e) => {
 //     if (isViewing) return;
-    
+
 //     const file = e.target.files[0];
 //     if (file) {
 //       // Check file size (max 5MB)
@@ -2441,7 +2441,7 @@
 //         }));
 //         return;
 //       }
-      
+
 //       // Check file type
 //       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 //       if (!validTypes.includes(file.type)) {
@@ -2451,16 +2451,16 @@
 //         }));
 //         return;
 //       }
-      
+
 //       setBannerFile(file);
-      
+
 //       // Create preview
 //       const reader = new FileReader();
 //       reader.onloadend = () => {
 //         setBannerPreview(reader.result);
 //       };
 //       reader.readAsDataURL(file);
-      
+
 //       // Clear error
 //       if (errors.banner) {
 //         setErrors(prev => ({
@@ -2473,7 +2473,7 @@
 
 //   const handleCategoryChange = (categoryId) => {
 //     if (isViewing) return;
-    
+
 //     setFormData(prev => {
 //       const numericId = parseInt(categoryId);
 //       const newCategories = prev.categories.includes(numericId)
@@ -2485,10 +2485,10 @@
 
 //   const handleWorkingHourChange = (index, field, value) => {
 //     if (isViewing) return;
-    
+
 //     setFormData(prev => {
 //       const updatedHours = [...prev.working_hours];
-      
+
 //       if (field === 'is_closed') {
 //         const isClosed = value === 'true';
 //         updatedHours[index] = {
@@ -2503,7 +2503,7 @@
 //           [field]: value
 //         };
 //       }
-      
+
 //       return { ...prev, working_hours: updatedHours };
 //     });
 //   };
@@ -2514,16 +2514,16 @@
 
 //   const validateCurrentTab = () => {
 //     if (isViewing) return true;
-    
+
 //     const newErrors = {};
-    
+
 //     switch (activeTab) {
 //       case 'basic-details':
 //         if (!formData.business_name?.trim()) newErrors.business_name = 'Business Name is required';
 //         if (!formData.business_type) newErrors.business_type = 'Business Type is required';
 //         if (!isEditing && !logoFile && !formData.logo) newErrors.logo = 'Logo is required';
 //         break;
-        
+
 //       case 'contact-info':
 //         if (!formData.support_email?.trim()) newErrors.support_email = 'Support Email is required';
 //         if (!formData.support_phone?.trim()) newErrors.support_phone = 'Support Phone is required';
@@ -2533,21 +2533,21 @@
 //           newErrors.support_email = 'Invalid email format';
 //         }
 //         break;
-        
+
 //       case 'address':
 //         if (!formData.address_line1?.trim()) newErrors.address_line1 = 'Address Line 1 is required';
 //         if (!formData.city?.trim()) newErrors.city = 'City is required';
 //         if (!formData.state?.trim()) newErrors.state = 'State is required';
 //         if (!formData.pincode?.trim()) newErrors.pincode = 'Pincode is required';
 //         break;
-        
+
 //       case 'bank-compliance':
 //         if (!formData.bank_account_name?.trim()) newErrors.bank_account_name = 'Account Name is required';
 //         if (!formData.bank_account_number?.trim()) newErrors.bank_account_number = 'Account Number is required';
 //         if (!formData.bank_ifsc?.trim()) newErrors.bank_ifsc = 'IFSC Code is required';
 //         if (!formData.bank_name?.trim()) newErrors.bank_name = 'Bank Name is required';
 //         break;
-        
+
 //       case 'marketplace':
 //         if (!formData.commission_percent || parseFloat(formData.commission_percent) < 0) {
 //           newErrors.commission_percent = 'Valid commission percentage is required';
@@ -2560,7 +2560,7 @@
 //         }
 //         break;
 //     }
-    
+
 //     setErrors(prev => ({ ...prev, ...newErrors }));
 //     return Object.keys(newErrors).length === 0;
 //   };
@@ -2575,7 +2575,7 @@
 //       });
 //       return;
 //     }
-    
+
 //     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
 //     if (currentIndex < tabs.length - 1) {
 //       setActiveTab(tabs[currentIndex + 1].id);
@@ -2611,13 +2611,13 @@
 
 //   const renderField = (fieldConfig) => {
 //     const { type = 'text', name, label, required = true, options, multiline, rows, disabled = false, readOnly = false, accept, ...props } = fieldConfig;
-    
+
 //     if (isViewing && type !== 'file') {
 //       const value = formData[name];
 //       const displayValue = Array.isArray(value) 
 //         ? value.join(', ')
 //         : (value !== null && value !== undefined && value !== '' ? value.toString() : 'N/A');
-      
+
 //       return (
 //         <div className="mb-3">
 //           <label className="customer-form-label view-mode-label">{label}</label>
@@ -3141,7 +3141,7 @@
 //     try {
 //       // Prepare FormData for file upload
 //       const formDataToSend = new FormData();
-      
+
 //       // Add all form fields
 //       formDataToSend.append('business_name', formData.business_name);
 //       formDataToSend.append('legal_name', formData.legal_name || '');
@@ -3169,7 +3169,7 @@
 //       formDataToSend.append('commission_percent', parseFloat(formData.commission_percent) || 5.0);
 //       formDataToSend.append('settlement_cycle_days', parseInt(formData.settlement_cycle_days) || 3);
 //       formDataToSend.append('min_order_value', parseFloat(formData.min_order_value) || 50.00);
-      
+
 //       // Add working hours as JSON string
 //       const workingHoursData = formData.working_hours.map(hour => {
 //         if (hour.is_closed) {
@@ -3186,7 +3186,7 @@
 //         };
 //       });
 //       formDataToSend.append('working_hours', JSON.stringify(workingHoursData));
-      
+
 //       // Add files if they exist
 //       if (logoFile) {
 //         formDataToSend.append('logo', logoFile);
@@ -3222,7 +3222,7 @@
 
 //     } catch (error) {
 //       console.error('Detailed submission error:', error);
-      
+
 //       let errorMessage = isEditing ? 'Error updating business' : 'Error adding business';
 //       if (error.response?.data) {
 //         // Handle Django validation errors
@@ -3235,7 +3235,7 @@
 //           errorMessage += `: ${JSON.stringify(errors)}`;
 //         }
 //       }
-      
+
 //       Swal.fire({
 //         icon: 'error',
 //         title: 'Submission Failed',
@@ -3322,7 +3322,7 @@
 //               <div className="form-body">
 //                 <form onSubmit={handleSubmit}>
 //                   {renderActiveTab()}
-                  
+
 //                   {!isViewing && (
 //                     <div className="form-navigation">
 //                       <div className="row">
@@ -3414,7 +3414,7 @@
 //   const [loading, setLoading] = useState(mode !== 'add');
 //   const [isSubmitting, setIsSubmitting] = useState(false);
 //   const navigate = useNavigate();
-  
+
 //   const userId = localStorage.getItem('user_id');
 //   const token = localStorage.getItem('token');
 
@@ -3466,13 +3466,13 @@
 //     description: '',
 //     logo: '',
 //     banner: '',
-    
+
 //     // Contact Info
 //     categories: [],
 //     support_email: '',
 //     support_phone: '',
 //     website: '',
-    
+
 //     // Address
 //     address_line1: '',
 //     address_line2: '',
@@ -3480,7 +3480,7 @@
 //     state: '',
 //     country: 'India',
 //     pincode: '',
-    
+
 //     // Bank & Compliance
 //     bank_account_name: '',
 //     bank_account_number: '',
@@ -3488,12 +3488,12 @@
 //     bank_name: '',
 //     gst_number: '',
 //     pan_number: '',
-    
+
 //     // Marketplace
 //     commission_percent: '5.00',
 //     settlement_cycle_days: 3,
 //     min_order_value: '50.00',
-    
+
 //     // Working Hours
 //     working_hours: DAYS.map(day => ({
 //       day: day.value,
@@ -3501,7 +3501,7 @@
 //       closes_at: day.value === 'sunday' ? null : '18:00',
 //       is_closed: day.value === 'sunday'
 //     })),
-    
+
 //     // System fields
 //     user: parseInt(userId) || 1
 //   });
@@ -3519,11 +3519,11 @@
 //             'Content-Type': 'application/json'
 //           }
 //         });
-        
+
 //         const businessCategories = Array.isArray(categoriesRes.data) 
 //           ? categoriesRes.data.filter(cat => cat.level === 'business')
 //           : categoriesRes.data.results?.filter(cat => cat.level === 'business') || [];
-        
+
 //         setCategories(businessCategories);
 
 //         // If editing/viewing, fetch business data
@@ -3534,9 +3534,9 @@
 //               'Content-Type': 'application/json'
 //             }
 //           });
-          
+
 //           const businessData = response.data;
-          
+
 //           // Format the data for the form
 //           const formattedData = {
 //             business_name: businessData.business_name || '',
@@ -3591,9 +3591,9 @@
 //                   is_closed: day.value === 'sunday'
 //                 }))
 //           };
-          
+
 //           setFormData(formattedData);
-          
+
 //           // Set preview URLs for existing images
 //           if (businessData.logo) {
 //             setLogoPreview(`${baseurl}${businessData.logo}`);
@@ -3601,7 +3601,7 @@
 //           if (businessData.banner) {
 //             setBannerPreview(`${baseurl}${businessData.banner}`);
 //           }
-          
+
 //           setIsEditing(mode === 'edit');
 //           setIsViewing(mode === 'view');
 //         }
@@ -3622,9 +3622,9 @@
 
 //   const handleChange = (e) => {
 //     if (isViewing) return;
-    
+
 //     const { name, value, type, checked } = e.target;
-    
+
 //     if (type === 'checkbox') {
 //       setFormData(prev => ({
 //         ...prev,
@@ -3648,7 +3648,7 @@
 
 //   const handleLogoChange = (e) => {
 //     if (isViewing) return;
-    
+
 //     const file = e.target.files[0];
 //     if (file) {
 //       if (file.size > 2 * 1024 * 1024) {
@@ -3658,7 +3658,7 @@
 //         }));
 //         return;
 //       }
-      
+
 //       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 //       if (!validTypes.includes(file.type)) {
 //         setErrors(prev => ({
@@ -3667,15 +3667,15 @@
 //         }));
 //         return;
 //       }
-      
+
 //       setLogoFile(file);
-      
+
 //       const reader = new FileReader();
 //       reader.onloadend = () => {
 //         setLogoPreview(reader.result);
 //       };
 //       reader.readAsDataURL(file);
-      
+
 //       if (errors.logo) {
 //         setErrors(prev => ({
 //           ...prev,
@@ -3687,7 +3687,7 @@
 
 //   const handleBannerChange = (e) => {
 //     if (isViewing) return;
-    
+
 //     const file = e.target.files[0];
 //     if (file) {
 //       if (file.size > 5 * 1024 * 1024) {
@@ -3697,7 +3697,7 @@
 //         }));
 //         return;
 //       }
-      
+
 //       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 //       if (!validTypes.includes(file.type)) {
 //         setErrors(prev => ({
@@ -3706,15 +3706,15 @@
 //         }));
 //         return;
 //       }
-      
+
 //       setBannerFile(file);
-      
+
 //       const reader = new FileReader();
 //       reader.onloadend = () => {
 //         setBannerPreview(reader.result);
 //       };
 //       reader.readAsDataURL(file);
-      
+
 //       if (errors.banner) {
 //         setErrors(prev => ({
 //           ...prev,
@@ -3726,7 +3726,7 @@
 
 //   const handleCategoryChange = (categoryId) => {
 //     if (isViewing) return;
-    
+
 //     setFormData(prev => {
 //       const numericId = parseInt(categoryId);
 //       const newCategories = prev.categories.includes(numericId)
@@ -3738,10 +3738,10 @@
 
 //   const handleWorkingHourChange = (index, field, value) => {
 //     if (isViewing) return;
-    
+
 //     setFormData(prev => {
 //       const updatedHours = [...prev.working_hours];
-      
+
 //       if (field === 'is_closed') {
 //         const isClosed = value === 'true' || value === true;
 //         updatedHours[index] = {
@@ -3756,7 +3756,7 @@
 //           [field]: value
 //         };
 //       }
-      
+
 //       return { ...prev, working_hours: updatedHours };
 //     });
 //   };
@@ -3767,16 +3767,16 @@
 
 //   const validateCurrentTab = () => {
 //     if (isViewing) return true;
-    
+
 //     const newErrors = {};
-    
+
 //     switch (activeTab) {
 //       case 'basic-details':
 //         if (!formData.business_name?.trim()) newErrors.business_name = 'Business Name is required';
 //         if (!formData.business_type) newErrors.business_type = 'Business Type is required';
 //         if (!isEditing && !logoFile && !formData.logo) newErrors.logo = 'Logo is required';
 //         break;
-        
+
 //       case 'contact-info':
 //         if (!formData.support_email?.trim()) newErrors.support_email = 'Support Email is required';
 //         if (!formData.support_phone?.trim()) newErrors.support_phone = 'Support Phone is required';
@@ -3785,21 +3785,21 @@
 //           newErrors.support_email = 'Invalid email format';
 //         }
 //         break;
-        
+
 //       case 'address':
 //         if (!formData.address_line1?.trim()) newErrors.address_line1 = 'Address Line 1 is required';
 //         if (!formData.city?.trim()) newErrors.city = 'City is required';
 //         if (!formData.state?.trim()) newErrors.state = 'State is required';
 //         if (!formData.pincode?.trim()) newErrors.pincode = 'Pincode is required';
 //         break;
-        
+
 //       case 'bank-compliance':
 //         if (!formData.bank_account_name?.trim()) newErrors.bank_account_name = 'Account Name is required';
 //         if (!formData.bank_account_number?.trim()) newErrors.bank_account_number = 'Account Number is required';
 //         if (!formData.bank_ifsc?.trim()) newErrors.bank_ifsc = 'IFSC Code is required';
 //         if (!formData.bank_name?.trim()) newErrors.bank_name = 'Bank Name is required';
 //         break;
-        
+
 //       case 'marketplace':
 //         if (!formData.commission_percent || parseFloat(formData.commission_percent) < 0) {
 //           newErrors.commission_percent = 'Valid commission percentage is required';
@@ -3812,7 +3812,7 @@
 //         }
 //         break;
 //     }
-    
+
 //     setErrors(prev => ({ ...prev, ...newErrors }));
 //     return Object.keys(newErrors).length === 0;
 //   };
@@ -3827,7 +3827,7 @@
 //       });
 //       return;
 //     }
-    
+
 //     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
 //     if (currentIndex < tabs.length - 1) {
 //       setActiveTab(tabs[currentIndex + 1].id);
@@ -3863,13 +3863,13 @@
 
 //   const renderField = (fieldConfig) => {
 //     const { type = 'text', name, label, required = true, options, multiline, rows, disabled = false, readOnly = false, accept, ...props } = fieldConfig;
-    
+
 //     if (isViewing && type !== 'file') {
 //       const value = formData[name];
 //       const displayValue = Array.isArray(value) 
 //         ? value.join(', ')
 //         : (value !== null && value !== undefined && value !== '' ? value.toString() : 'N/A');
-      
+
 //       return (
 //         <div className="mb-3">
 //           <label className="customer-form-label view-mode-label">{label}</label>
@@ -4386,18 +4386,18 @@
 //     try {
 //       // Prepare FormData for file upload
 //       const formDataToSend = new FormData();
-      
+
 //       // Add all form fields
 //       formDataToSend.append('business_name', formData.business_name);
 //       formDataToSend.append('legal_name', formData.legal_name || '');
 //       formDataToSend.append('business_type', formData.business_type);
 //       formDataToSend.append('description', formData.description || '');
-      
+
 //       // Add categories
 //       formData.categories.forEach(cat => {
 //         formDataToSend.append('categories', cat);
 //       });
-      
+
 //       formDataToSend.append('user', formData.user);
 //       formDataToSend.append('support_email', formData.support_email);
 //       formDataToSend.append('support_phone', formData.support_phone);
@@ -4417,7 +4417,7 @@
 //       formDataToSend.append('commission_percent', parseFloat(formData.commission_percent) || 5.0);
 //       formDataToSend.append('settlement_cycle_days', parseInt(formData.settlement_cycle_days) || 3);
 //       formDataToSend.append('min_order_value', parseFloat(formData.min_order_value) || 50.00);
-      
+
 //       // Prepare working hours data - IMPORTANT FIX: Format it properly and send as JSON string
 //       const workingHoursData = formData.working_hours.map(hour => {
 //         if (hour.is_closed) {
@@ -4435,10 +4435,10 @@
 //           is_closed: false
 //         };
 //       });
-      
+
 //       // Send working_hours as JSON string - this will be parsed by the backend
 //       formDataToSend.append('working_hours', JSON.stringify(workingHoursData));
-      
+
 //       // Add files if they exist
 //       if (logoFile) {
 //         formDataToSend.append('logo', logoFile);
@@ -4468,13 +4468,13 @@
 //         text: isEditing ? 'Business Updated Successfully!' : 'Business Added Successfully!',
 //         confirmButtonColor: '#3085d6',
 //       });
-      
+
 //       navigate("/agent-my-business");
 
 //     } catch (error) {
 //       console.error('Detailed submission error:', error);
 //       console.error('Error response data:', error.response?.data);
-      
+
 //       let errorMessage = isEditing ? 'Error updating business' : 'Error adding business';
 //       if (error.response?.data) {
 //         const errors = error.response.data;
@@ -4486,7 +4486,7 @@
 //           errorMessage += `: ${JSON.stringify(errors)}`;
 //         }
 //       }
-      
+
 //       Swal.fire({
 //         icon: 'error',
 //         title: 'Submission Failed',
@@ -4573,7 +4573,7 @@
 //               <div className="form-body">
 //                 <form onSubmit={handleSubmit}>
 //                   {renderActiveTab()}
-                  
+
 //                   {!isViewing && (
 //                     <div className="form-navigation">
 //                       <div className="row">
@@ -4664,7 +4664,7 @@
 //   const [loading, setLoading] = useState(mode !== 'add');
 //   const [isSubmitting, setIsSubmitting] = useState(false);
 //   const navigate = useNavigate();
-  
+
 //   const userId = localStorage.getItem('user_id');
 //   const token = localStorage.getItem('token');
 
@@ -4718,13 +4718,13 @@
 //     description: '',
 //     logo: '',
 //     banner: '',
-    
+
 //     // Contact Info
 //     categories: [],
 //     support_email: '',
 //     support_phone: '',
 //     website: '',
-    
+
 //     // Address
 //     address_line1: '',
 //     address_line2: '',
@@ -4732,7 +4732,7 @@
 //     state: '',
 //     country: 'India',
 //     pincode: '',
-    
+
 //     // Bank & Compliance
 //     bank_account_name: '',
 //     bank_account_number: '',
@@ -4740,12 +4740,12 @@
 //     bank_name: '',
 //     gst_number: '',
 //     pan_number: '',
-    
+
 //     // Marketplace
 //     commission_percent: '5.00',
 //     settlement_cycle_days: 3,
 //     min_order_value: '50.00',
-    
+
 //     // Working Hours
 //     working_hours: DAYS.map(day => ({
 //       day: day.value,
@@ -4753,7 +4753,7 @@
 //       closes_at: day.value === 'sunday' ? null : '18:00',
 //       is_closed: day.value === 'sunday'
 //     })),
-    
+
 //     // System fields
 //     user: parseInt(userId) || 1
 //   });
@@ -4771,11 +4771,11 @@
 //             'Content-Type': 'application/json'
 //           }
 //         });
-        
+
 //         const businessCategories = Array.isArray(categoriesRes.data) 
 //           ? categoriesRes.data.filter(cat => cat.level === 'business')
 //           : categoriesRes.data.results?.filter(cat => cat.level === 'business') || [];
-        
+
 //         setCategories(businessCategories);
 
 //         // If editing/viewing, fetch business data
@@ -4786,9 +4786,9 @@
 //               'Content-Type': 'application/json'
 //             }
 //           });
-          
+
 //           const businessData = response.data;
-          
+
 //           // Format the data for the form
 //           const formattedData = {
 //             business_name: businessData.business_name || '',
@@ -4843,9 +4843,9 @@
 //                   is_closed: day.value === 'sunday'
 //                 }))
 //           };
-          
+
 //           setFormData(formattedData);
-          
+
 //           // Set preview URLs for existing images
 //           if (businessData.logo) {
 //             setLogoPreview(`${baseurl}${businessData.logo}`);
@@ -4853,7 +4853,7 @@
 //           if (businessData.banner) {
 //             setBannerPreview(`${baseurl}${businessData.banner}`);
 //           }
-          
+
 //           setIsEditing(mode === 'edit');
 //           setIsViewing(mode === 'view');
 //         }
@@ -4874,9 +4874,9 @@
 
 //   const handleChange = (e) => {
 //     if (isViewing) return;
-    
+
 //     const { name, value, type, checked } = e.target;
-    
+
 //     if (type === 'checkbox') {
 //       setFormData(prev => ({
 //         ...prev,
@@ -4900,7 +4900,7 @@
 
 //   const handleLogoChange = (e) => {
 //     if (isViewing) return;
-    
+
 //     const file = e.target.files[0];
 //     if (file) {
 //       if (file.size > 2 * 1024 * 1024) {
@@ -4910,7 +4910,7 @@
 //         }));
 //         return;
 //       }
-      
+
 //       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 //       if (!validTypes.includes(file.type)) {
 //         setErrors(prev => ({
@@ -4919,16 +4919,16 @@
 //         }));
 //         return;
 //       }
-      
+
 //       setLogoFile(file);
 //       setHasLogoChanged(true);
-      
+
 //       const reader = new FileReader();
 //       reader.onloadend = () => {
 //         setLogoPreview(reader.result);
 //       };
 //       reader.readAsDataURL(file);
-      
+
 //       if (errors.logo) {
 //         setErrors(prev => ({
 //           ...prev,
@@ -4940,7 +4940,7 @@
 
 //   const handleBannerChange = (e) => {
 //     if (isViewing) return;
-    
+
 //     const file = e.target.files[0];
 //     if (file) {
 //       if (file.size > 5 * 1024 * 1024) {
@@ -4950,7 +4950,7 @@
 //         }));
 //         return;
 //       }
-      
+
 //       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 //       if (!validTypes.includes(file.type)) {
 //         setErrors(prev => ({
@@ -4959,16 +4959,16 @@
 //         }));
 //         return;
 //       }
-      
+
 //       setBannerFile(file);
 //       setHasBannerChanged(true);
-      
+
 //       const reader = new FileReader();
 //       reader.onloadend = () => {
 //         setBannerPreview(reader.result);
 //       };
 //       reader.readAsDataURL(file);
-      
+
 //       if (errors.banner) {
 //         setErrors(prev => ({
 //           ...prev,
@@ -4980,7 +4980,7 @@
 
 //   const handleCategoryChange = (categoryId) => {
 //     if (isViewing) return;
-    
+
 //     setFormData(prev => {
 //       const numericId = parseInt(categoryId);
 //       const newCategories = prev.categories.includes(numericId)
@@ -4992,10 +4992,10 @@
 
 //   const handleWorkingHourChange = (index, field, value) => {
 //     if (isViewing) return;
-    
+
 //     setFormData(prev => {
 //       const updatedHours = [...prev.working_hours];
-      
+
 //       if (field === 'is_closed') {
 //         const isClosed = value === true || value === 'true';
 //         updatedHours[index] = {
@@ -5010,7 +5010,7 @@
 //           [field]: value
 //         };
 //       }
-      
+
 //       return { ...prev, working_hours: updatedHours };
 //     });
 //   };
@@ -5021,16 +5021,16 @@
 
 //   const validateCurrentTab = () => {
 //     if (isViewing) return true;
-    
+
 //     const newErrors = {};
-    
+
 //     switch (activeTab) {
 //       case 'basic-details':
 //         if (!formData.business_name?.trim()) newErrors.business_name = 'Business Name is required';
 //         if (!formData.business_type) newErrors.business_type = 'Business Type is required';
 //         if (!isEditing && !logoFile && !formData.logo) newErrors.logo = 'Logo is required';
 //         break;
-        
+
 //       case 'contact-info':
 //         if (!formData.support_email?.trim()) newErrors.support_email = 'Support Email is required';
 //         if (!formData.support_phone?.trim()) newErrors.support_phone = 'Support Phone is required';
@@ -5039,21 +5039,21 @@
 //           newErrors.support_email = 'Invalid email format';
 //         }
 //         break;
-        
+
 //       case 'address':
 //         if (!formData.address_line1?.trim()) newErrors.address_line1 = 'Address Line 1 is required';
 //         if (!formData.city?.trim()) newErrors.city = 'City is required';
 //         if (!formData.state?.trim()) newErrors.state = 'State is required';
 //         if (!formData.pincode?.trim()) newErrors.pincode = 'Pincode is required';
 //         break;
-        
+
 //       case 'bank-compliance':
 //         if (!formData.bank_account_name?.trim()) newErrors.bank_account_name = 'Account Name is required';
 //         if (!formData.bank_account_number?.trim()) newErrors.bank_account_number = 'Account Number is required';
 //         if (!formData.bank_ifsc?.trim()) newErrors.bank_ifsc = 'IFSC Code is required';
 //         if (!formData.bank_name?.trim()) newErrors.bank_name = 'Bank Name is required';
 //         break;
-        
+
 //       case 'marketplace':
 //         if (!formData.commission_percent || parseFloat(formData.commission_percent) < 0) {
 //           newErrors.commission_percent = 'Valid commission percentage is required';
@@ -5066,7 +5066,7 @@
 //         }
 //         break;
 //     }
-    
+
 //     setErrors(prev => ({ ...prev, ...newErrors }));
 //     return Object.keys(newErrors).length === 0;
 //   };
@@ -5081,7 +5081,7 @@
 //       });
 //       return;
 //     }
-    
+
 //     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
 //     if (currentIndex < tabs.length - 1) {
 //       setActiveTab(tabs[currentIndex + 1].id);
@@ -5117,13 +5117,13 @@
 
 //   const renderField = (fieldConfig) => {
 //     const { type = 'text', name, label, required = true, options, rows, disabled = false, readOnly = false, accept, ...props } = fieldConfig;
-    
+
 //     if (isViewing && type !== 'file') {
 //       const value = formData[name];
 //       const displayValue = Array.isArray(value) 
 //         ? value.join(', ')
 //         : (value !== null && value !== undefined && value !== '' ? value.toString() : 'N/A');
-      
+
 //       return (
 //         <div className="mb-3">
 //           <label className="customer-form-label view-mode-label">{label}</label>
@@ -5667,22 +5667,22 @@
 //       if (hasFiles) {
 //         // Use FormData for file upload
 //         const formDataToSend = new FormData();
-        
+
 //         // Add all fields except working_hours as regular fields
 //         Object.keys(formData).forEach(key => {
 //           if (key !== 'working_hours' && key !== 'categories' && key !== 'logo' && key !== 'banner') {
 //             formDataToSend.append(key, formData[key]);
 //           }
 //         });
-        
+
 //         // Add categories
 //         formData.categories.forEach(cat => {
 //           formDataToSend.append('categories', cat);
 //         });
-        
+
 //         // Add working_hours as JSON string
 //         formDataToSend.append('working_hours', JSON.stringify(workingHoursData));
-        
+
 //         // Add files if changed
 //         if (logoFile && hasLogoChanged) {
 //           formDataToSend.append('logo', logoFile);
@@ -5700,7 +5700,7 @@
 //       } else {
 //         // No files to upload - send as JSON (this works perfectly for working_hours!)
 //         headers['Content-Type'] = 'application/json';
-        
+
 //         const jsonData = {
 //           ...formData,
 //           working_hours: workingHoursData,
@@ -5725,13 +5725,13 @@
 //         text: isEditing ? 'Business Updated Successfully!' : 'Business Added Successfully!',
 //         confirmButtonColor: '#3085d6',
 //       });
-      
+
 //       navigate("/agent-my-business");
 
 //     } catch (error) {
 //       console.error('Detailed submission error:', error);
 //       console.error('Error response data:', error.response?.data);
-      
+
 //       let errorMessage = isEditing ? 'Error updating business' : 'Error adding business';
 //       if (error.response?.data) {
 //         const errors = error.response.data;
@@ -5743,7 +5743,7 @@
 //           errorMessage += `: ${JSON.stringify(errors)}`;
 //         }
 //       }
-      
+
 //       Swal.fire({
 //         icon: 'error',
 //         title: 'Submission Failed',
@@ -5830,7 +5830,7 @@
 //               <div className="form-body">
 //                 <form onSubmit={handleSubmit}>
 //                   {renderActiveTab()}
-                  
+
 //                   {!isViewing && (
 //                     <div className="form-navigation">
 //                       <div className="row">
@@ -5910,8 +5910,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { baseurl } from '../../BaseURL/BaseURL';
 import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
-
-const AddBusinessForm = ({ user, mode = 'add' }) => {  
+import { Country, State, City } from "country-state-city";
+import defaultBusinessLogo from '../../Logos/download-123.png';
+const AddBusinessForm = ({ user, mode = 'add' }) => {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('basic-details');
   const [isEditing, setIsEditing] = useState(mode === 'edit');
@@ -5919,11 +5920,13 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
   const [loading, setLoading] = useState(mode !== 'add');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  
+
   const userId = localStorage.getItem('user_id');
   const token = localStorage.getItem('token');
-const [categorySearch, setCategorySearch] = useState('');
-
+  const [categorySearch, setCategorySearch] = useState('');
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
   // Define tabs
   const tabs = [
     { id: 'basic-details', label: 'Basic Details' },
@@ -5972,21 +5975,21 @@ const [categorySearch, setCategorySearch] = useState('');
     description: '',
     logo: '',
     banner: '',
-    
+
     // Contact Info
     categories: [],
     support_email: '',
     support_phone: '',
     website: '',
-    
+
     // Address
     address_line1: '',
     address_line2: '',
     city: '',
     state: '',
-    country: 'India',
+    country: 'IN',
     pincode: '',
-    
+
     // Bank & Compliance
     bank_account_name: '',
     bank_account_number: '',
@@ -5994,12 +5997,12 @@ const [categorySearch, setCategorySearch] = useState('');
     bank_name: '',
     gst_number: '',
     pan_number: '',
-    
+
     // Marketplace
     // commission_percent: '5.00',
     settlement_cycle_days: 3,
     min_order_value: '100.00',
-    
+
     // Working Hours - Initialize with default values
     working_hours: DAYS.map(day => ({
       day: day.value,
@@ -6007,7 +6010,7 @@ const [categorySearch, setCategorySearch] = useState('');
       closes_at: day.value === 'sunday' ? null : '18:00',
       is_closed: day.value === 'sunday'
     })),
-    
+
     // System fields
     user: parseInt(userId) || 1
   });
@@ -6016,43 +6019,98 @@ const [categorySearch, setCategorySearch] = useState('');
   const [categories, setCategories] = useState([]);
 
   const handleCategorySearch = (e) => {
-  setCategorySearch(e.target.value);
-};
+    setCategorySearch(e.target.value);
+  };
 
-const filteredCategories = Array.isArray(categories) 
-  ? categories.filter(category => 
+
+  // Load countries when component mounts
+  useEffect(() => {
+    const allCountries = Country.getAllCountries();
+    setCountries(allCountries);
+  }, []);
+
+  // Load states when country changes
+  useEffect(() => {
+    if (formData.country) {
+      const statesOfCountry = State.getStatesOfCountry(formData.country);
+      setStates(statesOfCountry);
+
+      // Reset state and city when country changes
+      if (!isViewing) {
+        setFormData(prev => ({
+          ...prev,
+          state: '',
+          city: ''
+        }));
+      }
+    } else {
+      setStates([]);
+      setCities([]);
+    }
+  }, [formData.country, isViewing]);
+
+  // Load cities when state changes
+  useEffect(() => {
+    if (formData.country && formData.state) {
+      const citiesOfState = City.getCitiesOfState(formData.country, formData.state);
+      setCities(citiesOfState);
+
+      // Reset city when state changes
+      if (!isViewing) {
+        setFormData(prev => ({
+          ...prev,
+          city: ''
+        }));
+      }
+    } else {
+      setCities([]);
+    }
+  }, [formData.country, formData.state, isViewing]);
+
+  const filteredCategories = Array.isArray(categories)
+    ? categories.filter(category =>
       category.name?.toLowerCase().includes(categorySearch.toLowerCase())
     )
-  : [];
+    : [];
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch categories
         const categoriesRes = await axios.get(`${baseurl}/categories/`, {
-          headers: { 
+          headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
-        
-        const businessCategories = Array.isArray(categoriesRes.data) 
+
+        const businessCategories = Array.isArray(categoriesRes.data)
           ? categoriesRes.data.filter(cat => cat.level === 'business')
           : categoriesRes.data.results?.filter(cat => cat.level === 'business') || [];
-        
+
         setCategories(businessCategories);
 
         // If editing/viewing, fetch business data
         if (id && mode !== 'add') {
           const response = await axios.get(`${baseurl}/business/${id}/`, {
-            headers: { 
+            headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
             }
           });
-          
+
           const businessData = response.data;
-          
+          let countryCode = businessData.country || 'IN';
+          if (businessData.country && businessData.country.length > 2) {
+            // If it's a full country name, try to find the ISO code
+            const foundCountry = countries.find(c =>
+              c.name.toLowerCase() === businessData.country.toLowerCase()
+            );
+            if (foundCountry) {
+              countryCode = foundCountry.isoCode;
+            }
+          }
+
           // Format the data for the form
           const formattedData = {
             business_name: businessData.business_name || '',
@@ -6069,7 +6127,7 @@ const filteredCategories = Array.isArray(categories)
             address_line2: businessData.address_line2 || '',
             city: businessData.city || '',
             state: businessData.state || '',
-            country: businessData.country || 'India',
+            country: countryCode,
             pincode: businessData.pincode || '',
             gst_number: businessData.gst_number || '',
             pan_number: businessData.pan_number || '',
@@ -6082,34 +6140,34 @@ const filteredCategories = Array.isArray(categories)
             min_order_value: businessData.min_order_value || '50.00',
             user: parseInt(userId) || 1,
             // Format working hours
-            working_hours: businessData.working_hours?.length 
+            working_hours: businessData.working_hours?.length
               ? DAYS.map(day => {
-                  const existingHour = businessData.working_hours.find(wh => wh.day === day.value);
-                  if (existingHour) {
-                    return {
-                      day: day.value,
-                      opens_at: existingHour.opens_at || null,
-                      closes_at: existingHour.closes_at || null,
-                      is_closed: existingHour.is_closed || false
-                    };
-                  }
+                const existingHour = businessData.working_hours.find(wh => wh.day === day.value);
+                if (existingHour) {
                   return {
                     day: day.value,
-                    opens_at: day.value === 'sunday' ? null : '11:00',
-                    closes_at: day.value === 'sunday' ? null : '18:00',
-                    is_closed: day.value === 'sunday'
+                    opens_at: existingHour.opens_at || null,
+                    closes_at: existingHour.closes_at || null,
+                    is_closed: existingHour.is_closed || false
                   };
-                })
-              : DAYS.map(day => ({
+                }
+                return {
                   day: day.value,
                   opens_at: day.value === 'sunday' ? null : '11:00',
                   closes_at: day.value === 'sunday' ? null : '18:00',
                   is_closed: day.value === 'sunday'
-                }))
+                };
+              })
+              : DAYS.map(day => ({
+                day: day.value,
+                opens_at: day.value === 'sunday' ? null : '11:00',
+                closes_at: day.value === 'sunday' ? null : '18:00',
+                is_closed: day.value === 'sunday'
+              }))
           };
-          
+
           setFormData(formattedData);
-          
+
           // Set preview URLs for existing images
           if (businessData.logo) {
             setLogoPreview(`${baseurl}${businessData.logo}`);
@@ -6117,7 +6175,7 @@ const filteredCategories = Array.isArray(categories)
           if (businessData.banner) {
             setBannerPreview(`${baseurl}${businessData.banner}`);
           }
-          
+
           setIsEditing(mode === 'edit');
           setIsViewing(mode === 'view');
         }
@@ -6138,9 +6196,9 @@ const filteredCategories = Array.isArray(categories)
 
   const handleChange = (e) => {
     if (isViewing) return;
-    
+
     const { name, value, type, checked } = e.target;
-    
+
     if (type === 'checkbox') {
       setFormData(prev => ({
         ...prev,
@@ -6164,7 +6222,7 @@ const filteredCategories = Array.isArray(categories)
 
   const handleLogoChange = (e) => {
     if (isViewing) return;
-    
+
     const file = e.target.files[0];
     if (file) {
       // Check file size (max 2MB)
@@ -6175,7 +6233,7 @@ const filteredCategories = Array.isArray(categories)
         }));
         return;
       }
-      
+
       // Check file type
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
       if (!validTypes.includes(file.type)) {
@@ -6185,16 +6243,16 @@ const filteredCategories = Array.isArray(categories)
         }));
         return;
       }
-      
+
       setLogoFile(file);
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogoPreview(reader.result);
       };
       reader.readAsDataURL(file);
-      
+
       // Clear error
       if (errors.logo) {
         setErrors(prev => ({
@@ -6207,7 +6265,7 @@ const filteredCategories = Array.isArray(categories)
 
   const handleBannerChange = (e) => {
     if (isViewing) return;
-    
+
     const file = e.target.files[0];
     if (file) {
       // Check file size (max 5MB)
@@ -6218,7 +6276,7 @@ const filteredCategories = Array.isArray(categories)
         }));
         return;
       }
-      
+
       // Check file type
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
       if (!validTypes.includes(file.type)) {
@@ -6228,16 +6286,16 @@ const filteredCategories = Array.isArray(categories)
         }));
         return;
       }
-      
+
       setBannerFile(file);
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setBannerPreview(reader.result);
       };
       reader.readAsDataURL(file);
-      
+
       // Clear error
       if (errors.banner) {
         setErrors(prev => ({
@@ -6250,7 +6308,7 @@ const filteredCategories = Array.isArray(categories)
 
   const handleCategoryChange = (categoryId) => {
     if (isViewing) return;
-    
+
     setFormData(prev => {
       const numericId = parseInt(categoryId);
       const newCategories = prev.categories.includes(numericId)
@@ -6262,10 +6320,10 @@ const filteredCategories = Array.isArray(categories)
 
   const handleWorkingHourChange = (index, field, value) => {
     if (isViewing) return;
-    
+
     setFormData(prev => {
       const updatedHours = [...prev.working_hours];
-      
+
       if (field === 'is_closed') {
         const isClosed = value === 'true';
         updatedHours[index] = {
@@ -6280,7 +6338,7 @@ const filteredCategories = Array.isArray(categories)
           [field]: value
         };
       }
-      
+
       return { ...prev, working_hours: updatedHours };
     });
   };
@@ -6291,16 +6349,16 @@ const filteredCategories = Array.isArray(categories)
 
   const validateCurrentTab = () => {
     if (isViewing) return true;
-    
+
     const newErrors = {};
-    
+
     switch (activeTab) {
       case 'basic-details':
         if (!formData.business_name?.trim()) newErrors.business_name = 'Business Name is required';
         if (!formData.business_type) newErrors.business_type = 'Business Type is required';
-        if (!isEditing && !logoFile && !formData.logo) newErrors.logo = 'Logo is required';
+        // if (!isEditing && !logoFile && !formData.logo) newErrors.logo = 'Logo is required';
         break;
-        
+
       case 'contact-info':
         if (!formData.support_email?.trim()) newErrors.support_email = 'Support Email is required';
         if (!formData.support_phone?.trim()) newErrors.support_phone = 'Support Phone is required';
@@ -6310,21 +6368,21 @@ const filteredCategories = Array.isArray(categories)
           newErrors.support_email = 'Invalid email format';
         }
         break;
-        
+
       case 'address':
         if (!formData.address_line1?.trim()) newErrors.address_line1 = 'Address Line 1 is required';
         if (!formData.city?.trim()) newErrors.city = 'City is required';
         if (!formData.state?.trim()) newErrors.state = 'State is required';
         if (!formData.pincode?.trim()) newErrors.pincode = 'Pincode is required';
         break;
-        
+
       case 'bank-compliance':
         if (!formData.bank_account_name?.trim()) newErrors.bank_account_name = 'Account Name is required';
         if (!formData.bank_account_number?.trim()) newErrors.bank_account_number = 'Account Number is required';
         if (!formData.bank_ifsc?.trim()) newErrors.bank_ifsc = 'IFSC Code is required';
         if (!formData.bank_name?.trim()) newErrors.bank_name = 'Bank Name is required';
         break;
-        
+
       case 'marketplace':
         // if (!formData.commission_percent || parseFloat(formData.commission_percent) < 0) {
         //   newErrors.commission_percent = 'Valid commission percentage is required';
@@ -6337,7 +6395,7 @@ const filteredCategories = Array.isArray(categories)
         }
         break;
     }
-    
+
     setErrors(prev => ({ ...prev, ...newErrors }));
     return Object.keys(newErrors).length === 0;
   };
@@ -6352,7 +6410,7 @@ const filteredCategories = Array.isArray(categories)
       });
       return;
     }
-    
+
     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
     if (currentIndex < tabs.length - 1) {
       setActiveTab(tabs[currentIndex + 1].id);
@@ -6388,13 +6446,13 @@ const filteredCategories = Array.isArray(categories)
 
   const renderField = (fieldConfig) => {
     const { type = 'text', name, label, required = true, options, multiline, rows, disabled = false, readOnly = false, accept, ...props } = fieldConfig;
-    
+
     if (isViewing && type !== 'file') {
       const value = formData[name];
-      const displayValue = Array.isArray(value) 
+      const displayValue = Array.isArray(value)
         ? value.join(', ')
         : (value !== null && value !== undefined && value !== '' ? value.toString() : 'N/A');
-      
+
       return (
         <div className="mb-3">
           <label className="customer-form-label view-mode-label">{label}</label>
@@ -6407,11 +6465,11 @@ const filteredCategories = Array.isArray(categories)
       return (
         <div className="mb-3">
           <label className="customer-form-label">{label}{required && '*'}</label>
-          <select 
-            className={getSelectClass(name)} 
-            name={name} 
-            value={formData[name] || ''} 
-            onChange={handleChange} 
+          <select
+            className={getSelectClass(name)}
+            name={name}
+            value={formData[name] || ''}
+            onChange={handleChange}
             required={required}
             disabled={disabled || isViewing}
             {...props}
@@ -6432,11 +6490,11 @@ const filteredCategories = Array.isArray(categories)
       return (
         <div className="mb-3">
           <label className="customer-form-label">{label}{required && '*'}</label>
-          <textarea 
-            name={name} 
-            value={formData[name] || ''} 
-            className={getTextareaClass(name)} 
-            onChange={handleChange} 
+          <textarea
+            name={name}
+            value={formData[name] || ''}
+            className={getTextareaClass(name)}
+            onChange={handleChange}
             required={required}
             rows={rows || 3}
             disabled={disabled || isViewing}
@@ -6447,39 +6505,90 @@ const filteredCategories = Array.isArray(categories)
       );
     }
 
+    // if (type === 'file') {
+    //   return (
+    //     <div className="mb-3">
+    //       <label className="customer-form-label">{label}{required && '*'}</label>
+    //       <input 
+    //         type="file" 
+    //         name={name} 
+    //         className={`form-control ${errors[name] ? 'is-invalid' : ''}`} 
+    //         onChange={name === 'logo' ? handleLogoChange : handleBannerChange}
+    //         required={required && !isEditing}
+    //         disabled={isViewing}
+    //         accept={accept || 'image/*'}
+    //         {...props}
+    //       />
+    //       {renderError(name)}
+    //       {(logoPreview || formData.logo) && name === 'logo' && (
+    //         <div className="mt-2">
+    //           <p className="small text-muted">Preview:</p>
+    //           <img 
+    //             src={logoPreview || `${baseurl}${formData.logo}`} 
+    //             alt="Logo preview" 
+    //             className="img-thumbnail" 
+    //             style={{ maxWidth: '150px', maxHeight: '150px' }}
+    //           />
+    //         </div>
+    //       )}
+    //       {(bannerPreview || formData.banner) && name === 'banner' && (
+    //         <div className="mt-2">
+    //           <p className="small text-muted">Preview:</p>
+    //           <img 
+    //             src={bannerPreview || `${baseurl}${formData.banner}`} 
+    //             alt="Banner preview" 
+    //             className="img-thumbnail" 
+    //             style={{ maxWidth: '300px', maxHeight: '150px' }}
+    //           />
+    //         </div>
+    //       )}
+    //     </div>
+    //   );
+    // }
+
     if (type === 'file') {
+      // Logo is optional, banner is optional
+      const isRequired = required && !isEditing;
+
       return (
         <div className="mb-3">
-          <label className="customer-form-label">{label}{required && '*'}</label>
-          <input 
-            type="file" 
-            name={name} 
-            className={`form-control ${errors[name] ? 'is-invalid' : ''}`} 
+          <label className="customer-form-label">{label}{isRequired && '*'}</label>
+          <input
+            type="file"
+            name={name}
+            className={`form-control ${errors[name] ? 'is-invalid' : ''}`}
             onChange={name === 'logo' ? handleLogoChange : handleBannerChange}
-            required={required && !isEditing}
+            required={isRequired}
             disabled={isViewing}
             accept={accept || 'image/*'}
             {...props}
           />
           {renderError(name)}
-          {(logoPreview || formData.logo) && name === 'logo' && (
+          
+          {/* Show preview with default logo for logo field when no logo is uploaded */}
+          {(logoPreview || formData.logo || name === 'logo') && name === 'logo' && (
             <div className="mt-2">
               <p className="small text-muted">Preview:</p>
-              <img 
-                src={logoPreview || `${baseurl}${formData.logo}`} 
-                alt="Logo preview" 
-                className="img-thumbnail" 
+              <img
+                src={logoPreview || (formData.logo ? `${baseurl}${formData.logo}` : defaultBusinessLogo)}
+                alt="Logo preview"
+                className="img-thumbnail"
                 style={{ maxWidth: '150px', maxHeight: '150px' }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = defaultBusinessLogo;
+                }}
               />
             </div>
           )}
+          
           {(bannerPreview || formData.banner) && name === 'banner' && (
             <div className="mt-2">
               <p className="small text-muted">Preview:</p>
-              <img 
-                src={bannerPreview || `${baseurl}${formData.banner}`} 
-                alt="Banner preview" 
-                className="img-thumbnail" 
+              <img
+                src={bannerPreview || `${baseurl}${formData.banner}`}
+                alt="Banner preview"
+                className="img-thumbnail"
                 style={{ maxWidth: '300px', maxHeight: '150px' }}
               />
             </div>
@@ -6487,16 +6596,15 @@ const filteredCategories = Array.isArray(categories)
         </div>
       );
     }
-
     return (
       <div className="mb-3">
         <label className="customer-form-label">{label}{required && '*'}</label>
-        <input 
-          type={type} 
-          name={name} 
-          value={formData[name] || ''} 
-          className={getInputClass(name)} 
-          onChange={handleChange} 
+        <input
+          type={type}
+          name={name}
+          value={formData[name] || ''}
+          className={getInputClass(name)}
+          onChange={handleChange}
           required={required}
           disabled={disabled || isViewing}
           readOnly={readOnly}
@@ -6513,142 +6621,142 @@ const filteredCategories = Array.isArray(categories)
     }
 
     switch (activeTab) {
-    case 'basic-details':
-  return (
-    <div className="form-section">
-      <div className="form-section-content">
-        <div className="row">
-          <div className="col-md-4">
-            {renderField({
-              name: 'business_name',
-              label: 'Business Name',
-              required: true
-            })}
-          </div>
-          <div className="col-md-4">
-            {renderField({
-              name: 'legal_name',
-              label: 'Legal Name',
-              required: false
-            })}
-          </div>
-           <div className="col-md-4">
-            {renderField({
-              type: 'select',
-              name: 'business_type',
-              label: 'Business Type',
-              options: BUSINESS_TYPES,
-              required: true
-            })}
-          </div>
-        </div>
+      case 'basic-details':
+        return (
+          <div className="form-section">
+            <div className="form-section-content">
+              <div className="row">
+                <div className="col-md-4">
+                  {renderField({
+                    name: 'business_name',
+                    label: 'Business Name',
+                    required: true
+                  })}
+                </div>
+                <div className="col-md-4">
+                  {renderField({
+                    name: 'legal_name',
+                    label: 'Legal Name',
+                    required: false
+                  })}
+                </div>
+                <div className="col-md-4">
+                  {renderField({
+                    type: 'select',
+                    name: 'business_type',
+                    label: 'Business Type',
+                    options: BUSINESS_TYPES,
+                    required: true
+                  })}
+                </div>
+              </div>
 
-        <div className="row">
-          <div className="col-md-6">
-            {renderField({
-              type: 'file',
-              name: 'logo',
-              label: 'Business Logo',
-              required: !isEditing,
-              accept: 'image/jpeg,image/jpg,image/png,image/gif'
-            })}
-          </div>
-          <div className="col-md-6">
-            {renderField({
-              type: 'file',
-              name: 'banner',
-              label: 'Business Banner',
-              required: false,
-              accept: 'image/jpeg,image/jpg,image/png,image/gif'
-            })}
-          </div>
-        </div>
+              <div className="row">
+                <div className="col-md-6">
+                  {renderField({
+                    type: 'file',
+                    name: 'logo',
+                    label: 'Business Logo (Optional)',
+                    required: false,
+                    accept: 'image/jpeg,image/jpg,image/png,image/gif'
+                  })}
+                </div>
+                <div className="col-md-6">
+                  {renderField({
+                    type: 'file',
+                    name: 'banner',
+                    label: 'Business Banner',
+                    required: false,
+                    accept: 'image/jpeg,image/jpg,image/png,image/gif'
+                  })}
+                </div>
+              </div>
 
-        <div className="row">
-          <div className="col-12">
-            {renderField({
-              type: 'textarea',
-              name: 'description',
-              label: 'Description',
-              rows: 4,
-              required: false
-            })}
-          </div>
-        </div>
+              <div className="row">
+                <div className="col-12">
+                  {renderField({
+                    type: 'textarea',
+                    name: 'description',
+                    label: 'Description',
+                    rows: 4,
+                    required: false
+                  })}
+                </div>
+              </div>
 
-        <div className="row">
-          <div className="col-12">
-            <div className="categories-section">
-              <label className="customer-form-label">Business Categories</label>
-              
-              {/* Search Field */}
-              {!isViewing && (
-                <div className="category-search mb-3">
-                  <div className="input-group">
-                    <span className="input-group-text bg-white">
-                      <i className="bi bi-search"></i>
-                    </span>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Search categories..."
-                      value={categorySearch}
-                      onChange={handleCategorySearch}
-                      disabled={isViewing}
-                    />
-                    {categorySearch && (
-                      <button
-                        className="btn btn-outline-secondary"
-                        type="button"
-                        onClick={() => setCategorySearch('')}
-                      >
-                        <i className="bi bi-x"></i>
-                      </button>
+              <div className="row">
+                <div className="col-12">
+                  <div className="categories-section">
+                    <label className="customer-form-label">Business Categories</label>
+
+                    {/* Search Field */}
+                    {!isViewing && (
+                      <div className="category-search mb-3">
+                        <div className="input-group">
+                          <span className="input-group-text bg-white">
+                            <i className="bi bi-search"></i>
+                          </span>
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search categories..."
+                            value={categorySearch}
+                            onChange={handleCategorySearch}
+                            disabled={isViewing}
+                          />
+                          {categorySearch && (
+                            <button
+                              className="btn btn-outline-secondary"
+                              type="button"
+                              onClick={() => setCategorySearch('')}
+                            >
+                              <i className="bi bi-x"></i>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Categories Grid */}
+                    <div className="categories-checkbox-group">
+                      {filteredCategories.length > 0 ? (
+                        filteredCategories.map(category => (
+                          <div className="form-check category-item" key={category.category_id}>
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id={`category-${category.category_id}`}
+                              checked={formData.categories.includes(parseInt(category.category_id))}
+                              onChange={() => handleCategoryChange(category.category_id)}
+                              disabled={isViewing}
+                            />
+                            <label className="form-check-label" htmlFor={`category-${category.category_id}`}>
+                              {category.name}
+                            </label>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-muted text-center py-3">
+                          {categorySearch ? 'No categories found matching your search' : 'No categories available'}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Selected Count */}
+                    {!isViewing && formData.categories.length > 0 && (
+                      <div className="selected-count mt-2 text-muted">
+                        <small>
+                          <i className="bi bi-check-circle-fill text-success me-1"></i>
+                          {formData.categories.length} categor{formData.categories.length === 1 ? 'y' : 'ies'} selected
+                        </small>
+                      </div>
                     )}
                   </div>
                 </div>
-              )}
-              
-              {/* Categories Grid */}
-              <div className="categories-checkbox-group">
-                {filteredCategories.length > 0 ? (
-                  filteredCategories.map(category => (
-                    <div className="form-check category-item" key={category.category_id}>
-                      <input 
-                        className="form-check-input" 
-                        type="checkbox" 
-                        id={`category-${category.category_id}`}
-                        checked={formData.categories.includes(parseInt(category.category_id))}
-                        onChange={() => handleCategoryChange(category.category_id)}
-                        disabled={isViewing}
-                      />
-                      <label className="form-check-label" htmlFor={`category-${category.category_id}`}>
-                        {category.name}
-                      </label>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-muted text-center py-3">
-                    {categorySearch ? 'No categories found matching your search' : 'No categories available'}
-                  </div>
-                )}
               </div>
-              
-              {/* Selected Count */}
-              {!isViewing && formData.categories.length > 0 && (
-                <div className="selected-count mt-2 text-muted">
-                  <small>
-                    <i className="bi bi-check-circle-fill text-success me-1"></i>
-                    {formData.categories.length} categor{formData.categories.length === 1 ? 'y' : 'ies'} selected
-                  </small>
-                </div>
-              )}
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  );
+        );
       case 'contact-info':
         return (
           <div className="form-section">
@@ -6686,69 +6794,230 @@ const filteredCategories = Array.isArray(categories)
           </div>
         );
 
-      case 'address':
-        return (
-          <div className="form-section">
-            {/* <h3 className="form-section-title">Address Details</h3> */}
-            <div className="form-section-content">
-              <div className="row">
-                <div className="col-12">
-                  {renderField({
-                    type: 'textarea',
-                    name: 'address_line1',
-                    label: 'Address Line 1',
-                    rows: 2,
-                    required: true
-                  })}
-                </div>
-              </div>
+      // case 'address':
+      //   return (
+      //     <div className="form-section">
+      //       {/* <h3 className="form-section-title">Address Details</h3> */}
+      //       <div className="form-section-content">
+      //         <div className="row">
+      //           <div className="col-12">
+      //             {renderField({
+      //               type: 'textarea',
+      //               name: 'address_line1',
+      //               label: 'Address Line 1',
+      //               rows: 2,
+      //               required: true
+      //             })}
+      //           </div>
+      //         </div>
 
-              <div className="row">
-                <div className="col-12">
-                  {renderField({
-                    type: 'textarea',
-                    name: 'address_line2',
-                    label: 'Address Line 2',
-                    rows: 2,
-                    required: false
-                  })}
-                </div>
-              </div>
+      //         <div className="row">
+      //           <div className="col-12">
+      //             {renderField({
+      //               type: 'textarea',
+      //               name: 'address_line2',
+      //               label: 'Address Line 2',
+      //               rows: 2,
+      //               required: false
+      //             })}
+      //           </div>
+      //         </div>
 
-              <div className="row">
-                <div className="col-md-3">
-                  {renderField({
-                    name: 'city',
-                    label: 'City',
-                    required: true
-                  })}
+      //         <div className="row">
+      //           <div className="col-md-3">
+      //             {renderField({
+      //               name: 'city',
+      //               label: 'City',
+      //               required: true
+      //             })}
+      //           </div>
+      //           <div className="col-md-3">
+      //             {renderField({
+      //               name: 'state',
+      //               label: 'State',
+      //               required: true
+      //             })}
+      //           </div>
+      //           <div className="col-md-3">
+      //             {renderField({
+      //               name: 'pincode',
+      //               label: 'Pincode',
+      //               required: true
+      //             })}
+      //           </div>
+      //           <div className="col-md-3">
+      //             {renderField({
+      //               name: 'country',
+      //               label: 'Country',
+      //               value: 'India',
+      //               readOnly: true
+      //             })}
+      //           </div>
+      //         </div>
+      //       </div>
+      //     </div>
+      //   );
+case 'address':
+  return (
+    <div className="form-section">
+      <div className="form-section-content">
+        <div className="row">
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="customer-form-label">Country *</label>
+              {isViewing ? (
+                <div className="view-mode-value">
+                  {countries.find(c => c.isoCode === formData.country)?.name || formData.country || 'N/A'}
                 </div>
-                <div className="col-md-3">
-                  {renderField({
-                    name: 'state',
-                    label: 'State',
-                    required: true
-                  })}
-                </div>
-                <div className="col-md-3">
-                  {renderField({
-                    name: 'pincode',
-                    label: 'Pincode',
-                    required: true
-                  })}
-                </div>
-                 <div className="col-md-3">
-                  {renderField({
-                    name: 'country',
-                    label: 'Country',
-                    value: 'India',
-                    readOnly: true
-                  })}
-                </div>
-              </div>
+              ) : (
+                <>
+                  <select 
+                    className={`form-select customer-form-input ${errors.country ? 'is-invalid' : ''}`}
+                    name="country"
+                    value={formData.country || 'IN'}  // Default to 'IN' for India
+                    onChange={(e) => {
+                      const selectedCountry = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        country: selectedCountry,
+                        state: '',
+                        city: ''
+                      }));
+                      if (errors.country) {
+                        setErrors(prev => ({ ...prev, country: '' }));
+                      }
+                    }}
+                    required
+                  >
+                    <option value="">Select Country</option>
+                    {countries.map(country => (
+                      <option key={country.isoCode} value={country.isoCode}>
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
+                  {renderError('country')}
+                </>
+              )}
             </div>
           </div>
-        );
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="customer-form-label">State *</label>
+              {isViewing ? (
+                <div className="view-mode-value">
+                  {states.find(s => s.isoCode === formData.state)?.name || formData.state || 'N/A'}
+                </div>
+              ) : (
+                <>
+                  <select 
+                    className={`form-select customer-form-input ${errors.state ? 'is-invalid' : ''}`}
+                    name="state"
+                    value={formData.state || ''}
+                    onChange={(e) => {
+                      const selectedState = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        state: selectedState,
+                        city: ''
+                      }));
+                      if (errors.state) {
+                        setErrors(prev => ({ ...prev, state: '' }));
+                      }
+                    }}
+                    disabled={!formData.country}
+                    required
+                  >
+                    <option value="">Select State</option>
+                    {states.map(state => (
+                      <option key={state.isoCode} value={state.isoCode}>
+                        {state.name}
+                      </option>
+                    ))}
+                  </select>
+                  {renderError('state')}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="customer-form-label">City *</label>
+              {isViewing ? (
+                <div className="view-mode-value">
+                  {formData.city || 'N/A'}
+                </div>
+              ) : (
+                <>
+                  <select 
+                    className={`form-select customer-form-input ${errors.city ? 'is-invalid' : ''}`}
+                    name="city"
+                    value={formData.city || ''}
+                    onChange={(e) => {
+                      const selectedCity = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        city: selectedCity
+                      }));
+                      if (errors.city) {
+                        setErrors(prev => ({ ...prev, city: '' }));
+                      }
+                    }}
+                    disabled={!formData.state}
+                    required
+                  >
+                    <option value="">Select City</option>
+                    {cities.map(city => (
+                      <option key={city.name} value={city.name}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                  {renderError('city')}
+                </>
+              )}
+            </div>
+          </div>
+          <div className="col-md-6">
+            {renderField({
+              name: 'pincode',
+              label: 'Pincode',
+              required: true
+            })}
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            {renderField({
+              type: 'textarea',
+              name: 'address_line1',
+              label: 'Address Line 1',
+              rows: 2,
+              required: true
+            })}
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12">
+            {renderField({
+              type: 'textarea',
+              name: 'address_line2',
+              label: 'Address Line 2',
+              rows: 2,
+              required: false
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+
 
       case 'bank-compliance':
         return (
@@ -6964,7 +7233,7 @@ const filteredCategories = Array.isArray(categories)
     try {
       // Prepare FormData for file upload
       const formDataToSend = new FormData();
-      
+
       // Add all form fields
       formDataToSend.append('business_name', formData.business_name);
       formDataToSend.append('legal_name', formData.legal_name || '');
@@ -6992,7 +7261,7 @@ const filteredCategories = Array.isArray(categories)
       formDataToSend.append('commission_percent', parseFloat(formData.commission_percent) || 5.0);
       formDataToSend.append('settlement_cycle_days', parseInt(formData.settlement_cycle_days) || 3);
       formDataToSend.append('min_order_value', parseFloat(formData.min_order_value) || 50.00);
-      
+
       // Add working hours as JSON string
       const workingHoursData = formData.working_hours.map(hour => {
         if (hour.is_closed) {
@@ -7009,7 +7278,7 @@ const filteredCategories = Array.isArray(categories)
         };
       });
       formDataToSend.append('working_hours', JSON.stringify(workingHoursData));
-      
+
       // Add files if they exist
       if (logoFile) {
         formDataToSend.append('logo', logoFile);
@@ -7045,7 +7314,7 @@ const filteredCategories = Array.isArray(categories)
 
     } catch (error) {
       console.error('Detailed submission error:', error);
-      
+
       let errorMessage = isEditing ? 'Error updating business' : 'Error adding business';
       if (error.response?.data) {
         // Handle Django validation errors
@@ -7058,7 +7327,7 @@ const filteredCategories = Array.isArray(categories)
           errorMessage += `: ${JSON.stringify(errors)}`;
         }
       }
-      
+
       Swal.fire({
         icon: 'error',
         title: 'Submission Failed',
@@ -7081,7 +7350,7 @@ const filteredCategories = Array.isArray(categories)
 
   return (
     <>
-      <AgentNavbar/>
+      <AgentNavbar />
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
@@ -7091,22 +7360,22 @@ const filteredCategories = Array.isArray(categories)
                 <div className="form-actions">
                   {!isViewing && (
                     <>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className="btn btn-secondary me-2"
                         onClick={() => navigate('/agent-my-business')} // Changed to business list
                         disabled={isSubmitting}
                       >
                         Cancel
                       </button>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className="btn "
-                          style={{
-              backgroundColor: '#273c75',
-              borderColor: '#273c75',
-              color: 'white'
-            }}
+                        style={{
+                          backgroundColor: '#273c75',
+                          borderColor: '#273c75',
+                          color: 'white'
+                        }}
                         onClick={handleSubmit}
                         disabled={isSubmitting}
                       >
@@ -7115,8 +7384,8 @@ const filteredCategories = Array.isArray(categories)
                     </>
                   )}
                   {isViewing && (
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       className="btn btn-secondary"
                       onClick={() => navigate('/agent-my-business')} // Changed to business list
                     >
@@ -7145,14 +7414,14 @@ const filteredCategories = Array.isArray(categories)
               <div className="form-body">
                 <form onSubmit={handleSubmit}>
                   {renderActiveTab()}
-                  
+
                   {!isViewing && (
                     <div className="form-navigation">
                       <div className="row">
                         <div className="col-md-6">
                           {activeTab !== 'basic-details' && (
-                            <button 
-                              type="button" 
+                            <button
+                              type="button"
                               className="btn btn-secondary"
                               onClick={handleBack}
                               disabled={isSubmitting}
@@ -7163,28 +7432,28 @@ const filteredCategories = Array.isArray(categories)
                         </div>
                         <div className="col-md-6 text-end">
                           {activeTab !== 'working-hours' ? (
-                            <button 
-                              type="button" 
+                            <button
+                              type="button"
                               className="btn"
-                                style={{
-              backgroundColor: '#273c75',
-              borderColor: '#273c75',
-              color: 'white'
-            }}
+                              style={{
+                                backgroundColor: '#273c75',
+                                borderColor: '#273c75',
+                                color: 'white'
+                              }}
                               onClick={handleNext}
                               disabled={isSubmitting}
                             >
                               Next <i className="bi bi-arrow-right ms-1"></i>
                             </button>
                           ) : (
-                            <button 
-                              type="button" 
+                            <button
+                              type="button"
                               className="btn"
-                                style={{
-              backgroundColor: '#273c75',
-              borderColor: '#273c75',
-              color: 'white'
-            }}
+                              style={{
+                                backgroundColor: '#273c75',
+                                borderColor: '#273c75',
+                                color: 'white'
+                              }}
                               onClick={handleSubmit}
                               disabled={isSubmitting}
                             >

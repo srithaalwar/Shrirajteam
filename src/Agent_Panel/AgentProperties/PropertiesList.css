@@ -82,6 +82,42 @@
 }
 
 /* Responsive adjustments */
+/* @media (max-width: 768px) {
+  .card-body {
+    padding: 1rem !important;
+  }
+  
+  .btn-group .btn {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.875rem;
+  }
+  
+  .list-group-item .row > div {
+    margin-bottom: 1rem;
+  }
+} */
+/* 
+@media (max-width: 576px) {
+  .input-group {
+    width: 100% !important;
+  }
+  
+  .form-select {
+    width: 100% !important;
+    margin-top: 0.5rem;
+  }
+  
+  .sticky-top {
+    position: static !important;
+  }
+  .btn-group {
+  display: none;
+
+}
+} */
+
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .card-body {
     padding: 1rem !important;
@@ -110,10 +146,16 @@
   .sticky-top {
     position: static !important;
   }
+  
+  /* Fix: Only hide the view mode buttons on mobile, not the entire button group */
+  .product-header .btn-group {
+    display: none;
+  }
+  
+  /* Ensure BUY NOW button is still visible */
   .btn-group {
-  display: none;
-
-}
+    display: inline-flex !important;
+  }
 }
 
 /* Price range slider (if you want to add later) */

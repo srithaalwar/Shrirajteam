@@ -7970,7 +7970,66 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
   const currentUserId = localStorage.getItem("user_id");
 
   // Move useEffect to the top, before any conditional returns
+  useEffect(() => {
+    // Check for pending payment on component mount
+    const checkPendingPayment = async () => {
+      const pendingPayment = sessionStorage.getItem('pendingPayment');
+      const urlParams = new URLSearchParams(window.location.search);
+      const paymentStatus = urlParams.get('payment_status');
+      const orderId = urlParams.get('order_id') || urlParams.get('merchant_order_id');
+      
+      console.log('Checking pending payment:', { pendingPayment, paymentStatus, orderId });
+      
+      if (isOpen && paymentStatus && !hasConfirmedRef.current) {
+        try {
+          let paymentData;
+          
+          if (pendingPayment) {
+            paymentData = JSON.parse(pendingPayment);
+          }
+          
+          // Get the order ID from URL params or from stored data
+          const confirmOrderId = orderId || (paymentData?.merchant_order_id);
+          
+          if (!confirmOrderId) {
+            console.error('No order ID found for confirmation');
+            return;
+          }
+          
+          // Only confirm if payment was successful
+          if (paymentStatus === 'success') {
+            // Set the merchant order ID first
+            setMerchantOrderId(confirmOrderId);
+            
+            // Small delay to ensure state is updated
+            setTimeout(async () => {
+              await handleConfirmPayment(confirmOrderId);
+            }, 100);
+          } else {
+            // Clear pending payment if payment failed
+            sessionStorage.removeItem('pendingPayment');
+            Swal.fire({
+              title: 'Payment Failed',
+              text: 'Your payment was not successful. Please try again.',
+              icon: 'error',
+              confirmButtonColor: '#273c75'
+            });
+            // Close modal on payment failure
+            handleClose();
+          }
+        } catch (err) {
+          console.error('Error processing pending payment:', err);
+        } finally {
+          // Clean up URL parameters
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+    };
 
+    if (isOpen) {
+      checkPendingPayment();
+    }
+  }, [isOpen]);
 
   // Early return after all hooks are called
   if (!isOpen || !property) return null;
@@ -7979,65 +8038,94 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
   const bookingAmount = parseFloat(property.booking_amount || 0);
   const remainingAmount = parseFloat(property.property_value_without_booking_amount || 0);
 
- const handleInitiatePayment = async () => {
-  if (!currentUserId) {
-    Swal.fire({
-      title: 'Error',
-      text: 'User not authenticated. Please login again.',
-      icon: 'error',
-    });
-    return;
-  }
+  const handleInitiatePayment = async () => {
+    if (!currentUserId) {
+      Swal.fire({
+        title: 'Error',
+        text: 'User not authenticated. Please login again.',
+        icon: 'error',
+        confirmButtonColor: '#273c75'
+      });
+      return;
+    }
 
-  setIsProcessing(true);
-  setPaymentStep('processing');
+    setIsProcessing(true);
+    setPaymentStep('processing');
 
-  try {
-    const res = await fetch(`${baseurl}/property/initiate-payment/`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user_id: Number(currentUserId),
-        property_id: property.property_id,
-        payment_type: "Booking-Amount",
-        redirect_url: window.location.origin + "/agent-properties"
-      })
-    });
+    try {
+      // First API call - Initiate Payment
+      const initiateResponse = await fetch(`${baseurl}/property/initiate-payment/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: parseInt(currentUserId),
+          property_id: property.property_id,
+          payment_type: "Booking-Amount",
+          redirect_url: window.location.origin + "/agent-properties"
+        })
+      });
 
-    const data = await res.json();
+      if (!initiateResponse.ok) {
+        const errorData = await initiateResponse.text();
+        throw new Error(`Payment initiation failed: ${errorData}`);
+      }
 
-    if (!res.ok) throw new Error(data.message || "Failed");
+      const initiateData = await initiateResponse.json();
+      console.log('Initiate Payment Response:', initiateData);
+      
+      // Store the merchant order ID and payment URL from response
+      const orderId = initiateData.merchant_order_id || initiateData.order_id || initiateData.id;
+      const paymentGatewayUrl = initiateData.payment_url;
+      
+      setMerchantOrderId(orderId);
+      setPaymentUrl(paymentGatewayUrl);
 
-    const orderId = data.merchant_order_id;
-    const paymentUrl = data.payment_url;
+      if (paymentGatewayUrl) {
+        // Store payment info in sessionStorage for after redirect
+        sessionStorage.setItem('pendingPayment', JSON.stringify({
+          property_id: property.property_id,
+          user_id: currentUserId,
+          merchant_order_id: orderId,
+          payment_type: "Booking-Amount",
+          property_title: property.property_title,
+          booking_amount: bookingAmount
+        }));
+        
+        // Show confirmation that we're redirecting
+        Swal.fire({
+          title: 'Redirecting to Payment Gateway',
+          text: 'You will be redirected to complete your payment. Please do not close this window.',
+          icon: 'info',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        
+        // Redirect to payment gateway with order ID
+        const redirectUrl = new URL(paymentGatewayUrl);
+        redirectUrl.searchParams.append('order_id', orderId);
+        
+        setTimeout(() => {
+          window.location.href = redirectUrl.toString();
+        }, 1000);
+      } else {
+        // If no payment URL, proceed with second API call
+        await handleConfirmPayment(orderId);
+      }
 
-    // ✅ store in localStorage
-    localStorage.setItem('property_payment', JSON.stringify({
-      property_id: property.property_id,
-      user_id: currentUserId,
-      merchant_order_id: orderId,
-      property_title: property.property_title,
-      booking_amount: bookingAmount,
-      timestamp: Date.now()
-    }));
-
-    Swal.fire({
-      title: "Redirecting...",
-      text: "Please complete payment",
-      timer: 1500,
-      showConfirmButton: false
-    });
-
-    setTimeout(() => {
-      window.location.href = paymentUrl;
-    }, 1000);
-
-  } catch (err) {
-    Swal.fire("Error", err.message, "error");
-    setPaymentStep('form');
-    setIsProcessing(false);
-  }
-};
+    } catch (error) {
+      console.error('Payment error:', error);
+      setPaymentStep('form');
+      Swal.fire({
+        title: 'Error!',
+        text: error.message || 'Failed to process payment. Please try again.',
+        icon: 'error',
+        confirmButtonColor: '#273c75'
+      });
+      setIsProcessing(false);
+    }
+  };
 
   const handleConfirmPayment = async (orderId) => {
     // Prevent double confirmation
@@ -9970,84 +10058,6 @@ const AgentProperties = () => {
     selectedSortOptions,
     currentUserId
   ]);
-
-
-  useEffect(() => {
-  const confirmPropertyPayment = async () => {
-    const stored = localStorage.getItem('property_payment');
-    if (!stored) return;
-
-    const data = JSON.parse(stored);
-    const { merchant_order_id, property_id } = data;
-
-    try {
-      // 🔍 Step 1: Check status
-      const statusRes = await fetch(
-        `${baseurl}/property/payment-status/${merchant_order_id}/`
-      );
-
-      let isSuccess = false;
-
-      if (statusRes.ok) {
-        const statusData = await statusRes.json();
-        isSuccess =
-          statusData.status === "success" ||
-          statusData.status === "paid";
-      }
-
-      // fallback (if API not available)
-      const urlParams = new URLSearchParams(window.location.search);
-      const paymentStatus = urlParams.get('payment_status');
-
-      if (!isSuccess && paymentStatus === "success") {
-        isSuccess = true;
-      }
-
-      if (!isSuccess) return;
-
-      // ✅ Step 2: Confirm payment
-      const confirmRes = await fetch(
-        `${baseurl}/property/confirm-payment/`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            user_id: Number(currentUserId),
-            property_id,
-            payment_type: "Booking-Amount",
-            merchant_order_id,
-          }),
-        }
-      );
-
-      if (confirmRes.ok) {
-        Swal.fire({
-          title: "Success 🎉",
-          text: "Property booked successfully",
-          icon: "success",
-        });
-
-        localStorage.removeItem('property_payment');
-
-        // refresh
-        fetchApprovedProperties();
-      }
-
-      // clean URL
-      window.history.replaceState({}, document.title, window.location.pathname);
-
-    } catch (err) {
-      console.error("Confirm error:", err);
-    }
-  };
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const paymentStatus = urlParams.get('payment_status');
-
-  if (paymentStatus || localStorage.getItem('property_payment')) {
-    confirmPropertyPayment();
-  }
-}, []);
 
   // Apply price range filter client-side
   useEffect(() => {
