@@ -520,7 +520,7 @@ useEffect(() => {
     const submitData = {
       first_name: formData.first_name.trim(),
       last_name: formData.last_name.trim(),
-      // email: formData.email.trim(),
+      email: formData.email.trim(),
       password: formData.password,
       phone_number: formData.phone_number.trim(),
       role_ids: formData.role_ids,
