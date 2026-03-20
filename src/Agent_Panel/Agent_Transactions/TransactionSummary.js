@@ -1762,7 +1762,7 @@ function AgentTransactionSummary() {
             <div className="staff-page">
                 {/* Header with refresh button */}
                 <div className="staff-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h2>Agent Transaction Summary</h2>
+                    <h2>My Transaction Summary</h2>
                     <button 
                         onClick={handleRefresh}
                         style={{

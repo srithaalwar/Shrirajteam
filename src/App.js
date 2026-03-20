@@ -351,6 +351,9 @@ import ClientOrders from "./Client_Panel/Client_Orders/Orders"
 import Categoslug from './ElectronicAndMobilesCarousel/CategoryBySlug'
 import AutoRedirect from "./components/AutoRedirect";
 import GuestRoute from "./components/GuestRoute";
+import TotalReferrals from "./Admin_Panel/Admin_Referrals/Total_Referrals";
+import ReferralReports from "./Admin_Panel/Admin_Referral_Reports/Referral_Reports";
+import AdminTeam from './Admin_Panel/Admin_MyTeam/MyTeam'
 function App() {
   return (
     <BrowserRouter>
@@ -422,6 +425,8 @@ function App() {
         {/* Admin-panel */}
         <Route path="/admin-add-property" element={<Add_Property />} />
         <Route path="/admin-reports" element={<AdminReports />} />
+        <Route path="/referral-reports" element={<ReferralReports />} />
+
 
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin-properties" element={<PropertiesList />} />
@@ -549,7 +554,7 @@ function App() {
         <Route path="/agent-add-product-form" element={<AgentAddProductForm />} />
 
         <Route path="/agent-my-team" element={<MyTeam />} />
-
+<Route path="/admin-my-team" element={<AdminTeam />} />
         <Route path="/agent-site-visits" element={<Sitevisit />} />
         <Route path="/agent-addsitevisit" element={<AddSitevisit />} />
         <Route path="/agent-editsitevisit/:id" element={<EditSitevisit />} />
@@ -597,6 +602,7 @@ function App() {
         <Route path="/client-transactions" element={<ClientTransactions />} />
         <Route path="/client-my-plans" element={<ClientPlans />} />
 
+        <Route path="/total-referrals" element={<TotalReferrals />} />
 
         <Route path="/admin-users" element={<UserList />} />
         <Route path="/admin-view-user/:id" element={<ViewUser />} />

@@ -602,43 +602,43 @@ const ClientDashboard = () => {
           label: "Total Properties", 
           value: myProps.total_added || 0, 
           icon: iconMap["Total Properties"], 
-          path: "/client-properties" 
+          // path: "/client-properties" 
         },
         { 
           label: "Available Properties", 
           value: myProps.available || 0, 
           icon: iconMap["Available Properties"], 
-          path: "/client-properties?status=available" 
+          // path: "/client-properties?status=available" 
         },
         { 
           label: "Sold Properties", 
           value: myProps.sold || 0, 
           icon: iconMap["Sold Properties"], 
-          path: "/client-properties?status=sold" 
+          // path: "/client-properties?status=sold" 
         },
         { 
           label: "Booked Properties", 
           value: myProps.booked || 0, 
           icon: iconMap["Booked Properties"], 
-          path: "/client-properties?status=booked" 
+          // path: "/client-properties?status=booked" 
         },
         { 
           label: "Pending Properties", 
           value: myProps.pending || 0, 
           icon: iconMap["Pending Properties"], 
-          path: "/client-properties?status=pending" 
+          // path: "/client-properties?status=pending" 
         },
         { 
           label: "Verified Properties", 
           value: myProps.verified || 0, 
           icon: iconMap["Verified Properties"], 
-          path: "/client-properties?status=verified" 
+          // path: "/client-properties?status=verified" 
         },
         { 
           label: "Rejected Properties", 
           value: myProps.rejected || 0, 
           icon: iconMap["Rejected Properties"], 
-          path: "/client-properties?status=rejected" 
+          // path: "/client-properties?status=rejected" 
         }
       );
     }
@@ -650,19 +650,19 @@ const ClientDashboard = () => {
           label: "Total Transactions", 
           value: transaction_summary.total_transactions || 0, 
           icon: iconMap["Total Transactions"], 
-          path: "/client-transactions" 
+          // path: "/client-transactions" 
         },
         { 
           label: "Successful Transactions", 
           value: transaction_summary.success || 0, 
           icon: iconMap["Successful Transactions"], 
-          path: "/client-transactions?status=success" 
+          // path: "/client-transactions?status=success" 
         },
         { 
           label: "Total Revenue", 
           value: `₹${transaction_summary.total_revenue || 0}`, 
           icon: iconMap["Total Revenue"], 
-          path: "/client-transactions" 
+          // path: "/client-transactions" 
         }
       );
     }
@@ -674,13 +674,13 @@ const ClientDashboard = () => {
           label: "Total Orders", 
           value: order_summary.total_orders || 0, 
           icon: iconMap["Total Orders"], 
-          path: "/client-orders" 
+          // path: "/client-orders" 
         },
         { 
           label: "Paid Orders", 
           value: order_summary.paid || 0, 
           icon: iconMap["Paid Orders"], 
-          path: "/client-orders?status=paid" 
+          // path: "/client-orders?status=paid" 
         }
       );
     }
@@ -692,13 +692,13 @@ const ClientDashboard = () => {
           label: "Total Subscriptions", 
           value: subscription_summary.total_subscriptions || 0, 
           icon: iconMap["Total Subscriptions"], 
-          path: "/client-my-plans" 
+          // path: "/client-my-plans" 
         },
         { 
           label: "Active Subscriptions", 
           value: subscription_summary.active || 0, 
           icon: iconMap["Active Subscriptions"], 
-          path: "/client-my-plans?status=active" 
+          // path: "/client-my-plans?status=active" 
         },
         // { 
         //   label: "Subscription Revenue", 
@@ -715,7 +715,7 @@ const ClientDashboard = () => {
         label: "Transaction History", 
         value: "View All", 
         icon: iconMap["Transaction History"], 
-        path: "/client-transaction-history" 
+        // path: "/client-transaction-history" 
       }
     );
 

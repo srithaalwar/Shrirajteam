@@ -4400,6 +4400,8 @@ const AdminNavbar = () => {
     { path: "/admin-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/a-leads", name: "Leads", icon: <FaChartLine /> },
     { path: "/admin-reports", name: "Reports", icon: <FaFileAlt /> },
+        { path: "/referral-reports", name: "Referral Reports", icon: <FaFileAlt /> },
+
     { path: "/a-settings", name: "Settings", icon: <FaTag /> },
     { path: "/admin-profile", name: "Profile", icon: <FaUserCircle /> },
   ];
