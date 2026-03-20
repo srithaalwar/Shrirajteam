@@ -251,6 +251,11 @@ import AdminEditServiceProvider from './Admin_Panel/Admin_ServiceProvider/EditSe
 // import AdminEditProductCategory from './Admin_Panel/Product_Category/EditCategory';
 // import AdminProductCategory from './Adm/in_Panel/Product_Category/TableCategory';
 
+import Settings from "./Admin_Panel/Admin_Settings/Settings"
+import AddSetting from "./Admin_Panel/Admin_Settings/AddSetting"
+import EditSetting from "./Admin_Panel/Admin_Settings/EditSetting"
+
+
 import TableProductCategory from './Admin_Panel/Product_Category/TableCategory';
 import ProductCategoryForm from './Admin_Panel/Product_Category/AddCategory';
 import EditProductCategory from './Admin_Panel/Product_Category/EditCategory';
@@ -429,6 +434,10 @@ function App() {
         <Route path="/a-bookingslab" element={<BookingSlab />} />
         <Route path="/a-add-booking-slab" element={<AddBookingSlab />} />
         <Route path="/a-edit-booking-slab/:id" element={<EditBookingSlab />} />
+
+<Route path="/a-settings" element={<Settings />} />
+<Route path="/a-add-setting" element={<AddSetting />} />
+<Route path="/a-edit-setting/:key" element={<EditSetting />} />
 
          <Route path="/a-service-categories" element={<ServiceCategories />} />
           <Route path="/a-add-service-category" element={<AddServiceCategory />} />
