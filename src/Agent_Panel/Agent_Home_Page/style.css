@@ -1,0 +1,462 @@
+/* Carousel.css - Add these styles to your existing CSS */
+
+
+/* ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.mani-as-offer-wrapper {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 16px 16px 10px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ===== HEADER ===== */
+.mani-as-offer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.mani-as-offer-heading {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* ===== VIEW ALL BUTTON ===== */
+.mani-as-offer-viewall-wrap {
+  text-align: right;
+}
+
+.mani-as-offer-viewall-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  transition: gap 0.2s ease;
+}
+
+.mani-as-offer-viewall-btn:hover { 
+  gap: 12px; 
+}
+
+.mani-as-viewall-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b35, #f7290b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 1;
+  box-shadow: 0 3px 10px rgba(255, 107, 53, 0.4);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  flex-shrink: 0;
+}
+
+.mani-as-offer-viewall-btn:hover .mani-as-viewall-circle {
+  transform: translateX(4px) scale(1.1);
+  box-shadow: 0 5px 16px rgba(255, 107, 53, 0.55);
+}
+
+/* ===== CARDS GRID — DESKTOP: 3 columns ===== */
+.mani-as-offer-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+/* ===== SINGLE CARD ITEM ===== */
+.mani-as-offer-card-item {
+  width: 100%;
+  cursor: pointer;
+}
+
+/* ===== CARD — image as background ===== */
+.mani-as-offer-card {
+  position: relative;
+  width: 100%;
+  padding-top: 56.2%;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.mani-as-offer-card-item:hover .mani-as-offer-card {
+  transform: scale(1.02);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
+}
+
+/* ===== DISCOUNT BADGE - TOP RIGHT ===== */
+.mani-as-offer-discount-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  padding: 4px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.mani-as-offer-discount-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* ===== LOADING / EMPTY ===== */
+.mani-as-offer-loading {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  font-size: 15px;
+}
+
+.mani-as-offer-loading-dots::after {
+  content: '...';
+  animation: mani-as-dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes mani-as-dots {
+  0%, 20%  { content: '.';   }
+  40%      { content: '..';  }
+  60%, 100%{ content: '...'; }
+}
+
+/* ========================================= */
+/* ============= RESPONSIVE ================ */
+/* ========================================= */
+
+/* Tablet (768px – 1024px): 2 columns */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .mani-as-offer-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .mani-as-offer-heading { 
+    font-size: 17px; 
+  }
+}
+
+/* Large mobile (481px – 767px) */
+@media (min-width: 481px) and (max-width: 767px) {
+  .mani-as-offer-wrapper { 
+    padding: 14px 12px 10px; 
+  }
+
+  .mani-as-offer-cards-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+
+  .mani-as-offer-cards-grid::-webkit-scrollbar { 
+    display: none; 
+  }
+
+  .mani-as-offer-card-item {
+    flex: 0 0 70vw;
+    max-width: 300px;
+    scroll-snap-align: start;
+  }
+
+  .mani-as-offer-heading { 
+    font-size: 16px; 
+  }
+
+  .mani-as-offer-discount-badge {
+    top: 10px;
+    right: 10px;
+    padding: 3px 8px;
+  }
+
+  .mani-as-offer-discount-text {
+    font-size: 11px;
+  }
+}
+
+/* Small mobile (≤ 480px) */
+@media (max-width: 480px) {
+  .mani-as-offer-wrapper { 
+    padding: 12px 10px 8px; 
+  }
+
+  .mani-as-offer-header { 
+    margin-bottom: 10px; 
+  }
+  
+  .mani-as-offer-heading { 
+    font-size: 15px; 
+  }
+
+  .mani-as-viewall-circle { 
+    width: 28px; 
+    height: 28px; 
+    font-size: 14px; 
+  }
+
+  .mani-as-offer-cards-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+
+  .mani-as-offer-cards-grid::-webkit-scrollbar { 
+    display: none; 
+  }
+
+  .mani-as-offer-card-item {
+    flex: 0 0 78vw;
+    max-width: 260px;
+    scroll-snap-align: start;
+  }
+
+  .mani-as-offer-discount-badge {
+    top: 8px;
+    right: 8px;
+    padding: 2px 8px;
+  }
+
+  .mani-as-offer-discount-text {
+    font-size: 10px;
+  }
+}
+
+/* Tiny (≤ 360px) */
+@media (max-width: 360px) {
+  .mani-as-offer-card-item {
+    flex: 0 0 84vw;
+  }
+
+  .mani-as-offer-heading { 
+    font-size: 14px; 
+  }
+
+  .mani-as-offer-discount-badge {
+    top: 6px;
+    right: 6px;
+    padding: 2px 6px;
+  }
+
+  .mani-as-offer-discount-text {
+    font-size: 9px;
+  }
+}
+
+/* Hover effect for badge on desktop */
+@media (min-width: 1025px) {
+  .mani-as-offer-card-item:hover .mani-as-offer-discount-badge {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+  }
+}
+
+.mani-as-offer-wrapper {
+  margin-bottom: 40px;
+  padding: 0 20px;
+}
+
+.mani-as-offer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+.mani-as-offer-heading {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  position: relative;
+  padding-left: 15px;
+  border-left: 4px solid #ff6b6b;
+}
+
+.mani-as-offer-viewall-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.mani-as-offer-viewall-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.3s ease;
+}
+
+.mani-as-offer-viewall-btn:hover {
+  transform: translateX(5px);
+}
+
+.mani-as-viewall-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #ff6b6b;
+  color: white;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.mani-as-viewall-circle:hover {
+  background-color: #ff5252;
+}
+
+.mani-as-offer-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.mani-as-offer-card-item {
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mani-as-offer-card-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* .mani-as-offer-card {
+  position: relative;
+  width: 100%;
+  padding-top: 75%; 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 12px;
+  overflow: hidden;
+} */
+
+.mani-as-offer-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  padding: 20px 15px 15px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mani-as-offer-card-item:hover .mani-as-offer-card-overlay {
+  opacity: 1;
+}
+
+.mani-as-offer-business-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.mani-as-offer-loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 16px;
+}
+
+.mani-as-offer-loading-dots {
+  display: inline-block;
+  position: relative;
+}
+
+.mani-as-offer-loading-dots::after {
+  content: '...';
+  position: absolute;
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    content: '.';
+  }
+  40% {
+    content: '..';
+  }
+  60%, 100% {
+    content: '...';
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mani-as-offer-wrapper {
+    padding: 0 15px;
+    margin-bottom: 30px;
+  }
+  
+  .mani-as-offer-heading {
+    font-size: 20px;
+  }
+  
+  .mani-as-viewall-circle {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+  
+  .mani-as-offer-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mani-as-offer-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .mani-as-offer-heading {
+    font-size: 18px;
+  }
+}
+
+
+
+

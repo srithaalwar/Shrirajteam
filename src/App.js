@@ -354,6 +354,7 @@ import GuestRoute from "./components/GuestRoute";
 import TotalReferrals from "./Admin_Panel/Admin_Referrals/Total_Referrals";
 import ReferralReports from "./Admin_Panel/Admin_Referral_Reports/Referral_Reports";
 import AdminTeam from './Admin_Panel/Admin_MyTeam/MyTeam'
+import AgentHome from "./Agent_Panel/Agent_Home_Page/Agent_Business_listings_home"
 function App() {
   return (
     <BrowserRouter>
@@ -401,6 +402,7 @@ function App() {
   }
 />
         <Route path="/loginwithemail" element={<LoginWithEmail />} />
+        
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/register" element={<Register />} />
         <Route path="/contact_us" element={<Contact />} />
@@ -574,6 +576,7 @@ function App() {
          <Route path="/agent-wishlist" element={<AgentWishlist />} />
         <Route path="/agent-transactions" element={<AgentTransactions />} />
 
+        <Route path="/agent-web-home" element={<AgentHome />} />
 
         {/* Client-panel */}
         <Route path="/client-dashboard" element={<ClientDashboard />} />

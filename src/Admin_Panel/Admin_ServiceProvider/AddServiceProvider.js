@@ -1128,7 +1128,7 @@ const AddServiceProvider = () => {
         if (!formData.city?.trim()) newErrors.city = 'City is required';
         if (!formData.state?.trim()) newErrors.state = 'State is required';
         if (!formData.country?.trim()) newErrors.country = 'Country is required';
-        if (!formData.pin_code?.trim()) newErrors.pin_code = 'Pin Code is required';
+        // if (!formData.pin_code?.trim()) newErrors.pin_code = 'Pin Code is required';
         
         if (formData.mobile_number && !/^\d{10}$/.test(formData.mobile_number)) {
           newErrors.mobile_number = 'Mobile number must be 10 digits';
@@ -1458,14 +1458,14 @@ const AddServiceProvider = () => {
                 </div>
                 <div className="col-md-3">
                   <div className="mb-3">
-                    <label className="admin-customer-form-label">Pin Code *</label>
+                    <label className="admin-customer-form-label">Pin Code </label>
                     <input
                       type="text"
                       name="pin_code"
                       value={formData.pin_code}
                       onChange={handleChange}
                       className={`form-control customer-form-input ${errors.pin_code ? 'is-invalid' : ''}`}
-                      placeholder="Enter pin code"
+                      placeholder="Enter pin code (optional)"
                       maxLength="6"
                     />
                     {renderError('pin_code')}
