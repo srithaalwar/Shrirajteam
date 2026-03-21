@@ -1,7 +1,4 @@
-/* Carousel.css - Add these styles to your existing CSS */
-
-
-/* ========================================= */
+/* 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 .mani-as-offer-wrapper {
@@ -11,7 +8,6 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* ===== HEADER ===== */
 .mani-as-offer-header {
   display: flex;
   justify-content: space-between;
@@ -26,7 +22,6 @@
   margin: 0;
 }
 
-/* ===== VIEW ALL BUTTON ===== */
 .mani-as-offer-viewall-wrap {
   text-align: right;
 }
@@ -71,7 +66,6 @@
   box-shadow: 0 5px 16px rgba(255, 107, 53, 0.55);
 }
 
-/* ===== CARDS GRID — DESKTOP: 3 columns ===== */
 .mani-as-offer-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -79,13 +73,11 @@
   width: 100%;
 }
 
-/* ===== SINGLE CARD ITEM ===== */
 .mani-as-offer-card-item {
   width: 100%;
   cursor: pointer;
 }
 
-/* ===== CARD — image as background ===== */
 .mani-as-offer-card {
   position: relative;
   width: 100%;
@@ -104,7 +96,6 @@
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
 }
 
-/* ===== DISCOUNT BADGE - TOP RIGHT ===== */
 .mani-as-offer-discount-badge {
   position: absolute;
   top: 12px;
@@ -124,7 +115,6 @@
   white-space: nowrap;
 }
 
-/* ===== LOADING / EMPTY ===== */
 .mani-as-offer-loading {
   text-align: center;
   padding: 40px;
@@ -143,11 +133,7 @@
   60%, 100%{ content: '...'; }
 }
 
-/* ========================================= */
-/* ============= RESPONSIVE ================ */
-/* ========================================= */
 
-/* Tablet (768px – 1024px): 2 columns */
 @media (min-width: 768px) and (max-width: 1024px) {
   .mani-as-offer-cards-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -159,7 +145,6 @@
   }
 }
 
-/* Large mobile (481px – 767px) */
 @media (min-width: 481px) and (max-width: 767px) {
   .mani-as-offer-wrapper { 
     padding: 14px 12px 10px; 
@@ -201,7 +186,6 @@
   }
 }
 
-/* Small mobile (≤ 480px) */
 @media (max-width: 480px) {
   .mani-as-offer-wrapper { 
     padding: 12px 10px 8px; 
@@ -253,7 +237,6 @@
   }
 }
 
-/* Tiny (≤ 360px) */
 @media (max-width: 360px) {
   .mani-as-offer-card-item {
     flex: 0 0 84vw;
@@ -274,7 +257,6 @@
   }
 }
 
-/* Hover effect for badge on desktop */
 @media (min-width: 1025px) {
   .mani-as-offer-card-item:hover .mani-as-offer-discount-badge {
     transform: scale(1.1);
@@ -360,16 +342,7 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* .mani-as-offer-card {
-  position: relative;
-  width: 100%;
-  padding-top: 75%; 
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-radius: 12px;
-  overflow: hidden;
-} */
+
 
 .mani-as-offer-card-overlay {
   position: absolute;
@@ -424,7 +397,7 @@
   }
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
   .mani-as-offer-wrapper {
     padding: 0 15px;
@@ -459,4 +432,4 @@
 
 
 
-
+ */

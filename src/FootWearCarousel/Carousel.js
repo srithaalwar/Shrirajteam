@@ -1281,11 +1281,11 @@ const FootWearCarousel = ({ categorySlug = "footwear" }) => {
           )}
         </h2>
         {/* Note: View All button is commented out in the original code */}
-        {/* <div className="mani-as-offer-viewall-wrap">
+        <div className="mani-as-offer-viewall-wrap">
           <button onClick={handleViewAll} className="mani-as-offer-viewall-btn">
             <span className="mani-as-viewall-circle">→</span>
           </button>
-        </div> */}
+        </div>
       </div>
 
       {/* Cards */}
@@ -1307,10 +1307,9 @@ const FootWearCarousel = ({ categorySlug = "footwear" }) => {
                 className="mani-as-offer-card"
                 style={{ backgroundImage: `url(${bannerImage})` }}
               >
-                {/* Discount Badge - Top Right */}
-                <div className="mani-as-offer-discount-badge">
+                {/* <div className="mani-as-offer-discount-badge">
                   <span className="mani-as-offer-discount-text">{discount}</span>
-                </div>
+                </div> */}
               </div>
             </div> 
           );
