@@ -1477,7 +1477,7 @@ const AgentEditProfile = () => {
     account_number: "",
     account_type: "",
     ifsc_code: "",
-    upi_id: "", // Add this line
+    upi_id: "", // Added UPI ID field
     pan_number: "",
     aadhaar_number: "",
     nominee_relationship: "",
@@ -1500,12 +1500,8 @@ const AgentEditProfile = () => {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
-  const requiredFields = [
-    "first_name", "last_name", "email", "phone_number", "date_of_birth",
-    "gender", "marital_status", "address", "city", "state", "country", "pin_code",
-    "account_holder_name", "bank_name", "branch_name", "account_number", "account_type", "ifsc_code",   "upi_id", 
-    "pan_number", "aadhaar_number", "nominee_reference_to", "nominee_relationship"
-  ];
+  // All fields are now optional - removed required fields array
+  const requiredFields = []; // Empty array - no fields are required
 
   useEffect(() => {
     if (!userId) return;
@@ -1536,27 +1532,12 @@ const AgentEditProfile = () => {
       setStates(statesArray);
       setCities(citiesArray);
 
-      // FIX: Convert date_of_birth from DD-MM-YYYY to YYYY-MM-DD
-      const formatDateForInput = (dateStr) => {
-        if (!dateStr) return "";
-        try {
-          const [day, month, year] = dateStr.split("-");
-          return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-        } catch (error) {
-          console.error("Error formatting date:", error);
-          return "";
-        }
-      };
-
       setFormData({
         ...user,
         country: countryName,
         state: stateName,
         city: user.city || "",
-        // FIX: Convert date format for input field
-        date_of_birth: formatDateForInput(user.date_of_birth),
-        // Ensure gender is lowercase (API expects lowercase)
-        gender: user.gender ? user.gender.toLowerCase() : "",
+        upi_id: user.upi_id || "", // Added UPI ID mapping
         image: toFileObject(user.image),
         aadhaar_front: toFileObject(user.aadhaar_front),
         aadhaar_back: toFileObject(user.aadhaar_back),
@@ -1634,55 +1615,18 @@ const AgentEditProfile = () => {
     e.preventDefault();
     setLoading(true);
 
+    // No validation required - all fields are optional
     let newErrors = {};
-    let missingFields = [];
-
-    requiredFields.forEach((field) => {
-      const value = formData[field];
-      if (!value || value === "") {
-        newErrors[field] = "This field is required";
-        missingFields.push(field.replace(/_/g, " ").toUpperCase());
-      }
-    });
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setLoading(false);
-      
-      Swal.fire({
-        icon: "warning",
-        title: "Missing Required Fields",
-        html: "Please fill the following required fields:<br/><br/>" + 
-              missingFields.join("<br/>"),
-        confirmButtonColor: "#6C63FF",
-      });
       return;
     }
 
     const form = new FormData();
-    
-    // Format date_of_birth to YYYY-MM-DD for API
-    const formatDateForAPI = (dateStr) => {
-      if (!dateStr) return "";
-      // If already in YYYY-MM-DD format, send as is
-      if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-        return dateStr;
-      }
-      return dateStr; // Return as is if not in expected format
-    };
-
-    // Process all fields
     Object.entries(formData).forEach(([key, value]) => {
-      if (key === "date_of_birth") {
-        // Send date in YYYY-MM-DD format
-        const formattedDate = formatDateForAPI(value);
-        if (formattedDate) {
-          form.append(key, formattedDate);
-        }
-      } else if (key === "gender") {
-        // Ensure gender is lowercase
-        form.append(key, value.toLowerCase());
-      } else if (
+      if (
         ["image", "aadhaar_front", "aadhaar_back", "pan_front", "pan_back", 
          "bank_passbook", "cancelled_cheque", "nominee_aadhaar_front", 
          "nominee_aadhaar_back"].includes(key)
@@ -1693,13 +1637,11 @@ const AgentEditProfile = () => {
           // If we have URL but no file (from server), don't send anything
         }
       } else {
-        form.append(key, value);
+        // Only append if value is not null or undefined
+        if (value !== null && value !== undefined) {
+          form.append(key, value);
+        }
       }
-    });
-
-    console.log("Form data being sent:", {
-      date_of_birth: form.get("date_of_birth"),
-      gender: form.get("gender")
     });
 
     try {
@@ -1717,24 +1659,10 @@ const AgentEditProfile = () => {
       });
     } catch (error) {
       console.error("Update failed:", error.response?.data || error.message);
-      
-      // Better error message
-      let errorMessage = "Failed to update profile";
-      if (error.response?.data) {
-        if (typeof error.response.data === 'object') {
-          const errors = Object.values(error.response.data).flat();
-          errorMessage = errors.join(', ');
-        } else if (typeof error.response.data === 'string') {
-          errorMessage = error.response.data;
-        } else if (error.response.data.detail) {
-          errorMessage = error.response.data.detail;
-        }
-      }
-      
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: errorMessage,
+        text: error.response?.data?.detail || "Failed to update profile",
         confirmButtonColor: "#6C63FF",
       });
     } finally {
@@ -1779,94 +1707,76 @@ const AgentEditProfile = () => {
               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Basic Information</h5>
               <div className="row">
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    First Name <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">First Name</label>
                   <input
                     type="text"
                     name="first_name"
                     value={formData.first_name}
                     onChange={handleChange}
-                    className={`form-control ${errors.first_name ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter first name"
                     disabled={loading}
                   />
-                  {errors.first_name && <div className="invalid-feedback">{errors.first_name}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Last Name <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Last Name</label>
                   <input
                     type="text"
                     name="last_name"
                     value={formData.last_name}
                     onChange={handleChange}
-                    className={`form-control ${errors.last_name ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter last name"
                     disabled={loading}
                   />
-                  {errors.last_name && <div className="invalid-feedback">{errors.last_name}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Email <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Email</label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter email"
                     disabled={loading}
                   />
-                  {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Phone Number <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Phone Number</label>
                   <input
                     type="tel"
                     name="phone_number"
                     value={formData.phone_number}
                     onChange={handleChange}
-                    className={`form-control ${errors.phone_number ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter phone number"
                     disabled={loading}
                   />
-                  {errors.phone_number && <div className="invalid-feedback">{errors.phone_number}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Date of Birth <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Date of Birth</label>
                   <input
                     type="date"
                     name="date_of_birth"
                     value={formData.date_of_birth}
                     onChange={handleChange}
-                    className={`form-control ${errors.date_of_birth ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading}
                   />
-                  {errors.date_of_birth && <div className="invalid-feedback">{errors.date_of_birth}</div>}
-                  <small className="text-muted">Format: YYYY-MM-DD</small>
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Gender <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Gender</label>
                   <select
                     name="gender"
                     value={formData.gender}
                     onChange={handleChange}
-                    className={`form-control ${errors.gender ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading}
                   >
                     <option value="">Select Gender</option>
@@ -1874,19 +1784,15 @@ const AgentEditProfile = () => {
                     <option value="male">Male</option>
                     <option value="other">Other</option>
                   </select>
-                  {errors.gender && <div className="invalid-feedback">{errors.gender}</div>}
-                  <small className="text-muted">Note: Will be saved as lowercase</small>
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Marital Status <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Marital Status</label>
                   <select
                     name="marital_status"
                     value={formData.marital_status}
                     onChange={handleChange}
-                    className={`form-control ${errors.marital_status ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading}
                   >
                     <option value="">Select Status</option>
@@ -1895,40 +1801,33 @@ const AgentEditProfile = () => {
                     <option value="divorced">Divorced</option>
                     <option value="widowed">Widowed</option>
                   </select>
-                  {errors.marital_status && <div className="invalid-feedback">{errors.marital_status}</div>}
                 </div>
               </div>
             </div>
 
-            {/* Rest of the form remains the same... */}
             {/* Address Details */}
-            {/* <div className="mb-4">
+            <div className="mb-4">
               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Address Details</h5>
               <div className="row">
                 <div className="col-12 mb-3">
-                  <label className="form-label">
-                    Address <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Address</label>
                   <input
                     type="text"
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
-                    className={`form-control ${errors.address ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter full address"
                     disabled={loading}
                   />
-                  {errors.address && <div className="invalid-feedback">{errors.address}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Country <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Country</label>
                   <select
                     value={formData.country}
                     onChange={handleCountryChange}
-                    className={`form-control ${errors.country ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading || countries.length === 0}
                   >
                     <option value="">Select Country</option>
@@ -1938,17 +1837,14 @@ const AgentEditProfile = () => {
                       </option>
                     ))}
                   </select>
-                  {errors.country && <div className="invalid-feedback">{errors.country}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    State <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">State</label>
                   <select
                     value={formData.state}
                     onChange={handleStateChange}
-                    className={`form-control ${errors.state ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading || !states.length}
                   >
                     <option value="">Select State</option>
@@ -1958,17 +1854,14 @@ const AgentEditProfile = () => {
                       </option>
                     ))}
                   </select>
-                  {errors.state && <div className="invalid-feedback">{errors.state}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    City <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">City</label>
                   <select
                     value={formData.city}
                     onChange={handleCityChange}
-                    className={`form-control ${errors.city ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading || !cities.length}
                   >
                     <option value="">Select City</option>
@@ -1978,91 +1871,22 @@ const AgentEditProfile = () => {
                       </option>
                     ))}
                   </select>
-                  {errors.city && <div className="invalid-feedback">{errors.city}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Pin Code <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Pin Code</label>
                   <input
                     type="text"
                     name="pin_code"
                     value={formData.pin_code}
                     onChange={handleChange}
-                    className={`form-control ${errors.pin_code ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter pin code"
                     disabled={loading}
                   />
-                  {errors.pin_code && <div className="invalid-feedback">{errors.pin_code}</div>}
                 </div>
               </div>
-            </div> */}
-            {/* Banking Details */}
-<div className="mb-4">
-  <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Banking Details</h5>
-  <div className="row">
-    {[
-      { name: "account_holder_name", label: "Account Holder Name" },
-      { name: "bank_name", label: "Bank Name" },
-      { name: "branch_name", label: "Branch Name" },
-      { name: "account_number", label: "Account Number" },
-      { name: "ifsc_code", label: "IFSC Code" },
-    ].map(({ name, label }) => (
-      <div className="col-md-6 mb-3" key={name}>
-        <label className="form-label">
-          {label} <span className="text-danger">*</span>
-        </label>
-        <input
-          type="text"
-          name={name}
-          value={formData[name]}
-          onChange={handleChange}
-          className={`form-control ${errors[name] ? 'is-invalid' : ''}`}
-          placeholder={`Enter ${label.toLowerCase()}`}
-          disabled={loading}
-        />
-        {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
-      </div>
-    ))}
-
-    {/* Add UPI ID field here */}
-    <div className="col-md-6 mb-3">
-      <label className="form-label">
-        UPI ID {requiredFields.includes("upi_id") && <span className="text-danger">*</span>}
-      </label>
-      <input
-        type="text"
-        name="upi_id"
-        value={formData.upi_id}
-        onChange={handleChange}
-        className={`form-control ${errors.upi_id ? 'is-invalid' : ''}`}
-        placeholder="Enter UPI ID (e.g., name@bank)"
-        disabled={loading}
-      />
-      {errors.upi_id && <div className="invalid-feedback">{errors.upi_id}</div>}
-      <small className="text-muted">Example: username@okhdfcbank, 9876543210@paytm</small>
-    </div>
-
-    <div className="col-md-6 mb-3">
-      <label className="form-label">
-        Account Type <span className="text-danger">*</span>
-      </label>
-      <select
-        name="account_type"
-        value={formData.account_type}
-        onChange={handleChange}
-        className={`form-control ${errors.account_type ? 'is-invalid' : ''}`}
-        disabled={loading}
-      >
-        <option value="">Select Account Type</option>
-        <option value="Savings">Savings</option>
-        <option value="Current">Current</option>
-      </select>
-      {errors.account_type && <div className="invalid-feedback">{errors.account_type}</div>}
-    </div>
-  </div>
-</div>
+            </div>
 
             {/* Banking Details */}
             <div className="mb-4">
@@ -2076,38 +1900,46 @@ const AgentEditProfile = () => {
                   { name: "ifsc_code", label: "IFSC Code" },
                 ].map(({ name, label }) => (
                   <div className="col-md-6 mb-3" key={name}>
-                    <label className="form-label">
-                      {label} <span className="text-danger">*</span>
-                    </label>
+                    <label className="form-label">{label}</label>
                     <input
                       type="text"
                       name={name}
                       value={formData[name]}
                       onChange={handleChange}
-                      className={`form-control ${errors[name] ? 'is-invalid' : ''}`}
+                      className="form-control"
                       placeholder={`Enter ${label.toLowerCase()}`}
                       disabled={loading}
                     />
-                    {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
                   </div>
                 ))}
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Account Type <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Account Type</label>
                   <select
                     name="account_type"
                     value={formData.account_type}
                     onChange={handleChange}
-                    className={`form-control ${errors.account_type ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading}
                   >
                     <option value="">Select Account Type</option>
                     <option value="Savings">Savings</option>
                     <option value="Current">Current</option>
                   </select>
-                  {errors.account_type && <div className="invalid-feedback">{errors.account_type}</div>}
+                </div>
+
+                {/* UPI ID Field */}
+                <div className="col-md-6 mb-3">
+                  <label className="form-label">UPI ID</label>
+                  <input
+                    type="text"
+                    name="upi_id"
+                    value={formData.upi_id}
+                    onChange={handleChange}
+                    className="form-control"
+                    placeholder="Enter UPI ID (e.g., username@okhdfcbank)"
+                    disabled={loading}
+                  />
                 </div>
               </div>
             </div>
@@ -2117,35 +1949,29 @@ const AgentEditProfile = () => {
               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>KYC Verification</h5>
               <div className="row">
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    PAN Number <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">PAN Number</label>
                   <input
                     type="text"
                     name="pan_number"
                     value={formData.pan_number}
                     onChange={handleChange}
-                    className={`form-control ${errors.pan_number ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter PAN number"
                     disabled={loading}
                   />
-                  {errors.pan_number && <div className="invalid-feedback">{errors.pan_number}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Aadhaar Number <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Aadhaar Number</label>
                   <input
                     type="text"
                     name="aadhaar_number"
                     value={formData.aadhaar_number}
                     onChange={handleChange}
-                    className={`form-control ${errors.aadhaar_number ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter Aadhaar number"
                     disabled={loading}
                   />
-                  {errors.aadhaar_number && <div className="invalid-feedback">{errors.aadhaar_number}</div>}
                 </div>
               </div>
             </div>
@@ -2164,9 +1990,7 @@ const AgentEditProfile = () => {
                   { label: "Cancelled Cheque", name: "cancelled_cheque" },
                 ].map(({ label, name }) => (
                   <div className="col-md-6 mb-3" key={name}>
-                    <label className="form-label">
-                      {label} <span className="text-danger">*</span>
-                    </label>
+                    <label className="form-label">{label}</label>
                     <div>
                       <input
                         type="file"
@@ -2190,7 +2014,6 @@ const AgentEditProfile = () => {
                         </div>
                       )}
                     </div>
-                    {errors[name] && <div className="text-danger small mt-1">{errors[name]}</div>}
                   </div>
                 ))}
               </div>
@@ -2201,35 +2024,29 @@ const AgentEditProfile = () => {
               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Nominee Details</h5>
               <div className="row">
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Nominee Relationship <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Nominee Relationship</label>
                   <input
                     type="text"
                     name="nominee_relationship"
                     value={formData.nominee_relationship}
                     onChange={handleChange}
-                    className={`form-control ${errors.nominee_relationship ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter relationship"
                     disabled={loading}
                   />
-                  {errors.nominee_relationship && <div className="invalid-feedback">{errors.nominee_relationship}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Nominee Name<span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Nominee Reference To</label>
                   <input
                     type="text"
                     name="nominee_reference_to"
                     value={formData.nominee_reference_to}
                     onChange={handleChange}
-                    className={`form-control ${errors.nominee_reference_to ? 'is-invalid' : ''}`}
-                    placeholder="Enter nominee name"
+                    className="form-control"
+                    placeholder="Enter reference"
                     disabled={loading}
                   />
-                  {errors.nominee_reference_to && <div className="invalid-feedback">{errors.nominee_reference_to}</div>}
                 </div>
               </div>
             </div>
@@ -2243,9 +2060,7 @@ const AgentEditProfile = () => {
                   { label: "Nominee Aadhaar Back", name: "nominee_aadhaar_back" },
                 ].map(({ label, name }) => (
                   <div className="col-md-6 mb-3" key={name}>
-                    <label className="form-label">
-                      {label} <span className="text-danger">*</span>
-                    </label>
+                    <label className="form-label">{label}</label>
                     <div>
                       <input
                         type="file"
@@ -2269,7 +2084,6 @@ const AgentEditProfile = () => {
                         </div>
                       )}
                     </div>
-                    {errors[name] && <div className="text-danger small mt-1">{errors[name]}</div>}
                   </div>
                 ))}
               </div>
