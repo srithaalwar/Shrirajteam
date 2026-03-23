@@ -2152,13 +2152,13 @@ const AdminDashboard = () => {
         },
         { 
           label: "Referral Amount/Wallet Amount", 
-          value: `₹${(referral_summary.total_pending_referral_amount || 0).toLocaleString()}`, 
+          value: `₹${(referral_summary.total_referral_amount_or_wallet_amount || 0).toLocaleString()}`, 
           icon: faClock, 
           // path: "/admin-referrals" 
         },
         { 
           label: "Referral Amount/Wallet Amount Paid", 
-          value: `₹${(referral_summary.total_paid_referral_amount || 0).toLocaleString()}`, 
+          value: `₹${(referral_summary.total_referral_amount_or_wallet_amount_paid || 0).toLocaleString()}`, 
           icon: faMoneyBillWave, 
           // path: "/admin-referrals" 
         }

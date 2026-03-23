@@ -1183,13 +1183,13 @@ const AgentDashboard = () => {
         },
         { 
           label: "Referral Amount/Wallet Amount", 
-          value: `₹${(referral_summary.total_pending_referral_amount || 0).toLocaleString()}`, 
+          value: `₹${(referral_summary.total_referral_amount_or_wallet_amount || 0).toLocaleString()}`, 
           icon: iconMap["Pending Referral Amount"], 
           // path: "/agent-referrals" 
         },
         { 
-          label: "Referral Amount/Wallet Aamount Paid", 
-          value: `₹${(referral_summary.total_paid_referral_amount || 0).toLocaleString()}`, 
+          label: "Referral Amount/Wallet amount Paid", 
+          value: `₹${(referral_summary.total_referral_amount_or_wallet_amount_paid || 0).toLocaleString()}`, 
           icon: iconMap["Paid Referral Amount"], 
           // path: "/agent-referrals" 
         }
