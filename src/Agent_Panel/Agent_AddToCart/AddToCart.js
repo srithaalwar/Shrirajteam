@@ -9940,7 +9940,7 @@ function AgentCart() {
 
       // Add redirect_url only for online payment
       if (paymentMethod === "online") {
-        paymentPayload.redirect_url = `${redirecturl}/`;
+        paymentPayload.redirect_url = `${redirecturl}/agent-add-to-cart`;
       }
 
       console.log("Payment payload:", paymentPayload);

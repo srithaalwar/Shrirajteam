@@ -9281,7 +9281,121 @@ const FilterSidebar = ({
     </div>
   );
 };
+// ============= Product Header Component =============
+// const ProductHeader = ({
+//   totalProducts,
+//   showingProducts,
+//   viewMode,
+//   onViewModeChange,
+//   searchTerm,
+//   setSearchTerm,
+//   onSearch,
+//   onOpenMobileFilters,
+//   activeFilterCount
+// }) => {
+//   const viewButtons = [
+//     { mode: "grid-3", icon: Grid3X3, label: "3 Columns" },
+//     { mode: "list", icon: List, label: "List" },
+//     { mode: "grid-4", icon: LayoutList, label: "4 Columns" },
+//   ];
 
+//   const handleSearchChange = (e) => {
+//     const value = e.target.value;
+//     setSearchTerm(value);
+//     if (onSearch) {
+//       onSearch(value);
+//     }
+//   };
+
+//   const handleClearSearch = () => {
+//     setSearchTerm("");
+//     if (onSearch) {
+//       onSearch("");
+//     }
+//   };
+
+//   const handleKeyPress = (e) => {
+//     if (e.key === 'Enter' && onSearch) {
+//       onSearch(searchTerm);
+//     }
+//   };
+
+//   return (
+//     <div className="d-flex align-items-center justify-content-between mb-4">
+//       {/* Left side - Title and count */}
+//       <div className="d-flex align-items-center gap-3">
+//         <h4 className="fw-bold mb-0">Properties</h4>
+//         <p className="mb-0 text-muted">
+//           Showing <span className="fw-semibold text-dark">{showingProducts}</span> of{" "}
+//           <span className="fw-semibold text-primary">{totalProducts}</span> properties
+//         </p>
+//       </div>
+
+//       {/* Right side - Search and View modes in same line */}
+//       <div className="d-flex align-items-center gap-3">
+//         {/* Search input */}
+//         <div className="input-group" style={{ width: '300px' }}>
+//           <span className="input-group-text bg-transparent border-end-0">
+//             <Search className="h-4 w-4 text-muted" />
+//           </span>
+//           <input
+//             type="text"
+//             className="form-control border-start-0"
+//             placeholder="Search properties..."
+//             value={searchTerm}
+//             onChange={handleSearchChange}
+//             onKeyPress={handleKeyPress}
+//             aria-label="Search properties"
+//           />
+//           {searchTerm && (
+//             <button
+//               onClick={handleClearSearch}
+//               className="btn btn-outline-secondary border-start-0"
+//               type="button"
+//               aria-label="Clear search"
+//             >
+//               <X className="h-4 w-4" />
+//             </button>
+//           )}
+//         </div>
+
+//         {/* View mode buttons */}
+//         <div className="btn-group" role="group" aria-label="View mode">
+//           {viewButtons.map(({ mode, icon: Icon, label }) => (
+//             <button
+//               key={mode}
+//               onClick={() => onViewModeChange(mode)}
+//               className={`btn btn-outline-secondary ${
+//                 viewMode === mode ? "active" : ""
+//               }`}
+//               style={{ padding: '0.375rem 0.75rem' }}
+//               title={label}
+//               aria-label={`Switch to ${label} view`}
+//             >
+//               <Icon className="h-4 w-4" />
+//             </button>
+//           ))}
+//         </div>
+
+//         {/* Mobile Filter Button - Hidden on desktop */}
+//         <button 
+//           onClick={onOpenMobileFilters}
+//           className="btn btn-primary d-md-none d-flex align-items-center gap-2"
+//         >
+//           <Filter size={16} />
+//           Filters
+//           {activeFilterCount > 0 && (
+//             <span className="badge bg-white text-primary rounded-pill">
+//               {activeFilterCount}
+//             </span>
+//           )}
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// ============= below Product Header Component - Dated on 23-03-2026=======================
 // ============= Product Header Component =============
 const ProductHeader = ({
   totalProducts,
@@ -9303,16 +9417,12 @@ const ProductHeader = ({
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    if (onSearch) {
-      onSearch(value);
-    }
+    if (onSearch) onSearch(value);
   };
 
   const handleClearSearch = () => {
     setSearchTerm("");
-    if (onSearch) {
-      onSearch("");
-    }
+    if (onSearch) onSearch("");
   };
 
   const handleKeyPress = (e) => {
@@ -9322,75 +9432,83 @@ const ProductHeader = ({
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-between mb-4">
-      {/* Left side - Title and count */}
-      <div className="d-flex align-items-center gap-3">
-        <h4 className="fw-bold mb-0">Properties</h4>
-        <p className="mb-0 text-muted">
-          Showing <span className="fw-semibold text-dark">{showingProducts}</span> of{" "}
-          <span className="fw-semibold text-primary">{totalProducts}</span> properties
-        </p>
+    <div className="mb-4">
+      {/* ====================== ROW 1: Title + Count ====================== */}
+      <div className="d-flex align-items-center justify-content-between mb-3">
+        <div className="d-flex align-items-center gap-3">
+          <h4 className="fw-bold mb-0">Properties</h4>
+          <p className="mb-0 text-muted">
+            Showing <span className="fw-semibold text-dark">{showingProducts}</span> of{" "}
+            <span className="fw-semibold text-primary">{totalProducts}</span> properties
+          </p>
+        </div>
       </div>
 
-      {/* Right side - Search and View modes in same line */}
-      <div className="d-flex align-items-center gap-3">
-        {/* Search input */}
-        <div className="input-group" style={{ width: '300px' }}>
-          <span className="input-group-text bg-transparent border-end-0">
-            <Search className="h-4 w-4 text-muted" />
-          </span>
-          <input
-            type="text"
-            className="form-control border-start-0"
-            placeholder="Search properties..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            onKeyPress={handleKeyPress}
-            aria-label="Search properties"
-          />
-          {searchTerm && (
-            <button
-              onClick={handleClearSearch}
-              className="btn btn-outline-secondary border-start-0"
-              type="button"
-              aria-label="Clear search"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </div>
-
-        {/* View mode buttons */}
-        <div className="btn-group" role="group" aria-label="View mode">
-          {viewButtons.map(({ mode, icon: Icon, label }) => (
-            <button
-              key={mode}
-              onClick={() => onViewModeChange(mode)}
-              className={`btn btn-outline-secondary ${
-                viewMode === mode ? "active" : ""
-              }`}
-              style={{ padding: '0.375rem 0.75rem' }}
-              title={label}
-              aria-label={`Switch to ${label} view`}
-            >
-              <Icon className="h-4 w-4" />
-            </button>
-          ))}
-        </div>
-
-        {/* Mobile Filter Button - Hidden on desktop */}
-        <button 
-          onClick={onOpenMobileFilters}
-          className="btn btn-primary d-md-none d-flex align-items-center gap-2"
-        >
-          <Filter size={16} />
-          Filters
-          {activeFilterCount > 0 && (
-            <span className="badge bg-white text-primary rounded-pill">
-              {activeFilterCount}
+      {/* ====================== ROW 2: Search (full width on mobile) ====================== */}
+      <div className="row align-items-center g-3">
+        <div className="col-12 col-md-8">
+          <div className="input-group">
+            <span className="input-group-text bg-transparent border-end-0">
+              <Search className="h-4 w-4 text-muted" />
             </span>
-          )}
-        </button>
+            <input
+              type="text"
+              className="form-control border-start-0"
+              placeholder="Search properties..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onKeyPress={handleKeyPress}
+              aria-label="Search properties"
+            />
+            {searchTerm && (
+              <button
+                onClick={handleClearSearch}
+                className="btn btn-outline-secondary border-start-0"
+                type="button"
+                aria-label="Clear search"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ====================== Controls (views + mobile filters) ====================== */}
+        <div className="col-12 col-md-4">
+          <div className="d-flex align-items-center gap-2 justify-content-md-end">
+            {/* View Mode Buttons - visible on both mobile & desktop */}
+            <div className="btn-group" role="group" aria-label="View mode">
+              {viewButtons.map(({ mode, icon: Icon, label }) => (
+                <button
+                  key={mode}
+                  onClick={() => onViewModeChange(mode)}
+                  className={`btn btn-outline-secondary ${
+                    viewMode === mode ? "active" : ""
+                  }`}
+                  style={{ padding: '0.375rem 0.75rem' }}
+                  title={label}
+                  aria-label={`Switch to ${label} view`}
+                >
+                  <Icon className="h-4 w-4" />
+                </button>
+              ))}
+            </div>
+
+            {/* Mobile Filters Button */}
+            <button
+              onClick={onOpenMobileFilters}
+              className="btn btn-primary d-md-none d-flex align-items-center gap-2"
+            >
+              <Filter size={16} />
+              Filters
+              {activeFilterCount > 0 && (
+                <span className="badge bg-white text-primary rounded-pill">
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -2250,15 +2250,14 @@ const AgentBusinessProductsCategories = () => {
       {/* ======= DESKTOP ======= */}
       {!isMobile && (
         <div className="abpc-desktop">
-          <div className="abpc-desktop-header">
-            <div className="abpc-desktop-header-inner">
-              <button className="abpc-back-desktop" onClick={() => navigate(-1)}>
-                <ArrowLeft size={17} /><span>Back</span>
-              </button>
-              <h1 className="abpc-desktop-title">Categories</h1>
-            </div>
-          </div>
-
+      <div className="abpc-desktop-header">
+  <div className="abpc-desktop-header-inner">
+    <button className="abpc-back-desktop" onClick={() => navigate('/agent-dashboard')}>
+      <ArrowLeft size={17} /><span>Go to Dashboard</span>
+    </button>
+    <h1 className="abpc-desktop-title">Categories</h1>
+  </div>
+</div>
           <div className="abpc-desktop-body">
             {/* Sidebar */}
             <aside className="abpc-sidebar">
