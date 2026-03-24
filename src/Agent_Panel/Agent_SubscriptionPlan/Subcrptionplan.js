@@ -2635,6 +2635,7 @@ import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import { baseurl, redirecturl } from "../../BaseURL/BaseURL";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Subcrptionplan.css';
+import { useLocation } from 'react-router-dom';
 
 const AgentSubcrptionplan = () => {
   const [variantData, setVariantData] = useState([]);
@@ -2643,74 +2644,57 @@ const AgentSubcrptionplan = () => {
   const [subscribedVariants, setSubscribedVariants] = useState([]);
   const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
   const [selectedVariantId, setSelectedVariantId] = useState(null);
-  const [selectedPlan, setSelectedPlan] = useState({
-    name: '',
-    duration: '',
-    price: 0,
-  });
-  const [paymentProcessing, setPaymentProcessing] = useState(false); // New state
+  const [selectedPlan, setSelectedPlan] = useState({ name: '', duration: '', price: 0 });
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
+  const [paymentVerified, setPaymentVerified] = useState(false);
 
   const userId = localStorage.getItem('user_id');
-  const hasPostedStatus = useRef(false);
-  const paymentProcessedRef = useRef(false);
+  const paymentVerifiedRef = useRef(false);
+  const paymentTimerRef = useRef(null);
 
-  /* ================= FETCH USER SUBSCRIPTION - FIXED ================= */
+  // ✅ Use React Router hooks — same as AgentCart
+  const location = useLocation();
+
+  /* ================= FETCH USER SUBSCRIPTION ================= */
   const fetchUserSubscription = async () => {
     try {
-      console.log("Fetching subscription for user:", userId);
-      const res = await fetch(
-        `${baseurl}/user-subscriptions/user-id/${userId}/`
-      );
-      
+      const res = await fetch(`${baseurl}/user-subscriptions/user-id/${userId}/`);
+
       if (res.ok) {
         const response = await res.json();
-        console.log("Full Subscription API Response:", response);
-        
-        // Check if user has any active subscription
+        console.log("Subscription API Response:", response);
+
         let isActive = false;
         let activeVariantIds = [];
-        
-        // Handle different response structures
-        if (response && response.results && Array.isArray(response.results)) {
-          // Filter subscriptions with status "paid" or "active"
-          const activeSubscriptions = response.results.filter(sub => 
-            sub.subscription_status === "paid" || 
+
+        if (response?.results && Array.isArray(response.results)) {
+          const activeSubscriptions = response.results.filter(sub =>
+            sub.subscription_status === "paid" ||
             sub.subscription_status === "active" ||
             sub.status === "paid" ||
             sub.status === "active"
           );
-          
           isActive = activeSubscriptions.length > 0;
-          activeVariantIds = activeSubscriptions.map(sub => 
+          activeVariantIds = activeSubscriptions.map(sub =>
             Number(sub.subscription_variant || sub.variant_id)
           );
-          
-          console.log("Active subscriptions found:", activeSubscriptions.length);
-          console.log("Active variant IDs:", activeVariantIds);
-        } 
-        // Check if response itself contains subscription data
-        else if (response && (response.subscription_status === "paid" || response.status === "paid")) {
+        } else if (
+          response &&
+          (response.subscription_status === "paid" || response.status === "paid")
+        ) {
           isActive = true;
           activeVariantIds = [Number(response.subscription_variant || response.variant_id)];
-        }
-        // Check latest_status at root level
-        else if (response && response.latest_status === "paid") {
+        } else if (response?.latest_status === "paid") {
           isActive = true;
-          if (response.results && response.results.length > 0) {
-            activeVariantIds = response.results
-              .filter(sub => sub.subscription_status === "paid")
-              .map(sub => Number(sub.subscription_variant));
-          }
+          activeVariantIds = (response.results || [])
+            .filter(sub => sub.subscription_status === "paid")
+            .map(sub => Number(sub.subscription_variant));
         }
-        
+
         setHasActiveSubscription(isActive);
         setSubscribedVariants(activeVariantIds);
-        
-        console.log("Has active subscription:", isActive);
-        console.log("Subscribed variants:", activeVariantIds);
-        
       } else {
-        console.error('Failed to fetch subscription:', res.status, await res.text());
         setHasActiveSubscription(false);
         setSubscribedVariants([]);
       }
@@ -2726,55 +2710,34 @@ const AgentSubcrptionplan = () => {
     const fetchPlans = async () => {
       try {
         setLoading(true);
-        
-        const variantRes = await fetch(
-          `${baseurl}/subscription/plan-variants/agent/`
-        );
-        
-        if (!variantRes.ok) {
-          throw new Error(`HTTP error! status: ${variantRes.status}`);
-        }
-        
+        const variantRes = await fetch(`${baseurl}/subscription/plan-variants/agent/`);
+        if (!variantRes.ok) throw new Error(`HTTP error! status: ${variantRes.status}`);
+
         const variants = await variantRes.json();
-        
         let variantsArray = [];
         if (Array.isArray(variants)) {
           variantsArray = variants;
-        } else if (variants && variants.results && Array.isArray(variants.results)) {
+        } else if (variants?.results && Array.isArray(variants.results)) {
           variantsArray = variants.results;
-        } else if (variants && Array.isArray(variants.data)) {
+        } else if (variants?.data && Array.isArray(variants.data)) {
           variantsArray = variants.data;
-        } else {
-          console.warn("Unexpected variants format:", variants);
         }
-        
+
         setVariantData(variantsArray);
 
-        const planIds = [...new Set(variantsArray.map((v) => v.plan_id))];
+        const planIds = [...new Set(variantsArray.map(v => v.plan_id))];
         const planMap = {};
 
         await Promise.all(
-          planIds.map(async (id) => {
+          planIds.map(async id => {
             try {
-              const res = await fetch(
-                `${baseurl}/subscription/plans/${id}/`
-              );
-              
+              const res = await fetch(`${baseurl}/subscription/plans/${id}/`);
               if (res.ok) {
                 const planData = await res.json();
-                
-                let plan = {};
-                if (planData && planData.plan_name) {
-                  plan = planData;
-                } else if (planData && planData.results && planData.results[0]) {
-                  plan = planData.results[0];
-                } else if (planData && planData.data) {
-                  plan = planData.data;
-                }
-                
-                if (plan.plan_name) {
-                  planMap[id] = plan;
-                }
+                let plan = planData?.plan_name
+                  ? planData
+                  : planData?.results?.[0] || planData?.data || {};
+                if (plan.plan_name) planMap[id] = plan;
               }
             } catch (err) {
               console.error(`Error fetching plan ${id}`, err);
@@ -2797,29 +2760,215 @@ const AgentSubcrptionplan = () => {
     fetchUserSubscription();
   }, []);
 
+  /* ================= CHECK URL FOR PAYMENT PARAMS — same as AgentCart ================= */
+  const checkURLForPaymentParams = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const merchantOrderId = searchParams.get('merchant_order_id');
+    const paymentStatus = searchParams.get('payment_status');
+    const orderId = searchParams.get('order_id');
+
+    console.log("Checking URL for payment params:", { merchantOrderId, paymentStatus, orderId });
+
+    if (merchantOrderId) {
+      localStorage.setItem('merchant_order_id', merchantOrderId);
+      if (paymentStatus) localStorage.setItem('payment_status', paymentStatus);
+      if (orderId) localStorage.setItem('order_id', orderId);
+
+      // Clean URL
+      window.history.replaceState({}, '', window.location.pathname);
+      return merchantOrderId;
+    }
+
+    return null;
+  };
+
+  /* ================= CONFIRM PAYMENT — same structure as AgentCart ================= */
+  const confirmPayment = async (merchantOrderId) => {
+    if (!merchantOrderId || paymentVerifiedRef.current) {
+      console.log("No merchant order ID or payment already verified");
+      return;
+    }
+
+    try {
+      setIsVerifyingPayment(true);
+      paymentVerifiedRef.current = true;
+
+      console.log("Calling confirm-payment API with:", { merchant_order_id: merchantOrderId });
+
+      const response = await fetch(`${baseurl}/subscription/confirm-payment/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          user_id: Number(userId),
+          merchant_order_id: merchantOrderId,
+        }),
+      });
+
+      const data = await response.json();
+      console.log("Payment confirmation response:", data);
+
+      const status = (data?.status || data?.payment_status || '').toLowerCase();
+
+      if (status === 'success' || status === 'paid' || status === 'active' || response.ok) {
+        // ✅ Payment confirmed
+        setPaymentVerified(true);
+
+        const planName = localStorage.getItem('selected_plan_name');
+        const planPrice = localStorage.getItem('selected_plan_price');
+
+        Swal.fire({
+          title: 'Subscription Activated! 🎉',
+          html: `
+            <div style="text-align: center;">
+              <p><strong>${planName || 'Plan'}</strong> has been activated.</p>
+              ${planPrice ? `<p>Amount Paid: ₹${planPrice}</p>` : ''}
+            </div>
+          `,
+          icon: 'success',
+          confirmButtonText: 'Continue',
+          confirmButtonColor: '#001e3c',
+        }).then(async () => {
+          await fetchUserSubscription();
+          clearPaymentStorage();
+        });
+
+      } else if (status === 'pending' || status === 'processing') {
+        // ⏳ Still pending — retry in 30s, same as AgentCart
+        Swal.fire({
+          title: 'Payment Pending',
+          text: "We're still confirming your payment. We'll check again in 30 seconds.",
+          icon: 'info',
+          confirmButtonColor: '#001e3c',
+          timer: 5000,
+          timerProgressBar: true,
+        });
+
+        // Reset flag to allow retry
+        paymentVerifiedRef.current = false;
+
+        paymentTimerRef.current = setTimeout(() => {
+          console.log("30 seconds passed, retrying payment confirmation...");
+          confirmPayment(merchantOrderId);
+        }, 30000);
+
+      } else {
+        // ❌ Payment failed
+        Swal.fire({
+          title: 'Payment Failed',
+          text: data?.message || data?.detail || 'Your payment could not be completed. Please try again.',
+          icon: 'error',
+          confirmButtonColor: '#001e3c',
+        });
+        clearPaymentStorage();
+      }
+
+    } catch (err) {
+      console.error('Error confirming payment:', err);
+
+      // Reset flag on error
+      paymentVerifiedRef.current = false;
+
+      // Retry on network errors — same as AgentCart
+      if (!err.response || err.code === 'ECONNABORTED') {
+        Swal.fire({
+          title: 'Connection Issue',
+          text: 'Network error. Retrying in 30 seconds...',
+          icon: 'warning',
+          confirmButtonColor: '#001e3c',
+          timer: 5000,
+          timerProgressBar: true,
+        });
+
+        paymentTimerRef.current = setTimeout(() => {
+          console.log("Network error, retrying in 30 seconds...");
+          confirmPayment(merchantOrderId);
+        }, 30000);
+      } else {
+        Swal.fire({
+          title: 'Verification Issue',
+          text: 'There was an issue verifying your payment. If the amount was deducted, please contact support.',
+          icon: 'warning',
+          confirmButtonColor: '#001e3c',
+        });
+        clearPaymentStorage();
+      }
+    } finally {
+      setIsVerifyingPayment(false);
+    }
+  };
+
+  /* ================= INITIALIZE — same pattern as AgentCart ================= */
+  useEffect(() => {
+    const initialize = async () => {
+      // Check URL for payment params from gateway redirect
+      const merchantOrderIdFromURL = checkURLForPaymentParams();
+
+      // Check localStorage for pending payment
+      const merchantOrderId =
+        merchantOrderIdFromURL || localStorage.getItem('merchant_order_id');
+
+      console.log("Initial payment check:", {
+        merchantOrderIdFromURL,
+        merchantOrderId,
+        search: location.search,
+      });
+
+      // If we have a merchant order ID, confirm payment
+      if (merchantOrderId && !paymentVerifiedRef.current && !paymentVerified) {
+        console.log("Found merchant order ID, starting payment verification:", merchantOrderId);
+
+        // Wait 1 second before first check — same as AgentCart
+        setTimeout(() => {
+          confirmPayment(merchantOrderId);
+        }, 1000);
+      }
+    };
+
+    initialize();
+
+    // Cleanup timers on unmount
+    return () => {
+      if (paymentTimerRef.current) {
+        clearTimeout(paymentTimerRef.current);
+      }
+    };
+  }, [location.search]); // ✅ Watches location.search — same as AgentCart
+
+  /* ================= MANUAL VERIFICATION — same as AgentCart ================= */
+  const handleManualVerification = () => {
+    const merchantOrderId = localStorage.getItem('merchant_order_id');
+    if (merchantOrderId) {
+      paymentVerifiedRef.current = false;
+      setPaymentVerified(false);
+      confirmPayment(merchantOrderId);
+    }
+  };
+
+  /* ================= HELPER: CLEAR PAYMENT STORAGE ================= */
+  const clearPaymentStorage = () => {
+    localStorage.removeItem('merchant_order_id');
+    localStorage.removeItem('order_id');
+    localStorage.removeItem('payment_status');
+    localStorage.removeItem('selected_plan_name');
+    localStorage.removeItem('selected_plan_price');
+    localStorage.removeItem('variant_id');
+    localStorage.removeItem('payment_initiated_time');
+    window.history.replaceState({}, document.title, window.location.pathname);
+  };
+
   /* ================= HANDLE SELECTION ================= */
-  const handleSelection = (
-    planName,
-    durationText,
-    price,
-    variant_id
-  ) => {
+  const handleSelection = (planName, durationText, price, variant_id) => {
     if (hasActiveSubscription) {
       Swal.fire({
         title: 'Already Subscribed',
         text: 'You already have an active subscription. Please contact support to change your plan.',
         icon: 'info',
-        confirmButtonColor: '#001e3c'
+        confirmButtonColor: '#001e3c',
       });
       return;
     }
-    
     setSelectedVariantId(variant_id);
-    setSelectedPlan({
-      name: planName,
-      duration: durationText,
-      price: Number(price),
-    });
+    setSelectedPlan({ name: planName, duration: durationText, price: Number(price) });
   };
 
   /* ================= GROUP PLANS ================= */
@@ -2828,7 +2977,6 @@ const AgentSubcrptionplan = () => {
     if (!plan) return acc;
 
     const planKey = variant.plan_id;
-    
     if (!acc[planKey]) {
       acc[planKey] = {
         name: plan.plan_name,
@@ -2842,10 +2990,7 @@ const AgentSubcrptionplan = () => {
     acc[planKey].options.push({
       duration: `${variant.duration_in_days} Days`,
       price: Number(variant.price),
-      perMonth: `₹${Math.round(
-        Number(variant.price) /
-          (variant.duration_in_days / 30)
-      )}/month`,
+      perMonth: `₹${Math.round(Number(variant.price) / (variant.duration_in_days / 30))}/month`,
       variant_id: variant.variant_id,
       isPopular: variant.is_popular || false,
     });
@@ -2855,52 +3000,40 @@ const AgentSubcrptionplan = () => {
 
   const plansArray = Object.values(groupedPlans);
 
-  /* ================= HANDLE BUY - ADDED LOADING STATE ================= */
+  /* ================= HANDLE BUY ================= */
   const handleBuy = async () => {
     if (hasActiveSubscription) {
       Swal.fire({
         title: 'Already Subscribed',
         text: 'You already have an active subscription.',
         icon: 'info',
-        confirmButtonColor: '#001e3c'
+        confirmButtonColor: '#001e3c',
       });
       return;
     }
-    
+
     if (!selectedVariantId) {
       Swal.fire({
         title: 'Select a Plan',
         text: 'Please select a subscription plan first',
         icon: 'warning',
-        confirmButtonColor: '#001e3c'
+        confirmButtonColor: '#001e3c',
       });
       return;
     }
 
     setPaymentProcessing(true);
-    
-    try {
-      console.log("Initiating payment for:", {
-        user_id: Number(userId),
-        variant_id: selectedVariantId,
-        redirect_url: `${redirecturl}/agent-subscription-plan`
-      });
 
-      const response = await fetch(
-        `${baseurl}/subscription/initiate-payment/`,
-        {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            user_id: Number(userId),
-            variant_id: selectedVariantId,
-            redirect_url: `${redirecturl}/agent-subscription-plan`,
-          }),
-        }
-      );
+    try {
+      const response = await fetch(`${baseurl}/subscription/initiate-payment/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          user_id: Number(userId),
+          variant_id: selectedVariantId,
+          redirect_url: `${redirecturl}/agent-subscription-plan`,
+        }),
+      });
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -2909,17 +3042,19 @@ const AgentSubcrptionplan = () => {
 
       const data = await response.json();
       console.log("Payment initiation response:", data);
-      
+
       if (data.payment_url && data.merchant_order_id) {
+        // ✅ Save same keys as AgentCart uses
         localStorage.setItem('merchant_order_id', data.merchant_order_id);
-        localStorage.setItem('variant_id', selectedVariantId);
+        localStorage.setItem('order_id', data.order_id || '');
         localStorage.setItem('selected_plan_name', selectedPlan.name);
-        localStorage.setItem('selected_plan_price', selectedPlan.price);
-        localStorage.setItem('payment_initiated_time', Date.now().toString());
-        
-        setSelectedVariantId(null);
-        setSelectedPlan({ name: '', duration: '', price: 0 });
-        
+        localStorage.setItem('selected_plan_price', String(selectedPlan.price));
+        localStorage.setItem('variant_id', String(selectedVariantId));
+
+        // Reset verification flag before redirect
+        paymentVerifiedRef.current = false;
+        setPaymentVerified(false);
+
         window.location.href = data.payment_url;
       } else {
         throw new Error('Invalid response from payment gateway');
@@ -2930,272 +3065,10 @@ const AgentSubcrptionplan = () => {
         title: 'Error',
         text: err.message || 'Something went wrong. Please try again.',
         icon: 'error',
-        confirmButtonColor: '#001e3c'
+        confirmButtonColor: '#001e3c',
       });
     } finally {
       setPaymentProcessing(false);
-    }
-  };
-
-  /* ================= CHECK PAYMENT STATUS ================= */
-  const checkPaymentStatus = async (merchant_order_id, variant_id) => {
-    try {
-      console.log("Checking payment status for:", merchant_order_id);
-      const response = await fetch(
-        `${baseurl}/subscription/payment-status/${merchant_order_id}/`
-      );
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Payment status response:", data);
-        return data;
-      }
-      console.error("Failed to check payment status:", response.status);
-      return null;
-    } catch (err) {
-      console.error('Error checking payment status:', err);
-      return null;
-    }
-  };
-
-  /* ================= CONFIRM PAYMENT AFTER REDIRECT - IMPROVED ================= */
-  useEffect(() => {
-    const confirmPayment = async () => {
-      const merchant_order_id = localStorage.getItem('merchant_order_id');
-      const variant_id = localStorage.getItem('variant_id');
-      const planName = localStorage.getItem('selected_plan_name');
-      const planPrice = localStorage.getItem('selected_plan_price');
-      const paymentInitiatedTime = localStorage.getItem('payment_initiated_time');
-
-      console.log("Confirm payment check:", {
-        hasMerchantOrder: !!merchant_order_id,
-        hasVariantId: !!variant_id,
-        paymentProcessed: paymentProcessedRef.current,
-        hasPosted: hasPostedStatus.current
-      });
-
-      if (paymentProcessedRef.current) {
-        console.log("Payment already processed, skipping");
-        return;
-      }
-
-      if (!userId || !merchant_order_id || !variant_id) {
-        console.log("Missing payment data, skipping");
-        return;
-      }
-
-      if (paymentInitiatedTime) {
-        const timeDiff = Date.now() - parseInt(paymentInitiatedTime);
-        const thirtyMinutes = 30 * 60 * 1000;
-        
-        if (timeDiff > thirtyMinutes) {
-          console.log('Payment session expired after 30 minutes');
-          localStorage.removeItem('merchant_order_id');
-          localStorage.removeItem('variant_id');
-          localStorage.removeItem('selected_plan_name');
-          localStorage.removeItem('selected_plan_price');
-          localStorage.removeItem('payment_initiated_time');
-          return;
-        }
-      }
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const paymentStatus = urlParams.get('payment_status');
-      const orderId = urlParams.get('order_id');
-      const cashfreePaymentStatus = urlParams.get('payment_status'); // Cashfree specific
-      
-      console.log("URL Parameters:", {
-        paymentStatus,
-        orderId,
-        allParams: Object.fromEntries(urlParams)
-      });
-      
-      const shouldProcess = paymentStatus === 'success' || 
-                           paymentStatus === 'SUCCESS' ||
-                           paymentStatus === 'paid' ||
-                           paymentStatus === 'COMPLETED' ||
-                           cashfreePaymentStatus === 'SUCCESS' ||
-                           (!paymentStatus && !hasPostedStatus.current);
-
-      if (!shouldProcess) {
-        console.log("Not processing payment, status:", paymentStatus);
-        return;
-      }
-
-      try {
-        hasPostedStatus.current = true;
-        
-        // Show loading indicator
-        Swal.fire({
-          title: 'Processing Payment',
-          text: 'Please wait while we confirm your payment...',
-          allowOutsideClick: false,
-          didOpen: () => {
-            Swal.showLoading();
-          }
-        });
-        
-        // Check actual payment status from backend
-        const paymentStatusData = await checkPaymentStatus(merchant_order_id, variant_id);
-        
-        let isPaymentSuccessful = false;
-        
-        if (paymentStatusData) {
-          const status = paymentStatusData.status || paymentStatusData.payment_status;
-          isPaymentSuccessful = status === 'success' || 
-                               status === 'SUCCESS' ||
-                               status === 'paid' ||
-                               status === 'COMPLETED' ||
-                               status === 'completed';
-        } else {
-          // Fallback to URL parameter
-          isPaymentSuccessful = paymentStatus === 'success' || 
-                               paymentStatus === 'SUCCESS' ||
-                               paymentStatus === 'paid';
-        }
-
-        console.log("Payment successful?", isPaymentSuccessful);
-
-        if (isPaymentSuccessful) {
-          console.log('Confirming successful payment for:', {
-            userId,
-            variant_id,
-            merchant_order_id
-          });
-
-          const response = await fetch(
-            `${baseurl}/subscription/confirm-payment/`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-              },
-              body: JSON.stringify({
-                user_id: Number(userId),
-                variant_id: Number(variant_id),
-                merchant_order_id: merchant_order_id,
-              }),
-            }
-          );
-
-          const result = await response.json();
-          console.log("Confirmation response:", result);
-          
-          if (response.ok) {
-            paymentProcessedRef.current = true;
-            
-            Swal.close(); // Close loading
-            Swal.fire({
-              title: 'Success!',
-              html: `
-                <div style="text-align: center;">
-                  <p>🎉 Subscription Successful!</p>
-                  <p><strong>${planName}</strong> has been activated.</p>
-                  <p>Amount: ₹${planPrice}</p>
-                </div>
-              `,
-              icon: 'success',
-              confirmButtonText: 'Continue',
-              confirmButtonColor: '#001e3c'
-            }).then(async () => {
-              // Refresh subscription status
-              await fetchUserSubscription();
-              
-              // Clear stored payment data
-              localStorage.removeItem('merchant_order_id');
-              localStorage.removeItem('variant_id');
-              localStorage.removeItem('selected_plan_name');
-              localStorage.removeItem('selected_plan_price');
-              localStorage.removeItem('payment_initiated_time');
-              
-              // Remove URL parameters
-              window.history.replaceState({}, document.title, window.location.pathname);
-            });
-          } else {
-            throw new Error(result.detail || result.message || 'Payment confirmation failed');
-          }
-        } else {
-          Swal.close();
-          console.log('Payment was not successful');
-          
-          if (paymentStatus === 'failed' || paymentStatus === 'FAILED') {
-            Swal.fire({
-              title: 'Payment Failed',
-              text: 'Your payment was not successful. Please try again.',
-              icon: 'error',
-              confirmButtonColor: '#001e3c'
-            });
-          } else if (paymentStatus === 'pending' || paymentStatus === 'PENDING') {
-            Swal.fire({
-              title: 'Payment Pending',
-              text: 'Your payment is still being processed. Please check back later.',
-              icon: 'info',
-              confirmButtonColor: '#001e3c'
-            });
-          }
-          
-          localStorage.removeItem('merchant_order_id');
-          localStorage.removeItem('variant_id');
-          localStorage.removeItem('selected_plan_name');
-          localStorage.removeItem('selected_plan_price');
-          localStorage.removeItem('payment_initiated_time');
-          window.history.replaceState({}, document.title, window.location.pathname);
-        }
-        
-      } catch (err) {
-        console.error('Error confirming payment:', err);
-        Swal.close();
-        hasPostedStatus.current = false;
-        
-        Swal.fire({
-          title: 'Payment Issue',
-          text: err.message || 'There was an issue confirming your payment. Please contact support if the amount was deducted.',
-          icon: 'warning',
-          confirmButtonColor: '#001e3c'
-        });
-      }
-    };
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const paymentStatus = urlParams.get('payment_status') || urlParams.get('status');
-    
-    if (paymentStatus) {
-      console.log("Payment callback detected with status:", paymentStatus);
-      confirmPayment();
-    }
-    
-  }, [userId]);
-
-  /* ================= REFRESH SUBSCRIPTION STATUS ================= */
-  useEffect(() => {
-    if (userId) {
-      fetchUserSubscription();
-    }
-  }, [userId]);
-
-  /* ================= ADD DEBUGGING BUTTON (Remove in production) ================= */
-  const debugSubscription = async () => {
-    console.log("=== DEBUGGING SUBSCRIPTION ===");
-    console.log("User ID:", userId);
-    console.log("Has active subscription:", hasActiveSubscription);
-    console.log("Subscribed variants:", subscribedVariants);
-    
-    // Manually fetch subscription
-    try {
-      const res = await fetch(`${baseurl}/user-subscriptions/user-id/${userId}/`);
-      const data = await res.json();
-      console.log("Raw subscription data:", data);
-      
-      Swal.fire({
-        title: 'Debug Info',
-        html: `
-          <pre style="text-align:left">${JSON.stringify(data, null, 2)}</pre>
-        `,
-        icon: 'info'
-      });
-    } catch (err) {
-      console.error("Debug error:", err);
     }
   };
 
@@ -3206,7 +3079,7 @@ const AgentSubcrptionplan = () => {
         <AgentNavbar />
         <div className="plans-page-container">
           <div className="loader-wrapper">
-            <div className="spinner-border text-primary" style={{width: '3rem', height: '3rem'}}>
+            <div className="spinner-border text-primary" style={{ width: '3rem', height: '3rem' }}>
               <span className="visually-hidden">Loading...</span>
             </div>
             <p className="mt-3">Loading subscription plans...</p>
@@ -3235,23 +3108,35 @@ const AgentSubcrptionplan = () => {
       <AgentNavbar />
 
       <div className="plans-page-container">
-        <h2 className="plans-title">
-          Subscription Plans
-        </h2>
-        
-        {/* Debug button - remove in production */}
-        <button 
-          onClick={debugSubscription}
-          style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 9999 }}
-          className="btn btn-sm btn-secondary"
-        >
-          Debug Subscription
-        </button>
-        
+        <h2 className="plans-title">Subscription Plans</h2>
+
+        {/* Payment Verification Banner — same as AgentCart */}
+        {isVerifyingPayment && (
+          <div className="alert alert-info mb-4">
+            <div className="d-flex align-items-center">
+              <div className="spinner-border spinner-border-sm me-3" role="status"></div>
+              <div>
+                <strong>Verifying Payment Status</strong>
+                <p className="mb-0 small">Checking payment confirmation, please wait...</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Manual Verification Button — same as AgentCart */}
+        {!isVerifyingPayment && localStorage.getItem('merchant_order_id') && !paymentVerified && (
+          <div className="alert alert-warning mb-4 d-flex justify-content-between align-items-center">
+            <span>Payment pending verification.</span>
+            <button className="btn btn-sm btn-warning" onClick={handleManualVerification}>
+              Check Payment Status
+            </button>
+          </div>
+        )}
+
         {hasActiveSubscription && (
           <div className="alert alert-success mb-4" role="alert">
             <i className="bi bi-check-circle-fill me-2"></i>
-            <strong>Active Subscription:</strong> You have an active subscription. 
+            <strong>Active Subscription:</strong> You have an active subscription.
           </div>
         )}
 
@@ -3265,37 +3150,27 @@ const AgentSubcrptionplan = () => {
               'gradient-peach',
               'gradient-sky',
             ];
-
             const gradientClass = gradients[index % gradients.length];
 
             return (
-              <div
-                className="col-12 col-md-6 col-lg-4"
-                key={`${plan.name}-${index}`}
-              >
+              <div className="col-12 col-md-6 col-lg-4" key={`${plan.name}-${index}`}>
                 <div
                   className={`plan-card ${gradientClass} ${plan.highlight ? 'popular-plan' : ''}`}
                 >
                   {plan.highlight && (
-                    <div className="popular-badge">
-                      {plan.highlight}
-                    </div>
+                    <div className="popular-badge">{plan.highlight}</div>
                   )}
-                  
+
                   <div className="plan-card-body">
                     <div className="plan-header">
                       <h4>{plan.name}</h4>
-                      <span className="plan-type badge bg-light text-dark">
-                        {plan.type}
-                      </span>
+                      <span className="plan-type badge bg-light text-dark">{plan.type}</span>
                     </div>
 
-                    <p className="plan-description">
-                      {plan.description}
-                    </p>
+                    <p className="plan-description">{plan.description}</p>
 
                     <div className="options-list">
-                      {plan.options.map((opt) => {
+                      {plan.options.map(opt => {
                         const isBought = subscribedVariants.includes(opt.variant_id);
                         const isSelected = selectedVariantId === opt.variant_id;
 
@@ -3303,12 +3178,16 @@ const AgentSubcrptionplan = () => {
                           <label
                             key={opt.variant_id}
                             className={`option-row ${isSelected ? 'selected' : ''} ${isBought ? 'disabled' : ''}`}
-                            onClick={() => !isBought && !hasActiveSubscription && handleSelection(
-                              plan.name,
-                              opt.duration,
-                              opt.price,
-                              opt.variant_id
-                            )}
+                            onClick={() =>
+                              !isBought &&
+                              !hasActiveSubscription &&
+                              handleSelection(
+                                plan.name,
+                                opt.duration,
+                                opt.price,
+                                opt.variant_id
+                              )
+                            }
                           >
                             <div className="option-content-wrapper">
                               <div className="option-radio-section">
@@ -3327,27 +3206,22 @@ const AgentSubcrptionplan = () => {
                                   <div className="option-duration">
                                     {opt.duration}
                                     {opt.isPopular && (
-                                      <span className="badge bg-warning text-dark ms-2">Popular</span>
+                                      <span className="badge bg-warning text-dark ms-2">
+                                        Popular
+                                      </span>
                                     )}
                                   </div>
-                                  <div className="option-permonth">
-                                    {opt.perMonth}
-                                  </div>
+                                  <div className="option-permonth">{opt.perMonth}</div>
                                 </div>
 
                                 <div className="option-right">
-                                  <div className="option-price">
-                                    ₹{opt.price}
-                                  </div>
+                                  <div className="option-price">₹{opt.price}</div>
                                   {isBought ? (
                                     <span className="badge bg-success text-white">
-                                      <i className="bi bi-check-circle me-1"></i>
-                                      Active
+                                      <i className="bi bi-check-circle me-1"></i>Active
                                     </span>
                                   ) : (
-                                    <span className="badge bg-secondary">
-                                      Select
-                                    </span>
+                                    <span className="badge bg-secondary">Select</span>
                                   )}
                                 </div>
                               </div>
@@ -3370,26 +3244,24 @@ const AgentSubcrptionplan = () => {
                 <i className="bi bi-cart-check me-2"></i>
                 {selectedPlan.name} • {selectedPlan.duration}
               </div>
-              <div className="footer-sub">
-                ₹{selectedPlan.price} (including all taxes)
-              </div>
+              <div className="footer-sub">₹{selectedPlan.price} (including all taxes)</div>
             </div>
 
             <div className="footer-right">
-              <div className="footer-total-label">
-                Total Amount
-              </div>
-              <div className="footer-total">
-                ₹{selectedPlan.price}
-              </div>
+              <div className="footer-total-label">Total Amount</div>
+              <div className="footer-total">₹{selectedPlan.price}</div>
               <button
                 className="btn btn-dark buy-btn"
                 onClick={handleBuy}
-                disabled={paymentProcessing}
+                disabled={paymentProcessing || isVerifyingPayment}
               >
                 {paymentProcessing ? (
                   <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
                     Processing...
                   </>
                 ) : (
