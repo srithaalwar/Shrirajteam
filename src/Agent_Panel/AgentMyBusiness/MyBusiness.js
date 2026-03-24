@@ -1316,7 +1316,7 @@ const BusinessList = () => {
 
   const getActiveBadge = (isActive) => {
     if (!isActive) return <span className="badge bg-danger active-badge">Inactive</span>;
-    return <span className="badge bg-success active-badge">Active</span>;
+    return <span className="badge bg-success active-badge text-white">Active</span>;
   };
 
   // Filter businesses based on search and filters

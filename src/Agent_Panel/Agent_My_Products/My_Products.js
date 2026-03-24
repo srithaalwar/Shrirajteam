@@ -7831,12 +7831,12 @@ const ProductCard = ({
           {getVariantName()}
         </h6>
         
-        <div className="d-flex justify-content-between align-items-center mb-2">
-          <small className="text-muted">{product.brand || "No Brand"}</small>
-          <span className={`badge ${variant.is_active ? 'bg-success' : 'bg-danger'}`}>
-            {variant.is_active ? 'Active' : 'Inactive'}
-          </span>
-        </div>
+       <div className="d-flex justify-content-between align-items-center mb-2">
+  <small className="text-muted">{product.brand || "No Brand"}</small>
+  <span className={`badge ${variant.is_active ? 'bg-success' : 'bg-danger'} text-white`}>
+    {variant.is_active ? 'Active' : 'Inactive'}
+  </span>
+</div>
         
         {/* Variant attributes */}
         {getVariantDisplay() && (
@@ -7851,16 +7851,16 @@ const ProductCard = ({
         </small>
 
         {/* Verification Status */}
-        <div className="d-flex justify-content-between align-items-center mb-2">
-          <small className="text-muted">Verification</small>
-          <span className={`badge ${
-            variant.verification_status === 'verified' ? 'bg-success' : 
-            variant.verification_status === 'rejected' ? 'bg-danger' : 
-            'bg-warning'
-          }`}>
-            {getVerificationStatusText()}
-          </span>
-        </div>
+      <div className="d-flex justify-content-between align-items-center mb-2">
+  <small className="text-muted">Verification</small>
+  <span className={`badge ${
+    variant.verification_status === 'verified' ? 'bg-success' : 
+    variant.verification_status === 'rejected' ? 'bg-danger' : 
+    'bg-warning'
+  } text-white`}>
+    {getVerificationStatusText()}
+  </span>
+</div>
 
         {/* Commission Display */}
         <div className="d-flex justify-content-between align-items-center mb-2">

@@ -8612,9 +8612,15 @@ const menuItems = [
   
   // Products Main Category
   {
-    name: "Products",
+    name: "Business",
     icon: <FaBriefcase />,
     subMenu: [
+       { 
+        path: "/agent-my-business", 
+        name: "My Business", 
+        icon: <FaUserTie />,
+      
+      },
       { 
         path: "/agent-add-product-form", 
         name: "Add Product", 
@@ -8661,7 +8667,7 @@ const menuItems = [
   },
   
   // Other standalone items
-  { path: "/agent-my-business", name: "My Business", icon: <FaUserTie /> },
+  // { path: "/agent-my-business", name: "My Business", icon: <FaUserTie /> },
     { path: "/a-service-providers", name: "Service Providers", icon: <FaUserTie /> },
 
   { path: "/p-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
