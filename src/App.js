@@ -357,7 +357,7 @@ import AdminTeam from './Admin_Panel/Admin_MyTeam/MyTeam'
 import AgentHome from "./Agent_Panel/Agent_Home_Page/Agent_Business_listings_home"
 import CommissionLedger from "./Agent_Panel/AgentDashboard/CommissionLedger"
 import AgentHomeSubCategories from './Agent_Panel/Agent_Home_Page/SubCategories'
-
+import AgentDashboardPropertyDetails from './Agent_Panel/AgentDashboard/PropertyDetails'
 
 function App() {
   return (
@@ -533,6 +533,8 @@ function App() {
 
         <Route path="/agent-commission-ledger" element={<CommissionLedger />} />
                 <Route path="/agent-dashboard" element={<AgentDashboard />} />
+          <Route path="/agent-property-details" element={<AgentDashboardPropertyDetails />} />
+
 
         <Route path="/agent-add-property" element={<AgentAddProperty />} />
         <Route path="/agent-properties" element={<AgentProperties />} />

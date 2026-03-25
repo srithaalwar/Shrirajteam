@@ -599,47 +599,47 @@ const ClientDashboard = () => {
       const myProps = property_summary.my_properties;
       metrics.push(
         { 
-          label: "Total Properties", 
+          label: " Properties", 
           value: myProps.total_added || 0, 
           icon: iconMap["Total Properties"], 
-          // path: "/client-properties" 
+          path: "/client-properties" 
         },
-        { 
-          label: "Available Properties", 
-          value: myProps.available || 0, 
-          icon: iconMap["Available Properties"], 
-          // path: "/client-properties?status=available" 
-        },
-        { 
-          label: "Sold Properties", 
-          value: myProps.sold || 0, 
-          icon: iconMap["Sold Properties"], 
-          // path: "/client-properties?status=sold" 
-        },
-        { 
-          label: "Booked Properties", 
-          value: myProps.booked || 0, 
-          icon: iconMap["Booked Properties"], 
-          // path: "/client-properties?status=booked" 
-        },
-        { 
-          label: "Pending Properties", 
-          value: myProps.pending || 0, 
-          icon: iconMap["Pending Properties"], 
-          // path: "/client-properties?status=pending" 
-        },
-        { 
-          label: "Verified Properties", 
-          value: myProps.verified || 0, 
-          icon: iconMap["Verified Properties"], 
-          // path: "/client-properties?status=verified" 
-        },
-        { 
-          label: "Rejected Properties", 
-          value: myProps.rejected || 0, 
-          icon: iconMap["Rejected Properties"], 
-          // path: "/client-properties?status=rejected" 
-        }
+        // { 
+        //   label: "Available Properties", 
+        //   value: myProps.available || 0, 
+        //   icon: iconMap["Available Properties"], 
+        //   path: "/client-properties?status=available" 
+        // },
+        // { 
+        //   label: "Sold Properties", 
+        //   value: myProps.sold || 0, 
+        //   icon: iconMap["Sold Properties"], 
+        //   path: "/client-properties?status=sold" 
+        // },
+        // { 
+        //   label: "Booked Properties", 
+        //   value: myProps.booked || 0, 
+        //   icon: iconMap["Booked Properties"], 
+        //   path: "/client-properties?status=booked" 
+        // },
+        // { 
+        //   label: "Pending Properties", 
+        //   value: myProps.pending || 0, 
+        //   icon: iconMap["Pending Properties"], 
+        //   path: "/client-properties?status=pending" 
+        // },
+        // { 
+        //   label: "Verified Properties", 
+        //   value: myProps.verified || 0, 
+        //   icon: iconMap["Verified Properties"], 
+        //   path: "/client-properties?status=verified" 
+        // },
+        // { 
+        //   label: "Rejected Properties", 
+        //   value: myProps.rejected || 0, 
+        //   icon: iconMap["Rejected Properties"], 
+        //   path: "/client-properties?status=rejected" 
+        // }
       );
     }
 
@@ -647,10 +647,10 @@ const ClientDashboard = () => {
     if (transaction_summary) {
       metrics.push(
         { 
-          label: "Total Transactions", 
+          label: " Transactions", 
           value: transaction_summary.total_transactions || 0, 
           icon: iconMap["Total Transactions"], 
-          // path: "/client-transactions" 
+          path: "/client-transactions" 
         },
         // { 
         //   label: "Successful Transactions", 
@@ -671,17 +671,17 @@ const ClientDashboard = () => {
     if (order_summary) {
       metrics.push(
         { 
-          label: "Total Orders", 
+          label: " Orders", 
           value: order_summary.total_orders || 0, 
           icon: iconMap["Total Orders"], 
-          // path: "/client-orders" 
+          path: "/client-orders" 
         },
-        { 
-          label: "Paid Orders", 
-          value: order_summary.paid || 0, 
-          icon: iconMap["Paid Orders"], 
-          // path: "/client-orders?status=paid" 
-        }
+        // { 
+        //   label: "Paid Orders", 
+        //   value: order_summary.paid || 0, 
+        //   icon: iconMap["Paid Orders"], 
+        //   path: "/client-orders?status=paid" 
+        // }
       );
     }
 
@@ -689,10 +689,10 @@ const ClientDashboard = () => {
     if (subscription_summary) {
       metrics.push(
         { 
-          label: "Total Subscriptions", 
+          label: " Subscriptions", 
           value: subscription_summary.total_subscriptions || 0, 
           icon: iconMap["Total Subscriptions"], 
-          // path: "/client-my-plans" 
+          path: "/client-my-plans" 
         },
         // { 
         //   label: "Active Subscriptions", 
@@ -909,7 +909,7 @@ const ClientDashboard = () => {
               </div>
 
               {/* Section 3: Quick Stats Summary */}
-              {summary && (
+              {/* {summary && (
                 <div className="dashboard-section quick-stats-section">
                   <h2 className="section-title">Quick Stats Summary</h2>
                   <div className="quick-stats-grid">
@@ -931,7 +931,7 @@ const ClientDashboard = () => {
                     </div>
                   </div>
                 </div>
-              )}
+              )} */}
             </>
           )}
         </div>

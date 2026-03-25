@@ -1,0 +1,316 @@
+/* Property Dashboard Specific Styles - Add to your existing CSS */
+
+/* Property Cards */
+.property-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.property-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.property-card-active {
+  border-color: #4CAF50;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+}
+
+.property-card-active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #4CAF50;
+}
+
+.property-card-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.property-card-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1f36;
+  margin-bottom: 6px;
+}
+
+.property-card-wide {
+  grid-column: span 2;
+}
+
+/* Tablet */
+@media (min-width: 640px) {
+  .property-card-wide {
+    grid-column: span 1;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .property-card-wide {
+    grid-column: span 1;
+  }
+}
+
+/* Property Chart Section */
+.property-chart-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e9eef3;
+}
+
+.property-chart-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Tablet and Desktop */
+@media (min-width: 768px) {
+  .property-chart-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.property-chart-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1f36;
+  margin: 0 0 4px 0;
+}
+
+.property-chart-subtitle {
+  font-size: 13px;
+  color: #8b96a5;
+  margin: 0;
+}
+
+/* Property Legend */
+.property-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.property-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #4b5565;
+}
+
+.property-legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+/* Property Chart Wrapper */
+.property-chart-wrapper {
+  display: flex;
+  gap: 8px;
+  height: 280px;
+  margin-top: 1rem;
+}
+
+/* Tablet and Desktop */
+@media (min-width: 768px) {
+  .property-chart-wrapper {
+    height: 320px;
+    gap: 16px;
+  }
+}
+
+/* Property Y-Axis */
+.property-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 8px;
+  border-right: 1px solid #e9eef3;
+  min-width: 40px;
+  text-align: right;
+}
+
+@media (min-width: 768px) {
+  .property-y-axis {
+    min-width: 50px;
+    padding-right: 12px;
+  }
+}
+
+.property-y-axis-label {
+  font-size: 10px;
+  color: #8b96a5;
+  line-height: 1;
+}
+
+@media (min-width: 768px) {
+  .property-y-axis-label {
+    font-size: 12px;
+  }
+}
+
+/* Property Bars Container */
+.property-bars-container {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 8px;
+  padding-bottom: 8px;
+  overflow-x: auto;
+}
+
+@media (min-width: 768px) {
+  .property-bars-container {
+    gap: 16px;
+  }
+}
+
+.property-bar-group {
+  flex: 1;
+  min-width: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+@media (max-width: 480px) {
+  .property-bar-group {
+    min-width: 45px;
+  }
+}
+
+.property-bars {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: calc(100% - 28px);
+  width: 100%;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .property-bars {
+    gap: 4px;
+    height: calc(100% - 30px);
+  }
+}
+
+.property-bar-single {
+  width: 80%;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-height: 2px;
+}
+
+.property-bar-single:hover {
+  opacity: 0.85;
+  transform: scaleX(1.05);
+}
+
+.property-bar-label {
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 500;
+  margin-top: 8px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .property-bar-label {
+    font-size: 13px;
+    margin-top: 12px;
+  }
+}
+
+/* Mobile Specific Adjustments */
+@media (max-width: 480px) {
+  .property-card-value {
+    font-size: 20px;
+  }
+  
+  .property-chart-title {
+    font-size: 16px;
+  }
+  
+  .property-chart-subtitle {
+    font-size: 12px;
+  }
+  
+  .property-legend-item {
+    font-size: 10px;
+  }
+  
+  .property-chart-wrapper {
+    height: 240px;
+    gap: 6px;
+  }
+  
+  .property-bar-single {
+    width: 100%;
+  }
+  
+  .property-bars {
+    gap: 2px;
+  }
+  
+  .property-bar-label {
+    font-size: 10px;
+    margin-top: 6px;
+  }
+  
+  .property-y-axis-label {
+    font-size: 9px;
+  }
+}
+
+/* For very small devices */
+@media (max-width: 360px) {
+  .property-bar-group {
+    min-width: 40px;
+  }
+  
+  .property-chart-wrapper {
+    height: 220px;
+  }
+}
+
+/* Scrollbar styling for horizontal scroll */
+.property-bars-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.property-bars-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.property-bars-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.property-bars-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

@@ -1,684 +1,3 @@
-// import React, { useEffect, useState, useRef } from "react";
-// import axios from "axios";
-// import { Bar } from "react-chartjs-2";
-// import {
-//   Chart as ChartJS,
-//   CategoryScale,
-//   LinearScale,
-//   BarElement,
-//   Title,
-//   Tooltip,
-//   Legend,
-// } from "chart.js";
-// import { useNavigate } from "react-router-dom";
-// import { baseurl } from "../../BaseURL/BaseURL";
-// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar"
-// import "./Dashboard.css";
-
-// // Font Awesome Icons
-// import {
-//   faCheckCircle,
-//   faCalendarCheck,
-//   faBuilding,
-//   faHourglassHalf,
-//   faTimesCircle,
-//   faUniversity,
-//   faMoneyCheckAlt,
-//   faBusinessTime,
-//   faHome,
-//   faCheck,
-//   faBan,
-//   faCreditCard,
-//   faReceipt,
-//   faUserTag,
-//   faDollarSign,
-//   faShoppingCart,
-//   faChartLine,
-//   faHomeUser,
-//   faFileContract,
-//   faHistory,
-//   faIndianRupeeSign
-// } from "@fortawesome/free-solid-svg-icons";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-// // Register Chart.js components
-// ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
-// // Card background colors - professional gradients
-// const cardColors = [
-//   "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-//   "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-//   "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-//   "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
-//   "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-//   "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-//   "linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)",
-//   "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)",
-//   "linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)",
-//   "linear-gradient(135deg, #f6d365 0%, #fda085 100%)",
-//   "linear-gradient(135deg, #a3bded 0%, #6991c7 100%)",
-//   "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"
-// ];
-
-// // Icon mapping for agent-specific metrics
-// const iconMap = {
-//   "Total Properties": faHome,
-//   "Available Properties": faHomeUser,
-//   "Sold Properties": faCheckCircle,
-//   "Booked Properties": faCalendarCheck,
-//   "Pending Properties": faHourglassHalf,
-//   "Verified Properties": faCheck,
-//   "Rejected Properties": faBan,
-//   "Total Bookings": faShoppingCart,
-//   "Properties Purchased": faIndianRupeeSign,
-//   "Total Transactions": faCreditCard,
-//   "Successful Transactions": faCheckCircle,
-//   "Failed Transactions": faTimesCircle,
-//   "Refunded Transactions": faReceipt,
-//   "Total Revenue": faIndianRupeeSign,
-//   "Total Orders": faFileContract,
-//   "Paid Orders": faCheckCircle,
-//   "Pending Orders": faHourglassHalf,
-//   "Cancelled Orders": faTimesCircle,
-//   "Refunded Orders": faReceipt,
-//   "Total Subscriptions": faChartLine,
-//   "Active Subscriptions": faCheckCircle,
-//   "Expired Subscriptions": faTimesCircle,
-//   "Subscription Revenue": faIndianRupeeSign,
-//   "Transaction History": faHistory
-// };
-
-// const AgentDashboard = () => {
-//   const [summary, setSummary] = useState(null);
-//   const [chartData, setChartData] = useState(null);
-//   const [filter, setFilter] = useState("all");
-//   const [loading, setLoading] = useState(true);
-//   const [chartLoading, setChartLoading] = useState(false);
-//   const [userInfo, setUserInfo] = useState({});
-//   const navigate = useNavigate();
-//   const chartRef = useRef(null);
-
-//   // Get user info from localStorage
-//   useEffect(() => {
-//     const storedUserInfo = {
-//       userId: localStorage.getItem('userId') || 'UID-1430',
-//       user_id: localStorage.getItem('user_id') || '2',
-//       user_name: localStorage.getItem('user_name') || 'harish',
-//       email: localStorage.getItem('email') || 'kodamharish12@gmail.com',
-//       phone_number: localStorage.getItem('phone_number') || '9133121164',
-//       referral_id: localStorage.getItem('referral_id') || 'SRP000001'
-//     };
-//     setUserInfo(storedUserInfo);
-//   }, []);
-
-//   // Fetch agent summary
-//   useEffect(() => {
-//     if (!userInfo.user_id) return;
-
-//     setLoading(true);
-//     setChartLoading(true);
-    
-//     const apiEndpoint = `${baseurl}/summary/?user_id=${userInfo.user_id}`;
-    
-//     axios.get(apiEndpoint)
-//       .then(res => {
-//         console.log("Agent API Response:", res.data);
-        
-//         if (res.data) {
-//           setSummary(res.data);
-//           prepareChartData(res.data);
-//         } else {
-//           throw new Error("Invalid API response structure");
-//         }
-//       })
-//       .catch(err => {
-//         console.error("Error fetching agent summary:", err);
-//         // Fallback to mock data structure based on agent API response
-//         const fallbackData = {
-//           filters_applied: {
-//             user_id: userInfo.user_id,
-//             role: null,
-//             start_date: null,
-//             end_date: null
-//           },
-//           property_summary: {
-//             my_properties: {
-//               total_added: 0,
-//               available: 0,
-//               booked: 0,
-//               sold: 0,
-//               pending: 0,
-//               verified: 0,
-//               rejected: 0
-//             },
-//             bookings: {
-//               count: 0
-//             },
-//             buyied_or_purchased: {
-//               count: 0
-//             }
-//           },
-//           transaction_summary: {
-//             total_transactions: 0,
-//             success: 0,
-//             failed: 0,
-//             refunded: 0,
-//             total_revenue: 0
-//           },
-//           order_summary: {
-//             total_orders: 0,
-//             paid: 0,
-//             pending: 0,
-//             cancelled: 0,
-//             refunded: 0
-//           },
-//           subscription_summary: {
-//             total_subscriptions: 0,
-//             active: 0,
-//             expired: 0,
-//             subscription_revenue: 0
-//           }
-//         };
-//         setSummary(fallbackData);
-//         prepareChartData(fallbackData);
-//       })
-//       .finally(() => {
-//         setLoading(false);
-//         setChartLoading(false);
-//       });
-//   }, [userInfo.user_id]);
-
-//   // Prepare chart data from agent summary
-//   const prepareChartData = (summaryData) => {
-//     if (!summaryData || !summaryData.property_summary) {
-//       console.log("No property summary data available");
-//       return;
-//     }
-    
-//     const { my_properties } = summaryData.property_summary;
-//     console.log("My Properties for Chart:", my_properties);
-    
-//     const labels = ["My Properties"];
-    
-//     // Extract data for each status
-//     const available = [my_properties.available || 0];
-//     const sold = [my_properties.sold || 0];
-//     const pending = [my_properties.pending || 0];
-//     const verified = [my_properties.verified || 0];
-//     const booked = [my_properties.booked || 0];
-//     const rejected = [my_properties.rejected || 0];
-
-//     console.log("Chart Data:", {
-//       labels,
-//       available,
-//       sold,
-//       pending,
-//       verified,
-//       booked,
-//       rejected
-//     });
-
-//     // Colors for agent dashboard
-//     const colors = {
-//       Available: "#4caf50", 
-//       Sold: "#e53935",    
-//       Pending: "#ffeb3b",   
-//       Verified: "#2196f3",
-//       Booked: "#ff9800",
-//       Rejected: "#9e9e9e"
-//     };
-
-//     // Create datasets array
-//     const datasets = [
-//       { 
-//         label: "Available", 
-//         data: available, 
-//         backgroundColor: colors.Available,
-//         borderColor: colors.Available,
-//         borderWidth: 1
-//       },
-//       { 
-//         label: "Sold", 
-//         data: sold, 
-//         backgroundColor: colors.Sold,
-//         borderColor: colors.Sold,
-//         borderWidth: 1
-//       },
-//       { 
-//         label: "Pending", 
-//         data: pending, 
-//         backgroundColor: colors.Pending,
-//         borderColor: colors.Pending,
-//         borderWidth: 1
-//       },
-//       { 
-//         label: "Verified", 
-//         data: verified, 
-//         backgroundColor: colors.Verified,
-//         borderColor: colors.Verified,
-//         borderWidth: 1
-//       },
-//       { 
-//         label: "Booked", 
-//         data: booked, 
-//         backgroundColor: colors.Booked,
-//         borderColor: colors.Booked,
-//         borderWidth: 1
-//       },
-//       { 
-//         label: "Rejected", 
-//         data: rejected, 
-//         backgroundColor: colors.Rejected,
-//         borderColor: colors.Rejected,
-//         borderWidth: 1
-//       },
-//     ];
-
-//     const chartDataConfig = {
-//       labels,
-//       datasets
-//     };
-
-//     console.log("Final Chart Config:", chartDataConfig);
-//     setChartData(chartDataConfig);
-//   };
-
-//   // Prepare metrics from agent summary data
-//   const prepareMetrics = () => {
-//     if (!summary) {
-//       console.log("No summary available for metrics");
-//       return [];
-//     }
-    
-//     const { 
-//       property_summary, 
-//       transaction_summary, 
-//       subscription_summary, 
-//       order_summary
-//     } = summary;
-
-//     console.log("Preparing metrics from:", {
-//       property_summary,
-//       transaction_summary,
-//       subscription_summary,
-//       order_summary
-//     });
-
-//     const metrics = [];
-    
-//     // Property Metrics from my_properties
-//     if (property_summary.my_properties) {
-//       const myProps = property_summary.my_properties;
-//       metrics.push(
-//         { 
-//           label: "Total Properties", 
-//           value: myProps.total_added || 0, 
-//           icon: iconMap["Total Properties"], 
-//           path: "/agent-properties" 
-//         },
-//         { 
-//           label: "Available Properties", 
-//           value: myProps.available || 0, 
-//           icon: iconMap["Available Properties"], 
-//           path: "/agent-properties?status=available" 
-//         },
-//         { 
-//           label: "Sold Properties", 
-//           value: myProps.sold || 0, 
-//           icon: iconMap["Sold Properties"], 
-//           path: "/agent-properties?status=sold" 
-//         },
-//         { 
-//           label: "Booked Properties", 
-//           value: myProps.booked || 0, 
-//           icon: iconMap["Booked Properties"], 
-//           path: "/agent-properties?status=booked" 
-//         },
-//         { 
-//           label: "Pending Properties", 
-//           value: myProps.pending || 0, 
-//           icon: iconMap["Pending Properties"], 
-//           path: "/agent-properties?status=pending" 
-//         },
-//         { 
-//           label: "Verified Properties", 
-//           value: myProps.verified || 0, 
-//           icon: iconMap["Verified Properties"], 
-//           path: "/agent-properties?status=verified" 
-//         },
-//         { 
-//           label: "Rejected Properties", 
-//           value: myProps.rejected || 0, 
-//           icon: iconMap["Rejected Properties"], 
-//           path: "/agent-properties?status=rejected" 
-//         }
-//       );
-//     }
-
-//     // Bookings and Purchases
-//     if (property_summary.bookings) {
-//       metrics.push(
-//         { 
-//           label: "Total Bookings", 
-//           value: property_summary.bookings.count || 0, 
-//           icon: iconMap["Total Bookings"], 
-//           path: "/agent-properties" 
-//         }
-//       );
-//     }
-
-//     if (property_summary.buyied_or_purchased) {
-//       metrics.push(
-//         { 
-//           label: "Properties Purchased", 
-//           value: property_summary.buyied_or_purchased.count || 0, 
-//           icon: iconMap["Properties Purchased"], 
-//           path: "/agent-properties" 
-//         }
-//       );
-//     }
-
-//     // Transaction Metrics
-//     if (transaction_summary) {
-//       metrics.push(
-//         { 
-//           label: "Total Transactions", 
-//           value: transaction_summary.total_transactions || 0, 
-//           icon: iconMap["Total Transactions"], 
-//           path: "/agent-transactions" 
-//         },
-//         { 
-//           label: "Successful Transactions", 
-//           value: transaction_summary.success || 0, 
-//           icon: iconMap["Successful Transactions"], 
-//           path: "/agent-transactions?status=success" 
-//         },
-//         { 
-//           label: "Total Revenue", 
-//           value: `₹${transaction_summary.total_revenue || 0}`, 
-//           icon: iconMap["Total Revenue"], 
-//           path: "/agent-transactions" 
-//         }
-//       );
-//     }
-
-//     // Order Metrics
-//     if (order_summary) {
-//       metrics.push(
-//         { 
-//           label: "Total Orders", 
-//           value: order_summary.total_orders || 0, 
-//           icon: iconMap["Total Orders"], 
-//           path: "/agent-orders" 
-//         },
-//         { 
-//           label: "Paid Orders", 
-//           value: order_summary.paid || 0, 
-//           icon: iconMap["Paid Orders"], 
-//           path: "/agent-orders?status=paid" 
-//         }
-//       );
-//     }
-
-//     // Subscription Metrics
-//     if (subscription_summary) {
-//       metrics.push(
-//         { 
-//           label: "Total Subscriptions", 
-//           value: subscription_summary.total_subscriptions || 0, 
-//           icon: iconMap["Total Subscriptions"], 
-//           path: "/agent-my-subscription-plans" 
-//         },
-//         { 
-//           label: "Active Subscriptions", 
-//           value: subscription_summary.active || 0, 
-//           icon: iconMap["Active Subscriptions"], 
-//           path: "/agent-my-subscription-plans" 
-//         },
-//         // { 
-//         //   label: "Subscription Revenue", 
-//         //   value: `₹${subscription_summary.subscription_revenue || 0}`, 
-//         //   icon: iconMap["Subscription Revenue"], 
-//         //   path: "/agent-my-subscription-plans" 
-//         // }
-//       );
-//     }
-
-//     // Add a transaction history card
-//     metrics.push(
-//       { 
-//         label: "Transaction History", 
-//         value: "View All", 
-//         icon: iconMap["Transaction History"], 
-//         path: "/agent-transactions" 
-//       }
-//     );
-
-//     return metrics;
-//   };
-
-//   const options = { 
-//     responsive: true, 
-//     plugins: { 
-//       legend: { 
-//         position: "bottom",
-//         labels: {
-//           font: {
-//             size: 12
-//           },
-//           padding: 20
-//         }
-//       },
-//       title: {
-//         display: true,
-//         text: 'My Properties Overview',
-//         font: {
-//           size: 16,
-//           weight: 'bold'
-//         },
-//         padding: {
-//           top: 10,
-//           bottom: 30
-//         }
-//       }
-//     }, 
-//     scales: { 
-//       y: { 
-//         beginAtZero: true,
-//         grid: {
-//           color: 'rgba(0,0,0,0.1)'
-//         },
-//         ticks: {
-//           font: {
-//             size: 12
-//           }
-//         },
-//         title: {
-//           display: true,
-//           text: 'Number of Properties',
-//           font: {
-//             size: 14,
-//             weight: 'bold'
-//           }
-//         }
-//       },
-//       x: {
-//         grid: {
-//           display: false
-//         },
-//         ticks: {
-//           font: {
-//             size: 12
-//           }
-//         }
-//       }
-//     }, 
-//     maintainAspectRatio: false,
-//     barPercentage: 0.8,
-//     categoryPercentage: 0.9
-//   };
-
-//   const getFilteredChart = () => {
-//     if (!chartData) {
-//       console.log("No chart data available for filtering");
-//       return null;
-//     }
-    
-//     if (filter === "all") {
-//       console.log("Showing all chart data");
-//       return chartData;
-//     }
-    
-//     console.log("Filtering chart for:", filter);
-//     const filteredData = { 
-//       labels: chartData.labels, 
-//       datasets: chartData.datasets.filter(d => d.label === filter) 
-//     };
-//     console.log("Filtered chart data:", filteredData);
-//     return filteredData;
-//   };
-
-//   const metrics = prepareMetrics();
-
-//   return (
-//     <>
-//       <AgentNavbar />
-//       <div className="agent-dashboard-container">
-//         <div className="agent-dashboard-content">
-//           {/* Welcome Header - Commented out as in original */}
-//           {/* <div className="welcome-header">
-//             <h1 className="welcome-title">Welcome back, {userInfo.user_name || 'Agent'}!</h1>
-//             <p className="welcome-subtitle">
-//               Here's your performance overview. Referral ID: <strong>{userInfo.referral_id}</strong>
-//             </p>
-//           </div> */}
-
-//           {loading ? (
-//             <div className="loading-container">
-//               <div className="spinner-border text-primary" role="status">
-//                 <span className="visually-hidden">Loading...</span>
-//               </div>
-//               <p className="mt-2">Loading dashboard data...</p>
-//             </div>
-//           ) : (
-//             <>
-//               {/* Section 1: Statistics Cards */}
-//               <div className="dashboard-section statistics-section">
-//                 <h2 className="section-title">Performance Overview</h2>
-//                 <div className="statistics-grid">
-//                   {metrics.map((metric, index) => (
-//                     <div 
-//                       key={`${metric.label}-${index}`}
-//                       className="stat-card"
-//                       style={{ 
-//                         background: cardColors[index % cardColors.length],
-//                       }}
-//                       onClick={() => metric.path && navigate(metric.path)}
-//                     >
-//                       <div className="stat-icon">
-//                         <FontAwesomeIcon icon={metric.icon} />
-//                       </div>
-//                       <div className="stat-info">
-//                         <h3 className="stat-value">{metric.value}</h3>
-//                         <p className="stat-label" style={{ color: 'black' }}>{metric.label}</p>
-//                       </div>
-//                     </div>
-//                   ))}
-//                 </div>
-//               </div>
-
-//               {/* Section 2: Chart/Graph */}
-//               <div className="dashboard-section chart-section">
-//                 <div className="chart-header">
-//                   <h2 className="section-title">Properties Analysis</h2>
-//                   <div className="chart-controls">
-//                     <div className="filter-control">
-//                       <label className="filter-label">Filter by Status:</label>
-//                       <select 
-//                         className="form-select form-select-dashboard"
-//                         value={filter}
-//                         onChange={(e) => {
-//                           console.log("Filter changed to:", e.target.value);
-//                           setFilter(e.target.value);
-//                         }}
-//                       >
-//                         <option value="all">All Status</option>
-//                         <option value="Available">Available</option>
-//                         <option value="Sold">Sold</option>
-//                         <option value="Pending">Pending</option>
-//                         <option value="Verified">Verified</option>
-//                         <option value="Booked">Booked</option>
-//                         <option value="Rejected">Rejected</option>
-//                       </select>
-//                     </div>
-//                   </div>
-//                 </div>
-//                 <div className="chart-container" style={{ position: 'relative', height: '400px' }}>
-//                   {chartLoading ? (
-//                     <div className="text-center py-5">
-//                       <div className="spinner-border text-primary" role="status">
-//                         <span className="visually-hidden">Loading chart...</span>
-//                       </div>
-//                       <p className="mt-2">Loading chart data...</p>
-//                     </div>
-//                   ) : chartData ? (
-//                     <>
-//                       <Bar 
-//                         key={filter}
-//                         ref={chartRef} 
-//                         data={getFilteredChart()} 
-//                         options={options} 
-//                       />
-//                       {getFilteredChart()?.datasets?.length === 0 && (
-//                         <div className="text-center py-5">
-//                           <p>No data available for the selected filter</p>
-//                         </div>
-//                       )}
-//                     </>
-//                   ) : (
-//                     <div className="text-center py-5">
-//                       <p>No chart data available</p>
-//                     </div>
-//                   )}
-//                 </div>
-//               </div>
-
-//               {/* Section 3: Quick Stats Summary */}
-//               {summary && (
-//                 <div className="dashboard-section quick-stats-section">
-//                   <h2 className="section-title">Quick Stats Summary</h2>
-//                   <div className="quick-stats-grid">
-//                     <div className="quick-stat">
-//                       <h4>Properties Added</h4>
-//                       <p>{summary.property_summary?.my_properties?.total_added || 0}</p>
-//                     </div>
-//                     <div className="quick-stat">
-//                       <h4>Total Bookings</h4>
-//                       <p>{summary.property_summary?.bookings?.count || 0}</p>
-//                     </div>
-//                     <div className="quick-stat">
-//                       <h4>Properties Purchased</h4>
-//                       <p>{summary.property_summary?.buyied_or_purchased?.count || 0}</p>
-//                     </div>
-//                     <div className="quick-stat">
-//                       <h4>Total Revenue</h4>
-//                       <p>₹{summary.transaction_summary?.total_revenue || 0}</p>
-//                     </div>
-//                   </div>
-//                 </div>
-//               )}
-//             </>
-//           )}
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default AgentDashboard;
-
-
-
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
@@ -693,7 +12,7 @@ import {
 } from "chart.js";
 import { useNavigate } from "react-router-dom";
 import { baseurl } from "../../BaseURL/BaseURL";
-import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar"
+import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import "./Dashboard.css";
 
 // Font Awesome Icons
@@ -721,7 +40,8 @@ import {
   faIndianRupeeSign,
   faShareAlt,
   faClock,
-  faMoneyBillWave
+  faMoneyBillWave,
+  faChartBar
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -735,48 +55,7 @@ const cardColors = [
   "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
   "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
   "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-  "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-  "linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)",
-  "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)",
-  "linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)",
-  "linear-gradient(135deg, #f6d365 0%, #fda085 100%)",
-  "linear-gradient(135deg, #a3bded 0%, #6991c7 100%)",
-  "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
-  "linear-gradient(135deg, #c2e9fb 0%, #a1c4fd 100%)",
-  "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)",
-  "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)"
 ];
-
-// Icon mapping for agent-specific metrics
-const iconMap = {
-  "Total Properties": faHome,
-  "Available Properties": faHomeUser,
-  "Sold Properties": faCheckCircle,
-  "Booked Properties": faCalendarCheck,
-  "Pending Properties": faHourglassHalf,
-  "Verified Properties": faCheck,
-  "Rejected Properties": faBan,
-  "Total Bookings": faShoppingCart,
-  "Properties Purchased": faIndianRupeeSign,
-  "Total Transactions": faCreditCard,
-  "Successful Transactions": faCheckCircle,
-  "Failed Transactions": faTimesCircle,
-  "Refunded Transactions": faReceipt,
-  "Total Revenue": faIndianRupeeSign,
-  "Total Orders": faFileContract,
-  "Paid Orders": faCheckCircle,
-  "Pending Orders": faHourglassHalf,
-  "Cancelled Orders": faTimesCircle,
-  "Refunded Orders": faReceipt,
-  "Total Subscriptions": faChartLine,
-  "Active Subscriptions": faCheckCircle,
-  "Expired Subscriptions": faTimesCircle,
-  "Subscription Revenue": faIndianRupeeSign,
-  "Transaction History": faHistory,
-  "Total Referrals": faShareAlt,
-  "Pending Referral Amount": faClock,
-  "Paid Referral Amount": faMoneyBillWave
-};
 
 const AgentDashboard = () => {
   const [summary, setSummary] = useState(null);
@@ -804,7 +83,6 @@ const AgentDashboard = () => {
     const phoneNumber = localStorage.getItem('phone_number');
     const referralId = localStorage.getItem('referral_id');
     
-    // Only set if at least one ID exists
     if (userId || userIdAlt) {
       setUserInfo({
         userId: userId || null,
@@ -822,7 +100,6 @@ const AgentDashboard = () => {
 
   // Fetch agent summary
   useEffect(() => {
-    // Don't fetch if user_id is not available
     if (!userInfo.user_id) {
       console.log("No user_id available, skipping API call");
       setLoading(false);
@@ -848,7 +125,6 @@ const AgentDashboard = () => {
       })
       .catch(err => {
         console.error("Error fetching agent summary:", err);
-        // Fallback to mock data structure based on agent API response
         const fallbackData = {
           filters_applied: {
             user_id: userInfo.user_id,
@@ -896,7 +172,8 @@ const AgentDashboard = () => {
           referral_summary: {
             total_referrals: 0,
             total_pending_referral_amount: 0,
-            total_paid_referral_amount: 0
+            total_paid_referral_amount: 0,
+            total_referral_amount_or_wallet_amount: 0
           }
         };
         setSummary(fallbackData);
@@ -916,11 +193,9 @@ const AgentDashboard = () => {
     }
     
     const { my_properties } = summaryData.property_summary;
-    console.log("My Properties for Chart:", my_properties);
     
     const labels = ["My Properties"];
     
-    // Extract data for each status
     const available = [my_properties.available || 0];
     const sold = [my_properties.sold || 0];
     const pending = [my_properties.pending || 0];
@@ -928,69 +203,63 @@ const AgentDashboard = () => {
     const booked = [my_properties.booked || 0];
     const rejected = [my_properties.rejected || 0];
 
-    console.log("Chart Data:", {
-      labels,
-      available,
-      sold,
-      pending,
-      verified,
-      booked,
-      rejected
-    });
-
-    // Colors for agent dashboard
     const colors = {
       Available: "#4caf50", 
       Sold: "#e53935",    
-      Pending: "#ffeb3b",   
+      Pending: "#ff9800",   
       Verified: "#2196f3",
       Booked: "#ff9800",
       Rejected: "#9e9e9e"
     };
 
-    // Create datasets array
     const datasets = [
       { 
         label: "Available", 
         data: available, 
         backgroundColor: colors.Available,
         borderColor: colors.Available,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 8
       },
       { 
         label: "Sold", 
         data: sold, 
         backgroundColor: colors.Sold,
         borderColor: colors.Sold,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 8
       },
       { 
         label: "Pending", 
         data: pending, 
         backgroundColor: colors.Pending,
         borderColor: colors.Pending,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 8
       },
       { 
         label: "Verified", 
         data: verified, 
         backgroundColor: colors.Verified,
         borderColor: colors.Verified,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 8
       },
       { 
         label: "Booked", 
         data: booked, 
         backgroundColor: colors.Booked,
         borderColor: colors.Booked,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 8
       },
       { 
         label: "Rejected", 
         data: rejected, 
         backgroundColor: colors.Rejected,
         borderColor: colors.Rejected,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 8
       },
     ];
 
@@ -999,238 +268,127 @@ const AgentDashboard = () => {
       datasets
     };
 
-    console.log("Final Chart Config:", chartDataConfig);
     setChartData(chartDataConfig);
   };
 
-  // Prepare metrics from agent summary data
+  // Prepare metrics in the required order
   const prepareMetrics = () => {
     if (!summary) {
-      console.log("No summary available for metrics");
       return [];
     }
     
     const { 
       property_summary, 
-      transaction_summary, 
-      subscription_summary, 
       order_summary,
       referral_summary
     } = summary;
 
-    console.log("Preparing metrics from:", {
-      property_summary,
-      transaction_summary,
-      subscription_summary,
-      order_summary,
-      referral_summary
-    });
-
     const metrics = [];
     
-    // Property Metrics from my_properties
-    if (property_summary.my_properties) {
-      const myProps = property_summary.my_properties;
-      metrics.push(
-        { 
-          label: "Total Properties", 
-          value: myProps.total_added || 0, 
-          icon: iconMap["Total Properties"], 
-          path: "/agent-properties" 
-        },
-        { 
-          label: "Available Properties", 
-          value: myProps.available || 0, 
-          icon: iconMap["Available Properties"], 
-          path: "/agent-properties?status=available" 
-        },
-        { 
-          label: "Sold Properties", 
-          value: myProps.sold || 0, 
-          icon: iconMap["Sold Properties"], 
-          path: "/agent-properties?status=sold" 
-        },
-        { 
-          label: "Booked Properties", 
-          value: myProps.booked || 0, 
-          icon: iconMap["Booked Properties"], 
-          path: "/agent-properties?status=booked" 
-        },
-        { 
-          label: "Pending Properties", 
-          value: myProps.pending || 0, 
-          icon: iconMap["Pending Properties"], 
-          path: "/agent-properties?status=pending" 
-        },
-        { 
-          label: "Verified Properties", 
-          value: myProps.verified || 0, 
-          icon: iconMap["Verified Properties"], 
-          path: "/agent-properties?status=verified" 
-        },
-        { 
-          label: "Rejected Properties", 
-          value: myProps.rejected || 0, 
-          icon: iconMap["Rejected Properties"], 
-          path: "/agent-properties?status=rejected" 
-        }
-      );
-    }
-
-    // Bookings and Purchases
-    if (property_summary.bookings) {
-      metrics.push(
-        { 
-          label: "Total Bookings", 
-          value: property_summary.bookings.count || 0, 
-          icon: iconMap["Total Bookings"], 
-          path: "/agent-properties" 
-        }
-      );
-    }
-
-    if (property_summary.buyied_or_purchased) {
-      metrics.push(
-        { 
-          label: "Properties Purchased", 
-          value: property_summary.buyied_or_purchased.count || 0, 
-          icon: iconMap["Properties Purchased"], 
-          path: "/agent-properties" 
-        }
-      );
-    }
-
-    // Transaction Metrics
-    if (transaction_summary) {
-      metrics.push(
-        { 
-          label: "Total Transactions", 
-          value: transaction_summary.total_transactions || 0, 
-          icon: iconMap["Total Transactions"], 
-          path: "/agent-transactions" 
-        },
-        { 
-          label: "Successful Transactions", 
-          value: transaction_summary.success || 0, 
-          icon: iconMap["Successful Transactions"], 
-          path: "/agent-transactions?status=success" 
-        },
-        // { 
-        //   label: "Total Revenue", 
-        //   value: `₹${(transaction_summary.total_revenue || 0).toLocaleString()}`, 
-        //   icon: iconMap["Total Revenue"], 
-        //   path: "/agent-transactions" 
-        // }
-      );
-    }
-
-    // Order Metrics
-    if (order_summary) {
-      metrics.push(
-        { 
-          label: "Total Orders", 
-          value: order_summary.total_orders || 0, 
-          icon: iconMap["Total Orders"], 
-          path: "/agent-orders" 
-        },
-        { 
-          label: "Paid Orders", 
-          value: order_summary.paid || 0, 
-          icon: iconMap["Paid Orders"], 
-          path: "/agent-orders?status=paid" 
-        },
-        { 
-          label: "Pending Orders", 
-          value: order_summary.pending || 0, 
-          icon: iconMap["Pending Orders"], 
-          path: "/agent-orders?status=pending" 
-        }
-      );
-    }
-
-    // Subscription Metrics
-    if (subscription_summary) {
-      metrics.push(
-        { 
-          label: "Total Subscriptions", 
-          value: subscription_summary.total_subscriptions || 0, 
-          icon: iconMap["Total Subscriptions"], 
-          path: "/agent-my-subscription-plans" 
-        },
-        // { 
-        //   label: "Active Subscriptions", 
-        //   value: subscription_summary.active || 0, 
-        //   icon: iconMap["Active Subscriptions"], 
-        //   path: "/agent-my-subscription-plans" 
-        // },
-        // { 
-        //   label: "Subscription Revenue", 
-        //   value: `₹${(subscription_summary.subscription_revenue || 0).toLocaleString()}`, 
-        //   icon: iconMap["Subscription Revenue"], 
-        //   path: "/agent-my-subscription-plans" 
-        // }
-      );
-    }
-
-    // Referral Metrics
+    // 1. Commissions Card
     if (referral_summary) {
       metrics.push(
         { 
-          label: "Total Referrals", 
-          value: referral_summary.total_referrals || 0, 
-          icon: iconMap["Total Referrals"], 
-          path: "/agent-my-team" 
-        },
-        { 
-          label: "Total Commissions", 
+          label: "Commissions", 
           value: `₹${(referral_summary.total_referral_amount_or_wallet_amount || 0).toLocaleString()}`, 
-          icon: iconMap["Pending Referral Amount"], 
+          icon: faMoneyBillWave, 
           path: "/agent-commission-ledger" 
-        },
-        // { 
-        //   label: "Referral Amount/Wallet amount Paid", 
-        //   value: `₹${(referral_summary.total_referral_amount_or_wallet_amount_paid || 0).toLocaleString()}`, 
-        //   icon: iconMap["Paid Referral Amount"], 
-        //   path: "/agent-referrals" 
-        // }
+        }
       );
     }
-
-    // Add a transaction history card
-    // metrics.push(
-    //   { 
-    //     label: "Transaction History", 
-    //     value: "View All", 
-    //     icon: iconMap["Transaction History"], 
-    //     path: "/agent-transactions" 
-    //   }
-    // );
+    
+    // 2. Properties Card
+    if (property_summary && property_summary.my_properties) {
+      metrics.push(
+        { 
+          label: "Properties", 
+          value: property_summary.my_properties.total_added || 0, 
+          icon: faHome, 
+          path: "/agent-property-details" 
+        }
+      );
+    }
+    
+    // 3. Products Card (using total orders as products count)
+    if (order_summary) {
+      metrics.push(
+        { 
+          label: "Products", 
+          value: order_summary.total_orders || 0, 
+          icon: faShoppingCart, 
+          // path: "/agent-orders" 
+        }
+      );
+    }
+    
+    // 4. Orders Card
+    if (order_summary) {
+      metrics.push(
+        { 
+          label: "Orders", 
+          value: order_summary.total_orders || 0, 
+          icon: faFileContract, 
+          path: "/agent-orders" 
+        }
+      );
+    }
+    
+    // 5. Referrals Card
+    if (referral_summary) {
+      metrics.push(
+        { 
+          label: "Referrals", 
+          value: referral_summary.total_referrals || 0, 
+          icon: faShareAlt, 
+          path: "/agent-my-team" 
+        }
+      );
+    }
 
     return metrics;
   };
 
   const options = { 
     responsive: true, 
+    maintainAspectRatio: false,
     plugins: { 
       legend: { 
         position: "bottom",
         labels: {
           font: {
-            size: 12
+            size: 12,
+            weight: '500'
           },
-          padding: 20
+          padding: 20,
+          usePointStyle: true,
+          boxWidth: 10
         }
       },
       title: {
         display: true,
-        text: 'My Properties Overview',
+        text: 'Property Status Distribution',
         font: {
-          size: 16,
-          weight: 'bold'
+          size: 18,
+          weight: 'bold',
+          family: "'Poppins', sans-serif"
         },
         padding: {
           top: 10,
           bottom: 30
+        },
+        color: '#2c3e50'
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        borderColor: '#667eea',
+        borderWidth: 2,
+        cornerRadius: 8,
+        callbacks: {
+          label: function(context) {
+            return `${context.dataset.label}: ${context.raw} properties`;
+          }
         }
       }
     }, 
@@ -1238,12 +396,24 @@ const AgentDashboard = () => {
       y: { 
         beginAtZero: true,
         grid: {
-          color: 'rgba(0,0,0,0.1)'
+          color: 'rgba(0,0,0,0.05)',
+          drawBorder: true,
+          borderDash: [5, 5]
         },
         ticks: {
           font: {
-            size: 12
-          }
+            size: 12,
+            weight: '500'
+          },
+          stepSize: 1,
+          callback: function(value) {
+            if (Math.floor(value) === value) {
+              return value;
+            }
+            return null;
+          },
+          autoSkip: true,
+          maxTicksLimit: 8
         },
         title: {
           display: true,
@@ -1251,8 +421,22 @@ const AgentDashboard = () => {
           font: {
             size: 14,
             weight: 'bold'
+          },
+          color: '#2c3e50'
+        },
+        min: 0,
+        max: (() => {
+          if (!chartData) return 100;
+          let maxVal = 0;
+          chartData.datasets.forEach(dataset => {
+            const datasetMax = Math.max(...dataset.data);
+            if (datasetMax > maxVal) maxVal = datasetMax;
+          });
+          if (maxVal > 20) {
+            return Math.ceil(maxVal / 10) * 10;
           }
-        }
+          return maxVal + 2;
+        })()
       },
       x: {
         grid: {
@@ -1260,39 +444,52 @@ const AgentDashboard = () => {
         },
         ticks: {
           font: {
-            size: 12
+            size: 13,
+            weight: '600'
           }
+        },
+        title: {
+          display: true,
+          text: 'Property Categories',
+          font: {
+            size: 14,
+            weight: 'bold'
+          },
+          color: '#2c3e50',
+          padding: { top: 20 }
         }
       }
     }, 
-    maintainAspectRatio: false,
-    barPercentage: 0.8,
-    categoryPercentage: 0.9
+    barPercentage: 0.7,
+    categoryPercentage: 0.85,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 20,
+        bottom: 10
+      }
+    }
   };
 
   const getFilteredChart = () => {
     if (!chartData) {
-      console.log("No chart data available for filtering");
       return null;
     }
     
     if (filter === "all") {
-      console.log("Showing all chart data");
       return chartData;
     }
     
-    console.log("Filtering chart for:", filter);
     const filteredData = { 
       labels: chartData.labels, 
       datasets: chartData.datasets.filter(d => d.label === filter) 
     };
-    console.log("Filtered chart data:", filteredData);
     return filteredData;
   };
 
   const metrics = prepareMetrics();
 
-  // Show loading if we're waiting for user info
   if (loading && !userInfo.user_id) {
     return (
       <>
@@ -1311,7 +508,6 @@ const AgentDashboard = () => {
     );
   }
 
-  // Show error if no user ID found
   if (!userInfo.user_id && !loading) {
     return (
       <>
@@ -1339,16 +535,6 @@ const AgentDashboard = () => {
       <AgentNavbar />
       <div className="agent-dashboard-container">
         <div className="agent-dashboard-content">
-          {/* Welcome Header - Uncomment if needed */}
-          {/* {userInfo.user_name && (
-            <div className="welcome-header">
-              <h1 className="welcome-title">Welcome back, {userInfo.user_name}!</h1>
-              <p className="welcome-subtitle">
-                Here's your performance overview. Referral ID: <strong>{userInfo.referral_id}</strong>
-              </p>
-            </div>
-          )} */}
-
           {loading ? (
             <div className="loading-container">
               <div className="spinner-border text-primary" role="status">
@@ -1376,7 +562,7 @@ const AgentDashboard = () => {
                       </div>
                       <div className="stat-info">
                         <h3 className="stat-value">{metric.value}</h3>
-                        <p className="stat-label" style={{ color: 'black' }}>{metric.label}</p>
+                        <p className="stat-label" style={{ color: 'white' }}>{metric.label}</p>
                       </div>
                     </div>
                   ))}
@@ -1394,7 +580,6 @@ const AgentDashboard = () => {
                         className="form-select form-select-dashboard"
                         value={filter}
                         onChange={(e) => {
-                          console.log("Filter changed to:", e.target.value);
                           setFilter(e.target.value);
                         }}
                       >
@@ -1409,7 +594,7 @@ const AgentDashboard = () => {
                     </div>
                   </div>
                 </div>
-                <div className="chart-container" style={{ position: 'relative', height: '400px' }}>
+                <div className="chart-container" style={{ position: 'relative', height: '450px' }}>
                   {chartLoading ? (
                     <div className="text-center py-5">
                       <div className="spinner-border text-primary" role="status">
@@ -1438,35 +623,6 @@ const AgentDashboard = () => {
                   )}
                 </div>
               </div>
-
-              {/* Section 3: Quick Stats Summary */}
-              {summary && (
-                <div className="dashboard-section quick-stats-section">
-                  <h2 className="section-title">Quick Stats Summary</h2>
-                  <div className="quick-stats-grid">
-                    <div className="quick-stat">
-                      <h4>Properties Added</h4>
-                      <p>{summary.property_summary?.my_properties?.total_added || 0}</p>
-                    </div>
-                    <div className="quick-stat">
-                      <h4>Total Bookings</h4>
-                      <p>{summary.property_summary?.bookings?.count || 0}</p>
-                    </div>
-                    <div className="quick-stat">
-                      <h4>Properties Purchased</h4>
-                      <p>{summary.property_summary?.buyied_or_purchased?.count || 0}</p>
-                    </div>
-                    <div className="quick-stat">
-                      <h4>Total Revenue</h4>
-                      <p>₹{(summary.transaction_summary?.total_revenue || 0).toLocaleString()}</p>
-                    </div>
-                    <div className="quick-stat">
-                      <h4>Total Referrals</h4>
-                      <p>{summary.referral_summary?.total_referrals || 0}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
             </>
           )}
         </div>

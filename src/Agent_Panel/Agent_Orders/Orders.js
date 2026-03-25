@@ -2537,7 +2537,7 @@ GRAND TOTAL: ₹${(parseFloat(order.total_amount) || 0).toFixed(2)}
             <div className="filter-group reset-btn-group">
               <label className="filter-label invisible">Reset</label>
               <button 
-                className="btn btn-outline-secondary reset-btn text-white"
+                className="btn reset-btn text-white"
                 onClick={handleResetFilters}
               >
                 Reset Filters
