@@ -1036,43 +1036,43 @@ const AgentDashboard = () => {
           label: "Total Properties", 
           value: myProps.total_added || 0, 
           icon: iconMap["Total Properties"], 
-          // path: "/agent-properties" 
+          path: "/agent-properties" 
         },
         { 
           label: "Available Properties", 
           value: myProps.available || 0, 
           icon: iconMap["Available Properties"], 
-          // path: "/agent-properties?status=available" 
+          path: "/agent-properties?status=available" 
         },
         { 
           label: "Sold Properties", 
           value: myProps.sold || 0, 
           icon: iconMap["Sold Properties"], 
-          // path: "/agent-properties?status=sold" 
+          path: "/agent-properties?status=sold" 
         },
         { 
           label: "Booked Properties", 
           value: myProps.booked || 0, 
           icon: iconMap["Booked Properties"], 
-          // path: "/agent-properties?status=booked" 
+          path: "/agent-properties?status=booked" 
         },
         { 
           label: "Pending Properties", 
           value: myProps.pending || 0, 
           icon: iconMap["Pending Properties"], 
-          // path: "/agent-properties?status=pending" 
+          path: "/agent-properties?status=pending" 
         },
         { 
           label: "Verified Properties", 
           value: myProps.verified || 0, 
           icon: iconMap["Verified Properties"], 
-          // path: "/agent-properties?status=verified" 
+          path: "/agent-properties?status=verified" 
         },
         { 
           label: "Rejected Properties", 
           value: myProps.rejected || 0, 
           icon: iconMap["Rejected Properties"], 
-          // path: "/agent-properties?status=rejected" 
+          path: "/agent-properties?status=rejected" 
         }
       );
     }
@@ -1084,7 +1084,7 @@ const AgentDashboard = () => {
           label: "Total Bookings", 
           value: property_summary.bookings.count || 0, 
           icon: iconMap["Total Bookings"], 
-          // path: "/agent-properties" 
+          path: "/agent-properties" 
         }
       );
     }
@@ -1095,7 +1095,7 @@ const AgentDashboard = () => {
           label: "Properties Purchased", 
           value: property_summary.buyied_or_purchased.count || 0, 
           icon: iconMap["Properties Purchased"], 
-          // path: "/agent-properties" 
+          path: "/agent-properties" 
         }
       );
     }
@@ -1107,20 +1107,20 @@ const AgentDashboard = () => {
           label: "Total Transactions", 
           value: transaction_summary.total_transactions || 0, 
           icon: iconMap["Total Transactions"], 
-          // path: "/agent-transactions" 
+          path: "/agent-transactions" 
         },
         { 
           label: "Successful Transactions", 
           value: transaction_summary.success || 0, 
           icon: iconMap["Successful Transactions"], 
-          // path: "/agent-transactions?status=success" 
+          path: "/agent-transactions?status=success" 
         },
-        { 
-          label: "Total Revenue", 
-          value: `₹${(transaction_summary.total_revenue || 0).toLocaleString()}`, 
-          icon: iconMap["Total Revenue"], 
-          // path: "/agent-transactions" 
-        }
+        // { 
+        //   label: "Total Revenue", 
+        //   value: `₹${(transaction_summary.total_revenue || 0).toLocaleString()}`, 
+        //   icon: iconMap["Total Revenue"], 
+        //   path: "/agent-transactions" 
+        // }
       );
     }
 
@@ -1131,19 +1131,19 @@ const AgentDashboard = () => {
           label: "Total Orders", 
           value: order_summary.total_orders || 0, 
           icon: iconMap["Total Orders"], 
-          // path: "/agent-orders" 
+          path: "/agent-orders" 
         },
         { 
           label: "Paid Orders", 
           value: order_summary.paid || 0, 
           icon: iconMap["Paid Orders"], 
-          // path: "/agent-orders?status=paid" 
+          path: "/agent-orders?status=paid" 
         },
         { 
           label: "Pending Orders", 
           value: order_summary.pending || 0, 
           icon: iconMap["Pending Orders"], 
-          // path: "/agent-orders?status=pending" 
+          path: "/agent-orders?status=pending" 
         }
       );
     }
@@ -1155,20 +1155,20 @@ const AgentDashboard = () => {
           label: "Total Subscriptions", 
           value: subscription_summary.total_subscriptions || 0, 
           icon: iconMap["Total Subscriptions"], 
-          // path: "/agent-my-subscription-plans" 
+          path: "/agent-my-subscription-plans" 
         },
-        { 
-          label: "Active Subscriptions", 
-          value: subscription_summary.active || 0, 
-          icon: iconMap["Active Subscriptions"], 
-          // path: "/agent-my-subscription-plans" 
-        },
-        { 
-          label: "Subscription Revenue", 
-          value: `₹${(subscription_summary.subscription_revenue || 0).toLocaleString()}`, 
-          icon: iconMap["Subscription Revenue"], 
-          // path: "/agent-my-subscription-plans" 
-        }
+        // { 
+        //   label: "Active Subscriptions", 
+        //   value: subscription_summary.active || 0, 
+        //   icon: iconMap["Active Subscriptions"], 
+        //   path: "/agent-my-subscription-plans" 
+        // },
+        // { 
+        //   label: "Subscription Revenue", 
+        //   value: `₹${(subscription_summary.subscription_revenue || 0).toLocaleString()}`, 
+        //   icon: iconMap["Subscription Revenue"], 
+        //   path: "/agent-my-subscription-plans" 
+        // }
       );
     }
 
@@ -1179,32 +1179,32 @@ const AgentDashboard = () => {
           label: "Total Referrals", 
           value: referral_summary.total_referrals || 0, 
           icon: iconMap["Total Referrals"], 
-          // path: "/agent-my-team" 
+          path: "/agent-my-team" 
         },
         { 
-          label: "Referral Amount/Wallet Amount", 
+          label: "Total Commissions", 
           value: `₹${(referral_summary.total_referral_amount_or_wallet_amount || 0).toLocaleString()}`, 
           icon: iconMap["Pending Referral Amount"], 
-          // path: "/agent-referrals" 
+          path: "/agent-commission-ledger" 
         },
-        { 
-          label: "Referral Amount/Wallet amount Paid", 
-          value: `₹${(referral_summary.total_referral_amount_or_wallet_amount_paid || 0).toLocaleString()}`, 
-          icon: iconMap["Paid Referral Amount"], 
-          // path: "/agent-referrals" 
-        }
+        // { 
+        //   label: "Referral Amount/Wallet amount Paid", 
+        //   value: `₹${(referral_summary.total_referral_amount_or_wallet_amount_paid || 0).toLocaleString()}`, 
+        //   icon: iconMap["Paid Referral Amount"], 
+        //   path: "/agent-referrals" 
+        // }
       );
     }
 
     // Add a transaction history card
-    metrics.push(
-      { 
-        label: "Transaction History", 
-        value: "View All", 
-        icon: iconMap["Transaction History"], 
-        // path: "/agent-transactions" 
-      }
-    );
+    // metrics.push(
+    //   { 
+    //     label: "Transaction History", 
+    //     value: "View All", 
+    //     icon: iconMap["Transaction History"], 
+    //     path: "/agent-transactions" 
+    //   }
+    // );
 
     return metrics;
   };

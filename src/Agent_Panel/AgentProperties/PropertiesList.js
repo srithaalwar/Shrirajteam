@@ -7923,7 +7923,7 @@ import WebsiteNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-
+import {  useLocation } from "react-router-dom";
 // ============= Utility Functions =============
 const formatPrice = (price) => {
   const priceNum = parseFloat(price);
@@ -9745,6 +9745,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
     <div className={getGridClasses()}>
       {properties.map((property) => (
         <div key={property.property_id} className="col mb-4">
+          
           <PropertyCard 
             property={property} 
             onVerificationStatusUpdate={onVerificationStatusUpdate}
@@ -9800,6 +9801,9 @@ const AgentProperties = () => {
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [roles, setRoles] = useState([]);
 
+  const location = useLocation();
+const [statusFilter, setStatusFilter] = useState("");
+
   // Get current user ID from localStorage
   const currentUserId = localStorage.getItem("user_id");
 
@@ -9842,6 +9846,14 @@ const AgentProperties = () => {
     // Refresh properties if needed
     fetchApprovedProperties();
   };
+
+  useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  const statusParam = params.get("status");
+  if (statusParam) setStatusFilter(statusParam);
+}, [location.search]);
+
+
 
   // Fetch user subscription status
   const fetchUserSubscription = useCallback(async () => {
@@ -10005,6 +10017,10 @@ const AgentProperties = () => {
       
       // Add verification status filter
       params.append('verification_status', 'verified');
+
+       if (statusFilter) {
+        params.append("status", statusFilter);
+      }
       
       // Add pagination parameters
       params.append('page', currentPage);
@@ -10086,7 +10102,8 @@ const AgentProperties = () => {
     selectedCities,
     selectedRoles,
     selectedSortOptions,
-    currentUserId
+    currentUserId,
+    statusFilter  
   ]);
 
 
@@ -10418,6 +10435,21 @@ const AgentProperties = () => {
       <WebsiteNavbar />
       
       <main className="flex-grow-1 bg-light">
+
+        
+  {statusFilter && (
+    <div className="alert alert-info d-flex align-items-center justify-content-between mb-3 py-2">
+      <span>
+        Showing: <strong>{statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1)}</strong> properties
+      </span>
+      <button
+        className="btn btn-sm btn-outline-secondary ms-3"
+        onClick={() => setStatusFilter("")}
+      >
+        ✕ Clear
+      </button>
+    </div>
+  )}
         <div className="container py-4">
           {/* Payment Modal */}
           <PaymentModal 

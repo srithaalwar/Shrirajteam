@@ -2041,43 +2041,43 @@ const AdminDashboard = () => {
         label: "Total Properties", 
         value: property_summary.total_properties || 0, 
         icon: iconMap["Total Properties"], 
-        // path: "/a-asset" 
+        path: "/admin-properties" 
       },
       { 
         label: "Available Properties", 
         value: property_summary.available || 0, 
         icon: iconMap["Available Properties"], 
-        // path: "/a-availableassets" 
+        path: "/admin-properties" 
       },
       { 
         label: "Sold Properties", 
         value: property_summary.sold || 0, 
         icon: iconMap["Sold Properties"], 
-        // path: "/a-soldassets" 
+        // path: "/admin-properties" 
       },
       { 
         label: "Booked Properties", 
         value: property_summary.booked || 0, 
         icon: iconMap["Booked Properties"], 
-        // path: "/a-bookedassets" 
+        // path: "/admin-properties" 
       },
       { 
         label: "Pending Properties", 
         value: property_summary.pending || 0, 
         icon: iconMap["Pending Properties"], 
-        // path: "/a-pendingassets" 
+        // path: "/admin-properties" 
       },
       { 
         label: "Verified Properties", 
         value: property_summary.verified || 0, 
         icon: iconMap["Verified Properties"], 
-        // path: "/a-approvedassets" 
+        // path: "/admin-properties" 
       },
       { 
         label: "Rejected Properties", 
         value: property_summary.rejected || 0, 
         icon: iconMap["Rejected Properties"], 
-        // path: "/a-rejectedassets" 
+        // path: "/admin-properties" 
       }
     );
 
@@ -2148,19 +2148,19 @@ const AdminDashboard = () => {
           label: "Total Referrals", 
           value: referral_summary.total_referrals || 0, 
           icon: faShareAlt, 
-          // path: "/admin-referrals" 
+          // path: "/referral-reports" 
         },
         { 
           label: "Referral Amount/Wallet Amount", 
           value: `₹${(referral_summary.total_referral_amount_or_wallet_amount || 0).toLocaleString()}`, 
           icon: faClock, 
-          // path: "/admin-referrals" 
+          // path: "/referral-reports" 
         },
         { 
           label: "Referral Amount/Wallet Amount Paid", 
           value: `₹${(referral_summary.total_referral_amount_or_wallet_amount_paid || 0).toLocaleString()}`, 
           icon: faMoneyBillWave, 
-          // path: "/admin-referrals" 
+          // path: "/referral-reports" 
         }
       );
     }
@@ -2171,19 +2171,19 @@ const AdminDashboard = () => {
         label: "Total Users", 
         value: user_summary.total_users || 0, 
         icon: iconMap["Total Users"], 
-        // path: "/admin-users" 
+        path: "/admin-users" 
       },
       { 
         label: "Active Users", 
         value: user_summary.active || 0, 
         icon: iconMap["Active Users"], 
-        // path: "/admin-users" 
+        path: "/admin-users" 
       },
       { 
         label: "Inactive Users", 
         value: user_summary.inactive || 0, 
         icon: iconMap["Inactive Users"], 
-        // path: "/admin-users" 
+        path: "/admin-users" 
       }
     );
 
@@ -2198,7 +2198,7 @@ const AdminDashboard = () => {
           label: "Admin Users", 
           value: adminCount, 
           icon: iconMap["Admin Users"], 
-          // path: "/admin-users" 
+          path: "/admin-users" 
         }
       );
     }
@@ -2209,7 +2209,7 @@ const AdminDashboard = () => {
           label: "Team Users", 
           value: agentCount, 
           icon: iconMap["Agent Users"], 
-          // path: "/admin-users" 
+          path: "/admin-users" 
         }
       );
     }
@@ -2220,7 +2220,7 @@ const AdminDashboard = () => {
           label: "Client Users", 
           value: clientCount, 
           icon: iconMap["Client Users"], 
-          // path: "/admin-users" 
+          path: "/admin-users" 
         }
       );
     }

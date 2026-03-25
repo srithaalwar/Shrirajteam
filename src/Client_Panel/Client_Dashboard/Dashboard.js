@@ -652,18 +652,18 @@ const ClientDashboard = () => {
           icon: iconMap["Total Transactions"], 
           // path: "/client-transactions" 
         },
-        { 
-          label: "Successful Transactions", 
-          value: transaction_summary.success || 0, 
-          icon: iconMap["Successful Transactions"], 
-          // path: "/client-transactions?status=success" 
-        },
-        { 
-          label: "Total Revenue", 
-          value: `₹${transaction_summary.total_revenue || 0}`, 
-          icon: iconMap["Total Revenue"], 
-          // path: "/client-transactions" 
-        }
+        // { 
+        //   label: "Successful Transactions", 
+        //   value: transaction_summary.success || 0, 
+        //   icon: iconMap["Successful Transactions"], 
+        //   path: "/client-transactions?status=success" 
+        // },
+        // { 
+        //   label: "Total Revenue", 
+        //   value: `₹${transaction_summary.total_revenue || 0}`, 
+        //   icon: iconMap["Total Revenue"], 
+        //   path: "/client-transactions" 
+        // }
       );
     }
 
@@ -694,12 +694,12 @@ const ClientDashboard = () => {
           icon: iconMap["Total Subscriptions"], 
           // path: "/client-my-plans" 
         },
-        { 
-          label: "Active Subscriptions", 
-          value: subscription_summary.active || 0, 
-          icon: iconMap["Active Subscriptions"], 
-          // path: "/client-my-plans?status=active" 
-        },
+        // { 
+        //   label: "Active Subscriptions", 
+        //   value: subscription_summary.active || 0, 
+        //   icon: iconMap["Active Subscriptions"], 
+        //   // path: "/client-my-plans?status=active" 
+        // },
         // { 
         //   label: "Subscription Revenue", 
         //   value: `₹${subscription_summary.subscription_revenue || 0}`, 
@@ -710,14 +710,14 @@ const ClientDashboard = () => {
     }
 
     // Add a transaction history card
-    metrics.push(
-      { 
-        label: "Transaction History", 
-        value: "View All", 
-        icon: iconMap["Transaction History"], 
-        // path: "/client-transaction-history" 
-      }
-    );
+    // metrics.push(
+    //   { 
+    //     label: "Transaction History", 
+    //     value: "View All", 
+    //     icon: iconMap["Transaction History"], 
+    //     // path: "/client-transactions" 
+    //   }
+    // );
 
     return metrics;
   };

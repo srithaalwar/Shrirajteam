@@ -3000,7 +3000,7 @@ useEffect(() => {
                   name: 'furnishing_status',
                   label: 'Furnishing Status',
                   options: [
-                    { value: '', label: 'Select' },
+                    // { value: '', label: 'Select' },
                     { value: 'Semi-Furnished', label: 'Semi-Furnished' },
                     { value: 'Fully-Furnished', label: 'Fully-Furnished' },
                     { value: 'Unfurnished', label: 'Unfurnished' }
@@ -3099,10 +3099,10 @@ useEffect(() => {
                   { value: 'west', label: 'West' },
                   { value: 'north', label: 'North' },
                   { value: 'south', label: 'South' },
-                  { value: 'north-east', label: 'North-East' },
-                  { value: 'north-west', label: 'North-West' },
-                  { value: 'south-east', label: 'South-East' },
-                  { value: 'south-west', label: 'South-West' }
+                  { value: 'north_east', label: 'North-East' },
+                  { value: 'north_west', label: 'North-West' },
+                  { value: 'south_east', label: 'South-East' },
+                  { value: 'south_west', label: 'South-West' }
                 ],
                 required: false
               })}
@@ -3198,7 +3198,7 @@ useEffect(() => {
         )}
 
         {/* Ownership Type */}
-        <div className="row">
+        {/* <div className="row">
           <div className="col-md-6">
             {renderField({
               type: 'select',
@@ -3214,9 +3214,9 @@ useEffect(() => {
             })}
           </div>
           <div className="col-md-6">
-            {/* Empty for alignment */}
+            Empty for alignment
           </div>
-        </div>
+        </div> */}
 
         {/* Text Areas - OPTIONAL */}
         <div className="row">

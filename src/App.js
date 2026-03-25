@@ -355,6 +355,10 @@ import TotalReferrals from "./Admin_Panel/Admin_Referrals/Total_Referrals";
 import ReferralReports from "./Admin_Panel/Admin_Referral_Reports/Referral_Reports";
 import AdminTeam from './Admin_Panel/Admin_MyTeam/MyTeam'
 import AgentHome from "./Agent_Panel/Agent_Home_Page/Agent_Business_listings_home"
+import CommissionLedger from "./Agent_Panel/AgentDashboard/CommissionLedger"
+import AgentHomeSubCategories from './Agent_Panel/Agent_Home_Page/SubCategories'
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -387,6 +391,9 @@ function App() {
 
         {/* <Route path="/w-subcategory/:id" element={<SubCategories />} /> */}
         <Route path="/w-subcategory/:id" element={<SubCategories />} />
+        |
+                <Route path="/agent-home-subcategory/:id" element={<AgentHomeSubCategories />} />
+
 
 
 
@@ -524,7 +531,9 @@ function App() {
 <Route path="/a-edit-service-provider/:id" element={<EditServiceProvider />} />
 <Route path="/a-view-service-provider/:id" element={<EditServiceProvider mode="view" />} />
 
-        <Route path="/agent-dashboard" element={<AgentDashboard />} />
+        <Route path="/agent-commission-ledger" element={<CommissionLedger />} />
+                <Route path="/agent-dashboard" element={<AgentDashboard />} />
+
         <Route path="/agent-add-property" element={<AgentAddProperty />} />
         <Route path="/agent-properties" element={<AgentProperties />} />
         <Route path="/agent-properties-details/:propertyId" element={<AgentPropertyDetails />} />
@@ -576,7 +585,7 @@ function App() {
          <Route path="/agent-wishlist" element={<AgentWishlist />} />
         <Route path="/agent-transactions" element={<AgentTransactions />} />
 
-        <Route path="/agent-web-home" element={<AgentHome />} />
+        <Route path="/agent-home" element={<AgentHome />} />
 
         {/* Client-panel */}
         <Route path="/client-dashboard" element={<ClientDashboard />} />

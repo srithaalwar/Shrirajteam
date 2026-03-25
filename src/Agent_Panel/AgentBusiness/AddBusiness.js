@@ -7297,11 +7297,18 @@ case 'address':
       const method = isEditing ? 'put' : 'post';
 
       // For PUT requests with files, use PATCH for partial updates
-      if (isEditing && (logoFile || bannerFile)) {
-        const response = await axios.patch(endpoint, formDataToSend, { headers });
-      } else {
-        const response = await axios[method](endpoint, formDataToSend, { headers });
-      }
+      // if (isEditing && (logoFile || bannerFile)) {
+      //   const response = await axios.patch(endpoint, formDataToSend, { headers });
+      // } else {
+      //   const response = await axios[method](endpoint, formDataToSend, { headers });
+      // }
+
+
+      if (isEditing) {
+  const response = await axios.put(endpoint, formDataToSend, { headers });
+} else {
+  const response = await axios.post(endpoint, formDataToSend, { headers });
+}
 
       Swal.fire({
         icon: 'success',

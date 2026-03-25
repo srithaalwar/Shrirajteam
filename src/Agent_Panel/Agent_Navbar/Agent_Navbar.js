@@ -8592,6 +8592,11 @@ const AgentNavbar = () => {
 
   // Define your navigation items with better categorization
 const menuItems = [
+   { 
+    path: "/agent-home", 
+    name: "Home", 
+    icon: <FaHome /> 
+  },
   { 
     path: "/agent-dashboard", 
     name: "Dashboard", 

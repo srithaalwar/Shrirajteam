@@ -2134,8 +2134,9 @@ const ClientBusinessProductsCategories = () => {
         <div className="cbpc-desktop">
           <div className="cbpc-desktop-header">
             <div className="cbpc-desktop-header-inner">
-              <button className="cbpc-back-desktop" onClick={() => navigate(-1)}>
-                <ArrowLeft size={17} /><span>Back</span>
+              <button className="cbpc-back-desktop" onClick={() => navigate('/client-dashboard')}>
+
+                <ArrowLeft size={17} /><span>Go to Dashboard</span>
               </button>
               <h1 className="cbpc-desktop-title">Categories</h1>
             </div>

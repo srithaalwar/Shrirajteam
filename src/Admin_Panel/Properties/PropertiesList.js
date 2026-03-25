@@ -2791,7 +2791,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
   const getVerificationBadgeColor = (status) => {
     switch (status) {
       case 'verified':
-        return 'bg-success';
+        return 'bg-success text-white';
       case 'rejected':
         return 'bg-danger';
       case 'suspended':
