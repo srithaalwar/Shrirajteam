@@ -6823,7 +6823,8 @@ import {
   ChevronDown,
   TrendingUp,
   Percent,
-  Info
+  Info,
+    Star
 } from "lucide-react";
 import { baseurl } from "../../BaseURL/BaseURL";
 
@@ -7118,7 +7119,7 @@ const EditProductModal = ({ product, isOpen, onClose, onSave, onDelete, baseurl 
                     onChange={handleChange}
                   />
                 </div>
-                <div className="col-md-6 mb-3">
+                {/* <div className="col-md-6 mb-3">
                   <label className="form-label">Verification Status</label>
                   <select
                     className="form-select"
@@ -7130,7 +7131,7 @@ const EditProductModal = ({ product, isOpen, onClose, onSave, onDelete, baseurl 
                     <option value="verified">Verified</option>
                     <option value="rejected">Rejected</option>
                   </select>
-                </div>
+                </div> */}
                 <div className="col-md-6 mb-3 d-flex align-items-end">
                   <div className="form-check form-switch">
                     <input
@@ -7610,66 +7611,501 @@ const AddVariantModal = ({ product, isOpen, onClose, onAdd, baseurl }) => {
   );
 };
 
-const ManageMediaModal = ({ product, variant, isOpen, onClose, onDeleteMedia, baseurl }) => {
-  const [selectedMedia, setSelectedMedia] = useState([]);
+// const ManageMediaModal = ({ product, variant, isOpen, onClose, onDeleteMedia, baseurl }) => {
+//   const [selectedMedia, setSelectedMedia] = useState([]);
+
+//   if (!isOpen) return null;
+
+//   const handleDeleteMedia = (mediaId) => {
+//     if (window.confirm("Are you sure you want to delete this media?")) {
+//       onDeleteMedia(product.product_id, mediaId);
+//     }
+//   };
+
+//   return (
+//     <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+//       <div className="modal-dialog modal-lg">
+//         <div className="modal-content">
+//           <div className="modal-header">
+//             <h5 className="modal-title">Manage Media for {variant?.sku}</h5>
+//             <button type="button" className="btn-close" onClick={onClose}></button>
+//           </div>
+//           <div className="modal-body">
+//             <h6 className="mb-3">Media Files ({variant?.media?.length || 0})</h6>
+//             <div className="row">
+//               {variant?.media?.map((mediaItem) => (
+//                 <div key={mediaItem.id} className="col-md-4 mb-3">
+//                   <div className="card">
+//                     <div className="card-body text-center">
+//                       {mediaItem.media_type === 'image' ? (
+//                         <img 
+//                           src={`${baseurl}${mediaItem.file}`} 
+//                           alt="Media" 
+//                           className="img-fluid mb-2"
+//                           style={{ maxHeight: '150px', objectFit: 'contain' }}
+//                           onError={(e) => {
+//                             e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w-300";
+//                           }}
+//                         />
+//                       ) : (
+//                         <div className="bg-light p-4 mb-2">
+//                           <PackageOpen size={48} className="text-muted" />
+//                           <p className="mt-2 mb-0">Video File</p>
+//                           <small>{mediaItem.file?.split('/').pop()}</small>
+//                         </div>
+//                       )}
+//                       <div className="d-flex justify-content-between">
+//                         <small className="text-muted">{mediaItem.media_type}</small>
+//                         <button 
+//                           className="btn btn-sm btn-outline-danger"
+//                           onClick={() => handleDeleteMedia(mediaItem.id)}
+//                         >
+//                           <Trash2 size={12} />
+//                         </button>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))}
+//               {(!variant?.media || variant.media.length === 0) && (
+//                 <div className="col-12 text-center py-4">
+//                   <ImageIcon size={48} className="text-muted mb-2" />
+//                   <p className="text-muted">No media files found</p>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//           <div className="modal-footer">
+//             <button type="button" className="btn btn-secondary" onClick={onClose}>
+//               Close
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+const ManageMediaModal = ({ product, variant, isOpen, onClose, onUpdateMedia, onDeleteMedia, baseurl }) => {
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    media_type: 'image',
+    sort_order: 0,
+    is_primary: false
+  });
+
+  // Reset state when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedMedia(null);
+      setEditMode(false);
+      setEditFormData({ media_type: 'image', sort_order: 0, is_primary: false });
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
+  const handleEditMedia = (mediaItem) => {
+    setSelectedMedia(mediaItem);
+    setEditFormData({
+      media_type: mediaItem.media_type || 'image',
+      sort_order: mediaItem.sort_order || 0,
+      is_primary: mediaItem.is_primary || false
+    });
+    setEditMode(true);
+  };
+
+  const handleUpdateMedia = () => {
+    if (!selectedMedia) return;
+    
+    const formData = new FormData();
+    
+    // Get the media file input
+    const fileInput = document.getElementById('media-file-input');
+    const file = fileInput?.files[0];
+    
+    // Prepare the payload according to backend structure
+    const payload = {
+      variants: [{
+        id: variant.id,
+        media: [{
+          id: selectedMedia.id,
+          media_type: editFormData.media_type,
+          sort_order: parseInt(editFormData.sort_order),
+          is_primary: editFormData.is_primary
+        }]
+      }]
+    };
+    
+    // Add the payload as JSON string
+    formData.append('variants', JSON.stringify(payload.variants));
+    
+    // Add the file if present
+    if (file) {
+      formData.append('media_files', file);
+    }
+    
+    setIsUploading(true);
+    
+    fetch(`${baseurl}/products/${product.product_id}/`, {
+      method: 'PUT',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Media updated successfully:", data);
+      alert("Media updated successfully!");
+      onUpdateMedia(); // Callback to refresh products
+      setEditMode(false);
+      setSelectedMedia(null);
+      setIsUploading(false);
+    })
+    .catch(error => {
+      console.error("Error updating media:", error);
+      alert("Failed to update media");
+      setIsUploading(false);
+    });
+  };
+
+  const handleAddMedia = () => {
+    const fileInput = document.getElementById('new-media-file-input');
+    const file = fileInput?.files[0];
+    
+    if (!file) {
+      alert("Please select a file to upload");
+      return;
+    }
+    
+    const formData = new FormData();
+    
+    // Determine media type from file
+    const fileType = file.type.startsWith('video/') ? 'video' : 'image';
+    
+    // Prepare payload for new media
+    const payload = {
+      variants: [{
+        id: variant.id,
+        media: [{
+          media_type: fileType,
+          sort_order: 0,
+          is_primary: false
+        }]
+      }]
+    };
+    
+    formData.append('variants', JSON.stringify(payload.variants));
+    formData.append('media_files', file);
+    
+    setIsUploading(true);
+    
+    fetch(`${baseurl}/products/${product.product_id}/`, {
+      method: 'PUT',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Media added successfully:", data);
+      alert("Media added successfully!");
+      onUpdateMedia(); // Callback to refresh products
+      fileInput.value = ''; // Clear file input
+      setIsUploading(false);
+    })
+    .catch(error => {
+      console.error("Error adding media:", error);
+      alert("Failed to add media");
+      setIsUploading(false);
+    });
+  };
+
   const handleDeleteMedia = (mediaId) => {
-    if (window.confirm("Are you sure you want to delete this media?")) {
-      onDeleteMedia(product.product_id, mediaId);
+    if (window.confirm("Are you sure you want to delete this media file?")) {
+      setIsUploading(true);
+      
+      fetch(`${baseurl}/products/${product.product_id}/?media=${mediaId}`, {
+        method: 'DELETE'
+      })
+      .then(response => {
+        if (response.ok) {
+          console.log("Media deleted successfully");
+          alert("Media deleted successfully!");
+          onUpdateMedia(); // Callback to refresh products
+          setEditMode(false);
+          setSelectedMedia(null);
+        } else {
+          throw new Error("Failed to delete media");
+        }
+      })
+      .catch(error => {
+        console.error("Error deleting media:", error);
+        alert("Failed to delete media");
+      })
+      .finally(() => {
+        setIsUploading(false);
+      });
     }
   };
+
+  const handleSetPrimaryMedia = (mediaId) => {
+    const formData = new FormData();
+    
+    const payload = {
+      variants: [{
+        id: variant.id,
+        media: [{
+          id: mediaId,
+          is_primary: true
+        }]
+      }]
+    };
+    
+    formData.append('variants', JSON.stringify(payload.variants));
+    
+    fetch(`${baseurl}/products/${product.product_id}/`, {
+      method: 'PUT',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Primary media set successfully:", data);
+      alert("Primary media set successfully!");
+      onUpdateMedia(); // Callback to refresh products
+    })
+    .catch(error => {
+      console.error("Error setting primary media:", error);
+      alert("Failed to set primary media");
+    });
+  };
+
+  // Check if variant exists and has media
+  const mediaFiles = variant?.media || [];
 
   return (
     <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Manage Media for {variant?.sku}</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
-          </div>
+            <h5 className="modal-title">
+              Manage Media for {variant?.sku}
+              {variant?.attributes?.display && ` - ${variant.attributes.display}`}
+            </h5>
+<button 
+  type="button" 
+  className="btn-close" 
+  style={{ filter: 'brightness(0) invert(1)' }} 
+  onClick={onClose}
+></button>          </div>
           <div className="modal-body">
-            <h6 className="mb-3">Media Files ({variant?.media?.length || 0})</h6>
+            {/* Add New Media Section */}
+            <div className="mb-4 p-3 border rounded bg-light">
+              <h6 className="mb-3">Add New Media</h6>
+              <div className="row align-items-end">
+                <div className="col-md-8 mb-2 mb-md-0">
+                  <input
+                    type="file"
+                    id="new-media-file-input"
+                    className="form-control"
+                    accept="image/*,video/*"
+                    disabled={isUploading}
+                  />
+                  <small className="text-muted">Supported formats: Images (jpg, png, gif) and Videos (mp4, mov)</small>
+                </div>
+                <div className="col-md-4">
+                  <button
+                    className="btn btn-success w-100"
+                    onClick={handleAddMedia}
+                    disabled={isUploading}
+                  >
+                    {isUploading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Plus size={16} className="me-1" /> Upload Media
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Edit Media Section */}
+            {editMode && selectedMedia && (
+              <div className="mb-4 p-3 border rounded bg-info bg-opacity-10">
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h6 className="mb-0">Edit Media</h6>
+                  <button
+                    className="btn btn-sm btn-outline-secondary"
+                    onClick={() => {
+                      setEditMode(false);
+                      setSelectedMedia(null);
+                    }}
+                  >
+                    Cancel Edit
+                  </button>
+                </div>
+                <div className="row">
+                  <div className="col-md-4 mb-3">
+                    {selectedMedia.media_type === 'image' ? (
+                      <img
+                        src={`${baseurl}${selectedMedia.file}`}
+                        alt="Media preview"
+                        className="img-fluid rounded"
+                        style={{ maxHeight: '100px', objectFit: 'contain' }}
+                      />
+                    ) : (
+                      <video
+                        src={`${baseurl}${selectedMedia.file}`}
+                        className="img-fluid rounded"
+                        style={{ maxHeight: '100px' }}
+                        controls
+                      />
+                    )}
+                  </div>
+                  <div className="col-md-8">
+                    <div className="row">
+                      <div className="col-md-6 mb-2">
+                        <label className="form-label small">Media Type</label>
+                        <select
+                          className="form-select form-select-sm"
+                          value={editFormData.media_type}
+                          onChange={(e) => setEditFormData({...editFormData, media_type: e.target.value})}
+                        >
+                          <option value="image">Image</option>
+                          <option value="video">Video</option>
+                        </select>
+                      </div>
+                      <div className="col-md-6 mb-2">
+                        <label className="form-label small">Sort Order</label>
+                        <input
+                          type="number"
+                          className="form-control form-control-sm"
+                          value={editFormData.sort_order}
+                          onChange={(e) => setEditFormData({...editFormData, sort_order: parseInt(e.target.value)})}
+                          min="0"
+                        />
+                      </div>
+                      <div className="col-md-12 mb-2">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            id="is_primary"
+                            checked={editFormData.is_primary}
+                            onChange={(e) => setEditFormData({...editFormData, is_primary: e.target.checked})}
+                          />
+                          <label className="form-check-label small" htmlFor="is_primary">
+                            Set as Primary Media
+                          </label>
+                        </div>
+                      </div>
+                      <div className="col-md-12 mb-2">
+                        <label className="form-label small">Replace File (Optional)</label>
+                        <input
+                          type="file"
+                          id="media-file-input"
+                          className="form-control form-control-sm"
+                          accept="image/*,video/*"
+                          disabled={isUploading}
+                        />
+                      </div>
+                      <div className="col-md-12">
+                        <button
+                          className="btn btn-primary btn-sm w-100"
+                          onClick={handleUpdateMedia}
+                          disabled={isUploading}
+                        >
+                          {isUploading ? 'Updating...' : 'Update Media'}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Media Gallery */}
+            <h6 className="mb-3">
+              Media Files ({mediaFiles.length})
+              {mediaFiles.filter(m => m.is_primary).length > 0 && (
+                <span className="badge bg-primary ms-2">Primary Media Set</span>
+              )}
+            </h6>
+            
             <div className="row">
-              {variant?.media?.map((mediaItem) => (
+              {mediaFiles.map((mediaItem) => (
                 <div key={mediaItem.id} className="col-md-4 mb-3">
-                  <div className="card">
+                  <div className="card h-100">
                     <div className="card-body text-center">
                       {mediaItem.media_type === 'image' ? (
                         <img 
                           src={`${baseurl}${mediaItem.file}`} 
                           alt="Media" 
                           className="img-fluid mb-2"
-                          style={{ maxHeight: '150px', objectFit: 'contain' }}
-                          onError={(e) => {
-                            e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w-300";
-                          }}
+                          style={{ maxHeight: '150px', objectFit: 'contain', cursor: 'pointer' }}
+                          onClick={() => handleEditMedia(mediaItem)}
                         />
                       ) : (
-                        <div className="bg-light p-4 mb-2">
+                        <div 
+                          className="bg-light p-4 mb-2 text-center"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleEditMedia(mediaItem)}
+                        >
                           <PackageOpen size={48} className="text-muted" />
                           <p className="mt-2 mb-0">Video File</p>
-                          <small>{mediaItem.file?.split('/').pop()}</small>
+                          <small className="text-muted">{mediaItem.file?.split('/').pop()}</small>
                         </div>
                       )}
-                      <div className="d-flex justify-content-between">
-                        <small className="text-muted">{mediaItem.media_type}</small>
-                        <button 
-                          className="btn btn-sm btn-outline-danger"
-                          onClick={() => handleDeleteMedia(mediaItem.id)}
-                        >
-                          <Trash2 size={12} />
-                        </button>
+                      
+                      {/* Media Info */}
+                      <div className="mt-2">
+                        {mediaItem.is_primary && (
+                          <span className="badge bg-primary mb-1">Primary</span>
+                        )}
+                        <div className="d-flex justify-content-between align-items-center mt-2">
+                          {/* <small className="text-muted">
+                            {mediaItem.media_type} • Order: {mediaItem.sort_order}
+                          </small> */}
+                          <div className="btn-group btn-group-sm">
+                            {/* {!mediaItem.is_primary && (
+                              <button 
+                                className="btn btn-outline-primary"
+                                onClick={() => handleSetPrimaryMedia(mediaItem.id)}
+                                title="Set as Primary"
+                              >
+                                <Star size={12} />
+                              </button>
+                            )} */}
+                            <button 
+                              className="btn btn-outline-info"
+                              onClick={() => handleEditMedia(mediaItem)}
+                              title="Edit Media"
+                            >
+                              <Edit size={15} />
+                            </button>
+                            <button 
+                              className="btn btn-outline-danger"
+                              onClick={() => handleDeleteMedia(mediaItem.id)}
+                              title="Delete Media"
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
-              {(!variant?.media || variant.media.length === 0) && (
+              
+              {mediaFiles.length === 0 && (
                 <div className="col-12 text-center py-4">
                   <ImageIcon size={48} className="text-muted mb-2" />
                   <p className="text-muted">No media files found</p>
+                  <p className="text-muted small">Upload images or videos to showcase this product variant</p>
                 </div>
               )}
             </div>
@@ -8697,14 +9133,15 @@ const AgentMyProducts = () => {
         baseurl={baseurl}
       />
 
-      <ManageMediaModal
-        product={manageMediaModal.product}
-        variant={manageMediaModal.variant}
-        isOpen={manageMediaModal.isOpen}
-        onClose={() => setManageMediaModal({ isOpen: false, product: null, variant: null })}
-        onDeleteMedia={handleDeleteMedia}
-        baseurl={baseurl}
-      />
+   <ManageMediaModal
+  product={manageMediaModal.product}
+  variant={manageMediaModal.variant}
+  isOpen={manageMediaModal.isOpen}
+  onClose={() => setManageMediaModal({ isOpen: false, product: null, variant: null })}
+  onUpdateMedia={fetchProducts}  // Add this line to refresh products after media update
+  onDeleteMedia={handleDeleteMedia}
+  baseurl={baseurl}
+/>
     </>
   );
 };

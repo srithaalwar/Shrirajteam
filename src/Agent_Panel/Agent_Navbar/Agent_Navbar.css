@@ -1016,3 +1016,141 @@
 .wn-profile-image-container:active {
   animation: profilePulse 0.3s ease;
 }
+
+
+
+/* ===================== DESKTOP QUICK ACTION BUTTONS ===================== */
+.wn-desktop-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+.wn-quick-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.wn-quick-btn--property {
+  background: #E6F1FB;
+  color: #185FA5;
+  border-color: #85B7EB;
+}
+.wn-quick-btn--property:hover {
+  background: #B5D4F4;
+}
+
+.wn-quick-btn--product {
+  background: #EAF3DE;
+  color: #3B6D11;
+  border-color: #97C459;
+}
+.wn-quick-btn--product:hover {
+  background: #C0DD97;
+}
+
+.wn-quick-btn--business {
+  background: #EEEDFE;
+  color: #534AB7;
+  border-color: #AFA9EC;
+}
+.wn-quick-btn--business:hover {
+  background: #CECBF6;
+}
+
+/* Hide desktop quick actions on mobile */
+@media (max-width: 767px) {
+  .wn-desktop-quick-actions {
+    display: none;
+  }
+}
+
+/* ===================== MOBILE QUICK ACTIONS STRIP ===================== */
+.wn-mobile-quick-actions {
+  display: none; /* hidden by default on desktop */
+  padding: 12px 16px 8px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.wn-mqa-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.wn-mqa-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wn-mqa-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 11px 14px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.wn-mqa-btn:active {
+  background: #f5f5f5;
+}
+
+.wn-mqa-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.wn-mqa-icon--blue  { background: #E6F1FB; color: #185FA5; }
+.wn-mqa-icon--green { background: #EAF3DE; color: #3B6D11; }
+.wn-mqa-icon--purple{ background: #EEEDFE; color: #534AB7; }
+
+.wn-mqa-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wn-mqa-text strong {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a202c;
+}
+
+.wn-mqa-text small {
+  font-size: 11px;
+  color: #888;
+}
+
+/* Show mobile quick actions only on mobile */
+@media (max-width: 767px) {
+  .wn-mobile-quick-actions {
+    display: flex;
+  }
+}

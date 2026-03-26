@@ -7868,6 +7868,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { baseurl } from "../../BaseURL/BaseURL";
 import Swal from "sweetalert2";
+import { useLocation } from "react-router-dom";
 
 // Import FontAwesome icons
 import { 
@@ -7957,6 +7958,8 @@ const AgentNavbar = () => {
   const signupUrl = "/register";
   
   const navigate = useNavigate();
+  const location = useLocation();
+const showQuickActions = ["/agent-home", "/agent-dashboard", "/"].includes(location.pathname);
 
   // Get current user ID from localStorage
   const currentUserId = localStorage.getItem("user_id");
@@ -8763,6 +8766,31 @@ const menuItems = [
             />
           </div>
         </div>
+          {/* ✅ Desktop Quick Action Buttons — hidden on mobile */}
+      <div className="wn-desktop-quick-actions">
+        <button
+          className="wn-quick-btn wn-quick-btn--property"
+          onClick={() => navigate("/agent-add-property")}
+        >
+          <FaHome size={13} />
+          Add Property
+        </button>
+        <button
+          className="wn-quick-btn wn-quick-btn--product"
+          onClick={handleAddProductClick}
+        >
+          <FaPlusCircle size={13} />
+          Add Product
+        </button>
+        <button
+          className="wn-quick-btn wn-quick-btn--business"
+          onClick={() => navigate("/agent-my-business")}
+        >
+          <FaBuilding size={13} />
+          Add Business
+        </button>
+      </div>
+
 
         <div className="wn-nav-right">
           {/* Copy Status Message */}
@@ -8903,6 +8931,38 @@ const menuItems = [
           </div>
         </div>
       </header>
+      {/* ✅ Mobile Quick Actions Strip — shown below navbar on key pages */}
+   {/* ✅ Mobile Quick Action Buttons — three in one row */}
+{showQuickActions && (
+  <div className="wn-mobile-quick-actions">
+    <button
+      className="wn-mqa-btn wn-mqa-btn--property"
+      onClick={() => navigate("/agent-add-property")}
+    >
+      <span className="wn-mqa-text">
+        <strong>Add Property</strong>
+      </span>
+    </button>
+
+    <button
+      className="wn-mqa-btn wn-mqa-btn--product"
+      onClick={handleAddProductClick}
+    >
+      <span className="wn-mqa-text">
+        <strong>Add Product</strong>
+      </span>
+    </button>
+
+    <button
+      className="wn-mqa-btn wn-mqa-btn--business"
+      onClick={() => navigate("/agent-my-business")}
+    >
+      <span className="wn-mqa-text">
+        <strong>Add Business</strong>
+      </span>
+    </button>
+  </div>
+)}
 
       {/* OVERLAY */}
       {open && <div className="wn-overlay" onClick={() => setOpen(false)} />}

@@ -1,0 +1,235 @@
+/* FormNavbar.css - Secondary Navigation Bar */
+
+.form-navbar {
+  position: sticky;
+  top: 60px; /* Adjust based on your main navbar height */
+  z-index: 998;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  width: 100%;
+}
+
+.form-navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 8px 20px;
+  gap: 16px;
+}
+
+/* Form Navigation Buttons */
+.form-nav-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.form-nav-btn::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #273c75, #4a69bd);
+  transition: width 0.3s ease;
+  border-radius: 3px 3px 0 0;
+}
+
+.form-nav-btn:hover::before,
+.form-nav-btn.active::before {
+  width: 80%;
+}
+
+.form-nav-btn:hover {
+  background: #f8f9fa;
+  transform: translateY(-2px);
+}
+
+.form-nav-btn.active {
+  background: linear-gradient(135deg, #f8f9fa, #fff);
+  box-shadow: 0 4px 12px rgba(39, 60, 117, 0.1);
+}
+
+.form-nav-icon {
+  font-size: 22px;
+  color: #6c757d;
+  transition: all 0.3s ease;
+}
+
+.form-nav-btn:hover .form-nav-icon,
+.form-nav-btn.active .form-nav-icon {
+  color: #273c75;
+  transform: scale(1.05);
+}
+
+.form-nav-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.form-nav-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2c3e50;
+  transition: color 0.3s ease;
+}
+
+.form-nav-desc {
+  font-size: 11px;
+  color: #95a5a6;
+  transition: color 0.3s ease;
+}
+
+.form-nav-btn:hover .form-nav-name,
+.form-nav-btn.active .form-nav-name {
+  color: #273c75;
+}
+
+.form-nav-btn:hover .form-nav-desc,
+.form-nav-btn.active .form-nav-desc {
+  color: #4a69bd;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .form-navbar {
+    top: 55px; /* Adjust for mobile navbar height */
+  }
+
+  .form-navbar-container {
+    padding: 6px 12px;
+    gap: 8px;
+  }
+
+  .form-nav-btn {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .form-nav-icon {
+    font-size: 18px;
+  }
+
+  .form-nav-name {
+    font-size: 13px;
+  }
+
+  .form-nav-desc {
+    font-size: 10px;
+  }
+}
+
+/* Small Mobile Devices */
+@media (max-width: 576px) {
+  .form-navbar-container {
+    padding: 4px 8px;
+    gap: 6px;
+  }
+
+  .form-nav-btn {
+    padding: 8px 10px;
+    gap: 6px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .form-nav-text {
+    align-items: center;
+    text-align: center;
+  }
+
+  .form-nav-icon {
+    font-size: 16px;
+  }
+
+  .form-nav-name {
+    font-size: 11px;
+  }
+
+  .form-nav-desc {
+    font-size: 9px;
+    display: none; /* Hide description on very small screens */
+  }
+
+  /* Show description only for active button on small screens */
+  .form-nav-btn.active .form-nav-desc {
+    display: inline-block;
+  }
+}
+
+/* For tablets in portrait mode */
+@media (min-width: 577px) and (max-width: 768px) {
+  .form-nav-btn {
+    flex-direction: row;
+    padding: 10px 14px;
+  }
+
+  .form-nav-icon {
+    font-size: 20px;
+  }
+
+  .form-nav-name {
+    font-size: 14px;
+  }
+
+  .form-nav-desc {
+    font-size: 10px;
+  }
+}
+
+/* Animation for active indicator */
+@keyframes slideIn {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 80%;
+    opacity: 1;
+  }
+}
+
+.form-nav-btn.active::before {
+  animation: slideIn 0.3s ease forwards;
+}
+
+/* Hover effect for better touch feedback on mobile */
+@media (hover: none) and (pointer: coarse) {
+  .form-nav-btn:active {
+    transform: scale(0.98);
+    background: #f0f2f5;
+  }
+}
+
+/* Optional: Add a subtle shadow on scroll */
+.form-navbar.scrolled {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Optional: Styling for the container when there's no secondary navbar */
+.main-content {
+  transition: padding-top 0.3s ease;
+}
+
+/* Add smooth transition for the sticky positioning */
+.form-navbar {
+  transition: top 0.3s ease, box-shadow 0.3s ease;
+}

@@ -1194,8 +1194,7 @@ const AgentHome = () => {
                             }}
                           >
                             {/* Business Info Overlay */}
-                            <div className="mani-as-offer-card-overlay">
-                              {/* Display business name on hover or always */}
+                            {/* <div className="mani-as-offer-card-overlay">
                               <h3 className="mani-as-offer-business-name" style={{
                                 position: 'absolute',
                                 bottom: '10px',
@@ -1224,7 +1223,7 @@ const AgentHome = () => {
                                   {discountValue}% OFF
                                 </div>
                               )}
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       );
