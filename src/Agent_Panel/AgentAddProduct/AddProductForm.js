@@ -6216,28 +6216,7 @@ const handleCancel = () => {
                 </div>
               </div>
             </div>
-
-            <div className="row">
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="agent-form-label">Brand</label>
-                  <input type="text" className="form-control" name="brand" value={productData.brand} onChange={handleProductChange} placeholder="Enter brand name" />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="agent-form-label">Model Number</label>
-                  <input type="text" className="form-control" name="model_no" value={productData.model_no} onChange={handleProductChange} placeholder="Enter model number" />
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-3">
-              <label className="agent-form-label">Description</label>
-              <textarea className="form-control" name="description" value={productData.description} onChange={handleProductChange} rows="3" placeholder="Enter product description" style={{ height: 'auto' }} />
-            </div>
-
-            <div className="row">
+              <div className="row">
               <div className="col-md-6">
                 <div className="mb-3">
                   <label className="agent-form-label">Category <span className="text-danger">*</span></label>
@@ -6267,6 +6246,28 @@ const handleCancel = () => {
                 </div>
               </div>
             </div>
+
+            <div className="row">
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="agent-form-label">Brand</label>
+                  <input type="text" className="form-control" name="brand" value={productData.brand} onChange={handleProductChange} placeholder="Enter brand name" />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="agent-form-label">Model Number</label>
+                  <input type="text" className="form-control" name="model_no" value={productData.model_no} onChange={handleProductChange} placeholder="Enter model number" />
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-3">
+              <label className="agent-form-label">Description</label>
+              <textarea className="form-control" name="description" value={productData.description} onChange={handleProductChange} rows="3" placeholder="Enter product description" style={{ height: 'auto' }} />
+            </div>
+
+          
 
             {/* Product Attributes */}
             <div className="mb-3">
