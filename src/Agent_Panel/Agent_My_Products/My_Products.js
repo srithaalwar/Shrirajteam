@@ -7887,8 +7887,7 @@ const ManageMediaModal = ({ product, variant, isOpen, onClose, onUpdateMedia, on
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">
-              Manage Media for {variant?.sku}
-              {variant?.attributes?.display && ` - ${variant.attributes.display}`}
+              Manage Media 
             </h5>
 <button 
   type="button" 
@@ -7901,7 +7900,7 @@ const ManageMediaModal = ({ product, variant, isOpen, onClose, onUpdateMedia, on
             <div className="mb-4 p-3 border rounded bg-light">
               <h6 className="mb-3">Add New Media</h6>
               <div className="row align-items-end">
-                <div className="col-md-8 mb-2 mb-md-0">
+                <div className="col-md-6  ">
                   <input
                     type="file"
                     id="new-media-file-input"
@@ -7909,7 +7908,7 @@ const ManageMediaModal = ({ product, variant, isOpen, onClose, onUpdateMedia, on
                     accept="image/*,video/*"
                     disabled={isUploading}
                   />
-                  <small className="text-muted">Supported formats: Images (jpg, png, gif) and Videos (mp4, mov)</small>
+                  {/* <small className="text-muted">Supported formats: Images (jpg, png, gif) and Videos (mp4, mov)</small> */}
                 </div>
                 <div className="col-md-4">
                   <button

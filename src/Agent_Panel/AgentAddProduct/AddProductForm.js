@@ -6315,7 +6315,7 @@ const handleCancel = () => {
                 <div className="row">
                   <div className="col-md-6">
                     <div className="mb-3">
-                      <label className="agent-form-label">SKU <span style={{fontSize:"12px",color:"#888"}}>(optional)</span></label>
+                      <label className="agent-form-label">SKU </label>
                       <input
                         type="text"
                         className={`form-control ${errors[`variant_${vi}_sku`] ? 'is-invalid' : ''}`}
@@ -6391,7 +6391,7 @@ const handleCancel = () => {
                 </div>
 
                 {/* Row: CGST + SGST */}
-                <div className="row">
+                {/* <div className="row">
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="agent-form-label">CGST (%)</label>
@@ -6410,7 +6410,7 @@ const handleCancel = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Row: HSN Code + Offer */}
                 <div className="row">

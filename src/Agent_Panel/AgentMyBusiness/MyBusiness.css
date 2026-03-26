@@ -17,6 +17,47 @@
   font-size: 1.1rem;
 }
 
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pending {
+  background-color: white;
+  color: black;
+  font-weight: 700;
+}
+
+.status-verified {
+  background-color: #28a745;
+  color: white;
+}
+
+.status-approved {
+  background-color: #28a745;
+  color: white;
+}
+
+.status-rejected {
+  background-color: #dc3545;
+  color: white;
+}
+
+.status-active {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.status-inactive {
+  background-color: #6c757d;
+  color: white;
+}
+
 .btn-add-business {
   padding: 10px 20px;
   font-weight: 600;

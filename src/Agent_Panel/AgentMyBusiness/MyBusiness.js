@@ -1227,7 +1227,7 @@ const BusinessList = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${baseurl}/api/categories/`, {
+      const response = await axios.get(`${baseurl}/categories/`, {
         headers: {
           'Authorization': `Bearer ${userId}`,
           'Content-Type': 'application/json'
@@ -1543,7 +1543,7 @@ const BusinessList = () => {
                 <div key={business.business_id} className="col-xl-3 col-lg-4 col-md-6 mb-4">
                   <div className="business-card">
                     {/* Card Header */}
-                    <div className="business-card-header">
+                    {/* <div className="business-card-header">
                       <div className="business-name-container">
                         <h3 className="business-name">{business.business_name}</h3>
                         {getFeaturedBadge(business.is_featured)}
@@ -1552,7 +1552,21 @@ const BusinessList = () => {
                         {getVerificationStatusBadge(business.verification_status)}
                         {getActiveBadge(business.is_active)}
                       </div>
-                    </div>
+                    </div> */}
+
+
+                    <div className="business-card-header">
+  <div className="business-name-container">
+    <h3 className="business-name">{business.business_name}</h3>
+    {getFeaturedBadge(business.is_featured)}
+  </div>
+  <div className="business-status">
+    <span className="status-label">Status: </span>
+    <span className={`status-badge status-${business.verification_status}`}>
+      {business.verification_status?.charAt(0).toUpperCase() + business.verification_status?.slice(1) || 'Pending'}
+    </span>
+  </div>
+</div>
 
                     {/* Card Body */}
                     <div className="business-card-body">
@@ -1609,13 +1623,13 @@ const BusinessList = () => {
                           </span>
                         </div>
                         
-                        <div className="business-info-item">
+                        {/* <div className="business-info-item">
                           <i className="bi bi-clock me-2"></i>
                           <span className="info-label">Hours:</span>
                           <span className="info-value">
                             {getWorkingHoursSummary(business.working_hours)}
                           </span>
-                        </div>
+                        </div> */}
                         
                         {/* <div className="business-info-item">
                           <i className="bi bi-percent me-2"></i>
@@ -1671,12 +1685,7 @@ const BusinessList = () => {
                         </button>
                       </div>
                       
-                      <div className="business-meta mt-2">
-                        <small className="text-muted">
-                          <i className="bi bi-calendar me-1"></i>
-                          Created: {business.created_at}
-                        </small>
-                      </div>
+                     
                     </div>
                   </div>
                 </div>

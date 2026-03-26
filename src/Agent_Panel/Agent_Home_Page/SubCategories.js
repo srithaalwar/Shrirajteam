@@ -1653,6 +1653,9 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import {
   Search, X, ChevronDown, Tag, DollarSign, ArrowLeft,
+
+
+  
   Filter, Check, ChevronRight, SlidersHorizontal
 } from "lucide-react";
 // import "./SubCategories.css";

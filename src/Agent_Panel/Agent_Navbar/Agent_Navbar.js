@@ -8784,7 +8784,7 @@ const menuItems = [
         </button>
         <button
           className="wn-quick-btn wn-quick-btn--business"
-          onClick={() => navigate("/agent-my-business")}
+          onClick={() => navigate("/agent-add-business-form")}
         >
           <FaBuilding size={13} />
           Add Business
@@ -8955,7 +8955,7 @@ const menuItems = [
 
     <button
       className="wn-mqa-btn wn-mqa-btn--business"
-      onClick={() => navigate("/agent-my-business")}
+      onClick={() => navigate("/agent-add-business-form")}
     >
       <span className="wn-mqa-text">
         <strong>Add Business</strong>
