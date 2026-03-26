@@ -7083,7 +7083,13 @@ const EditProductModal = ({ product, isOpen, onClose, onSave, onDelete, baseurl 
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Edit Product: {product?.product_name}</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
+            {/* <button type="button" className="btn-close" onClick={onClose}></button> */}
+            <button 
+  type="button" 
+  className="btn-close" 
+  style={{ filter: 'brightness(0) invert(1)' }} 
+  onClick={onClose}
+></button> 
           </div>
           <form onSubmit={handleSubmit}>
             <div className="modal-body">
@@ -7219,8 +7225,14 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete,
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Edit Variant: {variant?.sku}</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
+            <h5 className="modal-title">Edit Variant</h5>
+            {/* <button type="button" className="btn-close" onClick={onClose}></button> */}
+            <button 
+  type="button" 
+  className="btn-close" 
+  style={{ filter: 'brightness(0) invert(1)' }} 
+  onClick={onClose}
+></button> 
           </div>
           <form onSubmit={handleSubmit}>
             <div className="modal-body">
