@@ -3729,7 +3729,7 @@ useEffect(() => {
                       <button 
                         type="button" 
                         className="btn btn-secondary me-2"
-                        onClick={() => navigate('/agent-properties')}
+                      onClick={() => navigate(-1)}
                         disabled={isSubmitting}
                       >
                         Cancel
