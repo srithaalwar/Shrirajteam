@@ -1035,7 +1035,7 @@ const MyProducts = () => {
         <div className="mp-mobile">
           <div className="mp-mobile-topbar">
             <button className="mp-back" onClick={() => navigate(-1)}><ArrowLeft size={20} /></button>
-            <h1 className="mp-mobile-title">My Products</h1>
+            <h1 className="mp-mobile-title">Products</h1>
             <div style={{ width: 36 }} />
           </div>
           <div className="mp-mobile-search-wrap">
@@ -1075,7 +1075,7 @@ const MyProducts = () => {
           <div className="mp-desktop-header">
             <div className="mp-desktop-header-inner">
               <button className="mp-back-desktop" onClick={() => navigate(-1)}><ArrowLeft size={17} /><span>Back</span></button>
-              <h1 className="mp-desktop-title">My Products{businessName ? ` — ${businessName}` : ""}</h1>
+              <h1 className="mp-desktop-title">Products{businessName ? ` — ${businessName}` : ""}</h1>
             </div>
           </div>
           <div className="mp-desktop-body">

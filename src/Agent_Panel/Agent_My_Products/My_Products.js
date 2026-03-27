@@ -7698,6 +7698,440 @@ const AddVariantModal = ({ product, isOpen, onClose, onAdd, baseurl }) => {
 //   );
 // };
 
+// const ManageMediaModal = ({ product, variant, isOpen, onClose, onUpdateMedia, onDeleteMedia, baseurl }) => {
+//   const [selectedMedia, setSelectedMedia] = useState(null);
+//   const [isUploading, setIsUploading] = useState(false);
+//   const [editMode, setEditMode] = useState(false);
+//   const [editFormData, setEditFormData] = useState({
+//     media_type: 'image',
+//     sort_order: 0,
+//     is_primary: false
+//   });
+
+//   // Reset state when modal closes
+//   useEffect(() => {
+//     if (!isOpen) {
+//       setSelectedMedia(null);
+//       setEditMode(false);
+//       setEditFormData({ media_type: 'image', sort_order: 0, is_primary: false });
+//     }
+//   }, [isOpen]);
+
+//   if (!isOpen) return null;
+
+//   const handleEditMedia = (mediaItem) => {
+//     setSelectedMedia(mediaItem);
+//     setEditFormData({
+//       media_type: mediaItem.media_type || 'image',
+//       sort_order: mediaItem.sort_order || 0,
+//       is_primary: mediaItem.is_primary || false
+//     });
+//     setEditMode(true);
+//   };
+
+//   const handleUpdateMedia = () => {
+//     if (!selectedMedia) return;
+    
+//     const formData = new FormData();
+    
+//     // Get the media file input
+//     const fileInput = document.getElementById('media-file-input');
+//     const file = fileInput?.files[0];
+    
+//     // Prepare the payload according to backend structure
+//     const payload = {
+//       variants: [{
+//         id: variant.id,
+//         media: [{
+//           id: selectedMedia.id,
+//           media_type: editFormData.media_type,
+//           sort_order: parseInt(editFormData.sort_order),
+//           is_primary: editFormData.is_primary
+//         }]
+//       }]
+//     };
+    
+//     // Add the payload as JSON string
+//     formData.append('variants', JSON.stringify(payload.variants));
+    
+//     // Add the file if present
+//     if (file) {
+//       formData.append('media_files', file);
+//     }
+    
+//     setIsUploading(true);
+    
+//     fetch(`${baseurl}/products/${product.product_id}/`, {
+//       method: 'PUT',
+//       body: formData
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//       console.log("Media updated successfully:", data);
+//       alert("Media updated successfully!");
+//       onUpdateMedia(); // Callback to refresh products
+//       setEditMode(false);
+//       setSelectedMedia(null);
+//       setIsUploading(false);
+//     })
+//     .catch(error => {
+//       console.error("Error updating media:", error);
+//       alert("Failed to update media");
+//       setIsUploading(false);
+//     });
+//   };
+
+//   const handleAddMedia = () => {
+//     const fileInput = document.getElementById('new-media-file-input');
+//     const file = fileInput?.files[0];
+    
+//     if (!file) {
+//       alert("Please select a file to upload");
+//       return;
+//     }
+    
+//     const formData = new FormData();
+    
+//     // Determine media type from file
+//     const fileType = file.type.startsWith('video/') ? 'video' : 'image';
+    
+//     // Prepare payload for new media
+//     const payload = {
+//       variants: [{
+//         id: variant.id,
+//         media: [{
+//           media_type: fileType,
+//           sort_order: 0,
+//           is_primary: false
+//         }]
+//       }]
+//     };
+    
+//     formData.append('variants', JSON.stringify(payload.variants));
+//     formData.append('media_files', file);
+    
+//     setIsUploading(true);
+    
+//     fetch(`${baseurl}/products/${product.product_id}/`, {
+//       method: 'PUT',
+//       body: formData
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//       console.log("Media added successfully:", data);
+//       alert("Media added successfully!");
+//       onUpdateMedia(); // Callback to refresh products
+//       fileInput.value = ''; // Clear file input
+//       setIsUploading(false);
+//     })
+//     .catch(error => {
+//       console.error("Error adding media:", error);
+//       alert("Failed to add media");
+//       setIsUploading(false);
+//     });
+//   };
+
+//   const handleDeleteMedia = (mediaId) => {
+//     if (window.confirm("Are you sure you want to delete this media file?")) {
+//       setIsUploading(true);
+      
+//       fetch(`${baseurl}/products/${product.product_id}/?media=${mediaId}`, {
+//         method: 'DELETE'
+//       })
+//       .then(response => {
+//         if (response.ok) {
+//           console.log("Media deleted successfully");
+//           alert("Media deleted successfully!");
+//           onUpdateMedia(); // Callback to refresh products
+//           setEditMode(false);
+//           setSelectedMedia(null);
+//         } else {
+//           throw new Error("Failed to delete media");
+//         }
+//       })
+//       .catch(error => {
+//         console.error("Error deleting media:", error);
+//         alert("Failed to delete media");
+//       })
+//       .finally(() => {
+//         setIsUploading(false);
+//       });
+//     }
+//   };
+
+//   const handleSetPrimaryMedia = (mediaId) => {
+//     const formData = new FormData();
+    
+//     const payload = {
+//       variants: [{
+//         id: variant.id,
+//         media: [{
+//           id: mediaId,
+//           is_primary: true
+//         }]
+//       }]
+//     };
+    
+//     formData.append('variants', JSON.stringify(payload.variants));
+    
+//     fetch(`${baseurl}/products/${product.product_id}/`, {
+//       method: 'PUT',
+//       body: formData
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//       console.log("Primary media set successfully:", data);
+//       alert("Primary media set successfully!");
+//       onUpdateMedia(); // Callback to refresh products
+//     })
+//     .catch(error => {
+//       console.error("Error setting primary media:", error);
+//       alert("Failed to set primary media");
+//     });
+//   };
+
+//   // Check if variant exists and has media
+//   const mediaFiles = variant?.media || [];
+
+//   return (
+//     <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+//       <div className="modal-dialog modal-lg">
+//         <div className="modal-content">
+//           <div className="modal-header">
+//             <h5 className="modal-title">
+//               Manage Media 
+//             </h5>
+// <button 
+//   type="button" 
+//   className="btn-close" 
+//   style={{ filter: 'brightness(0) invert(1)' }} 
+//   onClick={onClose}
+// ></button>          </div>
+//           <div className="modal-body">
+//             {/* Add New Media Section */}
+//             <div className="mb-4 p-3 border rounded bg-light">
+//               <h6 className="mb-3">Add New Media</h6>
+//               <div className="row align-items-end">
+//                 <div className="col-md-6  ">
+//                   <input
+//                     type="file"
+//                     id="new-media-file-input"
+//                     className="form-control"
+//                     accept="image/*,video/*"
+//                     disabled={isUploading}
+//                   />
+//                   {/* <small className="text-muted">Supported formats: Images (jpg, png, gif) and Videos (mp4, mov)</small> */}
+//                 </div>
+//                 <div className="col-md-4">
+//                   <button
+//                     className="btn btn-success w-100"
+//                     onClick={handleAddMedia}
+//                     disabled={isUploading}
+//                   >
+//                     {isUploading ? (
+//                       <>
+//                         <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+//                         Uploading...
+//                       </>
+//                     ) : (
+//                       <>
+//                         <Plus size={16} className="me-1" /> Upload Media
+//                       </>
+//                     )}
+//                   </button>
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Edit Media Section */}
+//             {editMode && selectedMedia && (
+//               <div className="mb-4 p-3 border rounded bg-info bg-opacity-10">
+//                 <div className="d-flex justify-content-between align-items-center mb-3">
+//                   <h6 className="mb-0">Edit Media</h6>
+//                   <button
+//                     className="btn btn-sm btn-outline-secondary"
+//                     onClick={() => {
+//                       setEditMode(false);
+//                       setSelectedMedia(null);
+//                     }}
+//                   >
+//                     Cancel Edit
+//                   </button>
+//                 </div>
+//                 <div className="row">
+//                   <div className="col-md-4 mb-3">
+//                     {selectedMedia.media_type === 'image' ? (
+//                       <img
+//                         src={`${baseurl}${selectedMedia.file}`}
+//                         alt="Media preview"
+//                         className="img-fluid rounded"
+//                         style={{ maxHeight: '100px', objectFit: 'contain' }}
+//                       />
+//                     ) : (
+//                       <video
+//                         src={`${baseurl}${selectedMedia.file}`}
+//                         className="img-fluid rounded"
+//                         style={{ maxHeight: '100px' }}
+//                         controls
+//                       />
+//                     )}
+//                   </div>
+//                   <div className="col-md-8">
+//                     <div className="row">
+//                       <div className="col-md-6 mb-2">
+//                         <label className="form-label small">Media Type</label>
+//                         <select
+//                           className="form-select form-select-sm"
+//                           value={editFormData.media_type}
+//                           onChange={(e) => setEditFormData({...editFormData, media_type: e.target.value})}
+//                         >
+//                           <option value="image">Image</option>
+//                           <option value="video">Video</option>
+//                         </select>
+//                       </div>
+//                       <div className="col-md-6 mb-2">
+//                         <label className="form-label small">Sort Order</label>
+//                         <input
+//                           type="number"
+//                           className="form-control form-control-sm"
+//                           value={editFormData.sort_order}
+//                           onChange={(e) => setEditFormData({...editFormData, sort_order: parseInt(e.target.value)})}
+//                           min="0"
+//                         />
+//                       </div>
+//                       <div className="col-md-12 mb-2">
+//                         <div className="form-check">
+//                           <input
+//                             type="checkbox"
+//                             className="form-check-input"
+//                             id="is_primary"
+//                             checked={editFormData.is_primary}
+//                             onChange={(e) => setEditFormData({...editFormData, is_primary: e.target.checked})}
+//                           />
+//                           <label className="form-check-label small" htmlFor="is_primary">
+//                             Set as Primary Media
+//                           </label>
+//                         </div>
+//                       </div>
+//                       <div className="col-md-12 mb-2">
+//                         <label className="form-label small">Replace File (Optional)</label>
+//                         <input
+//                           type="file"
+//                           id="media-file-input"
+//                           className="form-control form-control-sm"
+//                           accept="image/*,video/*"
+//                           disabled={isUploading}
+//                         />
+//                       </div>
+//                       <div className="col-md-12">
+//                         <button
+//                           className="btn btn-primary btn-sm w-100"
+//                           onClick={handleUpdateMedia}
+//                           disabled={isUploading}
+//                         >
+//                           {isUploading ? 'Updating...' : 'Update Media'}
+//                         </button>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </div>
+//             )}
+
+//             {/* Media Gallery */}
+//             <h6 className="mb-3">
+//               Media Files ({mediaFiles.length})
+//               {mediaFiles.filter(m => m.is_primary).length > 0 && (
+//                 <span className="badge bg-primary ms-2">Primary Media Set</span>
+//               )}
+//             </h6>
+            
+//             <div className="row">
+//               {mediaFiles.map((mediaItem) => (
+//                 <div key={mediaItem.id} className="col-md-4 mb-3">
+//                   <div className="card h-100">
+//                     <div className="card-body text-center">
+//                       {mediaItem.media_type === 'image' ? (
+//                         <img 
+//                           src={`${baseurl}${mediaItem.file}`} 
+//                           alt="Media" 
+//                           className="img-fluid mb-2"
+//                           style={{ maxHeight: '150px', objectFit: 'contain', cursor: 'pointer' }}
+//                           onClick={() => handleEditMedia(mediaItem)}
+//                         />
+//                       ) : (
+//                         <div 
+//                           className="bg-light p-4 mb-2 text-center"
+//                           style={{ cursor: 'pointer' }}
+//                           onClick={() => handleEditMedia(mediaItem)}
+//                         >
+//                           <PackageOpen size={48} className="text-muted" />
+//                           <p className="mt-2 mb-0">Video File</p>
+//                           <small className="text-muted">{mediaItem.file?.split('/').pop()}</small>
+//                         </div>
+//                       )}
+                      
+//                       {/* Media Info */}
+//                       <div className="mt-2">
+//                         {mediaItem.is_primary && (
+//                           <span className="badge bg-primary mb-1">Primary</span>
+//                         )}
+//                         <div className="d-flex justify-content-between align-items-center mt-2">
+//                           {/* <small className="text-muted">
+//                             {mediaItem.media_type} • Order: {mediaItem.sort_order}
+//                           </small> */}
+//                           <div className="btn-group btn-group-sm">
+//                             {/* {!mediaItem.is_primary && (
+//                               <button 
+//                                 className="btn btn-outline-primary"
+//                                 onClick={() => handleSetPrimaryMedia(mediaItem.id)}
+//                                 title="Set as Primary"
+//                               >
+//                                 <Star size={12} />
+//                               </button>
+//                             )} */}
+//                             <button 
+//                               className="btn btn-outline-info"
+//                               onClick={() => handleEditMedia(mediaItem)}
+//                               title="Edit Media"
+//                             >
+//                               <Edit size={15} />
+//                             </button>
+//                             <button 
+//                               className="btn btn-outline-danger"
+//                               onClick={() => handleDeleteMedia(mediaItem.id)}
+//                               title="Delete Media"
+//                             >
+//                               <Trash2 size={15} />
+//                             </button>
+//                           </div>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))}
+              
+//               {mediaFiles.length === 0 && (
+//                 <div className="col-12 text-center py-4">
+//                   <ImageIcon size={48} className="text-muted mb-2" />
+//                   <p className="text-muted">No media files found</p>
+//                   <p className="text-muted small">Upload images or videos to showcase this product variant</p>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//           <div className="modal-footer">
+//             <button type="button" className="btn btn-secondary" onClick={onClose}>
+//               Close
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
 const ManageMediaModal = ({ product, variant, isOpen, onClose, onUpdateMedia, onDeleteMedia, baseurl }) => {
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -7770,6 +8204,7 @@ const ManageMediaModal = ({ product, variant, isOpen, onClose, onUpdateMedia, on
       console.log("Media updated successfully:", data);
       alert("Media updated successfully!");
       onUpdateMedia(); // Callback to refresh products
+      // Reset to gallery view after successful update
       setEditMode(false);
       setSelectedMedia(null);
       setIsUploading(false);
@@ -7859,35 +8294,13 @@ const ManageMediaModal = ({ product, variant, isOpen, onClose, onUpdateMedia, on
     }
   };
 
-  const handleSetPrimaryMedia = (mediaId) => {
-    const formData = new FormData();
-    
-    const payload = {
-      variants: [{
-        id: variant.id,
-        media: [{
-          id: mediaId,
-          is_primary: true
-        }]
-      }]
-    };
-    
-    formData.append('variants', JSON.stringify(payload.variants));
-    
-    fetch(`${baseurl}/products/${product.product_id}/`, {
-      method: 'PUT',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log("Primary media set successfully:", data);
-      alert("Primary media set successfully!");
-      onUpdateMedia(); // Callback to refresh products
-    })
-    .catch(error => {
-      console.error("Error setting primary media:", error);
-      alert("Failed to set primary media");
-    });
+  const handleCancelEdit = () => {
+    setEditMode(false);
+    setSelectedMedia(null);
+    setEditFormData({ media_type: 'image', sort_order: 0, is_primary: false });
+    // Clear file input if exists
+    const fileInput = document.getElementById('media-file-input');
+    if (fileInput) fileInput.value = '';
   };
 
   // Check if variant exists and has media
@@ -7899,231 +8312,245 @@ const ManageMediaModal = ({ product, variant, isOpen, onClose, onUpdateMedia, on
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">
-              Manage Media 
+              {editMode ? `Editing Media: ${selectedMedia?.file?.split('/').pop() || 'Media Item'}` : 'Manage Media'}
             </h5>
-<button 
-  type="button" 
-  className="btn-close" 
-  style={{ filter: 'brightness(0) invert(1)' }} 
-  onClick={onClose}
-></button>          </div>
+            <button 
+              type="button" 
+              className="btn-close" 
+              style={{ filter: 'brightness(0) invert(1)' }} 
+              onClick={onClose}
+            ></button>
+          </div>
           <div className="modal-body">
-            {/* Add New Media Section */}
-            <div className="mb-4 p-3 border rounded bg-light">
-              <h6 className="mb-3">Add New Media</h6>
-              <div className="row align-items-end">
-                <div className="col-md-6  ">
-                  <input
-                    type="file"
-                    id="new-media-file-input"
-                    className="form-control"
-                    accept="image/*,video/*"
-                    disabled={isUploading}
-                  />
-                  {/* <small className="text-muted">Supported formats: Images (jpg, png, gif) and Videos (mp4, mov)</small> */}
-                </div>
-                <div className="col-md-4">
-                  <button
-                    className="btn btn-success w-100"
-                    onClick={handleAddMedia}
-                    disabled={isUploading}
-                  >
-                    {isUploading ? (
-                      <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        Uploading...
-                      </>
-                    ) : (
-                      <>
-                        <Plus size={16} className="me-1" /> Upload Media
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Edit Media Section */}
-            {editMode && selectedMedia && (
+            {/* Conditionally render based on edit mode */}
+            {editMode ? (
+              /* Edit Media Section - Show only this when editing */
               <div className="mb-4 p-3 border rounded bg-info bg-opacity-10">
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                  <h6 className="mb-0">Edit Media</h6>
+                  <h6 className="mb-0">Edit Media Item</h6>
                   <button
                     className="btn btn-sm btn-outline-secondary"
-                    onClick={() => {
-                      setEditMode(false);
-                      setSelectedMedia(null);
-                    }}
+                    onClick={handleCancelEdit}
                   >
                     Cancel Edit
                   </button>
                 </div>
-                <div className="row">
-                  <div className="col-md-4 mb-3">
-                    {selectedMedia.media_type === 'image' ? (
-                      <img
-                        src={`${baseurl}${selectedMedia.file}`}
-                        alt="Media preview"
-                        className="img-fluid rounded"
-                        style={{ maxHeight: '100px', objectFit: 'contain' }}
-                      />
-                    ) : (
-                      <video
-                        src={`${baseurl}${selectedMedia.file}`}
-                        className="img-fluid rounded"
-                        style={{ maxHeight: '100px' }}
-                        controls
-                      />
-                    )}
+                
+                {/* Media Preview */}
+                <div className="row mb-3">
+                  <div className="col-12">
+                    <div className="text-center p-3 bg-light rounded">
+                      {selectedMedia?.media_type === 'image' ? (
+                        <img
+                          src={`${baseurl}${selectedMedia?.file}`}
+                          alt="Media preview"
+                          className="img-fluid rounded"
+                          style={{ maxHeight: '200px', objectFit: 'contain' }}
+                        />
+                      ) : (
+                        <video
+                          src={`${baseurl}${selectedMedia?.file}`}
+                          className="img-fluid rounded"
+                          style={{ maxHeight: '200px' }}
+                          controls
+                        />
+                      )}
+                      <p className="mt-2 text-muted small">
+                        Current file: {selectedMedia?.file?.split('/').pop()}
+                      </p>
+                    </div>
                   </div>
-                  <div className="col-md-8">
-                    <div className="row">
-                      <div className="col-md-6 mb-2">
-                        <label className="form-label small">Media Type</label>
-                        <select
-                          className="form-select form-select-sm"
-                          value={editFormData.media_type}
-                          onChange={(e) => setEditFormData({...editFormData, media_type: e.target.value})}
-                        >
-                          <option value="image">Image</option>
-                          <option value="video">Video</option>
-                        </select>
-                      </div>
-                      <div className="col-md-6 mb-2">
-                        <label className="form-label small">Sort Order</label>
-                        <input
-                          type="number"
-                          className="form-control form-control-sm"
-                          value={editFormData.sort_order}
-                          onChange={(e) => setEditFormData({...editFormData, sort_order: parseInt(e.target.value)})}
-                          min="0"
-                        />
-                      </div>
-                      <div className="col-md-12 mb-2">
-                        <div className="form-check">
-                          <input
-                            type="checkbox"
-                            className="form-check-input"
-                            id="is_primary"
-                            checked={editFormData.is_primary}
-                            onChange={(e) => setEditFormData({...editFormData, is_primary: e.target.checked})}
-                          />
-                          <label className="form-check-label small" htmlFor="is_primary">
-                            Set as Primary Media
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-md-12 mb-2">
-                        <label className="form-label small">Replace File (Optional)</label>
-                        <input
-                          type="file"
-                          id="media-file-input"
-                          className="form-control form-control-sm"
-                          accept="image/*,video/*"
-                          disabled={isUploading}
-                        />
-                      </div>
-                      <div className="col-md-12">
-                        <button
-                          className="btn btn-primary btn-sm w-100"
-                          onClick={handleUpdateMedia}
-                          disabled={isUploading}
-                        >
-                          {isUploading ? 'Updating...' : 'Update Media'}
-                        </button>
-                      </div>
+                </div>
+                
+                <div className="row">
+                  <div className="col-md-6 mb-2">
+                    <label className="form-label small">Media Type</label>
+                    <select
+                      className="form-select form-select-sm"
+                      value={editFormData.media_type}
+                      onChange={(e) => setEditFormData({...editFormData, media_type: e.target.value})}
+                    >
+                      <option value="image">Image</option>
+                      <option value="video">Video</option>
+                    </select>
+                  </div>
+                  <div className="col-md-6 mb-2">
+                    <label className="form-label small">Sort Order</label>
+                    <input
+                      type="number"
+                      className="form-control form-control-sm"
+                      value={editFormData.sort_order}
+                      onChange={(e) => setEditFormData({...editFormData, sort_order: parseInt(e.target.value)})}
+                      min="0"
+                    />
+                    <small className="text-muted">Lower numbers appear first</small>
+                  </div>
+                  <div className="col-md-12 mb-2">
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="is_primary"
+                        checked={editFormData.is_primary}
+                        onChange={(e) => setEditFormData({...editFormData, is_primary: e.target.checked})}
+                      />
+                      <label className="form-check-label small" htmlFor="is_primary">
+                        Set as Primary Media (this will be the main display image)
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-md-12 mb-2">
+                    <label className="form-label small">Replace File (Optional)</label>
+                    <input
+                      type="file"
+                      id="media-file-input"
+                      className="form-control form-control-sm"
+                      accept="image/*,video/*"
+                      disabled={isUploading}
+                    />
+                    <small className="text-muted">Leave empty to keep current file</small>
+                  </div>
+                  <div className="col-md-12 mt-3">
+                    <div className="d-flex gap-2">
+                      <button
+                        className="btn btn-danger btn-sm flex-fill"
+                        onClick={() => handleDeleteMedia(selectedMedia?.id)}
+                        disabled={isUploading}
+                      >
+                        <Trash2 size={14} className="me-1" />
+                        Delete 
+                      </button>
+                      <button
+                        className="btn btn-primary btn-sm flex-fill"
+                        onClick={handleUpdateMedia}
+                        disabled={isUploading}
+                      >
+                        {isUploading ? (
+                          <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Updating...
+                          </>
+                        ) : (
+                          'Save '
+                        )}
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-            )}
-
-            {/* Media Gallery */}
-            <h6 className="mb-3">
-              Media Files ({mediaFiles.length})
-              {mediaFiles.filter(m => m.is_primary).length > 0 && (
-                <span className="badge bg-primary ms-2">Primary Media Set</span>
-              )}
-            </h6>
-            
-            <div className="row">
-              {mediaFiles.map((mediaItem) => (
-                <div key={mediaItem.id} className="col-md-4 mb-3">
-                  <div className="card h-100">
-                    <div className="card-body text-center">
-                      {mediaItem.media_type === 'image' ? (
-                        <img 
-                          src={`${baseurl}${mediaItem.file}`} 
-                          alt="Media" 
-                          className="img-fluid mb-2"
-                          style={{ maxHeight: '150px', objectFit: 'contain', cursor: 'pointer' }}
-                          onClick={() => handleEditMedia(mediaItem)}
-                        />
-                      ) : (
-                        <div 
-                          className="bg-light p-4 mb-2 text-center"
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => handleEditMedia(mediaItem)}
-                        >
-                          <PackageOpen size={48} className="text-muted" />
-                          <p className="mt-2 mb-0">Video File</p>
-                          <small className="text-muted">{mediaItem.file?.split('/').pop()}</small>
-                        </div>
-                      )}
-                      
-                      {/* Media Info */}
-                      <div className="mt-2">
-                        {mediaItem.is_primary && (
-                          <span className="badge bg-primary mb-1">Primary</span>
+            ) : (
+              /* Gallery View - Show this when not editing */
+              <>
+                {/* Add New Media Section */}
+                <div className="mb-4 p-3 border rounded bg-light">
+                  <h6 className="mb-3">Add New Media</h6>
+                  <div className="row align-items-end">
+                    <div className="col-md-8">
+                      <input
+                        type="file"
+                        id="new-media-file-input"
+                        className="form-control"
+                        accept="image/*,video/*"
+                        disabled={isUploading}
+                      />
+                      <small className="text-muted">Supported formats: Images (jpg, png, gif) and Videos (mp4, mov)</small>
+                    </div>
+                    <div className="col-md-4">
+                      <button
+                        className="btn btn-success w-100"
+                        onClick={handleAddMedia}
+                        disabled={isUploading}
+                      >
+                        {isUploading ? (
+                          <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Uploading...
+                          </>
+                        ) : (
+                          <>
+                            <Plus size={16} className="me-1" /> Upload Media
+                          </>
                         )}
-                        <div className="d-flex justify-content-between align-items-center mt-2">
-                          {/* <small className="text-muted">
-                            {mediaItem.media_type} • Order: {mediaItem.sort_order}
-                          </small> */}
-                          <div className="btn-group btn-group-sm">
-                            {/* {!mediaItem.is_primary && (
-                              <button 
-                                className="btn btn-outline-primary"
-                                onClick={() => handleSetPrimaryMedia(mediaItem.id)}
-                                title="Set as Primary"
-                              >
-                                <Star size={12} />
-                              </button>
-                            )} */}
-                            <button 
-                              className="btn btn-outline-info"
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Media Gallery */}
+                <h6 className="mb-3">
+                  Media Files ({mediaFiles.length})
+                  {mediaFiles.filter(m => m.is_primary).length > 0 && (
+                    <span className="badge bg-primary ms-2">Primary Media Set</span>
+                  )}
+                </h6>
+                
+                <div className="row">
+                  {mediaFiles.map((mediaItem) => (
+                    <div key={mediaItem.id} className="col-md-4 mb-3">
+                      <div className="card h-100">
+                        <div className="card-body text-center">
+                          {mediaItem.media_type === 'image' ? (
+                            <img 
+                              src={`${baseurl}${mediaItem.file}`} 
+                              alt="Media" 
+                              className="img-fluid mb-2"
+                              style={{ maxHeight: '150px', objectFit: 'contain', cursor: 'pointer' }}
                               onClick={() => handleEditMedia(mediaItem)}
-                              title="Edit Media"
+                            />
+                          ) : (
+                            <div 
+                              className="bg-light p-4 mb-2 text-center"
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => handleEditMedia(mediaItem)}
                             >
-                              <Edit size={15} />
-                            </button>
-                            <button 
-                              className="btn btn-outline-danger"
-                              onClick={() => handleDeleteMedia(mediaItem.id)}
-                              title="Delete Media"
-                            >
-                              <Trash2 size={15} />
-                            </button>
+                              <PackageOpen size={48} className="text-muted" />
+                              <p className="mt-2 mb-0">Video File</p>
+                              <small className="text-muted">{mediaItem.file?.split('/').pop()}</small>
+                            </div>
+                          )}
+                          
+                          {/* Media Info */}
+                          <div className="mt-2">
+                            {mediaItem.is_primary && (
+                              <span className="badge bg-primary mb-1 d-block">Primary</span>
+                            )}
+                            <div className="d-flex gap-2 mt-2">
+                              <button 
+                                className="btn btn-outline-info btn-sm flex-fill"
+                                onClick={() => handleEditMedia(mediaItem)}
+                                title="Edit Media"
+                              >
+                                <Edit size={14} className="me-1" /> Edit
+                              </button>
+                              <button 
+                                className="btn btn-outline-danger btn-sm flex-fill"
+                                onClick={() => handleDeleteMedia(mediaItem.id)}
+                                title="Delete Media"
+                                disabled={isUploading}
+                              >
+                                <Trash2 size={14} className="me-1" /> Delete
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
+                  
+                  {mediaFiles.length === 0 && (
+                    <div className="col-12 text-center py-4">
+                      <ImageIcon size={48} className="text-muted mb-2" />
+                      <p className="text-muted">No media files found</p>
+                      <p className="text-muted small">Upload images or videos to showcase this product variant</p>
+                    </div>
+                  )}
                 </div>
-              ))}
-              
-              {mediaFiles.length === 0 && (
-                <div className="col-12 text-center py-4">
-                  <ImageIcon size={48} className="text-muted mb-2" />
-                  <p className="text-muted">No media files found</p>
-                  <p className="text-muted small">Upload images or videos to showcase this product variant</p>
-                </div>
-              )}
-            </div>
+              </>
+            )}
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={onClose}>
-              Close
+              {editMode ? 'Cancel' : 'Close'}
             </button>
           </div>
         </div>
@@ -8255,7 +8682,7 @@ const ProductCard = ({
     <div className="card h-100 shadow-sm border-0" style={{ zIndex: 999 }}>
       {/* Product Image with Discount Badge */}
       <div className="bg-light p-3 text-center position-relative" style={{ height: 150, cursor: "pointer" }}
-           onClick={() => navigate(`/agent-business-product-details/${product.product_id}?variant=${variant.id}`)}>
+           onClick={() => navigate(`/agent-my-business-product-details/${product.product_id}?variant=${variant.id}`)}>
         <img
           src={getProductImage()}
           alt={getVariantName()}
@@ -8274,7 +8701,7 @@ const ProductCard = ({
 
       <div className="card-body d-flex flex-column p-3">
         <h6 className="line-clamp-2 mb-2" style={{ cursor: "pointer", minHeight: "30px" }}
-            onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}>
+            onClick={() => navigate(`/agent-my-business-product-details/${product.product_id}/?variant=${variant.id}`)}>
           {getVariantName()}
         </h6>
         
@@ -8375,7 +8802,7 @@ const ProductCard = ({
         <button 
             className="btn w-100 mt-2 text-white" 
             style={{ background: "#6c757d", marginBottom: "8px" }}
-            onClick={() => navigate(`/agent-business-product-details/${product.product_id}/?variant=${variant.id}`)}
+            onClick={() => navigate(`/agent-my-business-product-details/${product.product_id}/?variant=${variant.id}`)}
           >
             VIEW DETAILS
           </button>
@@ -8588,6 +9015,10 @@ const ProductGrid = ({
 /* ================= MAIN PRODUCTS COMPONENT ================= */
 const AgentMyProducts = () => {
   const navigate = useNavigate();
+
+
+
+
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);

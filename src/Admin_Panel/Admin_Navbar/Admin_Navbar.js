@@ -4356,7 +4356,7 @@ const AdminNavbar = () => {
     
     // Products Main Category
     {
-      name: "Products",
+      name: "Business",
       icon: <FaBriefcase />,
       subMenu: [
         { path: "/admin-business", name: "Business Listings", icon: <FaBriefcase /> },

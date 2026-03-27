@@ -1,0 +1,36 @@
+.my-product-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr !important;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+
+
+
+
+@media (max-width: 767px) {
+    .my-product-layout {
+        grid-template-columns: 1fr !important;
+        grid-template-areas:
+        "images"
+        "details"
+        "buybox";
+        gap: 20px;
+    }
+
+
+        .thumbnail-list {
+        flex-direction: column;
+        max-height: 80px;
+        overflow-x: scroll;
+        overflow-y: auto;
+        padding-bottom: 5px;
+    }
+}
+
+
+.play-overlay{
+          margin-top: -49px;
+    margin-left: 24px;
+}

@@ -68,7 +68,7 @@ const BusinessList = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${baseurl}/api/categories/`, {
+      const response = await axios.get(`${baseurl}/categories/`, {
         headers: {
           'Authorization': `Bearer ${userId}`,
           'Content-Type': 'application/json'
@@ -155,10 +155,10 @@ const BusinessList = () => {
     return <span className="badge bg-warning featured-badge">Featured</span>;
   };
 
-  const getActiveBadge = (isActive) => {
-    if (!isActive) return <span className="badge bg-danger active-badge">Inactive</span>;
-    return <span className="badge bg-success active-badge">Active</span>;
-  };
+const getActiveBadge = (isActive) => {
+    if (!isActive) return <span className="badge bg-danger active-badge text-white">Inactive</span>;
+    return <span className="badge bg-success active-badge text-white">Active</span>;
+};
 
   // Filter businesses based on search and filters
   const filteredBusinesses = businesses.filter(business => {
@@ -263,7 +263,7 @@ const BusinessList = () => {
             <h1 className="business-list-title">Business Directory</h1>
             <p className="business-list-subtitle">Manage your businesses and view details</p>
           </div>
-          <div className="col-md-4 text-end">
+          {/* <div className="col-md-4 text-end">
             <button
               className="btn btn-primary btn-add-business"
               onClick={handleAddNew}
@@ -271,7 +271,7 @@ const BusinessList = () => {
               <i className="bi bi-plus-circle me-2"></i>
               Add New Business
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Filters and Search */}
@@ -447,19 +447,19 @@ const BusinessList = () => {
                           </span>
                         </div>
 
-                        <div className="business-info-item">
+                        {/* <div className="business-info-item">
                           <i className="bi bi-clock me-2"></i>
                           <span className="info-label">Hours:</span>
                           <span className="info-value">
                             {getWorkingHoursSummary(business.working_hours)}
                           </span>
-                        </div>
+                        </div> */}
 
-                        <div className="business-info-item">
+                        {/* <div className="business-info-item">
                           <i className="bi bi-percent me-2"></i>
                           <span className="info-label">Commission:</span>
                           <span className="info-value">{business.commission_percent}%</span>
-                        </div>
+                        </div> */}
 
                         <div className="business-description">
                           <p className="description-text">

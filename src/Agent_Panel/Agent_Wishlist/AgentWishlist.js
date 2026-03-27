@@ -491,12 +491,12 @@ function AgentWishlist() {
                     <span>{wishlistItems.length}</span>
                   </div>
                   
-                  <div className="summary-row">
+                  {/* <div className="summary-row">
                     <span>Items in Stock</span>
                     <span>
                       {wishlistItems.filter(item => item.variant_details?.stock > 0).length}
                     </span>
-                  </div>
+                  </div> */}
                   
                   <div className="summary-divider"></div>
                   

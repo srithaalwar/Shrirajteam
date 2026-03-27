@@ -358,7 +358,7 @@ import AgentHome from "./Agent_Panel/Agent_Home_Page/Agent_Business_listings_hom
 import CommissionLedger from "./Agent_Panel/AgentDashboard/CommissionLedger"
 import AgentHomeSubCategories from './Agent_Panel/Agent_Home_Page/SubCategories'
 import AgentDashboardPropertyDetails from './Agent_Panel/AgentDashboard/PropertyDetails'
-
+import AgentMyBusinessProductsDetails from "./Agent_Panel/AgentMyBusinessProducts/AgentMyProducts"
 function App() {
   return (
     <BrowserRouter>
@@ -564,6 +564,8 @@ function App() {
         <Route path="/agent-busineess-category" element={<AgentbusinessCategory />} />
         <Route path="/agent-subcategory/:id" element={<AgentSubCategory />} />
         <Route path="/agent-business-product-details/:productId" element={<AgentProductDetails />} />
+        <Route path="/agent-my-business-product-details/:productId" element={<AgentMyBusinessProductsDetails />} />
+
         <Route path="/agent-add-product-form" element={<AgentAddProductForm />} />
 
         <Route path="/agent-my-team" element={<MyTeam />} />
