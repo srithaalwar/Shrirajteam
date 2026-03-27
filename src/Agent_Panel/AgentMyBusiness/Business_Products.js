@@ -898,7 +898,7 @@ const EditProductModal = ({ product, isOpen, onClose, onSave, onDelete }) => {
                     <option value="rejected">Rejected</option>
                   </select>
                 </div> */}
-                <div className="col-md-6 mb-3 d-flex align-items-end">
+                {/* <div className="col-md-6 mb-3 d-flex align-items-end">
                   <div className="form-check form-switch">
                     <input
                       className="form-check-input"
@@ -909,7 +909,7 @@ const EditProductModal = ({ product, isOpen, onClose, onSave, onDelete }) => {
                     />
                     <label className="form-check-label">Product Active</label>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="modal-footer">
@@ -938,7 +938,7 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
     hsn_code: "",
     is_returnable: false,
     return_days: 7,
-    is_active: false,
+    is_active: "",
     product_commission: "",
     distribution_commission: "",
     verification_status: "pending"

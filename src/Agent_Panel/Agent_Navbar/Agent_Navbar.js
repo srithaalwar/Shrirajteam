@@ -9891,8 +9891,10 @@ const AgentNavbar = () => {
       onClick: handleAddVariantClick,
       requiresSubscription: true
     },
-    { path: "/agent-my-products", name: "My Products", icon: <FaTag /> },
-    { path: "/agent-busineess-category", name: "All Products", icon: <FaLayerGroup /> }
+    { path: "/agent-busineess-category", name: "All Products", icon: <FaLayerGroup /> },
+    { path: "/agent-offers", name: "Offers", icon: <FaTag /> },
+
+
   ];
 
   const ordersItems = [
@@ -10004,7 +10006,7 @@ const AgentNavbar = () => {
           onClick: handleAddVariantClick,
           requiresSubscription: true
         },
-        { path: "/agent-my-products", name: "My Products", icon: <FaTag /> },
+        // { path: "/agent-my-products", name: "My Products", icon: <FaTag /> },
         { path: "/agent-busineess-category", name: "All Products ", icon: <FaLayerGroup /> }
       ],
     },

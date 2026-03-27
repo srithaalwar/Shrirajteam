@@ -510,12 +510,7 @@ const getActiveBadge = (isActive) => {
                           <i className="bi bi-trash me-1"></i> Delete
                         </button>
                       </div>
-                      <div className="business-meta">
-                        <small className="text-muted">
-                          <i className="bi bi-calendar me-1"></i>
-                          Created: {business.created_at}
-                        </small>
-                      </div>
+                    
                     </div>
                   </div>
                 </div>

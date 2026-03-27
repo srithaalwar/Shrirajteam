@@ -467,76 +467,164 @@ const AgentHomeSubCategories = () => {
   }, [effectiveCategoryId, buildCategoryTree, viewType]);
 
   // ── Fetch products ──────────────────────────────────────────────────────────
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setProductsLoading(true);
-      try {
-        let results = [];
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     setProductsLoading(true);
+  //     try {
+  //       let results = [];
 
-        if (viewType === "business" && businessId) {
-          // Business view: fetch by business ID
-          // Also apply any selected subcategory filters on top
-          let apiUrl;
-          if (selectedCategories.length > 0) {
-            // If user picked subcategories, filter by those too
-            const promises = selectedCategories.map(async catId => {
-              const params = new URLSearchParams({ business: businessId, category_id: catId });
-              const res = await fetch(`${baseurl}/products/?${params}`);
-              if (!res.ok) return [];
-              const data = await res.json();
-              return (data.results || data || []);
+  //       if (viewType === "business" && businessId) {
+  //         // Business view: fetch by business ID
+  //         // Also apply any selected subcategory filters on top
+  //         let apiUrl;
+  //         if (selectedCategories.length > 0) {
+  //           // If user picked subcategories, filter by those too
+  //           const promises = selectedCategories.map(async catId => {
+  //             const params = new URLSearchParams({ business: businessId, category_id: catId });
+  //             const res = await fetch(`${baseurl}/products/?${params}`);
+  //             if (!res.ok) return [];
+  //             const data = await res.json();
+  //             return (data.results || data || []);
+  //           });
+  //           const allResults = await Promise.all(promises);
+  //           const flat = allResults.flat();
+  //           results = processProducts(flat);
+  //         } else {
+  //           // No subcategory selected — fetch all products for this business
+  //           const params = new URLSearchParams({ business: businessId });
+  //           apiUrl = `${baseurl}/products/?${params}`;
+  //           const res = await fetch(apiUrl);
+  //           if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+  //           const data = await res.json();
+  //           results = processProducts(data.results || data || []);
+  //         }
+
+  //       } else if (viewType === "category" && categoryId) {
+  //         // Category view: fetch by category (with subcategory filter if applied)
+  //         const categoriesToFetch = selectedCategories.length === 0
+  //           ? [categoryId]
+  //           : selectedCategories;
+
+  //         const promises = categoriesToFetch.map(async catId => {
+  //           const params = new URLSearchParams({ category_id: catId, variant_verification_status: "verified" });
+  //           const res = await fetch(`${baseurl}/products/?${params}`);
+  //           if (!res.ok) return [];
+  //           const data = await res.json();
+  //           return data.results || data || [];
+  //         });
+
+  //         const allResults = await Promise.all(promises);
+  //         results = processProducts(allResults.flat());
+  //       }
+
+  //       // Deduplicate
+  //       const unique = new Map();
+  //       results.forEach(item => {
+  //         const key = `${item.product.product_id}-${item.variant.id}`;
+  //         if (!unique.has(key)) unique.set(key, item);
+  //       });
+
+  //       setProducts(Array.from(unique.values()));
+  //     } catch (e) {
+  //       console.error("Error fetching products:", e);
+  //       setProducts([]);
+  //     } finally {
+  //       setProductsLoading(false);
+  //     }
+  //   };
+
+  //   if ((viewType === "business" && businessId) || (viewType === "category" && categoryId)) {
+  //     fetchProducts();
+  //   }
+  // }, [categoryId, selectedCategories, viewType, businessId]);
+
+
+  // Fetch products based on view type
+useEffect(() => {
+  const fetchProducts = async () => {
+    setProductsLoading(true);
+    try {
+      let results = [];
+
+      if (viewType === "business" && businessId) {
+        // ✅ Business view: Always include variant_verification_status=verified
+        const params = new URLSearchParams({ 
+          business: businessId,
+          variant_verification_status: "verified"
+        });
+        
+        // If subcategories are selected, add them to the filter
+        if (selectedCategories.length > 0) {
+          // Fetch products for each selected subcategory
+          const promises = selectedCategories.map(async catId => {
+            const catParams = new URLSearchParams({ 
+              business: businessId,
+              category_id: catId,
+              variant_verification_status: "verified"
             });
-            const allResults = await Promise.all(promises);
-            const flat = allResults.flat();
-            results = processProducts(flat);
-          } else {
-            // No subcategory selected — fetch all products for this business
-            const params = new URLSearchParams({ business: businessId });
-            apiUrl = `${baseurl}/products/?${params}`;
-            const res = await fetch(apiUrl);
-            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-            const data = await res.json();
-            results = processProducts(data.results || data || []);
-          }
-
-        } else if (viewType === "category" && categoryId) {
-          // Category view: fetch by category (with subcategory filter if applied)
-          const categoriesToFetch = selectedCategories.length === 0
-            ? [categoryId]
-            : selectedCategories;
-
-          const promises = categoriesToFetch.map(async catId => {
-            const params = new URLSearchParams({ category_id: catId, variant_verification_status: "verified" });
-            const res = await fetch(`${baseurl}/products/?${params}`);
+            const res = await fetch(`${baseurl}/products/?${catParams}`);
             if (!res.ok) return [];
             const data = await res.json();
             return data.results || data || [];
           });
-
           const allResults = await Promise.all(promises);
-          results = processProducts(allResults.flat());
+          const flat = allResults.flat();
+          results = processProducts(flat);
+        } else {
+          // Fetch all products for this business with verified variants
+          const apiUrl = `${baseurl}/products/?${params}`;
+          console.log("📦 Fetching business products:", apiUrl);
+          
+          const res = await fetch(apiUrl);
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+          
+          const data = await res.json();
+          console.log("✅ Business products loaded:", data.results?.length || data?.length || 0, "products");
+          results = processProducts(data.results || data || []);
         }
 
-        // Deduplicate
-        const unique = new Map();
-        results.forEach(item => {
-          const key = `${item.product.product_id}-${item.variant.id}`;
-          if (!unique.has(key)) unique.set(key, item);
+      } else if (viewType === "category" && categoryId) {
+        // Category view: fetch by category
+        const categoriesToFetch = selectedCategories.length === 0
+          ? [categoryId]
+          : selectedCategories;
+
+        const promises = categoriesToFetch.map(async catId => {
+          const params = new URLSearchParams({ 
+            category_id: catId, 
+            variant_verification_status: "verified" 
+          });
+          const res = await fetch(`${baseurl}/products/?${params}`);
+          if (!res.ok) return [];
+          const data = await res.json();
+          return data.results || data || [];
         });
 
-        setProducts(Array.from(unique.values()));
-      } catch (e) {
-        console.error("Error fetching products:", e);
-        setProducts([]);
-      } finally {
-        setProductsLoading(false);
+        const allResults = await Promise.all(promises);
+        results = processProducts(allResults.flat());
       }
-    };
 
-    if ((viewType === "business" && businessId) || (viewType === "category" && categoryId)) {
-      fetchProducts();
+      // Deduplicate products
+      const unique = new Map();
+      results.forEach(item => {
+        const key = `${item.product.product_id}-${item.variant.id}`;
+        if (!unique.has(key)) unique.set(key, item);
+      });
+
+      setProducts(Array.from(unique.values()));
+      
+    } catch (e) {
+      console.error("❌ Error fetching products:", e);
+      setProducts([]);
+    } finally {
+      setProductsLoading(false);
     }
-  }, [categoryId, selectedCategories, viewType, businessId]);
+  };
+
+  if ((viewType === "business" && businessId) || (viewType === "category" && categoryId)) {
+    fetchProducts();
+  }
+}, [categoryId, selectedCategories, viewType, businessId]);
 
   // ── Helper: flatten product list into {product, variant} pairs ─────────────
   const processProducts = (productsList) => {
