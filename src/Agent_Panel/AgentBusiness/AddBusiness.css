@@ -440,3 +440,53 @@ input[type="number"]::-webkit-outer-spin-button {
 .text-center {
   text-align: center !important;
 }
+
+
+
+
+/* Loading Overlay Styles */
+.loading-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.loading-content {
+  text-align: center;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.loading-content .spinner-border {
+  color: #273c75;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Optional: Add a subtle animation for content appearing */
+.form-section {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

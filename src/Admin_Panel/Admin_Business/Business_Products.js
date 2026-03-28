@@ -2533,8 +2533,9 @@ const MyProducts = () => {
           <div className="mp-desktop-header">
             <div className="mp-desktop-header-inner">
               <button className="mp-back-desktop" onClick={() => navigate(-1)}><ArrowLeft size={17} /><span>Back</span></button>
-              <h1 className="mp-desktop-title">Products{businessName ? ` — ${businessName}` : ""}</h1>
-            </div>
+<h1 className="mp-desktop-title">
+  {businessName ? `${businessName} — Products` : "Products"}
+</h1>            </div>
           </div>
           <div className="mp-desktop-body">
             <aside className="mp-sidebar">
