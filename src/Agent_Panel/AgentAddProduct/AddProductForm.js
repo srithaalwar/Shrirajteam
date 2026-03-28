@@ -6734,7 +6734,7 @@ const ProductForm = ({ onSuccess, onCancel }) => {
 
   const fetchBusinesses = async () => {
     try {
-      const response = await axios.get(`${baseurl}/business/?user_id=${userId}`);
+      const response = await axios.get(`${baseurl}/business/?user_id=${userId}&verification_status=verified`);
       setBusinesses(response.data.results || []);
     } catch (error) {
       console.error('Error fetching businesses:', error);

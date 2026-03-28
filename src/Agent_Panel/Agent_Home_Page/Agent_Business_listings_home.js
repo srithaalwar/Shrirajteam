@@ -515,83 +515,82 @@ const AgentHome = () => {
     fetchAllCategories();
   }, []);
 
-  const fetchAllBusinesses = async (userId) => {
-    setLoading(true);
-    setError(null);
-    try {
-      let businessesData = [];
+const fetchAllBusinesses = async (userId) => {
+  setLoading(true);
+  setError(null);
+  try {
+    let businessesData = [];
+    
+    // Build URL with exclude_user_id if user ID exists
+    if (userId && userId !== null && userId !== "null") {
+      const excludeUrl = `${baseurl}/business/?exclude_user_id=${userId}&verification_status=verified`;
+      console.log("Fetching businesses excluding user ID:", userId);
+      console.log("Full URL:", excludeUrl);
       
-      // Build URL with exclude_user_id if user ID exists
-      if (userId && userId !== null && userId !== "null") {
-        const excludeUrl = `${baseurl}/business/?exclude_user_id=${userId}&verification_status=verified`;
-        console.log("Fetching businesses excluding user ID:", userId);
-        console.log("Full URL:", excludeUrl);
-        
-        const res = await fetch(excludeUrl);
-        
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        
-        const data = await res.json();
-        console.log("API Response (exclude user):", data);
-        
-        // Handle paginated response
-        businessesData = data.results || data || [];
-        console.log("Businesses from other users:", businessesData.length);
-      } else {
-        // If no user ID, fetch all businesses
-        const allUrl = `${baseurl}/business/`;
-        console.log("No user ID found, fetching all businesses:", allUrl);
-        
-        const res = await fetch(allUrl);
-        
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        
-        const data = await res.json();
-        console.log("API Response (all businesses):", data);
-        
-        businessesData = data.results || data || [];
-        console.log("All businesses:", businessesData.length);
+      const res = await fetch(excludeUrl);
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
       }
       
-      // Filter businesses that have banners and are active
-      const businessesWithBanners = businessesData.filter(business => 
-        business.banner && 
-        business.banner.trim() !== "" && 
-        business.is_active === true
-      );
+      const data = await res.json();
+      console.log("API Response (exclude user):", data);
       
-      console.log("Businesses with banners:", businessesWithBanners.length);
-      console.log("Businesses details:", businessesWithBanners.map(b => ({ id: b.business_id, name: b.business_name, user: b.user })));
+      // Handle paginated response
+      businessesData = data.results || data || [];
+      console.log("Businesses from other users:", businessesData.length);
+    } else {
+      // If no user ID, fetch all businesses
+      const allUrl = `${baseurl}/business/`;
+      console.log("No user ID found, fetching all businesses:", allUrl);
       
-      setBusinesses(businessesWithBanners);
+      const res = await fetch(allUrl);
       
-      // Group businesses by their primary category
-      const grouped = {};
-      businessesWithBanners.forEach(business => {
-        if (business.categories && business.categories.length > 0) {
-          const categoryId = business.categories[0];
-          if (!grouped[categoryId]) {
-            grouped[categoryId] = [];
-          }
-          grouped[categoryId].push(business);
-        }
-      });
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
       
-      setGroupedBusinesses(grouped);
+      const data = await res.json();
+      console.log("API Response (all businesses):", data);
       
-    } catch (error) {
-      console.error("Business API error:", error);
-      setError(error.message);
-      setBusinesses([]);
-      setGroupedBusinesses({});
-    } finally {
-      setLoading(false);
+      businessesData = data.results || data || [];
+      console.log("All businesses:", businessesData.length);
     }
-  };
+    
+    // Filter businesses that have banners only (removed is_active condition)
+    const businessesWithBanners = businessesData.filter(business => 
+      business.banner && 
+      business.banner.trim() !== ""
+    );
+    
+    console.log("Businesses with banners:", businessesWithBanners.length);
+    console.log("Businesses details:", businessesWithBanners.map(b => ({ id: b.business_id, name: b.business_name, user: b.user, is_active: b.is_active })));
+    
+    setBusinesses(businessesWithBanners);
+    
+    // Group businesses by their primary category
+    const grouped = {};
+    businessesWithBanners.forEach(business => {
+      if (business.categories && business.categories.length > 0) {
+        const categoryId = business.categories[0];
+        if (!grouped[categoryId]) {
+          grouped[categoryId] = [];
+        }
+        grouped[categoryId].push(business);
+      }
+    });
+    
+    setGroupedBusinesses(grouped);
+    
+  } catch (error) {
+    console.error("Business API error:", error);
+    setError(error.message);
+    setBusinesses([]);
+    setGroupedBusinesses({});
+  } finally {
+    setLoading(false);
+  }
+};
 
   const fetchAllCategories = async () => {
     setCategoriesLoading(true);

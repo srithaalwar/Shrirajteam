@@ -1,590 +1,6 @@
-// import React, { useEffect, useState } from "react";
-// import "./Carousel.css";
-// import { baseurl } from "../BaseURL/BaseURL";
 
-// // ✅ Reliable Unsplash default banner
-// const DEFAULT_BANNER =
-//   "https://images.unsplash.com/photo-1506617420156-8e4536971650?auto=format&fit=crop&w=1200&q=80";
 
-// const OfferCarousel = ({ categorySlug = "grocery-kirana" }) => { // Add categorySlug prop with default
-//   const [businesses, setBusinesses] = useState([]);
-//   const [offersMap, setOffersMap] = useState({});
-//   const [activeIndex, setActiveIndex] = useState(0);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     fetchBusinessesByCategory(categorySlug);
-//     fetchOffers();
-//   }, [categorySlug]); // Re-fetch when categorySlug changes
-
-//   const fetchBusinessesByCategory = async (slug) => {
-//     setLoading(true);
-//     try {
-//       const res = await fetch(`${baseurl}/business/?category_slug=${slug}`);
-//       const data = await res.json();
-      
-//       // Assuming the API returns businesses directly or in a results field
-//       setBusinesses(data.results || data || []);
-//     } catch (error) {
-//       console.error("Business API error:", error);
-//       setBusinesses([]);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const fetchOffers = async () => {
-//     try {
-//       const res = await fetch(`${baseurl}/offers/`);
-//       const data = await res.json();
-
-//       const map = {};
-//       (data.results || []).forEach((offer) => {
-//         map[offer.id] = offer;
-//       });
-
-//       setOffersMap(map);
-//     } catch (error) {
-//       console.error("Offers API error:", error);
-//     }
-//   };
-
-//   // Split into slides (3 cards per slide)
-//   const chunkSize = 3;
-//   const slides = [];
-//   for (let i = 0; i < businesses.length; i += chunkSize) {
-//     slides.push(businesses.slice(i, i + chunkSize));
-//   }
-
-//   const handlePrev = () => {
-//     if (slides.length === 0) return;
-//     setActiveIndex((prevIndex) => 
-//       prevIndex === 0 ? slides.length - 1 : prevIndex - 1
-//     );
-//   };
-
-//   const handleNext = () => {
-//     if (slides.length === 0) return;
-//     setActiveIndex((prevIndex) => 
-//       prevIndex === slides.length - 1 ? 0 : prevIndex + 1
-//     );
-//   };
-
-//   if (loading) {
-//     return (
-//       <div className="offer-carousel-wrapper">
-//         <div className="loading-text">Loading offers...</div>
-//       </div>
-//     );
-//   }
-
-//   if (businesses.length === 0) {
-//     return (
-//       <div className="offer-carousel-wrapper">
-//         <div className="no-offers-text">No offers available for this category.</div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="offer-carousel-wrapper">
-//       <div className="carousel-container">
-//         {slides.length > 1 && (
-//           <>
-//             <button 
-//               className="carousel-control custom-prev"
-//               onClick={handlePrev}
-//             >
-//               <span className="control-icon">‹</span>
-//             </button>
-
-//             <button 
-//               className="carousel-control custom-next"
-//               onClick={handleNext}
-//             >
-//               <span className="control-icon">›</span>
-//             </button>
-//           </>
-//         )}
-
-//         <div className="carousel-viewport">
-//           <div 
-//             className="carousel-track"
-//             style={{ 
-//               transform: `translateX(-${activeIndex * 100}%)`,
-//               transition: 'transform 0.5s ease'
-//             }}
-//           >
-//             {slides.map((slide, slideIndex) => (
-//               <div
-//                 key={slideIndex}
-//                 className="carousel-slide"
-//               >
-//                 <div className="row g-4">
-//                   {slide.map((business) => {
-//                     const offer = offersMap[business.offer];
-//                     const discount = offer?.value
-//                       ? `${offer.value}%`
-//                       : "0%";
-
-//                     // ✅ SAFE banner logic
-//                     const bannerImage =
-//                       business.banner && business.banner.trim() !== ""
-//                         ? `${baseurl}${business.banner}`
-//                         : DEFAULT_BANNER;
-
-//                     return (
-//                       <div className="col-md-4" key={business.business_id}>
-//                         <div
-//                           className="offer-card"
-//                           style={{ backgroundImage: `url(${bannerImage})` }}
-//                         >
-//                           <div className="offer-content">
-//                             <p className="upto">UPTO</p>
-//                             <h2>{discount}</h2>
-//                             <p className="off">OFF</p>
-//                             <button className="shop-btn">Shop Now</button>
-//                           </div>
-//                         </div>
-//                       </div>
-//                     );
-//                   })}
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Indicators - only show if there are multiple slides */}
-//       {slides.length > 1 && (
-//         <div className="carousel-indicators">
-//           {slides.map((_, idx) => (
-//             <button
-//               key={idx}
-//               className={`indicator ${idx === activeIndex ? 'active' : ''}`}
-//               onClick={() => setActiveIndex(idx)}
-//             />
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default OfferCarousel;
-
-
-
-// import React, { useEffect, useState } from "react";
-// import "./Carousel.css";
-// import { baseurl } from "../BaseURL/BaseURL";
-
-// // ✅ Reliable Unsplash default banner
-// const DEFAULT_BANNER =
-//   "https://images.unsplash.com/photo-1506617420156-8e4536971650?auto=format&fit=crop&w=1200&q=80";
-
-// const OfferCarousel = ({ categorySlug = "grocery-kirana" }) => {
-//   const [businesses, setBusinesses] = useState([]);
-//   const [offersMap, setOffersMap] = useState({});
-//   const [activeIndex, setActiveIndex] = useState(0);
-//   const [loading, setLoading] = useState(true);
-//   const [categoryName, setCategoryName] = useState("");
-//   const [categoryLoading, setCategoryLoading] = useState(false);
-
-//   useEffect(() => {
-//     fetchBusinessesByCategory(categorySlug);
-//     fetchOffers();
-//   }, [categorySlug]);
-
-//   const fetchBusinessesByCategory = async (slug) => {
-//     setLoading(true);
-//     setCategoryLoading(true);
-//     try {
-//       const res = await fetch(`${baseurl}/business/?category_slug=${slug}`);
-//       const data = await res.json();
-      
-//       const businessesData = data.results || data || [];
-//       setBusinesses(businessesData);
-
-//       // Fetch category name if we have businesses
-//       if (businessesData.length > 0 && businessesData[0].categories && businessesData[0].categories.length > 0) {
-//         await fetchCategoryName(businessesData[0].categories[0]);
-//       } else {
-//         // If no category ID found, use slug to get category name
-//         await fetchCategoryBySlug(slug);
-//       }
-//     } catch (error) {
-//       console.error("Business API error:", error);
-//       setBusinesses([]);
-//     } finally {
-//       setLoading(false);
-//       setCategoryLoading(false);
-//     }
-//   };
-
-//   const fetchCategoryName = async (categoryId) => {
-//     try {
-//       const res = await fetch(`${baseurl}/categories/${categoryId}/`);
-//       if (res.ok) {
-//         const categoryData = await res.json();
-//         setCategoryName(categoryData.name || "");
-//       }
-//     } catch (error) {
-//       console.error("Category API error:", error);
-//       setCategoryName("Special Offers");
-//     }
-//   };
-
-//   const fetchCategoryBySlug = async (slug) => {
-//     try {
-//       const res = await fetch(`${baseurl}/categories/?slug=${slug}`);
-//       if (res.ok) {
-//         const data = await res.json();
-//         if (data.results && data.results.length > 0) {
-//           setCategoryName(data.results[0].name || "");
-//         } else {
-//           setCategoryName("Special Offers");
-//         }
-//       }
-//     } catch (error) {
-//       console.error("Category by slug API error:", error);
-//       setCategoryName("Special Offers");
-//     }
-//   };
-
-//   const fetchOffers = async () => {
-//     try {
-//       const res = await fetch(`${baseurl}/offers/`);
-//       const data = await res.json();
-
-//       const map = {};
-//       (data.results || []).forEach((offer) => {
-//         map[offer.id] = offer;
-//       });
-
-//       setOffersMap(map);
-//     } catch (error) {
-//       console.error("Offers API error:", error);
-//     }
-//   };
-
-//   // Split into slides (3 cards per slide)
-//   const chunkSize = 3;
-//   const slides = [];
-//   for (let i = 0; i < businesses.length; i += chunkSize) {
-//     slides.push(businesses.slice(i, i + chunkSize));
-//   }
-
-//   const handlePrev = () => {
-//     if (slides.length === 0) return;
-//     setActiveIndex((prevIndex) => 
-//       prevIndex === 0 ? slides.length - 1 : prevIndex - 1
-//     );
-//   };
-
-//   const handleNext = () => {
-//     if (slides.length === 0) return;
-//     setActiveIndex((prevIndex) => 
-//       prevIndex === slides.length - 1 ? 0 : prevIndex + 1
-//     );
-//   };
-
-//   if (loading) {
-//     return (
-//       <div className="offer-carousel-wrapper">
-//         <div className="loading-text">Loading offers...</div>
-//       </div>
-//     );
-//   }
-
-//   if (businesses.length === 0) {
-//     return (
-//       <div className="offer-carousel-wrapper">
-//         <div className="no-offers-text">No offers available for this category.</div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="offer-carousel-wrapper">
-//       {/* Dynamic Category Heading */}
-//       <div className="carousel-header">
-//         <h2 className="category-heading">
-//           {categoryLoading ? (
-//             <span className="loading-dots">Loading Category</span>
-//           ) : (
-//             categoryName || "Special Offers"
-//           )}
-//         </h2>
-//         <div className="view-all-link">
-//           <a href={`/category/${categorySlug}`}>View All →</a>
-//         </div>
-//       </div>
-
-//       <div className="carousel-container">
-//         {slides.length > 1 && (
-//           <>
-//             <button 
-//               className="carousel-control custom-prev"
-//               onClick={handlePrev}
-//             >
-//               <span className="control-icon">‹</span>
-//             </button>
-
-//             <button 
-//               className="carousel-control custom-next"
-//               onClick={handleNext}
-//             >
-//               <span className="control-icon">›</span>
-//             </button>
-//           </>
-//         )}
-
-//         <div className="carousel-viewport">
-//           <div 
-//             className="carousel-track"
-//             style={{ 
-//               transform: `translateX(-${activeIndex * 100}%)`,
-//               transition: 'transform 0.5s ease'
-//             }}
-//           >
-//             {slides.map((slide, slideIndex) => (
-//               <div
-//                 key={slideIndex}
-//                 className="carousel-slide"
-//               >
-//                 <div className="row g-4">
-//                   {slide.map((business) => {
-//                     const offer = offersMap[business.offer];
-//                     const discount = offer?.value
-//                       ? `${offer.value}%`
-//                       : "0%";
-
-//                     // ✅ SAFE banner logic
-//                     const bannerImage =
-//                       business.banner && business.banner.trim() !== ""
-//                         ? `${baseurl}${business.banner}`
-//                         : DEFAULT_BANNER;
-
-//                     return (
-//                       <div className="col-md-4" key={business.business_id}>
-//                         <div
-//                           className="offer-card"
-//                           style={{ backgroundImage: `url(${bannerImage})` }}
-//                         >
-//                           <div className="offer-content">
-//                             <p className="upto">UPTO</p>
-//                             <h2>{discount}</h2>
-//                             <p className="off">OFF</p>
-//                             <button className="shop-btn">Shop Now</button>
-//                           </div>
-//                         </div>
-//                       </div>
-//                     );
-//                   })}
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Indicators - only show if there are multiple slides */}
-//       {slides.length > 1 && (
-//         <div className="carousel-indicators">
-//           {slides.map((_, idx) => (
-//             <button
-//               key={idx}
-//               className={`indicator ${idx === activeIndex ? 'active' : ''}`}
-//               onClick={() => setActiveIndex(idx)}
-//             />
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default OfferCarousel;
-
-
-
-
-//=====================================================
-// below code without carousel slides 
-
-// import React, { useEffect, useState } from "react";
-// // import "./Carousel.css";
-// import { baseurl } from "../BaseURL/BaseURL";
-// import { useNavigate } from "react-router-dom";
-
-// // ✅ Reliable Unsplash default banner
-// const DEFAULT_BANNER =
-//   "https://images.unsplash.com/photo-1506617420156-8e4536971650?auto=format&fit=crop&w=1200&q=80";
-
-// const GroceryAndKiranamCarousel = ({ categorySlug = "grocery-kirana" }) => {
-//   const [businesses, setBusinesses] = useState([]);
-//   const [offersMap, setOffersMap] = useState({});
-//   const [loading, setLoading] = useState(true);
-//   const [categoryName, setCategoryName] = useState("");
-//   const [categoryLoading, setCategoryLoading] = useState(false);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     fetchBusinessesByCategory(categorySlug);
-//     fetchOffers();
-//   }, [categorySlug]);
-
-//   const fetchBusinessesByCategory = async (slug) => {
-//     setLoading(true);
-//     setCategoryLoading(true);
-//     try {
-//       const res = await fetch(`${baseurl}/business/?category_slug=${slug}`);
-//       const data = await res.json();
-      
-//       const businessesData = data.results || data || [];
-//       setBusinesses(businessesData);
-
-//       // Fetch category name if we have businesses
-//       if (businessesData.length > 0 && businessesData[0].categories && businessesData[0].categories.length > 0) {
-//         await fetchCategoryName(businessesData[0].categories[0]);
-//       } else {
-//         // If no category ID found, use slug to get category name
-//         await fetchCategoryBySlug(slug);
-//       }
-//     } catch (error) {
-//       console.error("Business API error:", error);
-//       setBusinesses([]);
-//     } finally {
-//       setLoading(false);
-//       setCategoryLoading(false);
-//     }
-//   };
-
-//   const fetchCategoryName = async (categoryId) => {
-//     try {
-//       const res = await fetch(`${baseurl}/categories/${categoryId}/`);
-//       if (res.ok) {
-//         const categoryData = await res.json();
-//         setCategoryName(categoryData.name || "");
-//       }
-//     } catch (error) {
-//       console.error("Category API error:", error);
-//       setCategoryName("Special Offers");
-//     }
-//   };
-
-//   const fetchCategoryBySlug = async (slug) => {
-//     try {
-//       const res = await fetch(`${baseurl}/categories/?slug=${slug}`);
-//       if (res.ok) {
-//         const data = await res.json();
-//         if (data.results && data.results.length > 0) {
-//           setCategoryName(data.results[0].name || "");
-//         } else {
-//           setCategoryName("Special Offers");
-//         }
-//       }
-//     } catch (error) {
-//       console.error("Category by slug API error:", error);
-//       setCategoryName("Special Offers");
-//     }
-//   };
-
-//   const fetchOffers = async () => {
-//     try {
-//       const res = await fetch(`${baseurl}/offers/`);
-//       const data = await res.json();
-
-//       const map = {};
-//       (data.results || []).forEach((offer) => {
-//         map[offer.id] = offer;
-//       });
-
-//       setOffersMap(map);
-//     } catch (error) {
-//       console.error("Offers API error:", error);
-//     }
-//   };
-
-//   // Handle View All navigation
-//   const handleViewAll = () => {
-//     navigate(`/category/${categorySlug}`);
-//   };
-
-//   if (loading) {
-//     return (
-//       <div className="mani-as-offer-wrapper">
-//         <div className="mani-as-offer-loading">Loading offers...</div>
-//       </div>
-//     );
-//   }
-
-//   if (businesses.length === 0) {
-//     return (
-//       <div className="mani-as-offer-wrapper">
-//         <div className="mani-as-offer-empty">No offers available for this category.</div>
-//       </div>
-//     );
-//   }
-
-//     const displayBusinesses = businesses.slice(0, 3);
-  
-//     return (
-//       <div className="mani-as-offer-wrapper">
-//         {/* Header */}
-//         <div className="mani-as-offer-header">
-//           <h2 className="mani-as-offer-heading">
-//             {categoryLoading ? (
-//               <span className="mani-as-offer-loading-dots">Loading Category</span>
-//             ) : (
-//               categoryName || "Special Offers"
-//             )}
-//           </h2>
-//             <div className="mani-as-offer-viewall-wrap">
-//   <button onClick={handleViewAll} className="mani-as-offer-viewall-btn">
-   
-//     <span className="mani-as-viewall-circle">→</span>
-//   </button>
-// </div>
-//         </div>
-  
-//         {/* Cards */}
-//         <div className="mani-as-offer-cards-grid">
-//           {displayBusinesses.map((business) => {
-//             const offer = offersMap[business.offer];
-//             const discount = offer?.value ? `${offer.value}%` : "0%";
-  
-//             const bannerImage =
-//               business.banner && business.banner.trim() !== ""
-//                 ? `${baseurl}${business.banner}`
-//                 : DEFAULT_BANNER;
-  
-//             return (
-//               <div className="mani-as-offer-card-item" key={business.business_id}>
-//                 <div
-//                   className="mani-as-offer-card"
-//                   style={{ backgroundImage: `url(${bannerImage})` }}
-//                 >
-//                   <div className="mani-as-offer-card-content">
-//                     <p className="mani-as-offer-upto">UPTO</p>
-//                     <h2 className="mani-as-offer-discount">{discount}</h2>
-//                     <p className="mani-as-offer-off">OFF</p>
-//                     <button className="mani-as-offer-shop-btn">Shop Now</button>
-//                   </div>
-//                 </div>
-//               </div> 
-//             );
-//           })}
-//         </div>
-//       </div>
-//     );
-//   };
-  
-//   export default GroceryAndKiranamCarousel;
-  
-  
+//===================================================
 
 // import React, { useEffect, useState } from "react";
 // // import "./Carousel.css";
@@ -597,363 +13,15 @@
 //   const [loading, setLoading] = useState(true);
 //   const [categoryName, setCategoryName] = useState("");
 //   const [categoryLoading, setCategoryLoading] = useState(false);
+//   const [categoryId, setCategoryId] = useState(null);
 //   const navigate = useNavigate();
 
 //   useEffect(() => {
+//     fetchCategoryBySlug(categorySlug);
 //     fetchBusinessesByCategory(categorySlug);
 //     fetchOffers();
 //   }, [categorySlug]);
 
-//   const fetchBusinessesByCategory = async (slug) => {
-//     setLoading(true);
-//     setCategoryLoading(true);
-//     try {
-//       const res = await fetch(`${baseurl}/business/?category_slug=${slug}`);
-//       const data = await res.json();
-      
-//       const businessesData = data.results || data || [];
-      
-//       // ⭐ Filter out businesses without valid banner images
-//       const businessesWithBanners = businessesData.filter(business => 
-//         business.banner && business.banner.trim() !== ""
-//       );
-      
-//       setBusinesses(businessesWithBanners);
-
-//       // Fetch category name if we have businesses
-//       if (businessesData.length > 0 && businessesData[0].categories && businessesData[0].categories.length > 0) {
-//         await fetchCategoryName(businessesData[0].categories[0]);
-//       } else {
-//         // If no category ID found, use slug to get category name
-//         await fetchCategoryBySlug(slug);
-//       }
-//     } catch (error) {
-//       console.error("Business API error:", error);
-//       setBusinesses([]);
-//     } finally {
-//       setLoading(false);
-//       setCategoryLoading(false);
-//     }
-//   };
-
-//   const fetchCategoryName = async (categoryId) => {
-//     try {
-//       const res = await fetch(`${baseurl}/categories/${categoryId}/`);
-//       if (res.ok) {
-//         const categoryData = await res.json();
-//         setCategoryName(categoryData.name || "");
-//       }
-//     } catch (error) {
-//       console.error("Category API error:", error);
-//       setCategoryName("Special Offers");
-//     }
-//   };
-
-//   const fetchCategoryBySlug = async (slug) => {
-//     try {
-//       const res = await fetch(`${baseurl}/categories/?slug=${slug}`);
-//       if (res.ok) {
-//         const data = await res.json();
-//         if (data.results && data.results.length > 0) {
-//           setCategoryName(data.results[0].name || "");
-//         } else {
-//           setCategoryName("Special Offers");
-//         }
-//       }
-//     } catch (error) {
-//       console.error("Category by slug API error:", error);
-//       setCategoryName("Special Offers");
-//     }
-//   };
-
-//   const fetchOffers = async () => {
-//     try {
-//       const res = await fetch(`${baseurl}/offers/`);
-//       const data = await res.json();
-
-//       const map = {};
-//       (data.results || []).forEach((offer) => {
-//         map[offer.id] = offer;
-//       });
-
-//       setOffersMap(map);
-//     } catch (error) {
-//       console.error("Offers API error:", error);
-//     }
-//   };
-
-//   // Handle View All navigation
-//   const handleViewAll = () => {
-//     navigate(`/category/${categorySlug}`);
-//   };
-
-//   // ⭐ Return null if no businesses with banners
-//   if (!loading && businesses.length === 0) {
-//     return null;
-//   }
-
-//   if (loading) {
-//     return (
-//       <div className="mani-as-offer-wrapper">
-//         <div className="mani-as-offer-loading">Loading offers...</div>
-//       </div>
-//     );
-//   }
-
-//   const displayBusinesses = businesses.slice(0, 3);
-
-//   return (
-//     <div className="mani-as-offer-wrapper">
-//       {/* Header */}
-//       <div className="mani-as-offer-header">
-//         <h2 className="mani-as-offer-heading">
-//           {categoryLoading ? (
-//             <span className="mani-as-offer-loading-dots">Loading Category</span>
-//           ) : (
-//             categoryName || "Special Offers"
-//           )}
-//         </h2>
-//         <div className="mani-as-offer-viewall-wrap">
-//           <button onClick={handleViewAll} className="mani-as-offer-viewall-btn">
-//             <span className="mani-as-viewall-circle">→</span>
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Cards */}
-//       <div className="mani-as-offer-cards-grid">
-//         {displayBusinesses.map((business) => {
-//           const offer = offersMap[business.offer];
-//           const discount = offer?.value ? `${offer.value}%` : "0%";
-
-//           // ⭐ No need for default banner anymore since we filtered
-//           const bannerImage = `${baseurl}${business.banner}`;
-
-//           return (
-//             <div className="mani-as-offer-card-item" key={business.business_id}>
-//               <div
-//                 className="mani-as-offer-card"
-//                 style={{ backgroundImage: `url(${bannerImage})` }}
-//               >
-//                 <div className="mani-as-offer-card-content">
-//                   <p className="mani-as-offer-upto">UPTO</p>
-//                   <h2 className="mani-as-offer-discount">{discount}</h2>
-//                   <p className="mani-as-offer-off">OFF</p>
-//                   <button className="mani-as-offer-shop-btn">Shop Now</button>
-//                 </div>
-//               </div>
-//             </div> 
-//           );
-//         })}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default GroceryAndKiranamCarousel;
-
-
-//======================================================
-
-// import React, { useEffect, useState } from "react";
-// // import "./Carousel.css";
-// import { baseurl } from "../BaseURL/BaseURL";
-// import { useNavigate } from "react-router-dom";
-
-// const GroceryAndKiranamCarousel = ({ categorySlug = "grocery-kirana" }) => {
-//   const [businesses, setBusinesses] = useState([]);
-//   const [offersMap, setOffersMap] = useState({});
-//   const [loading, setLoading] = useState(true);
-//   const [categoryName, setCategoryName] = useState("");
-//   const [categoryLoading, setCategoryLoading] = useState(false);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     fetchBusinessesByCategory(categorySlug);
-//     fetchOffers();
-//   }, [categorySlug]);
-
-//   const fetchBusinessesByCategory = async (slug) => {
-//     setLoading(true);
-//     setCategoryLoading(true);
-//     try {
-//       const res = await fetch(`${baseurl}/business/?category_slug=${slug}`);
-//       const data = await res.json();
-      
-//       const businessesData = data.results || data || [];
-      
-//       // Filter out businesses without valid banner images
-//       const businessesWithBanners = businessesData.filter(business => 
-//         business.banner && business.banner.trim() !== ""
-//       );
-      
-//       setBusinesses(businessesWithBanners);
-
-//       // Fetch category name if we have businesses
-//       if (businessesData.length > 0 && businessesData[0].categories && businessesData[0].categories.length > 0) {
-//         await fetchCategoryName(businessesData[0].categories[0]);
-//       } else {
-//         // If no category ID found, use slug to get category name
-//         await fetchCategoryBySlug(slug);
-//       }
-//     } catch (error) {
-//       console.error("Business API error:", error);
-//       setBusinesses([]);
-//     } finally {
-//       setLoading(false);
-//       setCategoryLoading(false);
-//     }
-//   };
-
-//   const fetchCategoryName = async (categoryId) => {
-//     try {
-//       const res = await fetch(`${baseurl}/categories/${categoryId}/`);
-//       if (res.ok) {
-//         const categoryData = await res.json();
-//         setCategoryName(categoryData.name || "");
-//       }
-//     } catch (error) {
-//       console.error("Category API error:", error);
-//       setCategoryName("Special Offers");
-//     }
-//   };
-
-//   const fetchCategoryBySlug = async (slug) => {
-//     try {
-//       const res = await fetch(`${baseurl}/categories/?slug=${slug}`);
-//       if (res.ok) {
-//         const data = await res.json();
-//         if (data.results && data.results.length > 0) {
-//           setCategoryName(data.results[0].name || "");
-//         } else {
-//           setCategoryName("Special Offers");
-//         }
-//       }
-//     } catch (error) {
-//       console.error("Category by slug API error:", error);
-//       setCategoryName("Special Offers");
-//     }
-//   };
-
-//   const fetchOffers = async () => {
-//     try {
-//       const res = await fetch(`${baseurl}/offers/`);
-//       const data = await res.json();
-
-//       const map = {};
-//       (data.results || []).forEach((offer) => {
-//         map[offer.id] = offer;
-//       });
-
-//       setOffersMap(map);
-//     } catch (error) {
-//       console.error("Offers API error:", error);
-//     }
-//   };
-
-//   // Handle View All navigation
-//   const handleViewAll = () => {
-//     navigate(`/category/${categorySlug}`);
-//   };
-
-//   // Handle business click navigation
-//   const handleBusinessClick = (businessId) => {
-//     navigate(`/business/${businessId}`);
-//   };
-
-//   // Return null if no businesses with banners
-//   if (!loading && businesses.length === 0) {
-//     return null;
-//   }
-
-//   if (loading) {
-//     return (
-//       <div className="mani-as-offer-wrapper">
-//         <div className="mani-as-offer-loading">Loading offers...</div>
-//       </div>
-//     );
-//   }
-
-//   const displayBusinesses = businesses.slice(0, 3);
-
-//   return (
-//     <div className="mani-as-offer-wrapper">
-//       {/* Header */}
-//       <div className="mani-as-offer-header">
-//         <h2 className="mani-as-offer-heading">
-//           {categoryLoading ? (
-//             <span className="mani-as-offer-loading-dots">Loading Category</span>
-//           ) : (
-//             categoryName || "Special Offers"
-//           )}
-//         </h2>
-//         <div className="mani-as-offer-viewall-wrap">
-//           <button onClick={handleViewAll} className="mani-as-offer-viewall-btn">
-//             <span className="mani-as-viewall-circle">→</span>
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Cards */}
-//       <div className="mani-as-offer-cards-grid">
-//         {displayBusinesses.map((business) => {
-//           const offer = offersMap[business.offer];
-//           const discountValue = offer?.value || 0;
-//           const discount = discountValue > 0 ? `${discountValue}%` : "0%";
-
-//           const bannerImage = `${baseurl}${business.banner}`;
-
-//           return (
-//             <div 
-//               className="mani-as-offer-card-item" 
-//               key={business.business_id}
-//               onClick={() => handleBusinessClick(business.business_id)}
-//             >
-//               <div
-//                 className="mani-as-offer-card"
-//                 style={{ backgroundImage: `url(${bannerImage})` }}
-//               >
-//                 {/* Discount Badge - Top Right */}
-//                 <div className="mani-as-offer-discount-badge">
-//                   <span className="mani-as-offer-discount-text">{discount}</span>
-//                 </div>
-//               </div>
-//             </div> 
-//           );
-//         })}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default GroceryAndKiranamCarousel;
-
-//======================================================
-//  Dated - on- before -  09-03-2026
-
-
-
-// import React, { useEffect, useState } from "react";
-// // import "./Carousel.css";
-// import { baseurl } from "../BaseURL/BaseURL";
-// import { useNavigate } from "react-router-dom";
-
-// const GroceryAndKiranamCarousel = ({ categorySlug = "grocery-kirana" }) => {
-//   const [businesses, setBusinesses] = useState([]);
-//   const [offersMap, setOffersMap] = useState({});
-//   const [loading, setLoading] = useState(true);
-//   const [categoryName, setCategoryName] = useState("");
-//   const [categoryLoading, setCategoryLoading] = useState(false);
-//   const [categoryId, setCategoryId] = useState(null); // Add this state
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     fetchCategoryBySlug(categorySlug); // Fetch category ID first
-//     fetchBusinessesByCategory(categorySlug);
-//     fetchOffers();
-//   }, [categorySlug]);
-
-//   // Add this function to fetch category by slug and get its ID
 //   const fetchCategoryBySlug = async (slug) => {
 //     try {
 //       const res = await fetch(`${baseurl}/categories/?slug=${slug}`);
@@ -961,7 +29,7 @@
 //         const data = await res.json();
 //         if (data.results && data.results.length > 0) {
 //           const category = data.results[0];
-//           setCategoryId(category.category_id); // Store the ID
+//           setCategoryId(category.category_id);
 //           setCategoryName(category.name || "");
 //         } else {
 //           setCategoryName("Special Offers");
@@ -977,7 +45,8 @@
 //     setLoading(true);
 //     setCategoryLoading(true);
 //     try {
-//       const res = await fetch(`${baseurl}/business/?category_slug=${slug}`);
+//       // const res = await fetch(`${baseurl}/business/?category_slug=${slug}`);
+//       const res = await fetch(`${baseurl}/business/?category_slug=${slug}&verification_status=verified`);
 //       const data = await res.json();
 
 //       const businessesData = data.results || data || [];
@@ -1046,8 +115,25 @@
 //     }
 //   };
 
-//   const handleBusinessClick = (businessId) => {
-//     navigate(`/business/${businessId}`);
+//   // Updated: Now navigates to subcategory page instead of business page
+//   const handleBusinessClick = async (business) => {
+//     // If we already have categoryId from state, use it
+//     if (categoryId) {
+//       navigate(`/w-subcategory/${categoryId}`);
+//     } else {
+//       // Otherwise try to get category ID from business data
+//       try {
+//         // First try to get category from business data
+//         if (business.categories && business.categories.length > 0) {
+//           navigate(`/w-subcategory/${business.categories[0]}`);
+//         } else {
+//           // Fallback to fetching by slug
+//           await handleViewAll();
+//         }
+//       } catch (error) {
+//         console.error("Error navigating:", error);
+//       }
+//     }
 //   };
 
 //   // Return null if no businesses with banners
@@ -1096,16 +182,13 @@
 //             <div 
 //               className="mani-as-offer-card-item" 
 //               key={business.business_id}
-//               onClick={() => handleBusinessClick(business.business_id)}
+//               onClick={() => handleBusinessClick(business)}
 //             >
 //               <div
 //                 className="mani-as-offer-card"
 //                 style={{ backgroundImage: `url(${bannerImage})` }}
 //               >
-//                 {/* Discount Badge - Top Right */}
-//                 {/* <div className="mani-as-offer-discount-badge">
-//                   <span className="mani-as-offer-discount-text">{discount}</span>
-//                 </div> */}
+//                 {/* Discount Badge - Commented out */}
 //               </div>
 //             </div> 
 //           );
@@ -1118,7 +201,11 @@
 // export default GroceryAndKiranamCarousel;
 
 
-//===================================================
+
+//=====================================
+// changes made on Date = 28-03-2026
+
+
 
 import React, { useEffect, useState } from "react";
 // import "./Carousel.css";
@@ -1163,7 +250,7 @@ const GroceryAndKiranamCarousel = ({ categorySlug = "grocery-kirana" }) => {
     setLoading(true);
     setCategoryLoading(true);
     try {
-      const res = await fetch(`${baseurl}/business/?category_slug=${slug}`);
+      const res = await fetch(`${baseurl}/business/?category_slug=${slug}&verification_status=verified`);
       const data = await res.json();
 
       const businessesData = data.results || data || [];
@@ -1232,25 +319,30 @@ const GroceryAndKiranamCarousel = ({ categorySlug = "grocery-kirana" }) => {
     }
   };
 
-  // Updated: Now navigates to subcategory page instead of business page
+  // FIXED: Now navigates to subcategory page with business ID in state
   const handleBusinessClick = async (business) => {
-    // If we already have categoryId from state, use it
-    if (categoryId) {
-      navigate(`/w-subcategory/${categoryId}`);
-    } else {
-      // Otherwise try to get category ID from business data
-      try {
-        // First try to get category from business data
-        if (business.categories && business.categories.length > 0) {
-          navigate(`/w-subcategory/${business.categories[0]}`);
-        } else {
-          // Fallback to fetching by slug
-          await handleViewAll();
-        }
-      } catch (error) {
-        console.error("Error navigating:", error);
-      }
+    console.log("Business clicked:", business);
+    
+    // Get the category ID from the business's categories array or from state
+    const businessCategoryId = business.categories && business.categories.length > 0 
+      ? business.categories[0] 
+      : categoryId;
+    
+    if (!businessCategoryId) {
+      console.error("No category ID found for business");
+      // Fallback to view all
+      await handleViewAll();
+      return;
     }
+    
+    // Navigate to the subcategory page with business information in state
+    navigate(`/w-subcategory/${businessCategoryId}`, {
+      state: {
+        businessId: business.business_id,
+        businessName: business.business_name,
+        categoryId: businessCategoryId
+      }
+    });
   };
 
   // Return null if no businesses with banners
@@ -1291,15 +383,18 @@ const GroceryAndKiranamCarousel = ({ categorySlug = "grocery-kirana" }) => {
         {displayBusinesses.map((business) => {
           const offer = offersMap[business.offer];
           const discountValue = offer?.value || 0;
-          const discount = discountValue > 0 ? `${discountValue}%` : "0%";
-
-          const bannerImage = `${baseurl}${business.banner}`;
+          
+          // Handle both relative and absolute URLs
+          const bannerImage = business.banner?.startsWith('http') 
+            ? business.banner 
+            : `${baseurl}${business.banner}`;
 
           return (
             <div 
               className="mani-as-offer-card-item" 
               key={business.business_id}
               onClick={() => handleBusinessClick(business)}
+              style={{ cursor: 'pointer' }}
             >
               <div
                 className="mani-as-offer-card"
