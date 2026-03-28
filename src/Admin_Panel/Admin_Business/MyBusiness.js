@@ -234,6 +234,76 @@ const getActiveBadge = (isActive) => {
 
 
 
+ const handleVerificationStatusChange = async (businessId, newStatus) => {
+  try {
+    const loadingAlert = Swal.fire({
+      title: 'Updating...',
+      text: 'Please wait while we update the verification status',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // Change from PATCH to PUT
+    const response = await axios.put(
+      `${baseurl}/business/${businessId}/`,
+      {
+        verification_status: newStatus
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${userId}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    Swal.close();
+
+    if (response.status === 200 || response.status === 201) {
+      setBusinesses(prevBusinesses => 
+        prevBusinesses.map(business => 
+          business.business_id === businessId 
+            ? { ...business, verification_status: newStatus }
+            : business
+        )
+      );
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Status Updated!',
+        text: `Verification status changed to ${getVerificationStatusLabel(newStatus)}`,
+        confirmButtonColor: '#3085d6',
+        timer: 2000,
+        timerProgressBar: true
+      });
+    }
+  } catch (error) {
+    console.error('Error updating verification status:', error);
+    
+    Swal.fire({
+      icon: 'error',
+      title: 'Update Failed',
+      text: error.response?.data?.message || 'Failed to update verification status',
+      confirmButtonColor: '#d33',
+    });
+  }
+};
+
+// Helper function to get status label
+const getVerificationStatusLabel = (status) => {
+  const statusLabels = {
+    'pending': 'Pending',
+    'verified': 'Verified',
+    'rejected': 'Rejected',
+    'suspended': 'Suspended'
+  };
+  return statusLabels[status] || status;
+};
+
+
+
   const handleAddNew = () => {
     navigate('/agent-add-business-form');
   };
@@ -426,7 +496,7 @@ const getActiveBadge = (isActive) => {
                       </div>
 
                       {/* Business Details */}
-                      <div className="business-details">
+                      {/* <div className="business-details">
                         <div className="business-info-item">
                           <i className="bi bi-building me-2"></i>
                           <span className="info-label">Type:</span>
@@ -447,19 +517,19 @@ const getActiveBadge = (isActive) => {
                           </span>
                         </div>
 
-                        {/* <div className="business-info-item">
+                        <div className="business-info-item">
                           <i className="bi bi-clock me-2"></i>
                           <span className="info-label">Hours:</span>
                           <span className="info-value">
                             {getWorkingHoursSummary(business.working_hours)}
                           </span>
-                        </div> */}
+                        </div>
 
-                        {/* <div className="business-info-item">
+                        <div className="business-info-item">
                           <i className="bi bi-percent me-2"></i>
                           <span className="info-label">Commission:</span>
                           <span className="info-value">{business.commission_percent}%</span>
-                        </div> */}
+                        </div>
 
                         <div className="business-description">
                           <p className="description-text">
@@ -467,7 +537,63 @@ const getActiveBadge = (isActive) => {
                             {business.description && business.description.length > 100 && '...'}
                           </p>
                         </div>
-                      </div>
+                      </div> */}
+
+                      {/* Business Details */}
+<div className="business-details">
+  <div className="business-info-item">
+    <i className="bi bi-building me-2"></i>
+    <span className="info-label">Type:</span>
+    <span className="info-value">{getBusinessTypeLabel(business.business_type)}</span>
+  </div>
+
+  <div className="business-info-item">
+    <i className="bi bi-geo-alt me-2"></i>
+    <span className="info-label">Location:</span>
+    <span className="info-value">{business.city}, {business.state}</span>
+  </div>
+
+  <div className="business-info-item">
+    <i className="bi bi-tags me-2"></i>
+    <span className="info-label">Categories:</span>
+    <span className="info-value categories-value">
+      {getCategoryNames(business.categories) || 'No categories'}
+    </span>
+  </div>
+
+  {/* Editable Verification Status */}
+  <div className="business-info-item">
+    <i className="bi bi-shield-check me-2"></i>
+    <span className="info-label">Verification Status:</span>
+    <span className="info-value">
+      <select
+        className="verification-status-select"
+        value={business.verification_status}
+        onChange={(e) => handleVerificationStatusChange(business.business_id, e.target.value)}
+        style={{
+          padding: '4px 8px',
+          borderRadius: '4px',
+          border: '1px solid #ddd',
+          backgroundColor: '#fff',
+          fontSize: '0.9rem',
+          cursor: 'pointer'
+        }}
+      >
+        <option value="pending">Pending</option>
+        <option value="verified">Verified</option>
+        <option value="rejected">Rejected</option>
+        <option value="suspended">Suspended</option>
+      </select>
+    </span>
+  </div>
+
+  <div className="business-description">
+    <p className="description-text">
+      {business.description?.substring(0, 100) || 'No description available'}
+      {business.description && business.description.length > 100 && '...'}
+    </p>
+  </div>
+</div>
                     </div>
 
                     {/* Card Footer */}

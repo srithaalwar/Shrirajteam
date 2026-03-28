@@ -7041,155 +7041,341 @@ const ProductForm = ({ onSuccess, onCancel }) => {
   };
 
   // ─── Submit ───────────────────────────────────────────────────────────────────
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!userId) {
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Authentication Error',
+  //       text: 'User ID is required. Please login again.',
+  //       confirmButtonColor: '#273c75',
+  //       confirmButtonText: 'OK'
+  //     });
+  //     return;
+  //   }
+
+  //   if (!validateForm()) return;
+
+  //   setLoading(true);
+
+  //   try {
+  //     const formDataToSend = new FormData();
+
+  //     // ── Product JSON ──────────────────────────────────────────────────────────
+  //     const cleanProduct = {
+  //       business: parseInt(productData.business),
+  //       product_name: productData.product_name,
+  //       description: productData.description || '',
+  //       brand: productData.brand || '',
+  //       model_no: productData.model_no || '',
+  //       category: parseInt(productData.category),
+  //       attributes: productData.attributes,
+  //       has_variants: variants.length > 1 || productData.has_variants,
+  //       // verification_status: 'pending',
+  //       user_id: userId,
+  //       created_by: userId
+  //     };
+
+  //     // ── Variants JSON (no file blobs, only metadata) ──────────────────────────
+  //     const cleanVariants = variants.map((variant) => {
+  //       // Build media metadata array in order
+  //       const mediaArray = (variant.media || []).map((m, mi) => ({
+  //         media_type: m.media_type || 'image',
+  //         sort_order: mi,
+  //         is_primary: m.is_primary || mi === 0
+  //       }));
+
+  //       const variantObj = {
+  //         sku: variant.sku,
+  //         mrp: variant.mrp === '' ? 0 : parseFloat(variant.mrp) || 0,
+  //         selling_price: variant.selling_price === '' || variant.selling_price === null
+  //           ? null
+  //           : parseFloat(variant.selling_price),
+  //         stock: variant.stock === '' ? 0 : parseInt(variant.stock) || 0,
+  //         attributes: variant.attributes,
+  //         cgst_percent: parseFloat(variant.cgst_percent) || 0,
+  //         sgst_percent: parseFloat(variant.sgst_percent) || 0,
+  //         tax_percent: parseFloat(variant.tax_percent) || 0,
+  //         hsn_code: variant.hsn_code || '',
+  //         weight_kg: variant.weight_kg === '' ? null : parseFloat(variant.weight_kg) || null,
+  //         length_cm: variant.length_cm === '' ? null : parseFloat(variant.length_cm) || null,
+  //         width_cm: variant.width_cm === '' ? null : parseFloat(variant.width_cm) || null,
+  //         height_cm: variant.height_cm === '' ? null : parseFloat(variant.height_cm) || null,
+  //         manufacture_date: variant.manufacture_date || null,
+  //         expiry_date: variant.expiry_date || null,
+  //         is_returnable: variant.is_returnable || false,
+  //         return_days: variant.return_days === '' ? 7 : parseInt(variant.return_days) || 7,
+  //         product_commission: variant.product_commission === ''
+  //           ? '0.00'
+  //           : parseFloat(variant.product_commission).toFixed(2),
+  //         media: mediaArray
+  //       };
+
+  //       if (variant.offer_id && variant.offer_id !== '') {
+  //         variantObj.offer_id = parseInt(variant.offer_id);
+  //       }
+
+  //       return variantObj;
+  //     });
+
+  //     formDataToSend.append('product', JSON.stringify(cleanProduct));
+  //     formDataToSend.append('variants', JSON.stringify(cleanVariants));
+
+  //     // ── IMPORTANT: Append files as 'media_files' (plural) ────────────────────
+  //     variantMediaFiles.forEach((filesForVariant) => {
+  //       (filesForVariant || []).forEach((file) => {
+  //         if (file instanceof File) {
+  //           formDataToSend.append('media_files', file);
+  //         }
+  //       });
+  //     });
+
+  //     // Debug log
+  //     console.log('Product:', cleanProduct);
+  //     console.log('Variants:', cleanVariants);
+  //     console.log('Files being sent:');
+  //     for (let pair of formDataToSend.entries()) {
+  //       console.log(pair[0], ':', pair[1] instanceof File ? pair[1].name : pair[1]);
+  //     }
+
+  //     const response = await axios.post(`${baseurl}/products/`, formDataToSend, {
+  //       headers: { 'Content-Type': 'multipart/form-data' }
+  //     });
+
+  //     console.log('Response:', response.data);
+
+  //     await Swal.fire({
+  //       icon: 'success',
+  //       title: 'Product Added Successfully!',
+  //       text: 'Your product has been added and is pending verification.',
+  //       confirmButtonColor: '#273c75',
+  //       confirmButtonText: 'OK'
+  //     });
+
+  //     if (onSuccess) onSuccess(response.data);
+  //     navigate('/agent-my-products');
+
+  //     // Reset form
+  //     setProductData({ business: '', product_name: '', description: '', brand: '', model_no: '', category: '', attributes: {}, has_variants: false });
+  //     setVariants([{ sku: '', mrp: '', selling_price: '', stock: '', attributes: {}, cgst_percent: 0, sgst_percent: 0, tax_percent: 0, hsn_code: '', weight_kg: '', length_cm: '', width_cm: '', height_cm: '', manufacture_date: '', expiry_date: '', is_returnable: true, return_days: 7, product_commission: '', offer_id: '', media: [{ media_type: 'image', sort_order: 0, is_primary: true }] }]);
+  //     setProductAttributes([{ key: '', value: '' }]);
+  //     setVariantAttributes([[{ key: '', value: '' }]]);
+  //     setVariantMediaFiles([[]]);
+  //     setCategories([]);
+
+  //   } catch (error) {
+  //     console.error('Error creating product:', error);
+  //     console.error('Error response:', error.response?.data);
+
+  //     let errorMessage = 'An error occurred while creating the product';
+  //     if (error.response?.data?.error) {
+  //       const msg = error.response.data.error;
+  //       errorMessage = typeof msg === 'string' ? msg : JSON.stringify(msg);
+  //     } else if (error.response?.data) {
+  //       errorMessage = JSON.stringify(error.response.data);
+  //     } else if (error.message) {
+  //       errorMessage = error.message;
+  //     }
+
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Error Creating Product',
+  //       text: errorMessage,
+  //       confirmButtonColor: '#273c75',
+  //       confirmButtonText: 'OK'
+  //     });
+  //     setErrors({ api: errorMessage });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!userId) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Authentication Error',
-        text: 'User ID is required. Please login again.',
-        confirmButtonColor: '#273c75',
-        confirmButtonText: 'OK'
-      });
-      return;
-    }
+  if (!userId) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Authentication Error',
+      text: 'User ID is required. Please login again.',
+      confirmButtonColor: '#273c75',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
 
-    if (!validateForm()) return;
+  if (!validateForm()) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      const formDataToSend = new FormData();
+  try {
+    const formDataToSend = new FormData();
 
-      // ── Product JSON ──────────────────────────────────────────────────────────
-      const cleanProduct = {
-        business: parseInt(productData.business),
-        product_name: productData.product_name,
-        description: productData.description || '',
-        brand: productData.brand || '',
-        model_no: productData.model_no || '',
-        category: parseInt(productData.category),
-        attributes: productData.attributes,
-        has_variants: variants.length > 1 || productData.has_variants,
-        verification_status: 'pending',
-        user_id: userId,
-        created_by: userId
+    // ── Product JSON ──────────────────────────────────────────────────────────
+    const cleanProduct = {
+      business: parseInt(productData.business),
+      product_name: productData.product_name,
+      description: productData.description || '',
+      brand: productData.brand || '',
+      model_no: productData.model_no || '',
+      category: parseInt(productData.category),
+      attributes: productData.attributes,
+      has_variants: variants.length > 1 || productData.has_variants,
+      // Remove verification_status entirely - let backend handle it
+      // DO NOT include verification_status here
+      user_id: userId,
+      created_by: userId
+    };
+
+    // Remove any undefined or null values
+    Object.keys(cleanProduct).forEach(key => {
+      if (cleanProduct[key] === undefined || cleanProduct[key] === null) {
+        delete cleanProduct[key];
+      }
+    });
+
+    // ── Variants JSON (no file blobs, only metadata) ──────────────────────────
+    const cleanVariants = variants.map((variant) => {
+      // Build media metadata array in order
+      const mediaArray = (variant.media || []).map((m, mi) => ({
+        media_type: m.media_type || 'image',
+        sort_order: mi,
+        is_primary: m.is_primary || mi === 0
+      }));
+
+      const variantObj = {
+        sku: variant.sku || undefined,
+        mrp: variant.mrp === '' ? 0 : parseFloat(variant.mrp) || 0,
+        selling_price: variant.selling_price === '' || variant.selling_price === null
+          ? null
+          : parseFloat(variant.selling_price),
+        stock: variant.stock === '' ? 0 : parseInt(variant.stock) || 0,
+        attributes: variant.attributes,
+        cgst_percent: parseFloat(variant.cgst_percent) || 0,
+        sgst_percent: parseFloat(variant.sgst_percent) || 0,
+        tax_percent: parseFloat(variant.tax_percent) || 0,
+        hsn_code: variant.hsn_code || '',
+        weight_kg: variant.weight_kg === '' ? null : parseFloat(variant.weight_kg) || null,
+        length_cm: variant.length_cm === '' ? null : parseFloat(variant.length_cm) || null,
+        width_cm: variant.width_cm === '' ? null : parseFloat(variant.width_cm) || null,
+        height_cm: variant.height_cm === '' ? null : parseFloat(variant.height_cm) || null,
+        manufacture_date: variant.manufacture_date || null,
+        expiry_date: variant.expiry_date || null,
+        is_returnable: variant.is_returnable || false,
+        return_days: variant.return_days === '' ? 7 : parseInt(variant.return_days) || 7,
+        product_commission: variant.product_commission === ''
+          ? '0.00'
+          : parseFloat(variant.product_commission).toFixed(2),
+        media: mediaArray
       };
 
-      // ── Variants JSON (no file blobs, only metadata) ──────────────────────────
-      const cleanVariants = variants.map((variant) => {
-        // Build media metadata array in order
-        const mediaArray = (variant.media || []).map((m, mi) => ({
-          media_type: m.media_type || 'image',
-          sort_order: mi,
-          is_primary: m.is_primary || mi === 0
-        }));
-
-        const variantObj = {
-          sku: variant.sku,
-          mrp: variant.mrp === '' ? 0 : parseFloat(variant.mrp) || 0,
-          selling_price: variant.selling_price === '' || variant.selling_price === null
-            ? null
-            : parseFloat(variant.selling_price),
-          stock: variant.stock === '' ? 0 : parseInt(variant.stock) || 0,
-          attributes: variant.attributes,
-          cgst_percent: parseFloat(variant.cgst_percent) || 0,
-          sgst_percent: parseFloat(variant.sgst_percent) || 0,
-          tax_percent: parseFloat(variant.tax_percent) || 0,
-          hsn_code: variant.hsn_code || '',
-          weight_kg: variant.weight_kg === '' ? null : parseFloat(variant.weight_kg) || null,
-          length_cm: variant.length_cm === '' ? null : parseFloat(variant.length_cm) || null,
-          width_cm: variant.width_cm === '' ? null : parseFloat(variant.width_cm) || null,
-          height_cm: variant.height_cm === '' ? null : parseFloat(variant.height_cm) || null,
-          manufacture_date: variant.manufacture_date || null,
-          expiry_date: variant.expiry_date || null,
-          is_returnable: variant.is_returnable || false,
-          return_days: variant.return_days === '' ? 7 : parseInt(variant.return_days) || 7,
-          product_commission: variant.product_commission === ''
-            ? '0.00'
-            : parseFloat(variant.product_commission).toFixed(2),
-          media: mediaArray
-        };
-
-        if (variant.offer_id && variant.offer_id !== '') {
-          variantObj.offer_id = parseInt(variant.offer_id);
+      // Remove undefined values
+      Object.keys(variantObj).forEach(key => {
+        if (variantObj[key] === undefined) {
+          delete variantObj[key];
         }
-
-        return variantObj;
       });
 
-      formDataToSend.append('product', JSON.stringify(cleanProduct));
-      formDataToSend.append('variants', JSON.stringify(cleanVariants));
-
-      // ── IMPORTANT: Append files as 'media_files' (plural) ────────────────────
-      variantMediaFiles.forEach((filesForVariant) => {
-        (filesForVariant || []).forEach((file) => {
-          if (file instanceof File) {
-            formDataToSend.append('media_files', file);
-          }
-        });
-      });
-
-      // Debug log
-      console.log('Product:', cleanProduct);
-      console.log('Variants:', cleanVariants);
-      console.log('Files being sent:');
-      for (let pair of formDataToSend.entries()) {
-        console.log(pair[0], ':', pair[1] instanceof File ? pair[1].name : pair[1]);
+      if (variant.offer_id && variant.offer_id !== '') {
+        variantObj.offer_id = parseInt(variant.offer_id);
       }
 
-      const response = await axios.post(`${baseurl}/products/`, formDataToSend, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      return variantObj;
+    });
+
+    formDataToSend.append('product', JSON.stringify(cleanProduct));
+    formDataToSend.append('variants', JSON.stringify(cleanVariants));
+
+    // ── IMPORTANT: Append files as 'media_files' (plural) ────────────────────
+    variantMediaFiles.forEach((filesForVariant) => {
+      (filesForVariant || []).forEach((file) => {
+        if (file instanceof File) {
+          formDataToSend.append('media_files', file);
+        }
       });
+    });
 
-      console.log('Response:', response.data);
-
-      await Swal.fire({
-        icon: 'success',
-        title: 'Product Added Successfully!',
-        text: 'Your product has been added and is pending verification.',
-        confirmButtonColor: '#273c75',
-        confirmButtonText: 'OK'
-      });
-
-      if (onSuccess) onSuccess(response.data);
-      navigate('/agent-my-products');
-
-      // Reset form
-      setProductData({ business: '', product_name: '', description: '', brand: '', model_no: '', category: '', attributes: {}, has_variants: false });
-      setVariants([{ sku: '', mrp: '', selling_price: '', stock: '', attributes: {}, cgst_percent: 0, sgst_percent: 0, tax_percent: 0, hsn_code: '', weight_kg: '', length_cm: '', width_cm: '', height_cm: '', manufacture_date: '', expiry_date: '', is_returnable: true, return_days: 7, product_commission: '', offer_id: '', media: [{ media_type: 'image', sort_order: 0, is_primary: true }] }]);
-      setProductAttributes([{ key: '', value: '' }]);
-      setVariantAttributes([[{ key: '', value: '' }]]);
-      setVariantMediaFiles([[]]);
-      setCategories([]);
-
-    } catch (error) {
-      console.error('Error creating product:', error);
-      console.error('Error response:', error.response?.data);
-
-      let errorMessage = 'An error occurred while creating the product';
-      if (error.response?.data?.error) {
-        const msg = error.response.data.error;
-        errorMessage = typeof msg === 'string' ? msg : JSON.stringify(msg);
-      } else if (error.response?.data) {
-        errorMessage = JSON.stringify(error.response.data);
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Error Creating Product',
-        text: errorMessage,
-        confirmButtonColor: '#273c75',
-        confirmButtonText: 'OK'
-      });
-      setErrors({ api: errorMessage });
-    } finally {
-      setLoading(false);
+    // Debug log - check what's being sent
+    console.log('Product being sent (without verification_status):', cleanProduct);
+    console.log('Variants being sent:', cleanVariants);
+    console.log('Files being sent:');
+    for (let pair of formDataToSend.entries()) {
+      console.log(pair[0], ':', pair[1] instanceof File ? pair[1].name : pair[1]);
     }
-  };
+
+    const response = await axios.post(`${baseurl}/products/`, formDataToSend, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+
+    console.log('Response:', response.data);
+
+    await Swal.fire({
+      icon: 'success',
+      title: 'Product Added Successfully!',
+      text: 'Your product has been added and is pending verification.',
+      confirmButtonColor: '#273c75',
+      confirmButtonText: 'OK'
+    });
+
+    if (onSuccess) onSuccess(response.data);
+    navigate('/agent-my-products');
+
+    // Reset form
+    setProductData({ business: '', product_name: '', description: '', brand: '', model_no: '', category: '', attributes: {}, has_variants: false });
+    setVariants([{ sku: '', mrp: '', selling_price: '', stock: '', attributes: {}, cgst_percent: 0, sgst_percent: 0, tax_percent: 0, hsn_code: '', weight_kg: '', length_cm: '', width_cm: '', height_cm: '', manufacture_date: '', expiry_date: '', is_returnable: true, return_days: 7, product_commission: '', offer_id: '', media: [{ media_type: 'image', sort_order: 0, is_primary: true }] }]);
+    setProductAttributes([{ key: '', value: '' }]);
+    setVariantAttributes([[{ key: '', value: '' }]]);
+    setVariantMediaFiles([[]]);
+    setCategories([]);
+
+  } catch (error) {
+    console.error('Error creating product:', error);
+    console.error('Error response:', error.response?.data);
+    console.error('Error response status:', error.response?.status);
+    console.error('Error response headers:', error.response?.headers);
+
+    let errorMessage = 'An error occurred while creating the product';
+    
+    // Better error handling
+    if (error.response?.data) {
+      const errorData = error.response.data;
+      
+      // Handle different error formats
+      if (typeof errorData === 'string') {
+        errorMessage = errorData;
+      } else if (errorData.error) {
+        errorMessage = typeof errorData.error === 'string' ? errorData.error : JSON.stringify(errorData.error);
+      } else if (errorData.detail) {
+        errorMessage = errorData.detail;
+      } else if (errorData.message) {
+        errorMessage = errorData.message;
+      } else {
+        errorMessage = JSON.stringify(errorData, null, 2);
+      }
+      
+      // Check for specific verification_status error
+      if (errorMessage.includes('verification_status')) {
+        errorMessage = 'The product was created successfully but there was an issue with the verification status. Please check with your administrator.';
+      }
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Error Creating Product',
+      text: errorMessage,
+      confirmButtonColor: '#273c75',
+      confirmButtonText: 'OK'
+    });
+    setErrors({ api: errorMessage });
+  } finally {
+    setLoading(false);
+  }
+};
 
   // const handleCancel = () => {
   //   Swal.fire({

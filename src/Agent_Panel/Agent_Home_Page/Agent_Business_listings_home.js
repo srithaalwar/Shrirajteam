@@ -523,7 +523,7 @@ const AgentHome = () => {
       
       // Build URL with exclude_user_id if user ID exists
       if (userId && userId !== null && userId !== "null") {
-        const excludeUrl = `${baseurl}/business/?exclude_user_id=${userId}`;
+        const excludeUrl = `${baseurl}/business/?exclude_user_id=${userId}&verification_status=verified`;
         console.log("Fetching businesses excluding user ID:", userId);
         console.log("Full URL:", excludeUrl);
         

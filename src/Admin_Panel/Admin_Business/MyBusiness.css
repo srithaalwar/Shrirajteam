@@ -557,3 +557,42 @@
     flex: 0 0 100%;
   }
 }
+
+
+.verification-status-select {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.verification-status-select:hover {
+  border-color: #007bff;
+  background-color: #f8f9fa;
+}
+
+.verification-status-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Optional: Add different colors for different statuses in the dropdown option */
+.verification-status-select option[value="pending"] {
+  color: #ffc107;
+}
+
+.verification-status-select option[value="verified"] {
+  color: #28a745;
+}
+
+.verification-status-select option[value="rejected"] {
+  color: #dc3545;
+}
+
+.verification-status-select option[value="suspended"] {
+  color: #6c757d;
+}
