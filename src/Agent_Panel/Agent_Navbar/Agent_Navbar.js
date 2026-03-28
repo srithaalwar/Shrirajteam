@@ -11651,7 +11651,7 @@ const AgentNavbar = () => {
             )}
           </div>
 
-          {/* Operations Dropdown */}
+          {/* Operations Dropdown - Commented out */}
           {/* <div className="wn-header-dropdown" ref={operationsDropdownRef}>
             <button 
               className="wn-header-dropdown-btn"
@@ -11806,138 +11806,21 @@ const AgentNavbar = () => {
               </div>
             )}
           </div>
+
+          {/* Logout Button - Desktop */}
+          <button 
+            className="wn-logout-btn-navbar"
+            onClick={handleLogout}
+            title="Logout"
+          >
+            <FaSignOutAlt size={16} />
+            <span className="wn-logout-text-navbar">Logout</span>
+          </button>
         </div>
       </header>
 
-      {/* Mobile Quick Actions - Bottom Navigation Bar */}
-      <div className="wn-mobile-bottom-nav">
-        <div className="wn-mobile-nav-item" onClick={() => {
-          setOpenRealEstateDropdown(false);
-          setOpenBusinessDropdown(false);
-          setOpenProductsDropdown(false);
-          setOpenOperationsDropdown(false);
-          // Open sidebar or show mobile menu
-          setOpen(true);
-        }}>
-          <FaBars size={20} />
-          <span>Menu</span>
-        </div>
-        
-        <div className="wn-mobile-nav-item" onClick={() => {
-          setOpenRealEstateDropdown(!openRealEstateDropdown);
-          setOpenBusinessDropdown(false);
-          setOpenProductsDropdown(false);
-          setOpenOperationsDropdown(false);
-        }}>
-          <FaBuilding size={20} />
-          <span>Real Estate</span>
-          {openRealEstateDropdown && (
-            <div className="wn-mobile-submenu">
-              {realEstateItems.map((item, idx) => (
-                <Link key={idx} to={item.path} className="wn-mobile-submenu-link" onClick={() => setOpenRealEstateDropdown(false)}>
-                  <span className="wn-mobile-submenu-icon">{item.icon}</span>
-                  <span>{item.name}</span>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-        
-        <div className="wn-mobile-nav-item" onClick={() => {
-          setOpenBusinessDropdown(!openBusinessDropdown);
-          setOpenRealEstateDropdown(false);
-          setOpenProductsDropdown(false);
-          setOpenOperationsDropdown(false);
-        }}>
-          <FaBriefcase size={20} />
-          <span>Business</span>
-          {openBusinessDropdown && (
-            <div className="wn-mobile-submenu">
-              {businessItems.map((item, idx) => {
-                if (item.onClick) {
-                  return (
-                    <a key={idx} href={item.path} className="wn-mobile-submenu-link" onClick={(e) => {
-                      e.preventDefault();
-                      item.onClick(e);
-                      setOpenBusinessDropdown(false);
-                    }}>
-                      <span className="wn-mobile-submenu-icon">{item.icon}</span>
-                      <span>{item.name}</span>
-                      {!hasActiveSubscription && item.requiresSubscription && (
-                        <span className="wn-mobile-badge">Req</span>
-                      )}
-                    </a>
-                  );
-                }
-                return (
-                  <Link key={idx} to={item.path} className="wn-mobile-submenu-link" onClick={() => setOpenBusinessDropdown(false)}>
-                    <span className="wn-mobile-submenu-icon">{item.icon}</span>
-                    <span>{item.name}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-        </div>
-        
-        <div className="wn-mobile-nav-item" onClick={() => {
-          setOpenProductsDropdown(!openProductsDropdown);
-          setOpenRealEstateDropdown(false);
-          setOpenBusinessDropdown(false);
-          setOpenOperationsDropdown(false);
-        }}>
-          <FaLayerGroup size={20} />
-          <span>Products</span>
-          {openProductsDropdown && (
-            <div className="wn-mobile-submenu">
-              {productsItems.map((item, idx) => {
-                if (item.onClick) {
-                  return (
-                    <a key={idx} href={item.path} className="wn-mobile-submenu-link" onClick={(e) => {
-                      e.preventDefault();
-                      item.onClick(e);
-                      setOpenProductsDropdown(false);
-                    }}>
-                      <span className="wn-mobile-submenu-icon">{item.icon}</span>
-                      <span>{item.name}</span>
-                      {!hasActiveSubscription && item.requiresSubscription && (
-                        <span className="wn-mobile-badge">Req</span>
-                      )}
-                    </a>
-                  );
-                }
-                return (
-                  <Link key={idx} to={item.path} className="wn-mobile-submenu-link" onClick={() => setOpenProductsDropdown(false)}>
-                    <span className="wn-mobile-submenu-icon">{item.icon}</span>
-                    <span>{item.name}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-          {cartItemCount > 0 && <span className="wn-mobile-badge-cart">{cartItemCount}</span>}
-        </div>
-        
-        <div className="wn-mobile-nav-item" onClick={() => {
-          setOpenOperationsDropdown(!openOperationsDropdown);
-          setOpenRealEstateDropdown(false);
-          setOpenBusinessDropdown(false);
-          setOpenProductsDropdown(false);
-        }}>
-          <FaCogs size={20} />
-          <span>Operations</span>
-          {openOperationsDropdown && (
-            <div className="wn-mobile-submenu">
-              {operationsItems.map((item, idx) => (
-                <Link key={idx} to={item.path} className="wn-mobile-submenu-link" onClick={() => setOpenOperationsDropdown(false)}>
-                  <span className="wn-mobile-submenu-icon">{item.icon}</span>
-                  <span>{item.name}</span>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      {/* Mobile Logout Button - Fixed at bottom of sidebar only (removed from navbar) */}
+      {/* The logout button in sidebar will serve as the mobile logout option */}
 
       {/* OVERLAY */}
       {open && <div className="wn-overlay" onClick={() => setOpen(false)} />}
@@ -11990,7 +11873,7 @@ const AgentNavbar = () => {
           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
         </div>
 
-        {/* Subscription Status and Refer Button Section - NEW */}
+        {/* Subscription Status and Refer Button Section */}
         <div className="wn-sidebar-status-section">
           {/* Subscription Status */}
           <div className="wn-sidebar-subscription-status">
@@ -12100,7 +11983,7 @@ const AgentNavbar = () => {
 
         <div className="wn-divider" />
 
-        {/* Logout Button */}
+        {/* Logout Button - Mobile (in sidebar) */}
         <div className="wn-logout-section">
           <button 
             className="wn-logout-btn"
