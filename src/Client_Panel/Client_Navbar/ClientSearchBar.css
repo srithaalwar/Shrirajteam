@@ -1,0 +1,332 @@
+/* ClientSearchBar.css - Updated with wider search field */
+
+.wn-search-container {
+  position: relative;
+  flex: 1;
+  max-width: 800px; /* Increased from 600px to 800px */
+  margin: 0 20px;
+  width: 100%; /* Added to ensure it takes available space */
+}
+
+.wn-search-form {
+  display: flex;
+  align-items: center;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  transition: all 0.2s ease;
+  width: 100%; /* Ensure form takes full width */
+}
+
+.wn-search-form:focus-within {
+  border-color: #febd69;
+  box-shadow: 0 0 0 3px rgba(254, 189, 105, 0.2);
+}
+
+.wn-search-input {
+  flex: 1;
+  padding: 12px 16px; /* Increased padding from 10px to 12px */
+  border: none;
+  outline: none;
+  font-size: 15px; /* Increased font size from 14px to 15px */
+  background: white;
+  min-width: 0; /* Important for flex shrinking */
+}
+
+.wn-search-input::placeholder {
+  color: #999;
+  font-size: 14px;
+}
+
+.wn-search-btn {
+  padding: 12px 24px; /* Increased padding from 10px to 12px */
+  background: #febd69;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.wn-search-btn:hover {
+  background: #f3a847;
+}
+
+.wn-search-btn svg {
+  color: #333;
+  font-size: 18px; /* Increased icon size from 16px to 18px */
+}
+
+/* Search Results Dropdown */
+.wn-search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 4px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  animation: slideDown 0.2s ease;
+}
+
+.wn-search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.wn-search-result-item:last-child {
+  border-bottom: none;
+}
+
+.wn-search-result-item:hover {
+  background: #f8f9fa;
+  transform: translateX(4px);
+}
+
+.wn-result-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #273c75;
+  flex-shrink: 0;
+  font-size: 24px;
+  overflow: hidden;
+}
+
+.wn-result-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wn-result-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.wn-result-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wn-result-type {
+  font-size: 11px;
+  color: #666;
+  text-transform: capitalize;
+  background: #f0f0f0;
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.wn-result-price {
+  font-size: 13px;
+  color: #e47911;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.wn-search-loading {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.wn-loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #febd69;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.wn-search-no-results {
+  padding: 30px 20px;
+  text-align: center;
+  color: #666;
+}
+
+.wn-no-results-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.wn-no-results-suggestion {
+  font-size: 12px;
+  color: #999;
+  margin-top: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Desktop Styles - Make search bar wider */
+@media (min-width: 769px) {
+  .wn-search-container {
+    max-width: 700px; /* Increased for tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  .wn-search-container {
+    max-width: 900px; /* Even wider for larger desktops */
+  }
+}
+
+@media (min-width: 1440px) {
+  .wn-search-container {
+    max-width: 1000px; /* Maximum width for very large screens */
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .wn-desktop-search {
+    display: none;
+  }
+  
+  .wn-mobile-search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+  }
+  
+  .wn-mobile-search-btn:hover {
+    color: #273c75;
+  }
+  
+  .wn-mobile-search-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .wn-mobile-search-content {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    margin: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    animation: slideDown 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .wn-mobile-search-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #e9ecef;
+    background: #f8f9fa;
+  }
+  
+  .wn-mobile-search-header h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .wn-mobile-search-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+  
+  .wn-mobile-search-close:hover {
+    background: #e9ecef;
+    color: #333;
+  }
+  
+  .wn-mobile-search-content .wn-search-container {
+    margin: 16px;
+    max-width: none;
+    width: calc(100% - 32px);
+  }
+  
+  .wn-mobile-search-content .wn-search-form {
+    width: 100%;
+  }
+}
+
+@media (min-width: 769px) {
+  .wn-mobile-search-btn {
+    display: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

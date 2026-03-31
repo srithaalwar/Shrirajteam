@@ -10609,7 +10609,8 @@ import axios from "axios";
 import { baseurl } from "../../BaseURL/BaseURL";
 import Swal from "sweetalert2";
 import { useLocation } from "react-router-dom";
-
+import AgentSearchBar from './AgentSearchBar';
+import { FaSearch } from 'react-icons/fa';
 // Import FontAwesome icons
 import { 
   FaTachometerAlt, 
@@ -11598,6 +11599,8 @@ const AgentNavbar = () => {
             />
           </div>
         </div>
+          <AgentSearchBar placeholder="Search products, businesses..." />
+
         
         {/* Header Dropdown Menus - Desktop */}
         <div className="wn-header-dropdowns">

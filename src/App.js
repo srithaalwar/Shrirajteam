@@ -363,6 +363,8 @@ import ViewBusiness from "./Agent_Panel/AgentBusiness/BusinessDetailView";
 import AdminViewBusiness from "./Admin_Panel/AdminBusiness/AdminViewBusiness"
 import AgentAddressPage from "./Agent_Panel/Agent_AddToCart/Agentaddresspage"
 import ClientAddressPageRoute from "./Client_Panel/Client_AddToCart/ClientAddressPageRoute"
+import AgentSearchResults from './Agent_Panel/Agent_Navbar/AgentSearchResults';
+import ClientSearchResults from './Client_Panel/Client_Navbar/ClientSearchResults';
 
 function App() {
   return (
@@ -597,6 +599,7 @@ function App() {
 
           <Route path="/agent-add-to-cart" element={<AgentAddToCart />} />
            <Route path="/agent-addresses" element={<AgentAddressPage />} />
+        <Route path="/agent-search-results" element={<AgentSearchResults />} />
          <Route path="/agent-wishlist" element={<AgentWishlist />} />
         <Route path="/agent-transactions" element={<AgentTransactions />} />
 
@@ -607,6 +610,7 @@ function App() {
         <Route path="/client-add-property-form" element={<ClientAddPropertyForm />} />
         <Route path="/client-Properties" element={<ClientProperties />} />
         <Route path="/client-properties-details/:propertyId" element={<ClientPropertiesDeatils />} />
+<Route path="/client-search-results" element={<ClientSearchResults />} />
 
 
         <Route path="/client-my-properties" element={<ClientMyProperty />} />

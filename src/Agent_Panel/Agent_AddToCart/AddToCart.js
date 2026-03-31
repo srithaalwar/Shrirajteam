@@ -12108,26 +12108,48 @@ function AgentCart() {
   const userId = localStorage.getItem("user_id");
 
   // Fetch cart items
-  const fetchCartItems = async () => {
-    if (!userId) { setLoading(false); setCartItems([]); return; }
-    try {
-      setLoading(true);
-      const response = await axios.get(`${baseurl}/cart/?user=${userId}`, { timeout: 10000 });
-      const cartResponse = response.data;
-      let userCartItems = [];
-      if (cartResponse.results && Array.isArray(cartResponse.results)) {
-        userCartItems = cartResponse.results;
-      } else if (Array.isArray(cartResponse)) {
-        userCartItems = cartResponse;
-      }
-      setCartItems(userCartItems);
-    } catch (error) {
-      showSnackbar("Error loading cart data", "error");
-      setCartItems([]);
-    } finally {
-      setLoading(false);
+ // Replace the fetchCartItems function
+const fetchCartItems = async () => {
+  if (!userId) { setLoading(false); setCartItems([]); return; }
+  try {
+    setLoading(true);
+    const response = await axios.get(`${baseurl}/cart/?user=${userId}`, { timeout: 10000 });
+    const cartResponse = response.data;
+    let userCartItems = [];
+    
+    if (cartResponse.results && Array.isArray(cartResponse.results)) {
+      userCartItems = cartResponse.results;
+    } else if (Array.isArray(cartResponse)) {
+      userCartItems = cartResponse;
     }
-  };
+    
+    // Fetch product details for each cart item if needed
+    const enhancedCartItems = await Promise.all(userCartItems.map(async (item) => {
+      if (item.variant && item.variant_details && !item.product_details) {
+        try {
+          // Fetch product details using variant's product_id
+          const productResponse = await axios.get(`${baseurl}/products/${item.variant_details.product}/`);
+          return {
+            ...item,
+            product_details: productResponse.data
+          };
+        } catch (err) {
+          console.error("Error fetching product details:", err);
+          return item;
+        }
+      }
+      return item;
+    }));
+    
+    setCartItems(enhancedCartItems);
+  } catch (error) {
+    console.error("Error loading cart data:", error);
+    showSnackbar("Error loading cart data", "error");
+    setCartItems([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Clear cart after payment
   const clearCartAfterPayment = async () => {
@@ -12325,74 +12347,101 @@ function AgentCart() {
 
   const calculateTotal = () => calculateSubtotal() + calculateTax();
 
-  // Checkout - UPDATED with correct payload structure
-  const handleCheckout = async () => {
-    if (cartItems.length === 0) { 
-      showSnackbar("Your cart is empty", "warning"); 
-      return; 
+// Replace the handleCheckout function (around line 200-250)
+const handleCheckout = async () => {
+  if (cartItems.length === 0) { 
+    showSnackbar("Your cart is empty", "warning"); 
+    return; 
+  }
+  if (!userId) { 
+    showSnackbar("Please login to proceed", "warning"); 
+    return; 
+  }
+
+  // Validate addresses
+  if (!selectedShippingAddress) {
+    showSnackbar("Please select a delivery address", "error");
+    return;
+  }
+
+  setPaymentLoading(true);
+  try {
+    // Prepare payload according to your API specification
+    const paymentPayload = {
+      user_id: parseInt(userId),
+      payment_method: paymentMethod,
+      user_address_id: selectedShippingAddress.id
+    };
+
+    // Add redirect_url only for online payment
+    if (paymentMethod === "online") {
+      paymentPayload.redirect_url = `${redirecturl}/agent-add-to-cart`;
     }
-    if (!userId) { 
-      showSnackbar("Please login to proceed", "warning"); 
-      return; 
-    }
 
-    // Validate addresses
-    if (!selectedShippingAddress) {
-      showSnackbar("Please select a delivery address", "error");
-      return;
-    }
+    console.log("Payment Payload:", paymentPayload);
 
-    setPaymentLoading(true);
-    try {
-      // Prepare payload according to your API specification
-      const paymentPayload = {
-        user_id: parseInt(userId),
-        payment_method: paymentMethod,
-        user_address_id: selectedShippingAddress.id  // Using the address ID from selected address
-      };
+    const paymentResponse = await axios.post(
+      `${baseurl}/product/initiate-payment/`,
+      paymentPayload,
+      { headers: { 'Content-Type': 'application/json' }, timeout: 15000 }
+    );
 
-      // Add redirect_url only for online payment
-      if (paymentMethod === "online") {
-        paymentPayload.redirect_url = `${redirecturl}/agent-add-to-cart`;
-      }
-
-      console.log("Payment Payload:", paymentPayload); // For debugging
-
-      const paymentResponse = await axios.post(
-        `${baseurl}/product/initiate-payment/`,
-        paymentPayload,
-        { headers: { 'Content-Type': 'application/json' }, timeout: 15000 }
-      );
-
-      if (paymentMethod === "online") {
-        if (paymentResponse.data?.payment_url) {
-          localStorage.setItem('merchant_order_id', paymentResponse.data.merchant_order_id);
-          localStorage.setItem('order_id', paymentResponse.data.order_id);
-          paymentVerifiedRef.current = false;
-          setPaymentVerified(false);
-          window.location.href = paymentResponse.data.payment_url;
-        } else {
-          showSnackbar("Payment initialization failed", "error");
-        }
+    if (paymentMethod === "online") {
+      if (paymentResponse.data?.payment_url) {
+        localStorage.setItem('merchant_order_id', paymentResponse.data.merchant_order_id);
+        localStorage.setItem('order_id', paymentResponse.data.order_id);
+        paymentVerifiedRef.current = false;
+        setPaymentVerified(false);
+        window.location.href = paymentResponse.data.payment_url;
       } else {
-        // COD payment
-        showSnackbar("Order placed successfully with COD!", "success");
-        await clearCartAfterPayment();
-        setPaymentSuccessInfo({
-          order_id: paymentResponse.data.order_id,
-          amount: calculateTotal(),
-          message: "Your order has been placed successfully with Cash on Delivery",
-          timestamp: new Date().toLocaleString()
-        });
-        setPaymentSuccessOpen(true);
+        showSnackbar(paymentResponse.data?.message || "Payment initialization failed", "error");
       }
-    } catch (error) {
-      console.error("Checkout error:", error);
-      showSnackbar(error.response?.data?.message || "Failed to initiate payment", "error");
-    } finally {
-      setPaymentLoading(false);
+    } else {
+      // COD payment
+      showSnackbar("Order placed successfully with COD!", "success");
+      await clearCartAfterPayment();
+      setPaymentSuccessInfo({
+        order_id: paymentResponse.data.order_id,
+        amount: calculateTotal(),
+        message: paymentResponse.data?.message || "Your order has been placed successfully with Cash on Delivery",
+        timestamp: new Date().toLocaleString()
+      });
+      setPaymentSuccessOpen(true);
     }
-  };
+  } catch (error) {
+    console.error("Checkout error:", error);
+    
+    // Extract error message from response
+    let errorMessage = "Failed to initiate payment";
+    
+    if (error.response) {
+      // Server responded with error
+      const errorData = error.response.data;
+      errorMessage = errorData.message || errorData.error || errorData.detail;
+      
+      // Handle specific error cases
+      if (errorMessage && errorMessage.includes("Minimum order value")) {
+        showSnackbar(errorMessage, "error");
+      } else if (errorMessage && errorMessage.includes("stock")) {
+        showSnackbar(errorMessage, "error");
+      } else if (errorMessage && errorMessage.includes("address")) {
+        showSnackbar(errorMessage, "error");
+      } else {
+        showSnackbar(errorMessage, "error");
+      }
+    } else if (error.request) {
+      // Request was made but no response
+      errorMessage = "Network error. Please check your connection.";
+      showSnackbar(errorMessage, "error");
+    } else {
+      // Something else happened
+      errorMessage = error.message || "Failed to initiate payment";
+      showSnackbar(errorMessage, "error");
+    }
+  } finally {
+    setPaymentLoading(false);
+  }
+};
 
   const showSnackbar = (message, severity) => {
     setSnackbarMessage(message);
@@ -12591,89 +12640,95 @@ function AgentCart() {
                 <h3>Cart Items ({cartItems.length})</h3>
               </div>
               <div className="cart-items-list scrollable-list">
-                {cartItems.map((item) => {
-                  const variant = item.variant_details;
-                  const mrp = parseFloat(variant.mrp || 0);
-                  const price = parseFloat(variant.selling_price || 0);
-                  const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
-                  const attributes = variant.attributes || {};
-                  const displayAttributes = Object.entries(attributes)
-                    .map(([key, value]) => `${key.replace(/_/g, ' ')}: ${value}`).join(', ');
+           
+{cartItems.map((item) => {
+  const variant = item.variant_details;
+  const product = item.product_details || {}; // Get product details
+  const mrp = parseFloat(variant.mrp || 0);
+  const price = parseFloat(variant.selling_price || 0);
+  const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+  const attributes = variant.attributes || {};
+  const displayAttributes = Object.entries(attributes)
+    .map(([key, value]) => `${key.replace(/_/g, ' ')}: ${value}`).join(', ');
+  
+  // Get product name - either from product_details or variant
+  const productName = product.product_name || variant.sku || "Product";
 
-                  return (
-                    <div key={item.id} className="cart-item-card compact">
-                      <div className="cart-item-image">
-                        <img
-                          src={getProductImage(item)}
-                          alt={variant.sku}
-                          onError={(e) => {
-                            e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400";
-                          }}
-                        />
-                      </div>
-                      <div className="cart-item-details">
-                        <div className="item-header">
-                          <h6 className="item-title">{variant.sku}</h6>
-                          <button
-                            className="btn btn-danger btn-sm remove-btn"
-                            onClick={() => handleRemoveItem(item.id)}
-                            disabled={removingItem === item.id}
-                          >
-                            {removingItem === item.id
-                              ? <span className="spinner-border spinner-border-sm" role="status"></span>
-                              : <FaTrash />}
-                          </button>
-                        </div>
-                        {displayAttributes && (
-                          <p className="item-attributes text-muted small">{displayAttributes}</p>
-                        )}
-                        <div className="item-pricing">
-                          <div className="price-display">
-                            <span className="current-price">₹{price.toFixed(2)}</span>
-                            {discount > 0 && (
-                              <>
-                                <span className="original-price">₹{mrp.toFixed(2)}</span>
-                                <span className="discount-badge">{discount}% OFF</span>
-                              </>
-                            )}
-                          </div>
-                          <div className="item-stock">
-                            <span className={`stock-badge ${variant.stock > 10 ? 'in-stock' : 'low-stock'}`}>
-                              {variant.stock > 10 ? 'In Stock' : `Only ${variant.stock} left`}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="item-quantity">
-                          <div className="quantity-controls">
-                            <button
-                              className="quantity-btn"
-                              onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                              disabled={item.quantity <= 1 || updatingItem === item.id}
-                            >
-                              <FaMinus />
-                            </button>
-                            <span className="quantity-display">
-                              {updatingItem === item.id
-                                ? <span className="spinner-border spinner-border-sm" role="status"></span>
-                                : item.quantity}
-                            </span>
-                            <button
-                              className="quantity-btn"
-                              onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                              disabled={item.quantity >= variant.stock || updatingItem === item.id}
-                            >
-                              <FaPlus />
-                            </button>
-                          </div>
-                          <div className="item-subtotal">
-                            <span className="subtotal-label">Subtotal:</span>
-                            <span className="subtotal-amount">₹{item.subtotal.toFixed(2)}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+  return (
+    <div key={item.id} className="cart-item-card compact">
+      <div className="cart-item-image">
+        <img
+          src={getProductImage(item)}
+          alt={productName}
+          onError={(e) => {
+            e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400";
+          }}
+        />
+      </div>
+      <div className="cart-item-details">
+        <div className="item-header">
+          <h6 className="item-title">{productName}</h6> {/* Display product name instead of SKU */}
+          <button
+            className="btn btn-danger btn-sm remove-btn"
+            onClick={() => handleRemoveItem(item.id)}
+            disabled={removingItem === item.id}
+          >
+            {removingItem === item.id
+              ? <span className="spinner-border spinner-border-sm" role="status"></span>
+              : <FaTrash />}
+          </button>
+        </div>
+        {displayAttributes && (
+          <p className="item-attributes text-muted small">{displayAttributes}</p>
+        )}
+        {/* Rest of the component remains the same */}
+        <div className="item-pricing">
+          <div className="price-display">
+            <span className="current-price">₹{price.toFixed(2)}</span>
+            {discount > 0 && (
+              <>
+                <span className="original-price">₹{mrp.toFixed(2)}</span>
+                <span className="discount-badge">{discount}% OFF</span>
+              </>
+            )}
+          </div>
+          <div className="item-stock">
+            <span className={`stock-badge ${variant.stock > 10 ? 'in-stock' : 'low-stock'}`}>
+              {variant.stock > 10 ? 'In Stock' : `Only ${variant.stock} left`}
+            </span>
+          </div>
+        </div>
+        <div className="item-quantity">
+          <div className="quantity-controls">
+            <button
+              className="quantity-btn"
+              onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+              disabled={item.quantity <= 1 || updatingItem === item.id}
+            >
+              <FaMinus />
+            </button>
+            <span className="quantity-display">
+              {updatingItem === item.id
+                ? <span className="spinner-border spinner-border-sm" role="status"></span>
+                : item.quantity}
+            </span>
+            <button
+              className="quantity-btn"
+              onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+              disabled={item.quantity >= variant.stock || updatingItem === item.id}
+            >
+              <FaPlus />
+            </button>
+          </div>
+          <div className="item-subtotal">
+            <span className="subtotal-label">Subtotal:</span>
+            <span className="subtotal-amount">₹{item.subtotal.toFixed(2)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+})}
               </div>
             </div>
 

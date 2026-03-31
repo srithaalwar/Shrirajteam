@@ -1292,3 +1292,70 @@
     margin-left: 2px;
   }
 }
+
+
+/* Add or update these styles in Client_Navbar.css */
+
+/* Navbar layout */
+/* .wn-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  gap: 20px;
+} */
+
+.wn-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.wn-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+/* Make desktop search take available space */
+.wn-desktop-search {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0; /* Important for flex to work properly */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wn-navbar {
+    padding: 8px 12px;
+    gap: 10px;
+  }
+  
+  .wn-nav-left {
+    gap: 10px;
+  }
+  
+  .wn-nav-right {
+    gap: 8px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .wn-desktop-search {
+    flex: 2;
+  }
+}
+
+@media (min-width: 1025px) {
+  .wn-desktop-search {
+    flex: 3;
+  }
+}
