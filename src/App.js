@@ -359,7 +359,10 @@ import CommissionLedger from "./Agent_Panel/AgentDashboard/CommissionLedger"
 import AgentHomeSubCategories from './Agent_Panel/Agent_Home_Page/SubCategories'
 import AgentDashboardPropertyDetails from './Agent_Panel/AgentDashboard/PropertyDetails'
 import AgentMyBusinessProductsDetails from "./Agent_Panel/AgentMyBusinessProducts/AgentMyProducts"
-
+import ViewBusiness from "./Agent_Panel/AgentBusiness/BusinessDetailView";
+import AdminViewBusiness from "./Admin_Panel/AdminBusiness/AdminViewBusiness"
+import AgentAddressPage from "./Agent_Panel/Agent_AddToCart/Agentaddresspage"
+import ClientAddressPageRoute from "./Client_Panel/Client_AddToCart/ClientAddressPageRoute"
 
 function App() {
   return (
@@ -494,7 +497,8 @@ function App() {
         <Route path="/admin-edit-commissionmaster/:id" element={<EditCommissionLevels />} />
         <Route path="/admin-business" element={<AdminBusiness />} />
          <Route path="/admin-edit-business/:id" element={<AdminAddBusinessForm mode="edit" />} />
-        <Route path="/admin-view-business/:id" element={<AdminAddBusinessForm mode="view" />} />
+        {/* <Route path="/admin-view-business/:id" element={<AdminAddBusinessForm mode="view" />} /> */}
+        <Route path="/admin-view-business/:id" element={<AdminViewBusiness />} /> 
         <Route path="/admin-my-products" element={<AdminBusinessProductsDetails />} />
         <Route path="/admin-business-product-details/:productId" element={<AdminBusinessProductDetails />} />
 
@@ -564,7 +568,9 @@ function App() {
         <Route path="/businesses" element={<BusinessList />} />
         <Route path="/add-business" element={<AddBusinessForm mode="add" />} />
         <Route path="/edit-business/:id" element={<AddBusinessForm mode="edit" />} />
-        <Route path="/view-business/:id" element={<AddBusinessForm mode="view" />} />
+        {/* <Route path="/view-business/:id" element={<AddBusinessForm mode="view" />} /> */}
+        <Route path="/view-business/:id" element={<ViewBusiness />} />
+
         <Route path="/agent-busineess-category" element={<AgentbusinessCategory />} />
         <Route path="/agent-subcategory/:id" element={<AgentSubCategory />} />
         <Route path="/agent-business-product-details/:productId" element={<AgentProductDetails />} />
@@ -590,6 +596,7 @@ function App() {
           <Route path="/p-meetingrequest" element={<MeetingRequestForm />} />
 
           <Route path="/agent-add-to-cart" element={<AgentAddToCart />} />
+           <Route path="/agent-addresses" element={<AgentAddressPage />} />
          <Route path="/agent-wishlist" element={<AgentWishlist />} />
         <Route path="/agent-transactions" element={<AgentTransactions />} />
 
@@ -618,6 +625,7 @@ function App() {
         <Route path="/client-meetings" element={<ClientMeetings />} />
         <Route path="/client-meetingrequest" element={<ClientMeetingRequestForm />} />
           <Route path="/client-add-to-cart" element={<ClientAddToCart />} />
+          <Route path="/client-addresses" element={<ClientAddressPageRoute />} />
          <Route path="/client-wishlist" element={<ClientWishlist />} />
         <Route path="/client-transactions" element={<ClientTransactions />} />
         <Route path="/client-my-plans" element={<ClientPlans />} />

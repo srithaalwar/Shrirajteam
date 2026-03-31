@@ -1,0 +1,282 @@
+/* =============================================
+   Address Manager - Amazon-style CSS
+   ============================================= */
+
+/* ---- Selected Address Box (shown in cart) ---- */
+.am-selected-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  margin-bottom: 12px;
+}
+.am-selected-box:hover {
+  border-color: #f90;
+  box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.15);
+}
+.am-selected-icon { color: #f90; font-size: 18px; margin-top: 2px; flex-shrink: 0; }
+.am-selected-info { flex: 1; min-width: 0; }
+.am-selected-name {
+  font-weight: 600; font-size: 0.875rem; color: #111;
+  display: flex; align-items: center; gap: 8px;
+}
+.am-no-address { color: #0066c0; }
+.am-selected-addr {
+  font-size: 0.78rem; color: #555; margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.am-selected-phone { font-size: 0.75rem; color: #666; margin-top: 2px; }
+.am-default-badge {
+  font-size: 0.68rem; color: #007600; background: #e7f4e4;
+  padding: 2px 6px; border-radius: 3px; font-weight: 500;
+}
+.am-change-btn {
+  background: none; border: 1px solid #999;
+  padding: 4px 12px; border-radius: 4px;
+  font-size: 0.78rem; color: #333; cursor: pointer;
+  white-space: nowrap; transition: background 0.15s; flex-shrink: 0;
+}
+.am-change-btn:hover { background: #f7f7f7; border-color: #555; }
+
+/* ---- Form inputs (shared between modal + page) ---- */
+.am-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.am-form-group { display: flex; flex-direction: column; gap: 5px; }
+.am-form-group.full { grid-column: 1 / -1; }
+.am-form-group label {
+  font-size: 0.82rem; font-weight: 600; color: #333;
+  display: flex; align-items: center;
+}
+.am-input {
+  border: 1px solid #a6a6a6; border-radius: 4px;
+  padding: 8px 10px; font-size: 0.875rem; color: #111;
+  outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+  background: #fff; width: 100%; box-sizing: border-box;
+}
+.am-input:focus { border-color: #e77600; box-shadow: 0 0 0 3px rgba(231,118,0,.25); }
+.am-input.am-error { border-color: #c0392b; }
+.am-input:disabled { background: #f5f5f5; color: #aaa; cursor: not-allowed; }
+.am-err-msg { font-size: 0.72rem; color: #c0392b; margin-top: 2px; }
+.am-checkbox-group { margin-top: 4px; }
+.am-checkbox-label {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  font-size: 0.875rem; color: #333; font-weight: normal !important;
+}
+.am-checkbox-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: #f90; cursor: pointer; }
+.am-form-actions { display: flex; gap: 12px; margin-top: 20px; }
+.am-save-btn {
+  padding: 9px 22px;
+  background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+  border: 1px solid #a88734; border-radius: 4px;
+  font-size: 0.875rem; font-weight: 600; color: #111; cursor: pointer;
+  transition: background 0.15s;
+}
+.am-save-btn:hover:not(:disabled) { background: linear-gradient(to bottom, #f5d78e, #eeb933); }
+.am-save-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+.am-cancel-btn {
+  padding: 9px 22px; background: #fff; border: 1px solid #a6a6a6;
+  border-radius: 4px; font-size: 0.875rem; color: #333; cursor: pointer;
+  transition: background 0.15s;
+}
+.am-cancel-btn:hover { background: #f7f7f7; }
+
+/* Section header inside order summary */
+.am-section-header { display: flex; align-items: center; margin-bottom: 8px; }
+.am-section-header h6 { font-size: 0.875rem; font-weight: 600; color: #333; }
+
+/* =============================================
+   Address PAGE  (Amazon "Your Addresses" style)
+   ============================================= */
+.ap-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+  font-family: "Amazon Ember", Arial, sans-serif;
+}
+
+/* Back button header */
+.ap-back-header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid #d5d9d9;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 0.875rem;
+  color: #0f1111;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background 0.15s, border-color 0.2s, box-shadow 0.2s;
+}
+.ap-back-header-btn:hover {
+  background: #f7f7f7;
+  border-color: #a88734;
+  box-shadow: 0 0 0 2px rgba(168,135,52,0.15);
+}
+.ap-back-icon {
+  font-size: 0.78rem;
+  color: #555;
+}
+
+.ap-title {
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: #0f1111;
+  margin: 0 0 20px;
+}
+
+.ap-loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+.ap-loading p { margin-top: 12px; }
+
+/* Address card grid */
+.ap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+/* "Add address" card */
+.ap-add-card {
+  border: 2px dashed #adb5bd;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: #fafafa;
+  gap: 10px;
+}
+.ap-add-card:hover {
+  border-color: #f90;
+  background: #fffbf2;
+}
+.ap-add-icon {
+  width: 48px; height: 48px;
+  border: 2px dashed #adb5bd;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s;
+}
+.ap-add-card:hover .ap-add-icon { border-color: #f90; }
+.ap-plus { font-size: 1.6rem; color: #adb5bd; line-height: 1; transition: color 0.2s; }
+.ap-add-card:hover .ap-plus { color: #f90; }
+.ap-add-label { font-size: 0.9rem; color: #333; font-weight: 500; }
+
+/* Address card */
+.ap-addr-card {
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  padding: 18px 18px 14px;
+  background: #fff;
+  position: relative;
+  transition: box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 180px;
+}
+.ap-addr-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+/* Highlighted default card */
+.ap-default-card {
+  border-color: #e77600;
+  box-shadow: 0 0 0 2px rgba(231,118,0,0.15);
+}
+
+.ap-default-label {
+  font-size: 0.78rem;
+  color: #555;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.ap-default-brand {
+  color: #c45500;
+  font-style: italic;
+  font-weight: 700;
+}
+
+.ap-addr-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #0f1111;
+}
+
+.ap-addr-body {
+  font-size: 0.85rem;
+  color: #333;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.ap-addr-phone {
+  font-size: 0.82rem;
+  color: #333;
+  margin-top: 2px;
+}
+
+/* Edit | Remove | Set as Default links */
+.ap-addr-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.ap-action-btn {
+  background: none;
+  border: none;
+  color: #0066c0;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+.ap-action-btn:hover { color: #c45500; text-decoration: underline; }
+.ap-action-btn:disabled { color: #999; cursor: not-allowed; text-decoration: none; }
+.ap-action-sep { color: #bbb; font-size: 0.78rem; }
+
+/* ---- Add / Edit form page ---- */
+.ap-form-page { max-width: 560px; }
+
+.ap-back-btn {
+  display: inline-flex; align-items: center;
+  background: none; border: none;
+  color: #0066c0; font-size: 0.875rem;
+  cursor: pointer; padding: 0;
+  margin-bottom: 16px;
+  transition: color 0.15s;
+}
+.ap-back-btn:hover { color: #c45500; text-decoration: underline; }
+
+.ap-form-title {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: #0f1111;
+  margin: 0 0 16px;
+}
+
+.ap-form-card {
+  background: #fff;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .ap-grid { grid-template-columns: 1fr; }
+  .am-form-grid { grid-template-columns: 1fr; }
+  .am-form-group.full { grid-column: auto; }
+}

@@ -621,7 +621,7 @@ GRAND TOTAL: ₹${(parseFloat(order.total_amount) || 0).toFixed(2)}
                 </div>
               </div>
               
-              <div className="summary-card">
+              {/* <div className="summary-card">
                 <div className="summary-card-icon pending-orders">
                   <FaClock />
                 </div>
@@ -629,7 +629,7 @@ GRAND TOTAL: ₹${(parseFloat(order.total_amount) || 0).toFixed(2)}
                   <h3>{orders.filter(o => o.status?.toLowerCase() === 'pending').length}</h3>
                   <p>Pending Orders</p>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Orders List */}

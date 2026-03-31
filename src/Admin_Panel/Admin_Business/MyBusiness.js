@@ -7,7 +7,7 @@ import { baseurl } from '../../BaseURL/BaseURL';
 import './MyBusiness.css';
 import AdminNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
 
-const BusinessList = () => {
+const AdminBusinessList = () => {
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -405,17 +405,17 @@ const getVerificationStatusLabel = (status) => {
                 </div>
                 <div className="stat-label" style={{ color: "black" }}>Verified</div>
               </div>
-              <div className="stat-card">
+              {/* <div className="stat-card">
                 <div className="stat-number">
                   {businesses.filter(b => b.is_featured).length}
                 </div>
                 <div className="stat-label" style={{ color: "black" }}>Featured</div>
-              </div>
+              </div> */}
               <div className="stat-card">
                 <div className="stat-number">
-                  {businesses.filter(b => b.is_active).length}
+                  {businesses.filter(b => b.verification_status === 'pending').length}
                 </div>
-                <div className="stat-label" style={{ color: "black" }}>Active</div>
+                <div className="stat-label" style={{ color: "black" }}>Pending</div>
               </div>
             </div>
           </div>
@@ -457,9 +457,12 @@ const getVerificationStatusLabel = (status) => {
                         {getFeaturedBadge(business.is_featured)}
                       </div>
                       <div className="business-status">
-                        {getVerificationStatusBadge(business.verification_status)}
-                        {getActiveBadge(business.is_active)}
-                      </div>
+        <div className="verification-status-group">
+          <span className="verification-label">Verification Status:</span>
+          {getVerificationStatusBadge(business.verification_status)}
+        </div>
+        {/* {getActiveBadge(business.is_active)} */}
+      </div>
                     </div>
 
                     {/* Card Body */}
@@ -694,4 +697,4 @@ const getVerificationStatusLabel = (status) => {
   );
 };
 
-export default BusinessList;
+export default AdminBusinessList;

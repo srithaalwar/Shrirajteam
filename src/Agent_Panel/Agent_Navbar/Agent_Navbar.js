@@ -11508,7 +11508,8 @@ const AgentNavbar = () => {
         { path: "/agent-my-team", name: "My Team", icon: <FaUsers /> },
       ],
     },
-    
+       { path: "/agent-my-orders", name: "My Orders", icon: <FaTag /> },
+        { path: "/agent-orders", name: "Orders", icon: <FaTag /> },
     { path: "/a-service-providers", name: "Service Providers", icon: <FaUserTie /> },
     { path: "/p-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/agent-profile", name: "Profile", icon: <FaUserCircle /> },
@@ -11650,6 +11651,39 @@ const AgentNavbar = () => {
               </div>
             )}
           </div>
+          
+  {/* Orders Dropdown - NEW */}
+  <div className="wn-header-dropdown" ref={operationsDropdownRef}>
+    <button 
+      className="wn-header-dropdown-btn"
+      onClick={() => setOpenOperationsDropdown(!openOperationsDropdown)}
+    >
+      <FaTag className="wn-dropdown-btn-icon" />
+      <span>Orders</span>
+      <FaCaretDown className="wn-dropdown-arrow" />
+    </button>
+    {openOperationsDropdown && (
+      <div className="wn-header-dropdown-menu">
+        <Link
+          to="/agent-my-orders"
+          className="wn-dropdown-link"
+          onClick={() => setOpenOperationsDropdown(false)}
+        >
+          <span className="wn-dropdown-icon"><FaTag /></span>
+          <span className="wn-dropdown-text">My Orders</span>
+        </Link>
+        <Link
+          to="/agent-orders"
+          className="wn-dropdown-link"
+          onClick={() => setOpenOperationsDropdown(false)}
+        >
+          <span className="wn-dropdown-icon"><FaClipboardList /></span>
+          <span className="wn-dropdown-text">Orders</span>
+        </Link>
+      </div>
+    )}
+  </div>
+
 
           {/* Operations Dropdown - Commented out */}
           {/* <div className="wn-header-dropdown" ref={operationsDropdownRef}>
@@ -11808,14 +11842,14 @@ const AgentNavbar = () => {
           </div>
 
           {/* Logout Button - Desktop */}
-          <button 
+          {/* <button 
             className="wn-logout-btn-navbar"
             onClick={handleLogout}
             title="Logout"
           >
             <FaSignOutAlt size={16} />
             <span className="wn-logout-text-navbar">Logout</span>
-          </button>
+          </button> */}
         </div>
       </header>
 

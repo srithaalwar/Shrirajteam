@@ -628,3 +628,50 @@
   background: #3498db;
   border-radius: 2px;
 }
+
+
+
+.verification-status-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.verification-label {
+  font-size: 0.85rem;
+  /* color: #6c757d; */
+  font-weight: 500;
+}
+
+.verification-badge {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 20px;
+}
+
+/* Badge color classes */
+.badge-warning {
+  background-color: #ffc107;
+  color: #856404;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.badge-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.badge-info {
+  background-color: #17a2b8;
+  color: white;
+}

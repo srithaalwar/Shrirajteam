@@ -6583,7 +6583,7 @@ import { baseurl } from '../../BaseURL/BaseURL';
 import { FaTrash, FaPlusCircle, FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 
-const ProductForm = ({ onSuccess, onCancel }) => {
+const AddProductForm = ({ onSuccess, onCancel }) => {
   const navigate = useNavigate();
 
   const [productData, setProductData] = useState({
@@ -7825,4 +7825,4 @@ const ProductForm = ({ onSuccess, onCancel }) => {
   );
 };
 
-export default ProductForm;
+export default AddProductForm;

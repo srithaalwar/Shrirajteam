@@ -606,7 +606,9 @@ import {
   CheckCircle, XCircle, Clock, TrendingUp, PackageOpen, Star
 } from "lucide-react";
 // import './Business_Products.css';
+import "./newmybusines.css"
 import { baseurl } from "../../BaseURL/BaseURL";
+
 
 // ============= useIsMobile =============
 const useIsMobile = () => {
@@ -2052,6 +2054,18 @@ const MyProducts = () => {
     }
   }, []);
 
+
+  useEffect(() => {
+  // Scroll to top when component mounts
+  window.scrollTo(0, 0);
+  
+  // Or if you want to scroll to the header
+  const headerElement = document.querySelector('.mp-desktop-header');
+  if (headerElement) {
+    headerElement.scrollIntoView({ behavior: 'smooth' });
+  }
+}, []); // Empty dependency array means it runs once on mount
+
   // Debounce search term
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -2317,12 +2331,15 @@ const MyProducts = () => {
         </div>
       )}
 
-      {!isMobile && (
+      {/* {!isMobile && (
         <div className="mp-desktop">
           <div className="mp-desktop-header">
             <div className="mp-desktop-header-inner">
               <button className="mp-back-desktop" onClick={() => navigate(-1)}><ArrowLeft size={17} /><span>Back</span></button>
-              <h1 className="mp-desktop-title">Products{businessName ? ` — ${businessName}` : ""}</h1>
+
+              <h1 className="mp-desktop-title">
+  {businessName ? `${businessName} — Products` : "Products"}
+</h1>
             </div>
           </div>
           <div className="mp-desktop-body">
@@ -2360,7 +2377,63 @@ const MyProducts = () => {
             </main>
           </div>
         </div>
-      )}
+      )} */}
+
+      {!isMobile && (
+  <div className="mp-desktop">
+    {/* REMOVED the separate header section since AdminNavbar already handles the top bar */}
+    <div className="mp-desktop-body">
+      <aside className="mp-sidebar">
+        <div className="mp-sidebar-top">
+          <span className="mp-sidebar-heading"><SlidersHorizontal size={15} /> Filters</span>
+          {activeFilterCount > 0 && <button className="mp-sidebar-clearall" onClick={clearAll}>Clear ({activeFilterCount})</button>}
+        </div>
+        <FilterContent {...filterProps} isSidebar={true} />
+      </aside>
+      <main className="mp-main">
+        <div className="mp-main-header">
+          <h1 className="mp-desktop-title">
+            {businessName ? `${businessName} — Products` : "Products"}
+          </h1>
+          <button className="mp-back-desktop" onClick={() => navigate(-1)}>
+            <ArrowLeft size={17} /><span>Back</span>
+          </button>
+        </div>
+        
+        <div className="mp-main-topbar">
+          <div className="mp-desktop-search">
+            <Search size={15} className="mp-search-ico" />
+            <input 
+              type="text" 
+              placeholder="Search products..." 
+              className="mp-search-input" 
+              value={searchTerm} 
+              onChange={e => setSearchTerm(e.target.value)} 
+            />
+            {searchTerm && <button className="mp-search-clear" onClick={() => setSearchTerm("")}><X size={14} /></button>}
+          </div>
+          <div className="mp-sort-wrap">
+            <button className="mp-sort-btn" onClick={() => setShowSortDropdown(v => !v)}>
+              <span>{sortLabel}</span><ChevronDown size={14} />
+            </button>
+            {showSortDropdown && (
+              <>
+                <div className="mp-dropdown-overlay" onClick={() => setShowSortDropdown(false)} />
+                <div className="mp-sort-dropdown">
+                  <SortList sortBy={sortBy} setSortBy={setSortBy} onClose={() => setShowSortDropdown(false)} />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+        
+        {activeFilterCount > 0 && <ActiveChips {...filterProps} clearAll={clearAll} />}
+        <div className="mp-count">{sortedProducts.length} product{sortedProducts.length !== 1 ? "s" : ""}</div>
+        {productSection}
+      </main>
+    </div>
+  </div>
+)}
 
       <EditProductModal 
         product={editProductModal.product} 

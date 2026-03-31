@@ -944,3 +944,89 @@
     font-size: 14px;
   }
 }
+
+
+
+/* Profile icon in navbar */
+.wn-profile-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.wn-profile-container:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.wn-profile-icon {
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.wn-profile-container:hover .wn-profile-icon {
+  color: #273c75;
+}
+
+/* Logout button in navbar */
+.wn-logout-btn-navbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  /* background: transparent; */
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.wn-logout-btn-navbar:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #c82333;
+}
+
+.wn-logout-text-navbar {
+  display: inline-block;
+}
+
+/* Hide logout text on smaller screens */
+@media (max-width: 768px) {
+  .wn-logout-text-navbar {
+    display: none;
+  }
+  
+  .wn-logout-btn-navbar {
+    padding: 8px;
+  }
+}
+
+
+/* Direct header link styles */
+.wn-header-direct-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.wn-header-direct-link:hover {
+  background: #f0f2f5;
+  color: #273c75;
+  text-decoration: none;
+}

@@ -1,0 +1,536 @@
+/* AgentViewBusiness.css */
+
+.agent-view-business-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+/* Header Section */
+.view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 15px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: #273c75;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-back:hover {
+  background-color: #e8eaf6;
+}
+
+.business-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-products,
+.btn-edit,
+.btn-delete {
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.btn-products {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.btn-products:hover {
+  background-color: #138496;
+}
+
+.btn-edit {
+  background-color: #273c75;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #1e2f5a;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
+/* Media Section (Logo and Banner - 50-50 split) */
+.media-section {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.logo-container {
+  flex: 1;
+  width: 50%;
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e0e0e0;
+}
+
+.business-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 20px;
+}
+
+.logo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  color: #999;
+}
+
+.banner-container {
+  flex: 1;
+  width: 50%;
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.business-banner {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 14px;
+}
+
+.banner-placeholder i {
+  font-size: 48px;
+}
+
+/* Status Section (Read-only) */
+.status-section {
+  background: white;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.status-label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.verification-badge,
+.featured-badge,
+.active-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-warning {
+  background-color: #ffc107;
+  color: #856404;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.badge-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.featured-badge {
+  background-color: #ffc107;
+  color: #856404;
+}
+
+.active-badge.active {
+  background-color: #28a745;
+  color: white;
+}
+
+.active-badge.inactive {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Info Sections */
+.info-section {
+  background: white;
+  margin-bottom: 15px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.section-title {
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #273c75;
+}
+
+.section-title h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Info Grid - 3 columns on desktop */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.info-grid:last-child {
+  margin-bottom: 0;
+}
+
+/* Info Field */
+.info-field {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 13px;
+  min-width: 140px;
+}
+
+.info-value {
+  color: #333;
+  font-size: 14px;
+  word-break: break-word;
+  flex: 1;
+}
+
+/* Description Field - Full width */
+.description-field {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.description-field .info-field {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.description-field .info-label {
+  margin-bottom: 5px;
+}
+
+.description-field .info-value {
+  line-height: 1.5;
+}
+
+/* Working Hours Table */
+.working-hours-table-container {
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+.working-hours-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.working-hours-table th {
+  text-align: left;
+  padding: 8px;
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #555;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.working-hours-table td {
+  padding: 8px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #555;
+}
+
+.day-cell {
+  font-weight: 500;
+}
+
+.closed-badge,
+.open-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.closed-badge {
+  background-color: #dc3545;
+  color: white;
+}
+
+.open-badge {
+  background-color: #28a745;
+  color: white;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 15px 0;
+}
+
+.action-buttons .btn {
+  padding: 10px 24px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.action-buttons .btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.action-buttons .btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.action-buttons .btn-primary {
+  background-color: #273c75;
+  color: white;
+}
+
+.action-buttons .btn-primary:hover {
+  background-color: #1e2f5a;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .agent-view-business-container {
+    padding: 15px;
+  }
+
+  .view-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .business-title {
+    font-size: 20px;
+    order: 2;
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn-back {
+    order: 1;
+  }
+
+  .header-actions {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .media-section {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .logo-container,
+  .banner-container {
+    width: 100%;
+    height: 250px;
+  }
+
+  .logo-container {
+    height: 200px;
+  }
+
+  .business-logo {
+    padding: 15px;
+  }
+
+  .logo-placeholder {
+    font-size: 48px;
+  }
+
+  .banner-placeholder i {
+    font-size: 36px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .info-field {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .info-label {
+    min-width: auto;
+  }
+
+  .status-row {
+    justify-content: center;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-buttons .btn {
+    justify-content: center;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+  }
+
+  .btn-products,
+  .btn-edit,
+  .btn-delete {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .info-section {
+    padding: 12px;
+  }
+
+  .section-title h3 {
+    font-size: 16px;
+  }
+
+  .working-hours-table th,
+  .working-hours-table td {
+    padding: 6px;
+    font-size: 11px;
+  }
+
+  .logo-container,
+  .banner-container {
+    height: 200px;
+  }
+
+  .logo-container {
+    height: 150px;
+  }
+
+  .business-logo {
+    padding: 10px;
+  }
+
+  .logo-placeholder {
+    font-size: 36px;
+  }
+}

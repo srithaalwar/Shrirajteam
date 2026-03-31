@@ -1,0 +1,194 @@
+/* ================================================
+   DESKTOP LAYOUT UPDATED
+   ================================================ */
+.mp-desktop {
+  min-height: 100vh;
+  background: var(--mp-bg);
+  padding-top: 0; /* Remove any extra padding */
+}
+
+.mp-desktop-body {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* New header inside main content */
+.mp-main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--mp-border);
+}
+
+.mp-desktop-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--mp-primary);
+  margin: 0;
+}
+
+.mp-back-desktop {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--mp-white);
+  border: 1.5px solid var(--mp-border);
+  color: var(--mp-primary);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mp-back-desktop:hover {
+  background: var(--mp-primary);
+  border-color: var(--mp-primary);
+  color: var(--mp-white);
+}
+
+/* Hide the old desktop header */
+.mp-desktop-header {
+  display: none;
+}
+
+/* Keep the rest of your existing desktop styles */
+.mp-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--mp-white);
+  border-radius: 12px;
+  box-shadow: var(--mp-shadow);
+  position: sticky;
+  top: 20px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.mp-sidebar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--mp-border);
+}
+
+.mp-sidebar-heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--mp-text);
+}
+
+.mp-sidebar-clearall {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: #e53935;
+  font-weight: 600;
+  padding: 0;
+}
+
+.mp-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.mp-main-topbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--mp-white);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--mp-shadow);
+}
+
+.mp-desktop-search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #f7f7f7;
+  border-radius: 8px;
+  padding: 8px 12px;
+  gap: 8px;
+  border: 1.5px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.mp-desktop-search:focus-within {
+  border-color: var(--mp-primary);
+  background: var(--mp-white);
+}
+
+.mp-sort-wrap {
+  position: relative;
+}
+
+.mp-sort-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--mp-white);
+  border: 1.5px solid var(--mp-border);
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.mp-sort-btn:hover {
+  border-color: var(--mp-primary);
+  color: var(--mp-primary);
+}
+
+.mp-dropdown-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+.mp-sort-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 220px;
+  background: var(--mp-white);
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.14);
+  border: 1px solid var(--mp-border);
+  z-index: 101;
+  overflow: hidden;
+}
+
+/* Grid and other existing styles remain the same */
+.mp-grid--desktop {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (min-width: 1200px) {
+  .mp-grid--desktop {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) and (min-width: 768px) {
+  .mp-grid--desktop {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

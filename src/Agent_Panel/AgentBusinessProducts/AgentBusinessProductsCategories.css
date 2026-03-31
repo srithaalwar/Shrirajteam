@@ -561,3 +561,66 @@
   text-align: center;
 }
 
+
+
+
+/* ================================================
+   DESKTOP LAYOUT UPDATED
+   ================================================ */
+.abpc-desktop {
+  min-height: 100vh;
+  background: var(--abpc-bg);
+  padding-top: 0; /* Remove any extra padding */
+}
+
+.abpc-desktop-body {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* New header inside main content */
+.abpc-main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--abpc-border);
+}
+
+.abpc-desktop-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--abpc-primary);
+  margin: 0;
+}
+
+.abpc-back-desktop {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--abpc-white);
+  border: 1.5px solid var(--abpc-border);
+  color: var(--abpc-primary);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.abpc-back-desktop:hover {
+  background: var(--abpc-primary);
+  border-color: var(--abpc-primary);
+  color: var(--abpc-white);
+}
+
+/* Remove the old desktop header styles */
+.abpc-desktop-header {
+  display: none; /* Hide the old header */
+}

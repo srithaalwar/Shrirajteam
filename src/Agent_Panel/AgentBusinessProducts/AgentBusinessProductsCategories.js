@@ -3138,7 +3138,7 @@ const AgentBusinessProductsCategories = () => {
       )}
 
       {/* ======= DESKTOP ======= */}
-      {!isMobile && (
+      {/* {!isMobile && (
         <div className="abpc-desktop">
           <div className="abpc-desktop-header">
             <div className="abpc-desktop-header-inner">
@@ -3149,7 +3149,6 @@ const AgentBusinessProductsCategories = () => {
             </div>
           </div>
           <div className="abpc-desktop-body">
-            {/* Sidebar */}
             <aside className="abpc-sidebar">
               <div className="abpc-sidebar-top">
                 <span className="abpc-sidebar-heading"><SlidersHorizontal size={15} /> Filters</span>
@@ -3160,7 +3159,6 @@ const AgentBusinessProductsCategories = () => {
               <FilterContent {...filterProps} isSidebar={true} />
             </aside>
 
-            {/* Main */}
             <main className="abpc-main">
               <div className="abpc-main-topbar">
                 <div className="abpc-desktop-search">
@@ -3206,7 +3204,77 @@ const AgentBusinessProductsCategories = () => {
             </main>
           </div>
         </div>
-      )}
+      )} */}
+      {/* ======= DESKTOP ======= */}
+{!isMobile && (
+  <div className="abpc-desktop">
+    {/* REMOVED the separate header section since ClientNavbar already handles the top bar */}
+    <div className="abpc-desktop-body">
+      {/* Sidebar */}
+      <aside className="abpc-sidebar">
+        <div className="abpc-sidebar-top">
+          <span className="abpc-sidebar-heading"><SlidersHorizontal size={15} /> Filters</span>
+          {activeFilterCount > 0 && (
+            <button className="abpc-sidebar-clearall" onClick={clearAll}>Clear ({activeFilterCount})</button>
+          )}
+        </div>
+        <FilterContent {...filterProps} isSidebar={true} />
+      </aside>
+
+      {/* Main */}
+      <main className="abpc-main">
+        <div className="abpc-main-header">
+          <h1 className="abpc-desktop-title">Categories</h1>
+          <button className="abpc-back-desktop" onClick={() => navigate('/agent-dashboard')}>
+            <ArrowLeft size={17} /><span>Go to Dashboard</span>
+          </button>
+        </div>
+        
+        <div className="abpc-main-topbar">
+          <div className="abpc-desktop-search">
+            <Search size={15} className="abpc-search-ico" />
+            <input 
+              type="text" 
+              placeholder="Search products using name, price, category..." 
+              className="abpc-search-input"
+              value={searchTerm} 
+              onChange={e => setSearchTerm(e.target.value)} 
+            />
+            {searchTerm && (
+              <button className="abpc-search-clear" onClick={() => setSearchTerm("")}>
+                <X size={14} />
+              </button>
+            )}
+          </div>
+          <div className="abpc-sort-wrap">
+            <button className="abpc-sort-btn" onClick={() => setShowSortDropdown(v => !v)}>
+              <span>{sortLabel}</span><ChevronDown size={14} />
+            </button>
+            {showSortDropdown && (
+              <>
+                <div className="abpc-dropdown-overlay" onClick={() => setShowSortDropdown(false)} />
+                <div className="abpc-sort-dropdown">
+                  <SortList sortBy={sortBy} setSortBy={setSortBy} onClose={() => setShowSortDropdown(false)} />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {activeFilterCount > 0 && (
+          <ActiveChips
+            selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories}
+            selectedPriceRanges={selectedPriceRanges} setSelectedPriceRanges={setSelectedPriceRanges}
+            selectedDiscountRanges={selectedDiscountRanges} setSelectedDiscountRanges={setSelectedDiscountRanges}
+            clearAll={clearAll} />
+        )}
+
+        <div className="abpc-count">{sortedProducts.length} product{sortedProducts.length !== 1 ? "s" : ""}</div>
+        {productSection}
+      </main>
+    </div>
+  </div>
+)}
     </>
   );
 };
