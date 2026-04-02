@@ -240,8 +240,8 @@
 .summary-title {
   font-weight: 600;
   color: #333;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
+  margin-bottom: 2px;
+  padding-bottom: 1px;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -253,7 +253,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 1px;
   font-size: 15px;
 }
 

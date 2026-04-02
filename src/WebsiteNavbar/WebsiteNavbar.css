@@ -746,3 +746,110 @@
 .wn-sidebar .wn-menu-list li a:hover {
   color: #273c75;
 }
+
+
+/* ===================== MOBILE SEARCH BUTTON ===================== */
+.wn-mobile-search-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #374151;
+  font-size: 18px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+
+.wn-mobile-search-btn:hover {
+  background: #f3f4f6;
+}
+
+/* ===================== CART LINK ===================== */
+.wn-cart-link {
+  text-decoration: none;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ===================== CART BADGE ===================== */
+.wn-cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.wn-cart {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  padding: 8px;
+}
+
+/* ===================== SIDEBAR CART ===================== */
+.wn-sidebar-cart {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin: 12px 0;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-weight: 500;
+  color: #273c75;
+}
+
+.wn-sidebar-cart:hover {
+  background: #f3f4f6;
+}
+
+/* ===================== RESPONSIVE UPDATES ===================== */
+@media (max-width: 768px) {
+  .wn-mobile-search-btn {
+    display: flex;
+  }
+  
+  .wn-nav-center {
+    display: none !important;
+  }
+  
+  .wn-cart {
+    padding: 6px;
+  }
+  
+  .wn-cart-badge {
+    top: -6px;
+    right: -6px;
+    min-width: 16px;
+    height: 16px;
+    font-size: 9px;
+  }
+}
+
+@media (min-width: 769px) {
+  .wn-mobile-search-btn {
+    display: none;
+  }
+  
+  .wn-nav-center {
+    display: flex !important;
+  }
+}

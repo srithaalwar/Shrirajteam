@@ -240,8 +240,8 @@
 .summary-title {
   font-weight: 600;
   color: #333;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
+  margin-bottom: 0px;
+  padding-bottom: 1px;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -260,7 +260,7 @@
 .summary-divider {
   height: 1px;
   background-color: #e0e0e0;
-  margin: 5px 0;
+  margin: 0px 0;
 }
 
 .summary-row.total-value {

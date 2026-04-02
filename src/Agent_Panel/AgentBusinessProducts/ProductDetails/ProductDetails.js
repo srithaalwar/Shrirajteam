@@ -5755,172 +5755,231 @@ const AgentProductDetails = () => {
   }, [selectedVariant]);
 
   /* ================= CART FUNCTIONS ================= */
-  const handleAddToCart = async () => {
-    console.log("🛒 Add to cart clicked");
-    
-    if (!userId) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Login Required',
-        text: 'Please login to add items to cart',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#f76f2f',
-      });
-      return;
-    }
+/* ================= CART FUNCTIONS ================= */
+const handleAddToCart = async () => {
+  console.log("🛒 Add to cart clicked");
+  
+  if (!userId) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Login Required',
+      text: 'Please login to add items to cart',
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#f76f2f',
+    });
+    return;
+  }
 
-    if (!selectedVariant) {
-      console.error("No selected variant");
-      return;
-    }
-    
-    if (selectedVariant.stock <= 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Out of Stock',
-        text: 'This product is currently out of stock',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#f76f2f',
-      });
-      return;
-    }
-    
-    if (qty > selectedVariant.stock) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Insufficient Stock',
-        text: `Only ${selectedVariant.stock} units available`,
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#f76f2f',
-      });
-      return;
-    }
+  if (!selectedVariant) {
+    console.error("No selected variant");
+    return;
+  }
+  
+  if (selectedVariant.stock <= 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Out of Stock',
+      text: 'This product is currently out of stock',
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#f76f2f',
+    });
+    return;
+  }
+  
+  if (qty > selectedVariant.stock) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Insufficient Stock',
+      text: `Only ${selectedVariant.stock} units available`,
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#f76f2f',
+    });
+    return;
+  }
 
-    setCartLoading(true);
+  setCartLoading(true);
+  
+  try {
+    if (isInCart && cartItemId) {
+      await axios.put(`${baseurl}/cart/${cartItemId}/`, {
+        user: parseInt(userId),
+        variant: selectedVariant.id,
+        quantity: qty
+      });
+      
+      setCartQuantity(qty);
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Cart Updated!',
+        text: `Cart updated to ${qty} items.`,
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'View Cart',
+        cancelButtonText: 'Continue Shopping',
+        confirmButtonColor: '#f76f2f',
+        cancelButtonColor: '#6c757d',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/agent-add-to-cart');
+        }
+      });
+    } else {
+      const response = await axios.post(`${baseurl}/cart/`, {
+        user: parseInt(userId),
+        variant: selectedVariant.id,
+        quantity: qty
+      });
+      
+      setIsInCart(true);
+      setCartItemId(response.data.id);
+      setCartQuantity(qty);
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Added to Cart!',
+        text: `${product.product_name} has been added to your cart.`,
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'View Cart',
+        cancelButtonText: 'Continue Shopping',
+        confirmButtonColor: '#f76f2f',
+        cancelButtonColor: '#6c757d',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/agent-add-to-cart');
+        }
+      });
+    }
     
-    try {
-      if (isInCart && cartItemId) {
-        await axios.put(`${baseurl}/cart/${cartItemId}/`, {
-          user: parseInt(userId),
-          variant: selectedVariant.id,
-          quantity: qty
-        });
-        
-        setCartQuantity(qty);
-        
+    window.dispatchEvent(new Event('cartUpdated'));
+    
+  } catch (error) {
+    console.error("❌ Error updating cart:", error);
+    
+    // Extract error message from backend response
+    let errorMessage = 'Failed to update cart. Please try again.';
+    
+    if (error.response) {
+      // Backend responded with error status
+      const responseData = error.response.data;
+      
+      if (responseData.error) {
+        errorMessage = responseData.error;
+      } else if (responseData.message) {
+        errorMessage = responseData.message;
+      } else if (typeof responseData === 'string') {
+        errorMessage = responseData;
+      } else if (responseData.detail) {
+        errorMessage = responseData.detail;
+      }
+      
+      // Check for specific stock/quantity related errors
+      if (errorMessage.toLowerCase().includes('maximum') || 
+          errorMessage.toLowerCase().includes('limit') ||
+          errorMessage.toLowerCase().includes('quantity')) {
         Swal.fire({
-          icon: 'success',
-          title: 'Cart Updated!',
-          text: `Cart updated to ${qty} items.`,
-          showConfirmButton: true,
-          showCancelButton: true,
-          confirmButtonText: 'View Cart',
-          cancelButtonText: 'Continue Shopping',
+          icon: 'error',
+          title: 'Quantity Limit Reached',
+          text: errorMessage,
+          confirmButtonText: 'OK',
           confirmButtonColor: '#f76f2f',
-          cancelButtonColor: '#6c757d',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigate('/agent-add-to-cart');
-          }
         });
       } else {
-        const response = await axios.post(`${baseurl}/cart/`, {
-          user: parseInt(userId),
-          variant: selectedVariant.id,
-          quantity: qty
-        });
-        
-        setIsInCart(true);
-        setCartItemId(response.data.id);
-        setCartQuantity(qty);
-        
         Swal.fire({
-          icon: 'success',
-          title: 'Added to Cart!',
-          text: `${product.product_name} has been added to your cart.`,
-          showConfirmButton: true,
-          showCancelButton: true,
-          confirmButtonText: 'View Cart',
-          cancelButtonText: 'Continue Shopping',
+          icon: 'error',
+          title: 'Error',
+          text: errorMessage,
+          confirmButtonText: 'OK',
           confirmButtonColor: '#f76f2f',
-          cancelButtonColor: '#6c757d',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigate('/agent-add-to-cart');
-          }
         });
       }
-      
-      window.dispatchEvent(new Event('cartUpdated'));
-      
-    } catch (error) {
-      console.error("❌ Error updating cart:", error);
+    } else if (error.request) {
+      errorMessage = 'No response from server. Please check your connection.';
       Swal.fire({
         icon: 'error',
-        title: 'Error',
-        text: 'Failed to update cart. Please try again.',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#f76f2f',
-      });
-    } finally {
-      setCartLoading(false);
-    }
-  };
-
-  const handleRemoveFromCart = async () => {
-    if (!userId || !cartItemId) return;
-    
-    setCartLoading(true);
-    
-    try {
-      await axios.delete(`${baseurl}/cart/${cartItemId}/`);
-      
-      setIsInCart(false);
-      setCartItemId(null);
-      setCartQuantity(0);
-      setQty(1);
-      
-      Swal.fire({
-        icon: 'info',
-        title: 'Removed from Cart',
-        text: `${product.product_name} has been removed from your cart.`,
-        showConfirmButton: false,
-        timer: 1500,
-        timerProgressBar: true,
-      });
-      
-      window.dispatchEvent(new Event('cartUpdated'));
-    } catch (error) {
-      console.error("Error removing from cart:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Failed to remove from cart. Please try again.',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#f76f2f',
-      });
-    } finally {
-      setCartLoading(false);
-    }
-  };
-
-  const handleUpdateQuantity = (newQty) => {
-    if (newQty < 1) {
-      if (isInCart) {
-        handleRemoveFromCart();
-      }
-    } else if (newQty > selectedVariant.stock) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Stock Limit Exceeded',
-        text: `Cannot add more than ${selectedVariant.stock} units`,
+        title: 'Connection Error',
+        text: errorMessage,
         confirmButtonText: 'OK',
         confirmButtonColor: '#f76f2f',
       });
     } else {
-      setQty(newQty);
+      errorMessage = error.message || 'An unexpected error occurred.';
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMessage,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#f76f2f',
+      });
     }
-  };
+  } finally {
+    setCartLoading(false);
+  }
+};
+
+const handleRemoveFromCart = async () => {
+  if (!userId || !cartItemId) return;
+  
+  setCartLoading(true);
+  
+  try {
+    await axios.delete(`${baseurl}/cart/${cartItemId}/`);
+    
+    setIsInCart(false);
+    setCartItemId(null);
+    setCartQuantity(0);
+    setQty(1);
+    
+    Swal.fire({
+      icon: 'info',
+      title: 'Removed from Cart',
+      text: `${product.product_name} has been removed from your cart.`,
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+    });
+    
+    window.dispatchEvent(new Event('cartUpdated'));
+  } catch (error) {
+    console.error("Error removing from cart:", error);
+    
+    let errorMessage = 'Failed to remove from cart. Please try again.';
+    if (error.response?.data?.error) {
+      errorMessage = error.response.data.error;
+    } else if (error.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    }
+    
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: errorMessage,
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#f76f2f',
+    });
+  } finally {
+    setCartLoading(false);
+  }
+};
+
+const handleUpdateQuantity = (newQty) => {
+  if (newQty < 1) {
+    if (isInCart) {
+      handleRemoveFromCart();
+    }
+  } else if (newQty > selectedVariant.stock) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Stock Limit Exceeded',
+      text: `Cannot add more than ${selectedVariant.stock} units`,
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#f76f2f',
+    });
+  } else {
+    setQty(newQty);
+  }
+};
 
   /* ================= WISHLIST FUNCTIONS ================= */
   const handleWishlistToggle = async () => {

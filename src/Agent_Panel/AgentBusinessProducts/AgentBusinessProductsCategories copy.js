@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { baseurl } from "../../BaseURL/BaseURL";
-import ClientNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+import ClientNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
 import {
   Search, X, ChevronDown, Tag, DollarSign, ArrowLeft,
   Filter, Check, ChevronRight, SlidersHorizontal, Info

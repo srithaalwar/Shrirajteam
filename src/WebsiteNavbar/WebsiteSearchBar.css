@@ -1,0 +1,174 @@
+/* ===================== WEBSITE SEARCH BAR STYLES ===================== */
+
+.wn-website-search-container {
+  width: 100%;
+  position: relative;
+}
+
+.wn-website-search-form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.wn-website-search-form:focus-within {
+  border-color: #273c75;
+  box-shadow: 0 0 0 2px rgba(39, 60, 117, 0.1);
+}
+
+.wn-website-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #374151;
+  background: transparent;
+}
+
+.wn-website-search-input::placeholder {
+  color: #9ca3af;
+}
+
+.wn-website-search-btn {
+  background: transparent;
+  border: none;
+  padding: 0 16px;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 16px;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wn-website-search-btn:hover {
+  color: #273c75;
+}
+
+/* Search Results Dropdown */
+.wn-website-search-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+  border: 1px solid #e5e7eb;
+}
+
+/* Search Result Item */
+.wn-website-search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.wn-website-search-result-item:hover {
+  background: #f9fafb;
+}
+
+.wn-website-result-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background: #f3f4f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 24px;
+  overflow: hidden;
+}
+
+.wn-website-result-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wn-website-result-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.wn-website-result-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wn-website-result-type {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 2px;
+}
+
+.wn-website-result-price {
+  font-size: 13px;
+  font-weight: 600;
+  color: #273c75;
+}
+
+/* Loading State */
+.wn-website-search-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.wn-website-loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e5e7eb;
+  border-top-color: #273c75;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* No Results */
+.wn-website-search-no-results {
+  text-align: center;
+  padding: 24px;
+  color: #6b7280;
+}
+
+.wn-website-no-results-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.wn-website-no-results-suggestion {
+  font-size: 12px;
+  margin-top: 8px;
+  color: #9ca3af;
+}

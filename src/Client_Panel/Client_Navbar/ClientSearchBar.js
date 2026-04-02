@@ -1,12 +1,11 @@
-// ClientSearchBar.js
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { baseurl } from '../../BaseURL/BaseURL';
-import { FaSearch, FaBox, FaStore, FaTag } from 'react-icons/fa';
+import { FaSearch, FaBox } from 'react-icons/fa';
 import './ClientSearchBar.css';
 
-const ClientSearchBar = ({ placeholder = "Search products, businesses..." }) => {
+const ClientSearchBar = ({ placeholder = "Search products..." }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
@@ -23,7 +22,7 @@ const ClientSearchBar = ({ placeholder = "Search products, businesses..." }) => 
     };
   };
 
-  // Search function - Only Products and Businesses
+  // Search function - Products only
   const performSearch = async (query) => {
     if (query.trim().length <= 1) {
       setSearchResults([]);
@@ -33,57 +32,30 @@ const ClientSearchBar = ({ placeholder = "Search products, businesses..." }) => 
 
     setIsLoading(true);
     try {
-      let results = [];
+      // Search Products only
+      const productsRes = await axios.get(`${baseurl}/products/`, {
+        params: { search: query, limit: 10 }
+      });
       
-      // Search Products
-      try {
-        const productsRes = await axios.get(`${baseurl}/products/`, {
-          params: { search: query, limit: 5 }
-        });
+      const productsData = productsRes.data.results || productsRes.data || [];
+      const products = productsData.map(p => {
+        const firstVariant = p.variants && p.variants[0];
+        const variantMedia = firstVariant?.media || [];
+        const primaryImage = variantMedia.find(m => m.is_primary) || variantMedia[0];
         
-        const productsData = productsRes.data.results || productsRes.data || [];
-        const products = productsData.map(p => {
-          const firstVariant = p.variants && p.variants[0];
-          const variantMedia = firstVariant?.media || [];
-          const primaryImage = variantMedia.find(m => m.is_primary) || variantMedia[0];
-          
-          return {
-            ...p,
-            type: 'product',
-            title: p.product_name || p.name,
-            id: p.product_id,
-            variant_id: firstVariant?.id,
-            image: primaryImage?.file || p.image,
-            price: firstVariant?.selling_price,
-            route: `/client-business-product-details/${p.product_id}/`
-          };
-        });
-        results = [...results, ...products];
-      } catch (err) {
-        console.error('Error searching products:', err);
-      }
+        return {
+          ...p,
+          type: 'product',
+          title: p.product_name || p.name,
+          id: p.product_id,
+          variant_id: firstVariant?.id,
+          image: primaryImage?.file || p.image,
+          price: firstVariant?.selling_price,
+          route: `/client-business-product-details/${p.product_id}/`
+        };
+      });
       
-      // Search Businesses
-      try {
-        const businessesRes = await axios.get(`${baseurl}/business/`, {
-          params: { search: query, limit: 5 }
-        });
-        
-        const businessesData = businessesRes.data.results || businessesRes.data || [];
-        const businesses = businessesData.map(b => ({
-          ...b,
-          type: 'business',
-          title: b.business_name,
-          id: b.business_id,
-          image: b.logo,
-          route: `/client-business-details/${b.business_id}`
-        }));
-        results = [...results, ...businesses];
-      } catch (err) {
-        console.error('Error searching businesses:', err);
-      }
-      
-      setSearchResults(results.slice(0, 10));
+      setSearchResults(products.slice(0, 10));
       setShowResults(true);
     } catch (error) {
       console.error('Search error:', error);
@@ -119,8 +91,6 @@ const ClientSearchBar = ({ placeholder = "Search products, businesses..." }) => 
       navigate(result.route);
     } else if (result.type === 'product') {
       navigate(`/client-business-product-details/${result.id}/`);
-    } else if (result.type === 'business') {
-      navigate(`/client-business-details/${result.id}`);
     }
   };
 
@@ -135,26 +105,8 @@ const ClientSearchBar = ({ placeholder = "Search products, businesses..." }) => 
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const getResultIcon = (type) => {
-    switch(type) {
-      case 'product':
-        return <FaBox />;
-      case 'business':
-        return <FaStore />;
-      default:
-        return <FaSearch />;
-    }
-  };
-
-  const getTypeLabel = (type) => {
-    switch(type) {
-      case 'product':
-        return 'Product';
-      case 'business':
-        return 'Business';
-      default:
-        return type;
-    }
+  const getResultIcon = () => {
+    return <FaBox />;
   };
 
   const formatPrice = (price) => {
@@ -203,12 +155,12 @@ const ClientSearchBar = ({ placeholder = "Search products, businesses..." }) => 
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.style.display = 'none';
-                        e.target.parentNode.innerHTML = getResultIcon(result.type);
+                        e.target.parentNode.innerHTML = getResultIcon();
                       }}
                       style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
                     />
                   ) : (
-                    getResultIcon(result.type)
+                    getResultIcon()
                   )}
                 </div>
                 <div className="wn-result-content">
@@ -216,7 +168,7 @@ const ClientSearchBar = ({ placeholder = "Search products, businesses..." }) => 
                     {result.title || 'Untitled'}
                   </div>
                   <div className="wn-result-type">
-                    {getTypeLabel(result.type)}
+                    Product
                   </div>
                   {result.price && (
                     <div className="wn-result-price">
@@ -229,7 +181,7 @@ const ClientSearchBar = ({ placeholder = "Search products, businesses..." }) => 
           ) : searchQuery.trim().length > 1 ? (
             <div className="wn-search-no-results">
               <div className="wn-no-results-icon">🔍</div>
-              <div>No results found for "{searchQuery}"</div>
+              <div>No products found for "{searchQuery}"</div>
               <div className="wn-no-results-suggestion">
                 Try checking your spelling or use different keywords
               </div>

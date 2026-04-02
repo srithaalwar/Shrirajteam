@@ -9,9 +9,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #e0e0e0;
+  /* margin-bottom: 30px; */
+  /* padding-bottom: 15px; */
+  /* border-bottom: 1px solid #e0e0e0; */
 }
 
 .agent-cart-title {
@@ -657,7 +657,7 @@
   gap: 24px;
   height: calc(100vh - 200px);
   min-height: 600px;
-  margin-top: 20px;
+  margin-top: 2px;
 }
 
 /* Left Column - Cart Items */
@@ -770,7 +770,7 @@
 
 .summary-details.compact .summary-row {
   font-size: 0.9rem;
-  padding: 6px 0;
+  padding: 3px 0;
 }
 
 .summary-details.compact .total-amount {
@@ -872,7 +872,7 @@
 /* Compact Checkout Actions */
 .checkout-actions.compact {
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 0px;
 }
 
 .checkout-actions.compact .checkout-btn {
@@ -1107,5 +1107,125 @@
   to {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+/* Centered Snackbar/Toast */
+.agent-cart-snackbar-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
+  animation: fadeInCenter 0.3s ease-out;
+}
+
+.snackbar-content {
+  min-width: 300px;
+  max-width: 500px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.snackbar-content.success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.snackbar-content.error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+.snackbar-content.warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+}
+
+.snackbar-content.info {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+/* Centered Payment Success Dialog */
+.payment-success-overlay-center {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.payment-success-alert-center {
+  background: white;
+  border-radius: 24px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideUpCenter 0.4s ease-out;
+}
+
+/* Animations */
+@keyframes fadeInCenter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUpCenter {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .snackbar-content {
+    min-width: 280px;
+    max-width: 90%;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  .payment-success-alert-center {
+    width: 95%;
+    margin: 20px;
   }
 }

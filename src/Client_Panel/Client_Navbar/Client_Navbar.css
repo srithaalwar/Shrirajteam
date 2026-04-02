@@ -1320,7 +1320,7 @@
 .wn-nav-right {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 0px;
   flex-shrink: 0;
 }
 
@@ -1357,5 +1357,108 @@
 @media (min-width: 1025px) {
   .wn-desktop-search {
     flex: 3;
+  }
+}
+
+
+/* Desktop Navigation Items */
+.wn-desktop-nav-items {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+.wn-desktop-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.wn-desktop-nav-item:hover {
+  background-color: #f0f0f0;
+  color: #007bff;
+}
+
+.wn-desktop-nav-icon {
+  font-size: 1.1rem;
+}
+
+.wn-desktop-nav-text {
+  font-size: 0.9rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .wn-desktop-nav-items {
+    display: none;
+  }
+}
+
+
+/* User Panel Indicator Styles */
+.wn-user-panel-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: 20px;
+  padding: 4px 16px;
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  border-radius: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wn-panel-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+}
+
+.wn-panel-icon {
+  font-size: 14px;
+  color: #fff;
+}
+
+.wn-panel-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.wn-user-role-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.wn-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.wn-user-role {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .wn-user-panel-indicator {
+    display: none; /* Hide on tablet/mobile to save space */
   }
 }

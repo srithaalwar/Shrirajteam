@@ -972,6 +972,8 @@ import logoImage from "../Logos/logo1.png";
 import { Link, useNavigate } from "react-router-dom"; // Added useNavigate
 import { FaShoppingCart } from "react-icons/fa";
 import { baseurl } from "../BaseURL/BaseURL";
+import WebsiteSearchBar from "./WebsiteSearchBar";
+
 const WebsiteNavbar = () => {
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -1143,13 +1145,8 @@ fetch(`${baseurl}/categories/?level=global`)
             />
           </div>
         </div> */}
-        <div className="wn-nav-center">
-  <div className="wn-search-box">
-    <input
-      type="text"
-      placeholder="What are you looking for?"
-    />
-  </div>
+     <div className="wn-nav-center">
+  <WebsiteSearchBar placeholder="Search products........" />
 </div>
 
         <div className="wn-nav-right web-nav-right">

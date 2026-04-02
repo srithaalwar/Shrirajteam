@@ -365,7 +365,7 @@ import AgentAddressPage from "./Agent_Panel/Agent_AddToCart/Agentaddresspage"
 import ClientAddressPageRoute from "./Client_Panel/Client_AddToCart/ClientAddressPageRoute"
 import AgentSearchResults from './Agent_Panel/Agent_Navbar/AgentSearchResults';
 import ClientSearchResults from './Client_Panel/Client_Navbar/ClientSearchResults';
-
+import CategoryProducts from "./Agent_Panel/Agent_Home_Page/CategoryProducts"
 function App() {
   return (
     <BrowserRouter>
@@ -401,12 +401,11 @@ function App() {
         |
                 <Route path="/agent-home-subcategory/:id" element={<AgentHomeSubCategories />} />
 
-
-
+<Route path="/category-products/:id" element={<CategoryProducts />} />
 
         <Route path="/website-business-product-details/:productId" element={<WebsiteProductDetails />} />
 
-        <Route path="/products/:id" element={<AdminProducts />} />
+        {/* <Route path="/products/:id" element={<AdminProducts />} /> */}
        <Route
   path="/login"
   element={
@@ -419,11 +418,11 @@ function App() {
         
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/contact_us" element={<Contact />} />
+        <Route path="/contactus" element={<Contact />} />
         <Route path="/about_us" element={<AboutUs />} />
 
         <Route path="/verify-otp" element={<VerifyOTP />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/privacypolicy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
 

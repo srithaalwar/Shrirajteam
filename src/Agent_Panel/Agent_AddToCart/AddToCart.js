@@ -12067,6 +12067,1528 @@
 //========================================
 
 // Dated on 31-03-2026
+// import React, { useState, useEffect, useRef } from "react";
+// import { useNavigate, useLocation } from "react-router-dom";
+// import axios from "axios";
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import { baseurl, redirecturl } from '../../BaseURL/BaseURL';
+// import "./AddToCart.css";
+// import AddressManager from "./AddressManager";
+// import "./AddressManager.css";
+// import {
+//   FaTrash, FaMinus, FaPlus, FaCreditCard, FaArrowLeft, FaShoppingCart,
+//   FaCheckCircle, FaExclamationCircle, FaTimes, FaMoneyBillWave, FaTruck,
+//   FaMapMarkerAlt
+// } from "react-icons/fa";
+// import { AddressPage } from "./AddressManager";
+// function AgentCart() {
+//   const [cartItems, setCartItems] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [paymentLoading, setPaymentLoading] = useState(false);
+//   const [snackbarOpen, setSnackbarOpen] = useState(false);
+//   const [snackbarMessage, setSnackbarMessage] = useState("");
+//   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+//   const [updatingItem, setUpdatingItem] = useState(null);
+//   const [removingItem, setRemovingItem] = useState(null);
+//   const [paymentSuccessOpen, setPaymentSuccessOpen] = useState(false);
+//   const [paymentSuccessInfo, setPaymentSuccessInfo] = useState(null);
+//   const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
+//   const [paymentVerified, setPaymentVerified] = useState(false);
+
+//   // Address state
+//   const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
+//   const [selectedBillingAddress, setSelectedBillingAddress] = useState(null);
+//   const [sameAsShipping, setSameAsShipping] = useState(true);
+//   const [paymentMethod, setPaymentMethod] = useState("online");
+
+//   const paymentVerifiedRef = useRef(false);
+//   const paymentTimerRef = useRef(null);
+//   const location = useLocation();
+//   const navigate = useNavigate();
+//   const userId = localStorage.getItem("user_id");
+
+//   // Fetch cart items
+//  // Replace the fetchCartItems function
+// const fetchCartItems = async () => {
+//   if (!userId) { setLoading(false); setCartItems([]); return; }
+//   try {
+//     setLoading(true);
+//     const response = await axios.get(`${baseurl}/cart/?user=${userId}`, { timeout: 10000 });
+//     const cartResponse = response.data;
+//     let userCartItems = [];
+    
+//     if (cartResponse.results && Array.isArray(cartResponse.results)) {
+//       userCartItems = cartResponse.results;
+//     } else if (Array.isArray(cartResponse)) {
+//       userCartItems = cartResponse;
+//     }
+    
+//     // Fetch product details for each cart item if needed
+//     const enhancedCartItems = await Promise.all(userCartItems.map(async (item) => {
+//       if (item.variant && item.variant_details && !item.product_details) {
+//         try {
+//           // Fetch product details using variant's product_id
+//           const productResponse = await axios.get(`${baseurl}/products/${item.variant_details.product}/`);
+//           return {
+//             ...item,
+//             product_details: productResponse.data
+//           };
+//         } catch (err) {
+//           console.error("Error fetching product details:", err);
+//           return item;
+//         }
+//       }
+//       return item;
+//     }));
+    
+//     setCartItems(enhancedCartItems);
+//   } catch (error) {
+//     console.error("Error loading cart data:", error);
+//     showSnackbar("Error loading cart data", "error");
+//     setCartItems([]);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+//   // Clear cart after payment
+//   const clearCartAfterPayment = async () => {
+//     try {
+//       if (!userId) return false;
+//       const currentCartResponse = await axios.get(`${baseurl}/cart/?user=${userId}`, { timeout: 5000 });
+//       const userCartItems = currentCartResponse.data.results || currentCartResponse.data || [];
+//       const deletePromises = userCartItems.map(item =>
+//         axios.delete(`${baseurl}/cart/${item.id}/`, { timeout: 5000 }).catch(() => Promise.resolve())
+//       );
+//       await Promise.all(deletePromises);
+//       setCartItems([]);
+//       window.dispatchEvent(new Event('cartUpdated'));
+//       return true;
+//     } catch { return false; }
+//   };
+
+//   // Check URL for payment params
+//   const checkURLForPaymentParams = () => {
+//     const searchParams = new URLSearchParams(location.search);
+//     const merchantOrderId = searchParams.get('merchant_order_id');
+//     const paymentStatus = searchParams.get('payment_status');
+//     const orderId = searchParams.get('order_id');
+//     if (merchantOrderId) {
+//       localStorage.setItem('merchant_order_id', merchantOrderId);
+//       if (paymentStatus) localStorage.setItem('payment_status', paymentStatus);
+//       if (orderId) localStorage.setItem('order_id', orderId);
+//       window.history.replaceState({}, '', window.location.pathname);
+//       return merchantOrderId;
+//     }
+//     return null;
+//   };
+
+//   const showPaymentSuccessAlert = (paymentData) => {
+//     setPaymentSuccessInfo({
+//       merchant_order_id: paymentData.merchant_order_id || paymentData.merchantOrderId,
+//       order_id: paymentData.order_id || paymentData.orderId,
+//       amount: paymentData.amount || calculateTotal(),
+//       message: paymentData.message || "Your payment was successful!",
+//       timestamp: new Date().toLocaleString()
+//     });
+//     setPaymentSuccessOpen(true);
+//     setPaymentVerified(true);
+//   };
+
+//   const closePaymentSuccessAlert = () => {
+//     setPaymentSuccessOpen(false);
+//     setPaymentSuccessInfo(null);
+//     localStorage.removeItem("merchant_order_id");
+//     localStorage.removeItem("order_id");
+//     localStorage.removeItem("payment_status");
+//     paymentVerifiedRef.current = false;
+//     setPaymentVerified(false);
+//     fetchCartItems();
+//   };
+
+//   // Confirm payment
+//   const confirmPayment = async (merchantOrderId) => {
+//     if (!merchantOrderId || paymentVerifiedRef.current) return;
+//     try {
+//       setIsVerifyingPayment(true);
+//       paymentVerifiedRef.current = true;
+//       const response = await axios.post(
+//         `${baseurl}/product/confirm-payment/`,
+//         { merchant_order_id: merchantOrderId },
+//         { headers: { 'Content-Type': 'application/json' }, timeout: 15000 }
+//       );
+//       const paymentData = response.data;
+//       if (paymentData.status === "success" || paymentData.status === "SUCCESS") {
+//         showSnackbar("Payment confirmed successfully!", "success");
+//         const cleared = await clearCartAfterPayment();
+//         if (cleared) showPaymentSuccessAlert(paymentData);
+//       } else if (paymentData.status === "pending" || paymentData.status === "PENDING") {
+//         showSnackbar("Payment is still pending. Retrying in 30 seconds.", "info");
+//         paymentVerifiedRef.current = false;
+//         paymentTimerRef.current = setTimeout(() => confirmPayment(merchantOrderId), 30000);
+//       } else {
+//         showSnackbar(paymentData.message || "Payment verification failed", "error");
+//         localStorage.removeItem("merchant_order_id");
+//         localStorage.removeItem("order_id");
+//         localStorage.removeItem("payment_status");
+//       }
+//       fetchCartItems();
+//     } catch (error) {
+//       showSnackbar("Payment verification failed. Please try again.", "error");
+//       paymentVerifiedRef.current = false;
+//       if (error.code === 'ECONNABORTED' || !error.response) {
+//         paymentTimerRef.current = setTimeout(() => confirmPayment(merchantOrderId), 30000);
+//       } else {
+//         localStorage.removeItem("merchant_order_id");
+//         localStorage.removeItem("order_id");
+//         localStorage.removeItem("payment_status");
+//       }
+//     } finally {
+//       setIsVerifyingPayment(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//   // When the user comes back from the address page, re-fetch addresses
+//   // and update the selected address (e.g. they may have changed the default).
+//   const syncAddressOnReturn = async () => {
+//     if (!userId) return;
+//     try {
+//       const res = await axios.get(`${baseurl}/addresses/?user_id=${userId}`, { timeout: 10000 });
+//       const data = res.data.results || res.data || [];
+//       if (data.length > 0) {
+//         // Prefer the previously selected address if still valid
+//         const stillValid = selectedShippingAddress
+//           ? data.find(a => a.id === selectedShippingAddress.id)
+//           : null;
+//         const defaultAddr = data.find(a => a.is_default) || data[0];
+//         setSelectedShippingAddress(stillValid || defaultAddr);
+//       } else {
+//         setSelectedShippingAddress(null);
+//       }
+//     } catch { /* keep existing selection */ }
+//   };
+ 
+//   // Re-sync on page focus (user returning from address page tab/navigation)
+//   window.addEventListener('focus', syncAddressOnReturn);
+//   return () => window.removeEventListener('focus', syncAddressOnReturn);
+// }, [userId, selectedShippingAddress]);
+ 
+
+//   // Initialize
+//   useEffect(() => {
+//     const initialize = async () => {
+//       await fetchCartItems();
+//       const merchantOrderIdFromURL = checkURLForPaymentParams();
+//       const merchantOrderId = merchantOrderIdFromURL || localStorage.getItem("merchant_order_id");
+//       if (merchantOrderId && !paymentVerifiedRef.current && !paymentVerified) {
+//         setTimeout(() => confirmPayment(merchantOrderId), 1000);
+//       }
+//     };
+//     initialize();
+//     return () => { if (paymentTimerRef.current) clearTimeout(paymentTimerRef.current); };
+//   }, [location.search]);
+
+//   // Handle quantity change
+//   const handleQuantityChange = async (cartItemId, newQuantity) => {
+//     if (newQuantity < 1) return;
+//     const cartItem = cartItems.find(item => item.id === cartItemId);
+//     if (!cartItem) return;
+//     if (newQuantity > cartItem.variant_details.stock) {
+//       showSnackbar(`Only ${cartItem.variant_details.stock} items available in stock`, "error");
+//       return;
+//     }
+//     setUpdatingItem(cartItemId);
+//     try {
+//       await axios.put(`${baseurl}/cart/${cartItemId}/`, {
+//         user: parseInt(userId),
+//         variant: cartItem.variant,
+//         quantity: newQuantity
+//       }, { timeout: 5000 });
+//       setCartItems(prev => prev.map(item =>
+//         item.id === cartItemId
+//           ? { ...item, quantity: newQuantity, subtotal: parseFloat(cartItem.variant_details.selling_price) * newQuantity }
+//           : item
+//       ));
+//       window.dispatchEvent(new Event('cartUpdated'));
+//       showSnackbar("Quantity updated successfully", "success");
+//     } catch {
+//       showSnackbar("Failed to update quantity", "error");
+//     } finally {
+//       setUpdatingItem(null);
+//     }
+//   };
+
+//   // Handle remove item
+//   const handleRemoveItem = async (cartItemId) => {
+//     setRemovingItem(cartItemId);
+//     try {
+//       await axios.delete(`${baseurl}/cart/${cartItemId}/`, { timeout: 5000 });
+//       setCartItems(prev => prev.filter(item => item.id !== cartItemId));
+//       window.dispatchEvent(new Event('cartUpdated'));
+//       showSnackbar("Item removed from cart", "info");
+//     } catch {
+//       showSnackbar("Failed to remove item", "error");
+//     } finally {
+//       setRemovingItem(null);
+//     }
+//   };
+
+//   // Calculate totals
+//   const calculateSubtotal = () =>
+//     cartItems.reduce((total, item) => total + parseFloat(item.subtotal || 0), 0);
+
+//   const calculateTax = () =>
+//     cartItems.reduce((total, item) => {
+//       const taxPercent = parseFloat(item.variant_details.tax_percent || 0);
+//       const price = parseFloat(item.variant_details.selling_price || 0);
+//       return total + ((price * item.quantity * taxPercent) / 100);
+//     }, 0);
+
+//   const calculateTotal = () => calculateSubtotal() + calculateTax();
+
+// // Replace the handleCheckout function (around line 200-250)
+// const handleCheckout = async () => {
+//   if (cartItems.length === 0) { 
+//     showSnackbar("Your cart is empty", "warning"); 
+//     return; 
+//   }
+//   if (!userId) { 
+//     showSnackbar("Please login to proceed", "warning"); 
+//     return; 
+//   }
+
+//   // Validate addresses
+//   if (!selectedShippingAddress) {
+//     showSnackbar("Please select a delivery address", "error");
+//     return;
+//   }
+
+//   setPaymentLoading(true);
+//   try {
+//     // Prepare payload according to your API specification
+//     const paymentPayload = {
+//       user_id: parseInt(userId),
+//       payment_method: paymentMethod,
+//       user_address_id: selectedShippingAddress.id
+//     };
+
+//     // Add redirect_url only for online payment
+//     if (paymentMethod === "online") {
+//       paymentPayload.redirect_url = `${redirecturl}/agent-add-to-cart`;
+//     }
+
+//     console.log("Payment Payload:", paymentPayload);
+
+//     const paymentResponse = await axios.post(
+//       `${baseurl}/product/initiate-payment/`,
+//       paymentPayload,
+//       { headers: { 'Content-Type': 'application/json' }, timeout: 15000 }
+//     );
+
+//     if (paymentMethod === "online") {
+//       if (paymentResponse.data?.payment_url) {
+//         localStorage.setItem('merchant_order_id', paymentResponse.data.merchant_order_id);
+//         localStorage.setItem('order_id', paymentResponse.data.order_id);
+//         paymentVerifiedRef.current = false;
+//         setPaymentVerified(false);
+//         window.location.href = paymentResponse.data.payment_url;
+//       } else {
+//         showSnackbar(paymentResponse.data?.message || "Payment initialization failed", "error");
+//       }
+//     } else {
+//       // COD payment
+//       showSnackbar("Order placed successfully with COD!", "success");
+//       await clearCartAfterPayment();
+//       setPaymentSuccessInfo({
+//         order_id: paymentResponse.data.order_id,
+//         amount: calculateTotal(),
+//         message: paymentResponse.data?.message || "Your order has been placed successfully with Cash on Delivery",
+//         timestamp: new Date().toLocaleString()
+//       });
+//       setPaymentSuccessOpen(true);
+//     }
+//   } catch (error) {
+//     console.error("Checkout error:", error);
+    
+//     // Extract error message from response
+//     let errorMessage = "Failed to initiate payment";
+    
+//     if (error.response) {
+//       // Server responded with error
+//       const errorData = error.response.data;
+//       errorMessage = errorData.message || errorData.error || errorData.detail;
+      
+//       // Handle specific error cases
+//       if (errorMessage && errorMessage.includes("Minimum order value")) {
+//         showSnackbar(errorMessage, "error");
+//       } else if (errorMessage && errorMessage.includes("stock")) {
+//         showSnackbar(errorMessage, "error");
+//       } else if (errorMessage && errorMessage.includes("address")) {
+//         showSnackbar(errorMessage, "error");
+//       } else {
+//         showSnackbar(errorMessage, "error");
+//       }
+//     } else if (error.request) {
+//       // Request was made but no response
+//       errorMessage = "Network error. Please check your connection.";
+//       showSnackbar(errorMessage, "error");
+//     } else {
+//       // Something else happened
+//       errorMessage = error.message || "Failed to initiate payment";
+//       showSnackbar(errorMessage, "error");
+//     }
+//   } finally {
+//     setPaymentLoading(false);
+//   }
+// };
+
+//   const showSnackbar = (message, severity) => {
+//     setSnackbarMessage(message);
+//     setSnackbarSeverity(severity);
+//     setSnackbarOpen(true);
+//     setTimeout(() => setSnackbarOpen(false), 4000);
+//   };
+
+//   const handleContinueShopping = () => navigate("/agent-busineess-category");
+
+//   const getProductImage = (item) => {
+//     if (item.variant_details.media?.length > 0) {
+//       return `${baseurl}${item.variant_details.media[0].file}`;
+//     }
+//     return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400";
+//   };
+
+//   const handleManualVerification = () => {
+//     const merchantOrderId = localStorage.getItem("merchant_order_id");
+//     if (merchantOrderId) {
+//       paymentVerifiedRef.current = false;
+//       setPaymentVerified(false);
+//       confirmPayment(merchantOrderId);
+//     }
+//   };
+
+//   // Guards
+//   if (!userId) {
+//     return (
+//       <>
+//         <AgentNavbar />
+//         <div className="agent-cart-container">
+//           <div className="agent-cart-empty text-center py-5">
+//             <div className="empty-cart-icon mb-3"><FaShoppingCart size={64} /></div>
+//             <h3 className="mb-3">Please Login</h3>
+//             <p className="text-muted mb-4">You need to be logged in to view your cart</p>
+//             <button className="btn btn-primary btn-lg" onClick={() => navigate("/login")}>
+//               Go to Login
+//             </button>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   if (loading) {
+//     return (
+//       <>
+//         <AgentNavbar />
+//         <div className="agent-cart-container">
+//           <div className="text-center py-5">
+//             <div className="spinner-border text-primary" role="status">
+//               <span className="visually-hidden">Loading...</span>
+//             </div>
+//             <p className="mt-3">Loading cart...</p>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   // Render
+//   return (
+//     <>
+//       <AgentNavbar />
+
+//       {/* Snackbar */}
+//       {snackbarOpen && (
+//         <div className={`agent-cart-snackbar ${snackbarSeverity}`}>
+//           {snackbarSeverity === "success"
+//             ? <FaCheckCircle className="me-2" />
+//             : <FaExclamationCircle className="me-2" />}
+//           {snackbarMessage}
+//         </div>
+//       )}
+
+//       {/* Payment Success Dialog */}
+//       {paymentSuccessOpen && paymentSuccessInfo && (
+//         <div className="payment-success-overlay">
+//           <div className="payment-success-alert">
+//             <div className="payment-success-header">
+//               <FaCheckCircle className="text-success me-3" size={40} />
+//               <div>
+//                 <h3 className="mb-1">Order Placed Successfully!</h3>
+//                 <p className="text-muted mb-0">{paymentSuccessInfo.message}</p>
+//               </div>
+//               <button className="btn-close ms-auto" onClick={closePaymentSuccessAlert}>
+//                 <FaTimes />
+//               </button>
+//             </div>
+//             <div className="payment-success-body">
+//               <div className="success-icon-container">
+//                 <div className="success-icon-circle"><FaCheckCircle size={48} /></div>
+//               </div>
+//               <p className="success-message text-center">Thank you for your purchase!</p>
+//               <div className="payment-details-card">
+//                 <h5 className="mb-3">Order Details</h5>
+//                 {paymentSuccessInfo.order_id && (
+//                   <div className="payment-detail-item">
+//                     <span className="detail-label">Order ID:</span>
+//                     <span className="detail-value">{paymentSuccessInfo.order_id}</span>
+//                   </div>
+//                 )}
+//                 <div className="payment-detail-item">
+//                   <span className="detail-label">Amount:</span>
+//                   <span className="detail-value">₹{paymentSuccessInfo.amount?.toFixed(2)}</span>
+//                 </div>
+//                 <div className="payment-detail-item">
+//                   <span className="detail-label">Date & Time:</span>
+//                   <span className="detail-value">{paymentSuccessInfo.timestamp}</span>
+//                 </div>
+//               </div>
+//               <div className="alert alert-info mt-3">
+//                 <small>
+//                   <FaExclamationCircle className="me-2" />
+//                   Your cart has been cleared. You will receive order confirmation shortly.
+//                 </small>
+//               </div>
+//             </div>
+//             <div className="payment-success-footer">
+//               <button className="btn btn-primary" onClick={closePaymentSuccessAlert}>
+//                 Continue Shopping
+//               </button>
+//               <button className="btn btn-outline-secondary" onClick={() => navigate("/agent-my-orders")}>
+//                 View Orders
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+
+//       <div className="agent-cart-container">
+//         {/* Payment verification banner */}
+//         {isVerifyingPayment && (
+//           <div className="payment-verification-status mb-4">
+//             <div className="alert alert-info">
+//               <div className="d-flex align-items-center">
+//                 <div className="spinner-border spinner-border-sm me-3" role="status"></div>
+//                 <div>
+//                   <strong>Verifying Payment Status</strong>
+//                   <p className="mb-0 small">Checking payment confirmation...</p>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         )}
+
+//         {/* Header */}
+//         <div className="agent-cart-header">
+//           <h3 className="agent-cart-title">
+//             <FaShoppingCart className="me-2" />
+//             Shopping Cart
+//             {cartItems.length > 0 && (
+//               <span className="cart-count-badge">
+//                 {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}
+//               </span>
+//             )}
+//           </h3>
+//           <button className="btn btn-outline-secondary" onClick={handleContinueShopping}>
+//             <FaArrowLeft className="me-2" />Continue Shopping
+//           </button>
+//         </div>
+
+//         {cartItems.length === 0 ? (
+//           <div className="agent-cart-empty text-center py-5">
+//             <div className="empty-cart-icon mb-3"><FaShoppingCart size={64} /></div>
+//             {paymentVerified ? (
+//               <>
+//                 <h3 className="mb-3 text-success">Payment Successful!</h3>
+//                 <p className="text-muted mb-4">Your order has been placed and cart has been cleared.</p>
+//                 <button className="btn btn-primary btn-lg" onClick={handleContinueShopping}>Continue Shopping</button>
+//               </>
+//             ) : localStorage.getItem("merchant_order_id") ? (
+//               <>
+//                 <h3 className="mb-3">Payment Processing</h3>
+//                 <p className="text-muted mb-4">We're verifying your payment status...</p>
+//                 {!isVerifyingPayment && (
+//                   <button className="btn btn-warning btn-lg" onClick={handleManualVerification}>
+//                     Check Payment Status
+//                   </button>
+//                 )}
+//               </>
+//             ) : (
+//               <>
+//                 <h3 className="mb-3">Your cart is empty</h3>
+//                 <p className="text-muted mb-4">Add some products to your cart</p>
+//                 <button className="btn btn-primary btn-lg" onClick={handleContinueShopping}>Browse Products</button>
+//               </>
+//             )}
+//           </div>
+//         ) : (
+//           <div className="agent-cart-content split-layout">
+//             {/* Left: Cart Items */}
+//             <div className="cart-items-column">
+//               <div className="cart-items-header sticky-header">
+//                 <h3>Cart Items ({cartItems.length})</h3>
+//               </div>
+//               <div className="cart-items-list scrollable-list">
+           
+// {cartItems.map((item) => {
+//   const variant = item.variant_details;
+//   const product = item.product_details || {}; // Get product details
+//   const mrp = parseFloat(variant.mrp || 0);
+//   const price = parseFloat(variant.selling_price || 0);
+//   const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+//   const attributes = variant.attributes || {};
+//   const displayAttributes = Object.entries(attributes)
+//     .map(([key, value]) => `${key.replace(/_/g, ' ')}: ${value}`).join(', ');
+  
+//   // Get product name - either from product_details or variant
+//   const productName = product.product_name || variant.sku || "Product";
+
+//   return (
+//     <div key={item.id} className="cart-item-card compact">
+//       <div className="cart-item-image">
+//         <img
+//           src={getProductImage(item)}
+//           alt={productName}
+//           onError={(e) => {
+//             e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400";
+//           }}
+//         />
+//       </div>
+//       <div className="cart-item-details">
+//         <div className="item-header">
+//           <h6 className="item-title">{productName}</h6> {/* Display product name instead of SKU */}
+//           <button
+//             className="btn btn-danger btn-sm remove-btn"
+//             onClick={() => handleRemoveItem(item.id)}
+//             disabled={removingItem === item.id}
+//           >
+//             {removingItem === item.id
+//               ? <span className="spinner-border spinner-border-sm" role="status"></span>
+//               : <FaTrash />}
+//           </button>
+//         </div>
+//         {displayAttributes && (
+//           <p className="item-attributes text-muted small">{displayAttributes}</p>
+//         )}
+//         {/* Rest of the component remains the same */}
+//         <div className="item-pricing">
+//           <div className="price-display">
+//             <span className="current-price">₹{price.toFixed(2)}</span>
+//             {discount > 0 && (
+//               <>
+//                 <span className="original-price">₹{mrp.toFixed(2)}</span>
+//                 <span className="discount-badge">{discount}% OFF</span>
+//               </>
+//             )}
+//           </div>
+//           <div className="item-stock">
+//             <span className={`stock-badge ${variant.stock > 10 ? 'in-stock' : 'low-stock'}`}>
+//               {variant.stock > 10 ? 'In Stock' : `Only ${variant.stock} left`}
+//             </span>
+//           </div>
+//         </div>
+//         <div className="item-quantity">
+//           <div className="quantity-controls">
+//             <button
+//               className="quantity-btn"
+//               onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+//               disabled={item.quantity <= 1 || updatingItem === item.id}
+//             >
+//               <FaMinus />
+//             </button>
+//             <span className="quantity-display">
+//               {updatingItem === item.id
+//                 ? <span className="spinner-border spinner-border-sm" role="status"></span>
+//                 : item.quantity}
+//             </span>
+//             <button
+//               className="quantity-btn"
+//               onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+//               disabled={item.quantity >= variant.stock || updatingItem === item.id}
+//             >
+//               <FaPlus />
+//             </button>
+//           </div>
+//           <div className="item-subtotal">
+//             <span className="subtotal-label">Subtotal:</span>
+//             <span className="subtotal-amount">₹{item.subtotal.toFixed(2)}</span>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// })}
+//               </div>
+//             </div>
+
+//             {/* Right: Order Summary */}
+//             <div className="order-summary-column">
+//               <div className="order-summary-card compact">
+//                 <h3 className="summary-title">Order Summary</h3>
+
+//                 <div className="summary-details compact">
+//                   <div className="summary-row">
+//                     <span>Subtotal ({cartItems.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
+//                     <span>₹{calculateSubtotal().toFixed(2)}</span>
+//                   </div>
+//                   <div className="summary-row">
+//                     <span>Tax</span>
+//                     <span>₹{calculateTax().toFixed(2)}</span>
+//                   </div>
+//                   <div className="summary-row shipping-row">
+//                     <span>Shipping</span>
+//                     <span className="free-shipping">FREE</span>
+//                   </div>
+//                   <div className="summary-divider"></div>
+//                   <div className="summary-row total-row">
+//                     <span className="total-label">Total</span>
+//                     <span className="total-amount">₹{calculateTotal().toFixed(2)}</span>
+//                   </div>
+//                 </div>
+
+//                 {/* Payment Method */}
+//                 <div className="payment-method-section compact">
+//                   <h6 className="payment-method-title">Select Payment Method</h6>
+//                   <div className="payment-method-options compact">
+//                     <label className={`payment-method-option compact ${paymentMethod === 'online' ? 'selected' : ''}`}>
+//                       <input
+//                         type="radio" name="paymentMethod" value="online"
+//                         checked={paymentMethod === 'online'}
+//                         onChange={(e) => setPaymentMethod(e.target.value)}
+//                       />
+//                       <FaCreditCard className="payment-icon" />
+//                       <div className="payment-method-info">
+//                         <span className="payment-method-name">Online Payment</span>
+//                       </div>
+//                     </label>
+//                     <label className={`payment-method-option compact ${paymentMethod === 'cod' ? 'selected' : ''}`}>
+//                       <input
+//                         type="radio" name="paymentMethod" value="cod"
+//                         checked={paymentMethod === 'cod'}
+//                         onChange={(e) => setPaymentMethod(e.target.value)}
+//                       />
+//                       <FaMoneyBillWave className="payment-icon" />
+//                       <div className="payment-method-info">
+//                         <span className="payment-method-name">Cash on Delivery</span>
+//                       </div>
+//                     </label>
+//                   </div>
+//                 </div>
+
+//                 {/* Address Section */}
+//                 <div className="address-section compact">
+//                   {/* Shipping Address */}
+//                   <div className="am-section-header">
+//                     <FaTruck className="me-2 text-muted" />
+//                     <h6 className="mb-0">Delivery Address</h6>
+//                   </div>
+//                   <AddressManager
+//                     userId={userId}
+//                     selectedAddress={selectedShippingAddress}
+//                     onAddressSelect={setSelectedShippingAddress}
+//                   />
+//                 </div>
+
+//                 <div className="checkout-actions compact">
+//                   <button
+//                     className="btn btn-primary checkout-btn"
+//                     onClick={handleCheckout}
+//                     disabled={paymentLoading || cartItems.length === 0 || isVerifyingPayment || !selectedShippingAddress}
+//                   >
+//                     {paymentLoading ? (
+//                       <>
+//                         <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+//                         Processing...
+//                       </>
+//                     ) : (
+//                       <>
+//                         {paymentMethod === 'online'
+//                           ? <FaCreditCard className="me-2" />
+//                           : <FaMoneyBillWave className="me-2" />}
+//                         {paymentMethod === 'online' ? 'Pay Now' : 'Place Order (COD)'}
+//                       </>
+//                     )}
+//                   </button>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//     </>
+//   );
+// }
+
+// export default AgentCart;
+
+
+//=====================================
+// Dated on 02-04-2026 
+
+// import React, { useState, useEffect, useRef } from "react";
+// import { useNavigate, useLocation } from "react-router-dom";
+// import axios from "axios";
+// import Swal from 'sweetalert2';
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import { baseurl, redirecturl } from '../../BaseURL/BaseURL';
+// import "./AddToCart.css";
+// import AddressManager from "./AddressManager";
+// import "./AddressManager.css";
+// import {
+//   FaTrash, FaMinus, FaPlus, FaCreditCard, FaArrowLeft, FaShoppingCart,
+//   FaCheckCircle, FaExclamationCircle, FaTimes, FaMoneyBillWave, FaTruck,
+//   FaMapMarkerAlt
+// } from "react-icons/fa";
+// import { AddressPage } from "./AddressManager";
+
+// function AgentCart() {
+//   const [cartItems, setCartItems] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [paymentLoading, setPaymentLoading] = useState(false);
+//   const [updatingItem, setUpdatingItem] = useState(null);
+//   const [removingItem, setRemovingItem] = useState(null);
+//   const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
+//   const [paymentVerified, setPaymentVerified] = useState(false);
+
+//   // Address state
+//   const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
+//   const [selectedBillingAddress, setSelectedBillingAddress] = useState(null);
+//   const [sameAsShipping, setSameAsShipping] = useState(true);
+//   const [paymentMethod, setPaymentMethod] = useState("online");
+
+//   const paymentVerifiedRef = useRef(false);
+//   const paymentTimerRef = useRef(null);
+//   const location = useLocation();
+//   const navigate = useNavigate();
+//   const userId = localStorage.getItem("user_id");
+
+//   // SweetAlert helper functions
+//   const showAlert = (title, message, type = 'success', timer = 3000) => {
+//     Swal.fire({
+//       title: title,
+//       text: message,
+//       icon: type,
+//       toast: false,
+//       position: 'center',
+//       showConfirmButton: true,
+//       confirmButtonColor: '#3085d6',
+//       timer: type === 'error' ? undefined : timer,
+//       timerProgressBar: type !== 'error'
+//     });
+//   };
+
+//   const showToast = (title, message, type = 'success', timer = 3000) => {
+//     Swal.fire({
+//       title: title,
+//       text: message,
+//       icon: type,
+//       toast: true,
+//       position: 'top-end',
+//       showConfirmButton: false,
+//       timer: timer,
+//       timerProgressBar: true,
+//       background: '#fff',
+//       showClass: {
+//         popup: 'animate__animated animate__fadeInRight'
+//       },
+//       hideClass: {
+//         popup: 'animate__animated animate__fadeOutRight'
+//       }
+//     });
+//   };
+
+//   const showConfirmDialog = async (title, text, confirmText = 'Yes, delete it!', cancelText = 'Cancel') => {
+//     const result = await Swal.fire({
+//       title: title,
+//       text: text,
+//       icon: 'warning',
+//       showCancelButton: true,
+//       confirmButtonColor: '#d33',
+//       cancelButtonColor: '#3085d6',
+//       confirmButtonText: confirmText,
+//       cancelButtonText: cancelText
+//     });
+//     return result.isConfirmed;
+//   };
+
+//   const showPaymentSuccessDialog = (paymentData) => {
+//     Swal.fire({
+//       title: 'Order Placed Successfully!',
+//       html: `
+//         <div class="text-center">
+//           <div class="mb-3">
+//             <i class="fas fa-check-circle" style="font-size: 64px; color: #28a745;"></i>
+//           </div>
+//           <p class="mb-3">${paymentData.message || "Your payment was successful!"}</p>
+//           <div class="payment-details mt-3" style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: left;">
+//             ${paymentData.order_id ? `<div><strong>Order ID:</strong> ${paymentData.order_id}</div>` : ''}
+//             <div><strong>Amount:</strong> ₹${(paymentData.amount || calculateTotal()).toFixed(2)}</div>
+//             <div><strong>Date & Time:</strong> ${new Date().toLocaleString()}</div>
+//           </div>
+//         </div>
+//       `,
+//       icon: 'success',
+//       confirmButtonText: 'Continue Shopping',
+//       showCancelButton: true,
+//       cancelButtonText: 'View Orders',
+//       reverseButtons: true
+//     }).then((result) => {
+//       if (result.isConfirmed) {
+//         // Continue Shopping
+//         fetchCartItems();
+//       } else if (result.dismiss === Swal.DismissReason.cancel) {
+//         // View Orders
+//         navigate("/agent-my-orders");
+//       }
+//       setPaymentVerified(true);
+//     });
+//   };
+
+//   // Fetch cart items
+//   const fetchCartItems = async () => {
+//     if (!userId) { 
+//       setLoading(false); 
+//       setCartItems([]); 
+//       return; 
+//     }
+//     try {
+//       setLoading(true);
+//       const response = await axios.get(`${baseurl}/cart/?user=${userId}`, { timeout: 10000 });
+//       const cartResponse = response.data;
+//       let userCartItems = [];
+      
+//       if (cartResponse.results && Array.isArray(cartResponse.results)) {
+//         userCartItems = cartResponse.results;
+//       } else if (Array.isArray(cartResponse)) {
+//         userCartItems = cartResponse;
+//       }
+      
+//       // Fetch product details for each cart item if needed
+//       const enhancedCartItems = await Promise.all(userCartItems.map(async (item) => {
+//         if (item.variant && item.variant_details && !item.product_details) {
+//           try {
+//             // Fetch product details using variant's product_id
+//             const productResponse = await axios.get(`${baseurl}/products/${item.variant_details.product}/`);
+//             return {
+//               ...item,
+//               product_details: productResponse.data
+//             };
+//           } catch (err) {
+//             console.error("Error fetching product details:", err);
+//             return item;
+//           }
+//         }
+//         return item;
+//       }));
+      
+//       setCartItems(enhancedCartItems);
+//     } catch (error) {
+//       console.error("Error loading cart data:", error);
+//       showToast('Error', 'Error loading cart data', 'error');
+//       setCartItems([]);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // Clear cart after payment
+//   const clearCartAfterPayment = async () => {
+//     try {
+//       if (!userId) return false;
+//       const currentCartResponse = await axios.get(`${baseurl}/cart/?user=${userId}`, { timeout: 5000 });
+//       const userCartItems = currentCartResponse.data.results || currentCartResponse.data || [];
+//       const deletePromises = userCartItems.map(item =>
+//         axios.delete(`${baseurl}/cart/${item.id}/`, { timeout: 5000 }).catch(() => Promise.resolve())
+//       );
+//       await Promise.all(deletePromises);
+//       setCartItems([]);
+//       window.dispatchEvent(new Event('cartUpdated'));
+//       return true;
+//     } catch { return false; }
+//   };
+
+//   // Check URL for payment params
+//   const checkURLForPaymentParams = () => {
+//     const searchParams = new URLSearchParams(location.search);
+//     const merchantOrderId = searchParams.get('merchant_order_id');
+//     const paymentStatus = searchParams.get('payment_status');
+//     const orderId = searchParams.get('order_id');
+//     if (merchantOrderId) {
+//       localStorage.setItem('merchant_order_id', merchantOrderId);
+//       if (paymentStatus) localStorage.setItem('payment_status', paymentStatus);
+//       if (orderId) localStorage.setItem('order_id', orderId);
+//       window.history.replaceState({}, '', window.location.pathname);
+//       return merchantOrderId;
+//     }
+//     return null;
+//   };
+
+//   // Confirm payment
+//   const confirmPayment = async (merchantOrderId) => {
+//     if (!merchantOrderId || paymentVerifiedRef.current) return;
+//     try {
+//       setIsVerifyingPayment(true);
+//       paymentVerifiedRef.current = true;
+//       const response = await axios.post(
+//         `${baseurl}/product/confirm-payment/`,
+//         { merchant_order_id: merchantOrderId },
+//         { headers: { 'Content-Type': 'application/json' }, timeout: 15000 }
+//       );
+//       const paymentData = response.data;
+//       if (paymentData.status === "success" || paymentData.status === "SUCCESS") {
+//         showToast('Success', 'Payment confirmed successfully!', 'success');
+//         const cleared = await clearCartAfterPayment();
+//         if (cleared) showPaymentSuccessDialog(paymentData);
+//       } else if (paymentData.status === "pending" || paymentData.status === "PENDING") {
+//         showToast('Info', 'Payment is still pending. Retrying in 30 seconds.', 'info', 5000);
+//         paymentVerifiedRef.current = false;
+//         paymentTimerRef.current = setTimeout(() => confirmPayment(merchantOrderId), 30000);
+//       } else {
+//         showAlert('Payment Failed', paymentData.message || "Payment verification failed", 'error');
+//         localStorage.removeItem("merchant_order_id");
+//         localStorage.removeItem("order_id");
+//         localStorage.removeItem("payment_status");
+//       }
+//       fetchCartItems();
+//     } catch (error) {
+//       showAlert('Verification Failed', 'Payment verification failed. Please try again.', 'error');
+//       paymentVerifiedRef.current = false;
+//       if (error.code === 'ECONNABORTED' || !error.response) {
+//         paymentTimerRef.current = setTimeout(() => confirmPayment(merchantOrderId), 30000);
+//       } else {
+//         localStorage.removeItem("merchant_order_id");
+//         localStorage.removeItem("order_id");
+//         localStorage.removeItem("payment_status");
+//       }
+//     } finally {
+//       setIsVerifyingPayment(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     const syncAddressOnReturn = async () => {
+//       if (!userId) return;
+//       try {
+//         const res = await axios.get(`${baseurl}/addresses/?user_id=${userId}`, { timeout: 10000 });
+//         const data = res.data.results || res.data || [];
+//         if (data.length > 0) {
+//           const stillValid = selectedShippingAddress
+//             ? data.find(a => a.id === selectedShippingAddress.id)
+//             : null;
+//           const defaultAddr = data.find(a => a.is_default) || data[0];
+//           setSelectedShippingAddress(stillValid || defaultAddr);
+//         } else {
+//           setSelectedShippingAddress(null);
+//         }
+//       } catch { /* keep existing selection */ }
+//     };
+   
+//     window.addEventListener('focus', syncAddressOnReturn);
+//     return () => window.removeEventListener('focus', syncAddressOnReturn);
+//   }, [userId, selectedShippingAddress]);
+
+//   // Initialize
+//   useEffect(() => {
+//     const initialize = async () => {
+//       await fetchCartItems();
+//       const merchantOrderIdFromURL = checkURLForPaymentParams();
+//       const merchantOrderId = merchantOrderIdFromURL || localStorage.getItem("merchant_order_id");
+//       if (merchantOrderId && !paymentVerifiedRef.current && !paymentVerified) {
+//         setTimeout(() => confirmPayment(merchantOrderId), 1000);
+//       }
+//     };
+//     initialize();
+//     return () => { if (paymentTimerRef.current) clearTimeout(paymentTimerRef.current); };
+//   }, [location.search]);
+
+//   // Handle quantity change
+//   const handleQuantityChange = async (cartItemId, newQuantity) => {
+//     if (newQuantity < 1) return;
+//     const cartItem = cartItems.find(item => item.id === cartItemId);
+//     if (!cartItem) return;
+//     if (newQuantity > cartItem.variant_details.stock) {
+//       showToast('Out of Stock', `Only ${cartItem.variant_details.stock} items available in stock`, 'error');
+//       return;
+//     }
+//     setUpdatingItem(cartItemId);
+//     try {
+//       await axios.put(`${baseurl}/cart/${cartItemId}/`, {
+//         user: parseInt(userId),
+//         variant: cartItem.variant,
+//         quantity: newQuantity
+//       }, { timeout: 5000 });
+//       setCartItems(prev => prev.map(item =>
+//         item.id === cartItemId
+//           ? { ...item, quantity: newQuantity, subtotal: parseFloat(cartItem.variant_details.selling_price) * newQuantity }
+//           : item
+//       ));
+//       window.dispatchEvent(new Event('cartUpdated'));
+//       showToast('Success', 'Quantity updated successfully', 'success');
+//     } catch {
+//       showToast('Error', 'Failed to update quantity', 'error');
+//     } finally {
+//       setUpdatingItem(null);
+//     }
+//   };
+
+//   // Handle remove item
+//   const handleRemoveItem = async (cartItemId) => {
+//     const confirmed = await showConfirmDialog(
+//       'Remove Item',
+//       'Are you sure you want to remove this item from your cart?',
+//       'Yes, remove it!',
+//       'Cancel'
+//     );
+    
+//     if (confirmed) {
+//       setRemovingItem(cartItemId);
+//       try {
+//         await axios.delete(`${baseurl}/cart/${cartItemId}/`, { timeout: 5000 });
+//         setCartItems(prev => prev.filter(item => item.id !== cartItemId));
+//         window.dispatchEvent(new Event('cartUpdated'));
+//         showToast('Removed', 'Item removed from cart', 'info');
+//       } catch {
+//         showToast('Error', 'Failed to remove item', 'error');
+//       } finally {
+//         setRemovingItem(null);
+//       }
+//     }
+//   };
+
+//   // Calculate totals
+//   const calculateSubtotal = () =>
+//     cartItems.reduce((total, item) => total + parseFloat(item.subtotal || 0), 0);
+
+//   const calculateTax = () =>
+//     cartItems.reduce((total, item) => {
+//       const taxPercent = parseFloat(item.variant_details.tax_percent || 0);
+//       const price = parseFloat(item.variant_details.selling_price || 0);
+//       return total + ((price * item.quantity * taxPercent) / 100);
+//     }, 0);
+
+//   const calculateTotal = () => calculateSubtotal() + calculateTax();
+
+//   // Handle checkout
+//   const handleCheckout = async () => {
+//     if (cartItems.length === 0) { 
+//       showToast('Empty Cart', 'Your cart is empty', 'warning'); 
+//       return; 
+//     }
+//     if (!userId) { 
+//       showToast('Login Required', 'Please login to proceed', 'warning'); 
+//       return; 
+//     }
+
+//     // Validate addresses
+//     if (!selectedShippingAddress) {
+//       showToast('Address Required', 'Please select a delivery address', 'error');
+//       return;
+//     }
+
+//     setPaymentLoading(true);
+//     try {
+//       // Prepare payload according to your API specification
+//       const paymentPayload = {
+//         user_id: parseInt(userId),
+//         payment_method: paymentMethod,
+//         user_address_id: selectedShippingAddress.id
+//       };
+
+//       // Add redirect_url only for online payment
+//       if (paymentMethod === "online") {
+//         paymentPayload.redirect_url = `${redirecturl}/agent-add-to-cart`;
+//       }
+
+//       const paymentResponse = await axios.post(
+//         `${baseurl}/product/initiate-payment/`,
+//         paymentPayload,
+//         { headers: { 'Content-Type': 'application/json' }, timeout: 15000 }
+//       );
+
+//       if (paymentMethod === "online") {
+//         if (paymentResponse.data?.payment_url) {
+//           localStorage.setItem('merchant_order_id', paymentResponse.data.merchant_order_id);
+//           localStorage.setItem('order_id', paymentResponse.data.order_id);
+//           paymentVerifiedRef.current = false;
+//           setPaymentVerified(false);
+//           window.location.href = paymentResponse.data.payment_url;
+//         } else {
+//           showAlert('Payment Failed', paymentResponse.data?.message || "Payment initialization failed", 'error');
+//         }
+//       } else {
+//         // COD payment
+//         showToast('Order Placed', 'Order placed successfully with COD!', 'success');
+//         await clearCartAfterPayment();
+//         showPaymentSuccessDialog({
+//           order_id: paymentResponse.data.order_id,
+//           amount: calculateTotal(),
+//           message: paymentResponse.data?.message || "Your order has been placed successfully with Cash on Delivery",
+//           timestamp: new Date().toLocaleString()
+//         });
+//       }
+//     } catch (error) {
+//       console.error("Checkout error:", error);
+      
+//       // Extract error message from response
+//       let errorMessage = "Failed to initiate payment";
+      
+//       if (error.response) {
+//         // Server responded with error
+//         const errorData = error.response.data;
+//         errorMessage = errorData.message || errorData.error || errorData.detail;
+        
+//         // Handle specific error cases
+//         if (errorMessage && errorMessage.includes("Minimum order value")) {
+//           showAlert('Minimum Order Value', errorMessage, 'warning');
+//         } else if (errorMessage && errorMessage.includes("stock")) {
+//           showAlert('Out of Stock', errorMessage, 'error');
+//         } else if (errorMessage && errorMessage.includes("address")) {
+//           showAlert('Address Error', errorMessage, 'error');
+//         } else {
+//           showAlert('Checkout Failed', errorMessage, 'error');
+//         }
+//       } else if (error.request) {
+//         // Request was made but no response
+//         errorMessage = "Network error. Please check your connection.";
+//         showAlert('Network Error', errorMessage, 'error');
+//       } else {
+//         // Something else happened
+//         errorMessage = error.message || "Failed to initiate payment";
+//         showAlert('Error', errorMessage, 'error');
+//       }
+//     } finally {
+//       setPaymentLoading(false);
+//     }
+//   };
+
+//   const handleContinueShopping = () => navigate("/agent-busineess-category");
+
+//   const getProductImage = (item) => {
+//     if (item.variant_details.media?.length > 0) {
+//       return `${baseurl}${item.variant_details.media[0].file}`;
+//     }
+//     return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400";
+//   };
+
+//   const handleManualVerification = () => {
+//     const merchantOrderId = localStorage.getItem("merchant_order_id");
+//     if (merchantOrderId) {
+//       paymentVerifiedRef.current = false;
+//       setPaymentVerified(false);
+//       confirmPayment(merchantOrderId);
+//     }
+//   };
+
+//   // Guards
+//   if (!userId) {
+//     return (
+//       <>
+//         <AgentNavbar />
+//         <div className="agent-cart-container">
+//           <div className="agent-cart-empty text-center py-5">
+//             <div className="empty-cart-icon mb-3"><FaShoppingCart size={64} /></div>
+//             <h3 className="mb-3">Please Login</h3>
+//             <p className="text-muted mb-4">You need to be logged in to view your cart</p>
+//             <button className="btn btn-primary btn-lg" onClick={() => navigate("/login")}>
+//               Go to Login
+//             </button>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   if (loading) {
+//     return (
+//       <>
+//         <AgentNavbar />
+//         <div className="agent-cart-container">
+//           <div className="text-center py-5">
+//             <div className="spinner-border text-primary" role="status">
+//               <span className="visually-hidden">Loading...</span>
+//             </div>
+//             <p className="mt-3">Loading cart...</p>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   // Render
+//   return (
+//     <>
+//       <AgentNavbar />
+
+//       <div className="agent-cart-container">
+//         {/* Payment verification banner */}
+//         {isVerifyingPayment && (
+//           <div className="payment-verification-status mb-4">
+//             <div className="alert alert-info">
+//               <div className="d-flex align-items-center">
+//                 <div className="spinner-border spinner-border-sm me-3" role="status"></div>
+//                 <div>
+//                   <strong>Verifying Payment Status</strong>
+//                   <p className="mb-0 small">Checking payment confirmation...</p>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         )}
+
+//         {/* Header */}
+//         <div className="agent-cart-header">
+//           <h3 className="agent-cart-title">
+//             <FaShoppingCart className="me-2" />
+//             Shopping Cart
+//             {cartItems.length > 0 && (
+//               <span className="cart-count-badge">
+//                 {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}
+//               </span>
+//             )}
+//           </h3>
+//           <button className="btn btn-outline-secondary" onClick={handleContinueShopping}>
+//             <FaArrowLeft className="me-2" />Continue Shopping
+//           </button>
+//         </div>
+
+//         {cartItems.length === 0 ? (
+//           <div className="agent-cart-empty text-center py-5">
+//             <div className="empty-cart-icon mb-3"><FaShoppingCart size={64} /></div>
+//             {paymentVerified ? (
+//               <>
+//                 <h3 className="mb-3 text-success">Payment Successful!</h3>
+//                 <p className="text-muted mb-4">Your order has been placed and cart has been cleared.</p>
+//                 <button className="btn btn-primary btn-lg" onClick={handleContinueShopping}>Continue Shopping</button>
+//               </>
+//             ) : localStorage.getItem("merchant_order_id") ? (
+//               <>
+//                 <h3 className="mb-3">Payment Processing</h3>
+//                 <p className="text-muted mb-4">We're verifying your payment status...</p>
+//                 {!isVerifyingPayment && (
+//                   <button className="btn btn-warning btn-lg" onClick={handleManualVerification}>
+//                     Check Payment Status
+//                   </button>
+//                 )}
+//               </>
+//             ) : (
+//               <>
+//                 <h3 className="mb-3">Your cart is empty</h3>
+//                 <p className="text-muted mb-4">Add some products to your cart</p>
+//                 <button className="btn btn-primary btn-lg" onClick={handleContinueShopping}>Browse Products</button>
+//               </>
+//             )}
+//           </div>
+//         ) : (
+//           <div className="agent-cart-content split-layout">
+//             {/* Left: Cart Items */}
+//             <div className="cart-items-column">
+//               <div className="cart-items-header sticky-header">
+//                 <h3>Cart Items ({cartItems.length})</h3>
+//               </div>
+//               <div className="cart-items-list scrollable-list">
+           
+// {cartItems.map((item) => {
+//   const variant = item.variant_details;
+//   const product = item.product_details || {};
+//   const mrp = parseFloat(variant.mrp || 0);
+//   const price = parseFloat(variant.selling_price || 0);
+//   const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+//   const attributes = variant.attributes || {};
+//   const displayAttributes = Object.entries(attributes)
+//     .map(([key, value]) => `${key.replace(/_/g, ' ')}: ${value}`).join(', ');
+  
+//   const productName = product.product_name || variant.sku || "Product";
+
+//   return (
+//     <div key={item.id} className="cart-item-card compact">
+//       <div className="cart-item-image">
+//         <img
+//           src={getProductImage(item)}
+//           alt={productName}
+//           onError={(e) => {
+//             e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400";
+//           }}
+//         />
+//       </div>
+//       <div className="cart-item-details">
+//         <div className="item-header">
+//           <h6 className="item-title">{productName}</h6>
+//           <button
+//             className="btn btn-danger btn-sm remove-btn"
+//             onClick={() => handleRemoveItem(item.id)}
+//             disabled={removingItem === item.id}
+//           >
+//             {removingItem === item.id
+//               ? <span className="spinner-border spinner-border-sm" role="status"></span>
+//               : <FaTrash />}
+//           </button>
+//         </div>
+//         {displayAttributes && (
+//           <p className="item-attributes text-muted small">{displayAttributes}</p>
+//         )}
+//         <div className="item-pricing">
+//           <div className="price-display">
+//             <span className="current-price">₹{price.toFixed(2)}</span>
+//             {discount > 0 && (
+//               <>
+//                 <span className="original-price">₹{mrp.toFixed(2)}</span>
+//                 <span className="discount-badge">{discount}% OFF</span>
+//               </>
+//             )}
+//           </div>
+//           <div className="item-stock">
+//             <span className={`stock-badge ${variant.stock > 10 ? 'in-stock' : 'low-stock'}`}>
+//               {variant.stock > 10 ? 'In Stock' : `Only ${variant.stock} left`}
+//             </span>
+//           </div>
+//         </div>
+//         <div className="item-quantity">
+//           <div className="quantity-controls">
+//             <button
+//               className="quantity-btn"
+//               onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+//               disabled={item.quantity <= 1 || updatingItem === item.id}
+//             >
+//               <FaMinus />
+//             </button>
+//             <span className="quantity-display">
+//               {updatingItem === item.id
+//                 ? <span className="spinner-border spinner-border-sm" role="status"></span>
+//                 : item.quantity}
+//             </span>
+//             <button
+//               className="quantity-btn"
+//               onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+//               disabled={item.quantity >= variant.stock || updatingItem === item.id}
+//             >
+//               <FaPlus />
+//             </button>
+//           </div>
+//           <div className="item-subtotal">
+//             <span className="subtotal-label">Subtotal:</span>
+//             <span className="subtotal-amount">₹{item.subtotal.toFixed(2)}</span>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// })}
+//               </div>
+//             </div>
+
+//             {/* Right: Order Summary */}
+//             <div className="order-summary-column">
+//               <div className="order-summary-card compact">
+//                 <h3 className="summary-title">Order Summary</h3>
+
+//                 <div className="summary-details compact">
+//                   <div className="summary-row">
+//                     <span>Subtotal ({cartItems.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
+//                     <span>₹{calculateSubtotal().toFixed(2)}</span>
+//                   </div>
+//                   <div className="summary-row">
+//                     <span>Tax</span>
+//                     <span>₹{calculateTax().toFixed(2)}</span>
+//                   </div>
+//                   <div className="summary-row shipping-row">
+//                     <span>Shipping</span>
+//                     <span className="free-shipping">FREE</span>
+//                   </div>
+//                   <div className="summary-divider"></div>
+//                   <div className="summary-row total-row">
+//                     <span className="total-label">Total</span>
+//                     <span className="total-amount">₹{calculateTotal().toFixed(2)}</span>
+//                   </div>
+//                 </div>
+
+//                 {/* Payment Method */}
+//                 <div className="payment-method-section compact">
+//                   <h6 className="payment-method-title">Select Payment Method</h6>
+//                   <div className="payment-method-options compact">
+//                     <label className={`payment-method-option compact ${paymentMethod === 'online' ? 'selected' : ''}`}>
+//                       <input
+//                         type="radio" name="paymentMethod" value="online"
+//                         checked={paymentMethod === 'online'}
+//                         onChange={(e) => setPaymentMethod(e.target.value)}
+//                       />
+//                       <FaCreditCard className="payment-icon" />
+//                       <div className="payment-method-info">
+//                         <span className="payment-method-name">Online Payment</span>
+//                       </div>
+//                     </label>
+//                     <label className={`payment-method-option compact ${paymentMethod === 'cod' ? 'selected' : ''}`}>
+//                       <input
+//                         type="radio" name="paymentMethod" value="cod"
+//                         checked={paymentMethod === 'cod'}
+//                         onChange={(e) => setPaymentMethod(e.target.value)}
+//                       />
+//                       <FaMoneyBillWave className="payment-icon" />
+//                       <div className="payment-method-info">
+//                         <span className="payment-method-name">Cash on Delivery</span>
+//                       </div>
+//                     </label>
+//                   </div>
+//                 </div>
+
+//                 {/* Address Section */}
+//                 <div className="address-section compact">
+//                   <div className="am-section-header">
+//                     <FaTruck className="me-2 text-muted" />
+//                     <h6 className="mb-0">Delivery Address</h6>
+//                   </div>
+//                   <AddressManager
+//                     userId={userId}
+//                     selectedAddress={selectedShippingAddress}
+//                     onAddressSelect={setSelectedShippingAddress}
+//                   />
+//                 </div>
+
+//                 <div className="checkout-actions compact">
+//                   <button
+//                     className="btn btn-primary checkout-btn"
+//                     onClick={handleCheckout}
+//                     disabled={paymentLoading || cartItems.length === 0 || isVerifyingPayment || !selectedShippingAddress}
+//                   >
+//                     {paymentLoading ? (
+//                       <>
+//                         <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+//                         Processing...
+//                       </>
+//                     ) : (
+//                       <>
+//                         {paymentMethod === 'online'
+//                           ? <FaCreditCard className="me-2" />
+//                           : <FaMoneyBillWave className="me-2" />}
+//                         {paymentMethod === 'online' ? 'Pay Now' : 'Place Order (COD)'}
+//                       </>
+//                     )}
+//                   </button>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//     </>
+//   );
+// }
+
+// export default AgentCart;
+
+//======================
+
+
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -12081,6 +13603,7 @@ import {
   FaMapMarkerAlt
 } from "react-icons/fa";
 import { AddressPage } from "./AddressManager";
+
 function AgentCart() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12108,48 +13631,47 @@ function AgentCart() {
   const userId = localStorage.getItem("user_id");
 
   // Fetch cart items
- // Replace the fetchCartItems function
-const fetchCartItems = async () => {
-  if (!userId) { setLoading(false); setCartItems([]); return; }
-  try {
-    setLoading(true);
-    const response = await axios.get(`${baseurl}/cart/?user=${userId}`, { timeout: 10000 });
-    const cartResponse = response.data;
-    let userCartItems = [];
-    
-    if (cartResponse.results && Array.isArray(cartResponse.results)) {
-      userCartItems = cartResponse.results;
-    } else if (Array.isArray(cartResponse)) {
-      userCartItems = cartResponse;
-    }
-    
-    // Fetch product details for each cart item if needed
-    const enhancedCartItems = await Promise.all(userCartItems.map(async (item) => {
-      if (item.variant && item.variant_details && !item.product_details) {
-        try {
-          // Fetch product details using variant's product_id
-          const productResponse = await axios.get(`${baseurl}/products/${item.variant_details.product}/`);
-          return {
-            ...item,
-            product_details: productResponse.data
-          };
-        } catch (err) {
-          console.error("Error fetching product details:", err);
-          return item;
-        }
+  const fetchCartItems = async () => {
+    if (!userId) { setLoading(false); setCartItems([]); return; }
+    try {
+      setLoading(true);
+      const response = await axios.get(`${baseurl}/cart/?user=${userId}`, { timeout: 10000 });
+      const cartResponse = response.data;
+      let userCartItems = [];
+      
+      if (cartResponse.results && Array.isArray(cartResponse.results)) {
+        userCartItems = cartResponse.results;
+      } else if (Array.isArray(cartResponse)) {
+        userCartItems = cartResponse;
       }
-      return item;
-    }));
-    
-    setCartItems(enhancedCartItems);
-  } catch (error) {
-    console.error("Error loading cart data:", error);
-    showSnackbar("Error loading cart data", "error");
-    setCartItems([]);
-  } finally {
-    setLoading(false);
-  }
-};
+      
+      // Fetch product details for each cart item if needed
+      const enhancedCartItems = await Promise.all(userCartItems.map(async (item) => {
+        if (item.variant && item.variant_details && !item.product_details) {
+          try {
+            // Fetch product details using variant's product_id
+            const productResponse = await axios.get(`${baseurl}/products/${item.variant_details.product}/`);
+            return {
+              ...item,
+              product_details: productResponse.data
+            };
+          } catch (err) {
+            console.error("Error fetching product details:", err);
+            return item;
+          }
+        }
+        return item;
+      }));
+      
+      setCartItems(enhancedCartItems);
+    } catch (error) {
+      console.error("Error loading cart data:", error);
+      showSnackbar("Error loading cart data", "error");
+      setCartItems([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Clear cart after payment
   const clearCartAfterPayment = async () => {
@@ -12249,31 +13771,26 @@ const fetchCartItems = async () => {
   };
 
   useEffect(() => {
-  // When the user comes back from the address page, re-fetch addresses
-  // and update the selected address (e.g. they may have changed the default).
-  const syncAddressOnReturn = async () => {
-    if (!userId) return;
-    try {
-      const res = await axios.get(`${baseurl}/addresses/?user_id=${userId}`, { timeout: 10000 });
-      const data = res.data.results || res.data || [];
-      if (data.length > 0) {
-        // Prefer the previously selected address if still valid
-        const stillValid = selectedShippingAddress
-          ? data.find(a => a.id === selectedShippingAddress.id)
-          : null;
-        const defaultAddr = data.find(a => a.is_default) || data[0];
-        setSelectedShippingAddress(stillValid || defaultAddr);
-      } else {
-        setSelectedShippingAddress(null);
-      }
-    } catch { /* keep existing selection */ }
-  };
- 
-  // Re-sync on page focus (user returning from address page tab/navigation)
-  window.addEventListener('focus', syncAddressOnReturn);
-  return () => window.removeEventListener('focus', syncAddressOnReturn);
-}, [userId, selectedShippingAddress]);
- 
+    const syncAddressOnReturn = async () => {
+      if (!userId) return;
+      try {
+        const res = await axios.get(`${baseurl}/addresses/?user_id=${userId}`, { timeout: 10000 });
+        const data = res.data.results || res.data || [];
+        if (data.length > 0) {
+          const stillValid = selectedShippingAddress
+            ? data.find(a => a.id === selectedShippingAddress.id)
+            : null;
+          const defaultAddr = data.find(a => a.is_default) || data[0];
+          setSelectedShippingAddress(stillValid || defaultAddr);
+        } else {
+          setSelectedShippingAddress(null);
+        }
+      } catch { /* keep existing selection */ }
+    };
+   
+    window.addEventListener('focus', syncAddressOnReturn);
+    return () => window.removeEventListener('focus', syncAddressOnReturn);
+  }, [userId, selectedShippingAddress]);
 
   // Initialize
   useEffect(() => {
@@ -12290,34 +13807,93 @@ const fetchCartItems = async () => {
   }, [location.search]);
 
   // Handle quantity change
-  const handleQuantityChange = async (cartItemId, newQuantity) => {
-    if (newQuantity < 1) return;
-    const cartItem = cartItems.find(item => item.id === cartItemId);
-    if (!cartItem) return;
-    if (newQuantity > cartItem.variant_details.stock) {
-      showSnackbar(`Only ${cartItem.variant_details.stock} items available in stock`, "error");
-      return;
+ // Handle quantity change
+// const handleQuantityChange = async (cartItemId, newQuantity) => {
+//   if (newQuantity < 1) return;
+//   const cartItem = cartItems.find(item => item.id === cartItemId);
+//   if (!cartItem) return;
+  
+//   if (newQuantity > cartItem.variant_details.stock) {
+//     showSnackbar(`Only ${cartItem.variant_details.stock} items available in stock`, "error");
+//     return;
+//   }
+  
+//   setUpdatingItem(cartItemId);
+//   try {
+//     await axios.put(`${baseurl}/cart/${cartItemId}/`, {
+//       user: parseInt(userId),
+//       variant: cartItem.variant,
+//       quantity: newQuantity
+//     }, { timeout: 5000 });
+    
+//     setCartItems(prev => prev.map(item =>
+//       item.id === cartItemId
+//         ? { ...item, quantity: newQuantity, subtotal: parseFloat(cartItem.variant_details.selling_price) * newQuantity }
+//         : item
+//     ));
+//     window.dispatchEvent(new Event('cartUpdated'));
+//     showSnackbar("Quantity updated successfully", "success");
+//   } catch (error) {
+//     console.error("Error updating quantity:", error);
+    
+//     // Extract and show the backend error message
+//     let errorMessage = "Failed to update quantity";
+    
+//     if (error.response?.data?.error) {
+//       errorMessage = error.response.data.error;
+//     } else if (error.response?.data?.message) {
+//       errorMessage = error.response.data.message;
+//     } else if (error.response?.data?.detail) {
+//       errorMessage = error.response.data.detail;
+//     }
+    
+//     // Show the error in alert/snackbar
+//     showSnackbar(errorMessage, "error");
+//   } finally {
+//     setUpdatingItem(null);
+//   }
+// };
+
+const handleQuantityChange = async (cartItemId, newQuantity) => {
+  if (newQuantity < 1) return;
+  const cartItem = cartItems.find(item => item.id === cartItemId);
+  if (!cartItem) return;
+  if (newQuantity > cartItem.variant_details.stock) {
+    showSnackbar(`Only ${cartItem.variant_details.stock} items available in stock`, "error");
+    return;
+  }
+  setUpdatingItem(cartItemId);
+  try {
+    await axios.put(`${baseurl}/cart/${cartItemId}/`, {
+      user: parseInt(userId),
+      variant: cartItem.variant,
+      quantity: newQuantity,
+    }, { timeout: 5000 });
+    setCartItems(prev => prev.map(item =>
+      item.id === cartItemId
+        ? { ...item, quantity: newQuantity, subtotal: parseFloat(cartItem.variant_details.selling_price) * newQuantity }
+        : item
+    ));
+    window.dispatchEvent(new Event('cartUpdated'));
+    showSnackbar("Quantity updated successfully", "success");
+  } catch (error) {
+    let errorMessage = "Failed to update quantity";
+    
+    // Try to extract the specific error message
+    if (error.response?.data?.error) {
+      errorMessage = error.response.data.error;
+    } else if (error.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    } else if (error.response?.data?.detail) {
+      errorMessage = error.response.data.detail;
     }
-    setUpdatingItem(cartItemId);
-    try {
-      await axios.put(`${baseurl}/cart/${cartItemId}/`, {
-        user: parseInt(userId),
-        variant: cartItem.variant,
-        quantity: newQuantity
-      }, { timeout: 5000 });
-      setCartItems(prev => prev.map(item =>
-        item.id === cartItemId
-          ? { ...item, quantity: newQuantity, subtotal: parseFloat(cartItem.variant_details.selling_price) * newQuantity }
-          : item
-      ));
-      window.dispatchEvent(new Event('cartUpdated'));
-      showSnackbar("Quantity updated successfully", "success");
-    } catch {
-      showSnackbar("Failed to update quantity", "error");
-    } finally {
-      setUpdatingItem(null);
-    }
-  };
+    
+    showSnackbar(errorMessage, "error");
+  } finally {
+    setUpdatingItem(null);
+  }
+};
+
 
   // Handle remove item
   const handleRemoveItem = async (cartItemId) => {
@@ -12347,101 +13923,91 @@ const fetchCartItems = async () => {
 
   const calculateTotal = () => calculateSubtotal() + calculateTax();
 
-// Replace the handleCheckout function (around line 200-250)
-const handleCheckout = async () => {
-  if (cartItems.length === 0) { 
-    showSnackbar("Your cart is empty", "warning"); 
-    return; 
-  }
-  if (!userId) { 
-    showSnackbar("Please login to proceed", "warning"); 
-    return; 
-  }
-
-  // Validate addresses
-  if (!selectedShippingAddress) {
-    showSnackbar("Please select a delivery address", "error");
-    return;
-  }
-
-  setPaymentLoading(true);
-  try {
-    // Prepare payload according to your API specification
-    const paymentPayload = {
-      user_id: parseInt(userId),
-      payment_method: paymentMethod,
-      user_address_id: selectedShippingAddress.id
-    };
-
-    // Add redirect_url only for online payment
-    if (paymentMethod === "online") {
-      paymentPayload.redirect_url = `${redirecturl}/agent-add-to-cart`;
+  const handleCheckout = async () => {
+    if (cartItems.length === 0) { 
+      showSnackbar("Your cart is empty", "warning"); 
+      return; 
+    }
+    if (!userId) { 
+      showSnackbar("Please login to proceed", "warning"); 
+      return; 
     }
 
-    console.log("Payment Payload:", paymentPayload);
+    if (!selectedShippingAddress) {
+      showSnackbar("Please select a delivery address", "error");
+      return;
+    }
 
-    const paymentResponse = await axios.post(
-      `${baseurl}/product/initiate-payment/`,
-      paymentPayload,
-      { headers: { 'Content-Type': 'application/json' }, timeout: 15000 }
-    );
+    setPaymentLoading(true);
+    try {
+      const paymentPayload = {
+        user_id: parseInt(userId),
+        payment_method: paymentMethod,
+        user_address_id: selectedShippingAddress.id
+      };
 
-    if (paymentMethod === "online") {
-      if (paymentResponse.data?.payment_url) {
-        localStorage.setItem('merchant_order_id', paymentResponse.data.merchant_order_id);
-        localStorage.setItem('order_id', paymentResponse.data.order_id);
-        paymentVerifiedRef.current = false;
-        setPaymentVerified(false);
-        window.location.href = paymentResponse.data.payment_url;
-      } else {
-        showSnackbar(paymentResponse.data?.message || "Payment initialization failed", "error");
+      if (paymentMethod === "online") {
+        paymentPayload.redirect_url = `${redirecturl}/agent-add-to-cart`;
       }
-    } else {
-      // COD payment
-      showSnackbar("Order placed successfully with COD!", "success");
-      await clearCartAfterPayment();
-      setPaymentSuccessInfo({
-        order_id: paymentResponse.data.order_id,
-        amount: calculateTotal(),
-        message: paymentResponse.data?.message || "Your order has been placed successfully with Cash on Delivery",
-        timestamp: new Date().toLocaleString()
-      });
-      setPaymentSuccessOpen(true);
-    }
-  } catch (error) {
-    console.error("Checkout error:", error);
-    
-    // Extract error message from response
-    let errorMessage = "Failed to initiate payment";
-    
-    if (error.response) {
-      // Server responded with error
-      const errorData = error.response.data;
-      errorMessage = errorData.message || errorData.error || errorData.detail;
+
+      console.log("Payment Payload:", paymentPayload);
+
+      const paymentResponse = await axios.post(
+        `${baseurl}/product/initiate-payment/`,
+        paymentPayload,
+        { headers: { 'Content-Type': 'application/json' }, timeout: 15000 }
+      );
+
+      if (paymentMethod === "online") {
+        if (paymentResponse.data?.payment_url) {
+          localStorage.setItem('merchant_order_id', paymentResponse.data.merchant_order_id);
+          localStorage.setItem('order_id', paymentResponse.data.order_id);
+          paymentVerifiedRef.current = false;
+          setPaymentVerified(false);
+          window.location.href = paymentResponse.data.payment_url;
+        } else {
+          showSnackbar(paymentResponse.data?.message || "Payment initialization failed", "error");
+        }
+      } else {
+        showSnackbar("Order placed successfully with COD!", "success");
+        await clearCartAfterPayment();
+        setPaymentSuccessInfo({
+          order_id: paymentResponse.data.order_id,
+          amount: calculateTotal(),
+          message: paymentResponse.data?.message || "Your order has been placed successfully with Cash on Delivery",
+          timestamp: new Date().toLocaleString()
+        });
+        setPaymentSuccessOpen(true);
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
       
-      // Handle specific error cases
-      if (errorMessage && errorMessage.includes("Minimum order value")) {
-        showSnackbar(errorMessage, "error");
-      } else if (errorMessage && errorMessage.includes("stock")) {
-        showSnackbar(errorMessage, "error");
-      } else if (errorMessage && errorMessage.includes("address")) {
+      let errorMessage = "Failed to initiate payment";
+      
+      if (error.response) {
+        const errorData = error.response.data;
+        errorMessage = errorData.message || errorData.error || errorData.detail;
+        
+        if (errorMessage && errorMessage.includes("Minimum order value")) {
+          showSnackbar(errorMessage, "error");
+        } else if (errorMessage && errorMessage.includes("stock")) {
+          showSnackbar(errorMessage, "error");
+        } else if (errorMessage && errorMessage.includes("address")) {
+          showSnackbar(errorMessage, "error");
+        } else {
+          showSnackbar(errorMessage, "error");
+        }
+      } else if (error.request) {
+        errorMessage = "Network error. Please check your connection.";
         showSnackbar(errorMessage, "error");
       } else {
+        errorMessage = error.message || "Failed to initiate payment";
         showSnackbar(errorMessage, "error");
       }
-    } else if (error.request) {
-      // Request was made but no response
-      errorMessage = "Network error. Please check your connection.";
-      showSnackbar(errorMessage, "error");
-    } else {
-      // Something else happened
-      errorMessage = error.message || "Failed to initiate payment";
-      showSnackbar(errorMessage, "error");
+    } finally {
+      setPaymentLoading(false);
     }
-  } finally {
-    setPaymentLoading(false);
-  }
-};
+  };
 
   const showSnackbar = (message, severity) => {
     setSnackbarMessage(message);
@@ -12508,20 +14074,24 @@ const handleCheckout = async () => {
     <>
       <AgentNavbar />
 
-      {/* Snackbar */}
+      {/* Centered Snackbar/Toast */}
       {snackbarOpen && (
-        <div className={`agent-cart-snackbar ${snackbarSeverity}`}>
-          {snackbarSeverity === "success"
-            ? <FaCheckCircle className="me-2" />
-            : <FaExclamationCircle className="me-2" />}
-          {snackbarMessage}
+        <div className="agent-cart-snackbar-center">
+          <div className={`snackbar-content ${snackbarSeverity}`}>
+            {snackbarSeverity === "success"
+              ? <FaCheckCircle className="me-2" />
+              : snackbarSeverity === "error"
+              ? <FaExclamationCircle className="me-2" />
+              : <FaExclamationCircle className="me-2" />}
+            {snackbarMessage}
+          </div>
         </div>
       )}
 
-      {/* Payment Success Dialog */}
+      {/* Centered Payment Success Dialog */}
       {paymentSuccessOpen && paymentSuccessInfo && (
-        <div className="payment-success-overlay">
-          <div className="payment-success-alert">
+        <div className="payment-success-overlay-center">
+          <div className="payment-success-alert-center">
             <div className="payment-success-header">
               <FaCheckCircle className="text-success me-3" size={40} />
               <div>
@@ -12591,7 +14161,7 @@ const handleCheckout = async () => {
 
         {/* Header */}
         <div className="agent-cart-header">
-          <h1 className="agent-cart-title">
+          <h3 className="agent-cart-title">
             <FaShoppingCart className="me-2" />
             Shopping Cart
             {cartItems.length > 0 && (
@@ -12599,7 +14169,7 @@ const handleCheckout = async () => {
                 {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}
               </span>
             )}
-          </h1>
+          </h3>
           <button className="btn btn-outline-secondary" onClick={handleContinueShopping}>
             <FaArrowLeft className="me-2" />Continue Shopping
           </button>
@@ -12640,95 +14210,92 @@ const handleCheckout = async () => {
                 <h3>Cart Items ({cartItems.length})</h3>
               </div>
               <div className="cart-items-list scrollable-list">
-           
-{cartItems.map((item) => {
-  const variant = item.variant_details;
-  const product = item.product_details || {}; // Get product details
-  const mrp = parseFloat(variant.mrp || 0);
-  const price = parseFloat(variant.selling_price || 0);
-  const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
-  const attributes = variant.attributes || {};
-  const displayAttributes = Object.entries(attributes)
-    .map(([key, value]) => `${key.replace(/_/g, ' ')}: ${value}`).join(', ');
-  
-  // Get product name - either from product_details or variant
-  const productName = product.product_name || variant.sku || "Product";
+                {cartItems.map((item) => {
+                  const variant = item.variant_details;
+                  const product = item.product_details || {};
+                  const mrp = parseFloat(variant.mrp || 0);
+                  const price = parseFloat(variant.selling_price || 0);
+                  const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+                  const attributes = variant.attributes || {};
+                  const displayAttributes = Object.entries(attributes)
+                    .map(([key, value]) => `${key.replace(/_/g, ' ')}: ${value}`).join(', ');
+                  
+                  const productName = product.product_name || variant.sku || "Product";
 
-  return (
-    <div key={item.id} className="cart-item-card compact">
-      <div className="cart-item-image">
-        <img
-          src={getProductImage(item)}
-          alt={productName}
-          onError={(e) => {
-            e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400";
-          }}
-        />
-      </div>
-      <div className="cart-item-details">
-        <div className="item-header">
-          <h6 className="item-title">{productName}</h6> {/* Display product name instead of SKU */}
-          <button
-            className="btn btn-danger btn-sm remove-btn"
-            onClick={() => handleRemoveItem(item.id)}
-            disabled={removingItem === item.id}
-          >
-            {removingItem === item.id
-              ? <span className="spinner-border spinner-border-sm" role="status"></span>
-              : <FaTrash />}
-          </button>
-        </div>
-        {displayAttributes && (
-          <p className="item-attributes text-muted small">{displayAttributes}</p>
-        )}
-        {/* Rest of the component remains the same */}
-        <div className="item-pricing">
-          <div className="price-display">
-            <span className="current-price">₹{price.toFixed(2)}</span>
-            {discount > 0 && (
-              <>
-                <span className="original-price">₹{mrp.toFixed(2)}</span>
-                <span className="discount-badge">{discount}% OFF</span>
-              </>
-            )}
-          </div>
-          <div className="item-stock">
-            <span className={`stock-badge ${variant.stock > 10 ? 'in-stock' : 'low-stock'}`}>
-              {variant.stock > 10 ? 'In Stock' : `Only ${variant.stock} left`}
-            </span>
-          </div>
-        </div>
-        <div className="item-quantity">
-          <div className="quantity-controls">
-            <button
-              className="quantity-btn"
-              onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-              disabled={item.quantity <= 1 || updatingItem === item.id}
-            >
-              <FaMinus />
-            </button>
-            <span className="quantity-display">
-              {updatingItem === item.id
-                ? <span className="spinner-border spinner-border-sm" role="status"></span>
-                : item.quantity}
-            </span>
-            <button
-              className="quantity-btn"
-              onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-              disabled={item.quantity >= variant.stock || updatingItem === item.id}
-            >
-              <FaPlus />
-            </button>
-          </div>
-          <div className="item-subtotal">
-            <span className="subtotal-label">Subtotal:</span>
-            <span className="subtotal-amount">₹{item.subtotal.toFixed(2)}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-})}
+                  return (
+                    <div key={item.id} className="cart-item-card compact">
+                      <div className="cart-item-image">
+                        <img
+                          src={getProductImage(item)}
+                          alt={productName}
+                          onError={(e) => {
+                            e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400";
+                          }}
+                        />
+                      </div>
+                      <div className="cart-item-details">
+                        <div className="item-header">
+                          <h6 className="item-title">{productName}</h6>
+                          <button
+                            className="btn btn-danger btn-sm remove-btn"
+                            onClick={() => handleRemoveItem(item.id)}
+                            disabled={removingItem === item.id}
+                          >
+                            {removingItem === item.id
+                              ? <span className="spinner-border spinner-border-sm" role="status"></span>
+                              : <FaTrash />}
+                          </button>
+                        </div>
+                        {displayAttributes && (
+                          <p className="item-attributes text-muted small">{displayAttributes}</p>
+                        )}
+                        <div className="item-pricing">
+                          <div className="price-display">
+                            <span className="current-price">₹{price.toFixed(2)}</span>
+                            {discount > 0 && (
+                              <>
+                                <span className="original-price">₹{mrp.toFixed(2)}</span>
+                                <span className="discount-badge">{discount}% OFF</span>
+                              </>
+                            )}
+                          </div>
+                          <div className="item-stock">
+                            <span className={`stock-badge ${variant.stock > 10 ? 'in-stock' : 'low-stock'}`}>
+                              {variant.stock > 10 ? 'In Stock' : `Only ${variant.stock} left`}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="item-quantity">
+                          <div className="quantity-controls">
+                            <button
+                              className="quantity-btn"
+                              onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                              disabled={item.quantity <= 1 || updatingItem === item.id}
+                            >
+                              <FaMinus />
+                            </button>
+                            <span className="quantity-display">
+                              {updatingItem === item.id
+                                ? <span className="spinner-border spinner-border-sm" role="status"></span>
+                                : item.quantity}
+                            </span>
+                            <button
+                              className="quantity-btn"
+                              onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                              disabled={item.quantity >= variant.stock || updatingItem === item.id}
+                            >
+                              <FaPlus />
+                            </button>
+                          </div>
+                          <div className="item-subtotal">
+                            <span className="subtotal-label">Subtotal:</span>
+                            <span className="subtotal-amount">₹{item.subtotal.toFixed(2)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -12788,7 +14355,6 @@ const handleCheckout = async () => {
 
                 {/* Address Section */}
                 <div className="address-section compact">
-                  {/* Shipping Address */}
                   <div className="am-section-header">
                     <FaTruck className="me-2 text-muted" />
                     <h6 className="mb-0">Delivery Address</h6>

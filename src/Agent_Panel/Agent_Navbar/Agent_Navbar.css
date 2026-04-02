@@ -1486,3 +1486,131 @@
     padding: 8px;
   }
 }
+
+
+/* User Panel Indicator Styles */
+.wn-user-panel-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: 20px;
+  padding: 4px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wn-panel-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+}
+
+.wn-panel-icon {
+  font-size: 14px;
+  color: #fff;
+}
+
+.wn-panel-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.wn-user-role-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.wn-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.wn-user-role {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .wn-user-panel-indicator {
+    display: none; /* Hide on mobile to save space */
+  }
+}
+
+/* For tablet view - make it smaller */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .wn-user-panel-indicator {
+    margin-right: 10px;
+    padding: 2px 8px;
+  }
+  
+  .wn-panel-name {
+    font-size: 10px;
+  }
+  
+  .wn-user-name {
+    font-size: 11px;
+  }
+  
+  .wn-user-role {
+    font-size: 9px;
+  }
+}
+
+
+
+
+/* Profile Tooltip Styles */
+.wn-profile-tooltip {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  white-space: nowrap;
+}
+
+.wn-tooltip-content {
+  position: relative;
+  background-color: #333;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: normal;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.wn-tooltip-arrow {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #333;
+}
+
+.wn-tooltip-text {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Make the user panel indicator have relative positioning for tooltip */
+.wn-user-panel-indicator {
+  position: relative;
+}

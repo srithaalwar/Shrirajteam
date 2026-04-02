@@ -943,6 +943,488 @@
 
 
 
+// import React, { useEffect, useState, useCallback } from "react";
+// import "./style.css";
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import { baseurl } from "../../BaseURL/BaseURL";
+// import { useNavigate } from "react-router-dom";
+// import Categories from "./Categories";
+
+// const AgentHome = () => {
+//   const [businesses, setBusinesses] = useState([]);
+//   const [offersMap, setOffersMap] = useState({});
+//   const [loading, setLoading] = useState(true);
+//   const [categoriesMap, setCategoriesMap] = useState({});
+//   const [categoriesLoading, setCategoriesLoading] = useState(false);
+//   const [groupedBusinesses, setGroupedBusinesses] = useState({});
+//   const [currentUserId, setCurrentUserId] = useState(null);
+//   const [error, setError] = useState(null);
+  
+//   // Pagination states
+//   const [displayedCategories, setDisplayedCategories] = useState([]);
+//   const [categoriesToShow, setCategoriesToShow] = useState(10);
+//   const [loadingMore, setLoadingMore] = useState(false);
+//   const INCREMENT_COUNT = 10;
+  
+//   const navigate = useNavigate();
+
+//   // Helper function to get user ID from localStorage
+//   const getUserIdFromStorage = () => {
+//     try {
+//       const userId = localStorage.getItem('user_id');
+//       if (userId) {
+//         console.log("Found user_id directly in localStorage:", userId);
+//         return userId;
+//       }
+      
+//       const userData = localStorage.getItem('user');
+//       if (userData) {
+//         const parsedUser = JSON.parse(userData);
+//         console.log("Found user object:", parsedUser);
+//         return parsedUser?.id || parsedUser?.user_id || null;
+//       }
+      
+//       const userIdAlt = localStorage.getItem('userId');
+//       if (userIdAlt) {
+//         console.log("Found userId:", userIdAlt);
+//         return userIdAlt;
+//       }
+      
+//       console.log("No user ID found in localStorage");
+//       console.log("All localStorage keys:", Object.keys(localStorage));
+//       return null;
+//     } catch (error) {
+//       console.error("Error parsing user data from localStorage:", error);
+//       return null;
+//     }
+//   };
+
+//   useEffect(() => {
+//     const userId = getUserIdFromStorage();
+//     console.log("Current User ID extracted:", userId, "Type:", typeof userId);
+//     setCurrentUserId(userId);
+//     fetchAllBusinesses(userId);
+//     fetchOffers();
+//     fetchAllCategories();
+//   }, []);
+
+//   const fetchAllBusinesses = async (userId) => {
+//     setLoading(true);
+//     setError(null);
+//     try {
+//       let businessesData = [];
+      
+//       if (userId && userId !== null && userId !== "null") {
+//         const excludeUrl = `${baseurl}/business/?exclude_user_id=${userId}&verification_status=verified`;
+//         console.log("Fetching businesses excluding user ID:", userId);
+//         console.log("Full URL:", excludeUrl);
+        
+//         const res = await fetch(excludeUrl);
+        
+//         if (!res.ok) {
+//           throw new Error(`HTTP error! status: ${res.status}`);
+//         }
+        
+//         const data = await res.json();
+//         console.log("API Response (exclude user):", data);
+        
+//         businessesData = data.results || data || [];
+//         console.log("Businesses from other users:", businessesData.length);
+//       } else {
+//         const allUrl = `${baseurl}/business/`;
+//         console.log("No user ID found, fetching all businesses:", allUrl);
+        
+//         const res = await fetch(allUrl);
+        
+//         if (!res.ok) {
+//           throw new Error(`HTTP error! status: ${res.status}`);
+//         }
+        
+//         const data = await res.json();
+//         console.log("API Response (all businesses):", data);
+        
+//         businessesData = data.results || data || [];
+//         console.log("All businesses:", businessesData.length);
+//       }
+      
+//       // Filter businesses that have banners only
+//       const businessesWithBanners = businessesData.filter(business => 
+//         business.banner && 
+//         business.banner.trim() !== ""
+//       );
+      
+//       console.log("Businesses with banners:", businessesWithBanners.length);
+//       console.log("Businesses details:", businessesWithBanners.map(b => ({ 
+//         id: b.business_id, 
+//         name: b.business_name, 
+//         user: b.user, 
+//         is_active: b.is_active,
+//         categories: b.categories 
+//       })));
+      
+//       setBusinesses(businessesWithBanners);
+      
+//       // FIXED: Group businesses by ALL their categories (not just the first one)
+//       const grouped = {};
+//       businessesWithBanners.forEach(business => {
+//         // Check if business has categories
+//         if (business.categories && business.categories.length > 0) {
+//           // Iterate through ALL categories the business belongs to
+//           business.categories.forEach(categoryId => {
+//             if (!grouped[categoryId]) {
+//               grouped[categoryId] = [];
+//             }
+//             // Add business to this category group (avoid duplicates)
+//             const existingBusiness = grouped[categoryId].find(
+//               b => b.business_id === business.business_id
+//             );
+//             if (!existingBusiness) {
+//               grouped[categoryId].push(business);
+//             }
+//           });
+//         } else {
+//           // If no categories, put in "uncategorized" group
+//           const uncategorizedId = "uncategorized";
+//           if (!grouped[uncategorizedId]) {
+//             grouped[uncategorizedId] = [];
+//           }
+//           grouped[uncategorizedId].push(business);
+//         }
+//       });
+      
+//       console.log("Grouped businesses by categories:", Object.keys(grouped).length, "categories");
+//       console.log("Category groups:", Object.keys(grouped).map(key => ({
+//         categoryId: key,
+//         businessCount: grouped[key].length
+//       })));
+      
+//       setGroupedBusinesses(grouped);
+      
+//     } catch (error) {
+//       console.error("Business API error:", error);
+//       setError(error.message);
+//       setBusinesses([]);
+//       setGroupedBusinesses({});
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const fetchAllCategories = async () => {
+//     setCategoriesLoading(true);
+//     try {
+//       const res = await fetch(`${baseurl}/categories/`);
+      
+//       if (!res.ok) {
+//         throw new Error(`HTTP error! status: ${res.status}`);
+//       }
+      
+//       const data = await res.json();
+//       console.log("Categories API Response:", data);
+      
+//       const categoriesData = data.results || data || [];
+      
+//       const map = {};
+//       categoriesData.forEach(category => {
+//         map[category.category_id] = {
+//           name: category.name,
+//           slug: category.slug,
+//           category_id: category.category_id
+//         };
+//       });
+      
+//       setCategoriesMap(map);
+//     } catch (error) {
+//       console.error("Categories API error:", error);
+//     } finally {
+//       setCategoriesLoading(false);
+//     }
+//   };
+
+//   const fetchOffers = async () => {
+//     try {
+//       const res = await fetch(`${baseurl}/offers/`);
+      
+//       if (!res.ok) {
+//         throw new Error(`HTTP error! status: ${res.status}`);
+//       }
+      
+//       const data = await res.json();
+//       console.log("Offers API Response:", data);
+      
+//       const map = {};
+//       (data.results || data || []).forEach((offer) => {
+//         map[offer.id] = offer;
+//       });
+//       setOffersMap(map);
+//     } catch (error) {
+//       console.error("Offers API error:", error);
+//     }
+//   };
+
+//   // Update displayed categories when groupedBusinesses or categoriesToShow changes
+//   useEffect(() => {
+//     const categoriesWithBusinesses = Object.keys(groupedBusinesses).filter(
+//       categoryId => groupedBusinesses[categoryId].length > 0
+//     );
+//     setDisplayedCategories(categoriesWithBusinesses.slice(0, categoriesToShow));
+//   }, [groupedBusinesses, categoriesToShow]);
+
+// const handleViewAll = (categoryId) => {
+//   const categoryInfo = categoriesMap[categoryId];
+//   console.log("View All clicked for category:", categoryId, categoryInfo);
+//   navigate(`/agent-home-subcategory/${categoryId}`, { 
+//     state: { 
+//       categoryId: categoryId,
+//       categoryName: categoryInfo?.name || "Products",
+//       viewType: "category"
+//     }
+//   });
+// };
+
+// const handleBusinessClick = (business) => {
+//   if (business && business.business_id) {
+//     console.log("Navigating to business products with ID:", business.business_id);
+//     navigate(`/agent-home-subcategory/${business.business_id}`, { 
+//       state: { 
+//         businessId: business.business_id,
+//         businessName: business.business_name,
+//         categoryId: business.categories?.[0] || null,
+//         viewType: "business"
+//       }
+//     });
+//   }
+// };
+
+//   const loadMoreCategories = () => {
+//     setLoadingMore(true);
+//     setTimeout(() => {
+//       setCategoriesToShow(prev => prev + INCREMENT_COUNT);
+//       setLoadingMore(false);
+//     }, 500);
+//   };
+
+//   if (loading) {
+//     return (
+//       <div>
+//         <AgentNavbar />
+//         <div className="mani-as-offer-wrapper">
+//           <div className="mani-as-offer-loading">Loading businesses...</div>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   if (error) {
+//     return (
+//       <div>
+//         <AgentNavbar />
+//         <div className="mani-as-offer-wrapper">
+//           <div className="mani-as-offer-error">
+//             Error loading businesses: {error}
+//             <button 
+//               onClick={() => fetchAllBusinesses(currentUserId)} 
+//               className="retry-btn"
+//               style={{
+//                 marginLeft: '10px',
+//                 padding: '5px 10px',
+//                 backgroundColor: '#007bff',
+//                 color: 'white',
+//                 border: 'none',
+//                 borderRadius: '4px',
+//                 cursor: 'pointer'
+//               }}
+//             >
+//               Retry
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   if (businesses.length === 0) {
+//     return (
+//       <div>
+//         <AgentNavbar />
+//         <div className="mani-as-offer-wrapper">
+//           <div className="mani-as-offer-loading">
+//             {currentUserId && currentUserId !== "null" 
+//               ? `No other businesses available at the moment. Your business (User ID: ${currentUserId}) is currently listed, but no other businesses exist.` 
+//               : "Please log in to view businesses."}
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   const allCategoriesWithBusinesses = Object.keys(groupedBusinesses).filter(
+//     categoryId => groupedBusinesses[categoryId].length > 0
+//   );
+  
+//   const hasMoreCategories = displayedCategories.length < allCategoriesWithBusinesses.length;
+
+//   return (
+//     <div>
+//       <AgentNavbar />
+//       <Categories/>
+      
+//       <div className="agent-home-container">
+//         {displayedCategories.length === 0 ? (
+//           <div className="mani-as-offer-wrapper">
+//             <div className="mani-as-offer-loading">
+//               No categories with businesses available.
+//             </div>
+//           </div>
+//         ) : (
+//           <>
+//             {displayedCategories.map((categoryId) => {
+//               const categoryBusinesses = groupedBusinesses[categoryId];
+//               const categoryInfo = categoriesMap[categoryId];
+//               const categoryName = categoryInfo?.name || 
+//                 (categoryId === "uncategorized" ? "Uncategorized" : "Businesses");
+              
+//               const displayBusinesses = categoryBusinesses.slice(0, 3);
+              
+//               return (
+//                 <div key={categoryId} className="mani-as-offer-wrapper">
+//                   <div className="mani-as-offer-header">
+//                     <h2 className="mani-as-offer-heading">
+//                       {categoriesLoading ? (
+//                         <span className="mani-as-offer-loading-dots">Loading Category</span>
+//                       ) : (
+//                         categoryName
+//                       )}
+//                     </h2>
+//                     {categoryId !== "uncategorized" && (
+//                       <div className="mani-as-offer-viewall-wrap">
+//                         <button 
+//                           onClick={() => handleViewAll(categoryId)} 
+//                           className="mani-as-offer-viewall-btn"
+//                         >
+//                           <span className="mani-as-viewall-circle">→</span>
+//                         </button>
+//                       </div>
+//                     )}
+//                   </div>
+
+//                   <div className="mani-as-offer-cards-grid">
+//                     {displayBusinesses.map((business) => {
+//                       const offer = offersMap[business.offer];
+//                       const discountValue = offer?.value || 0;
+                      
+//                       const bannerImage = business.banner 
+//                         ? business.banner.startsWith('http') 
+//                           ? business.banner 
+//                           : `${baseurl}${business.banner}`
+//                         : null;
+
+//                       return (
+//                         <div 
+//                           className="mani-as-offer-card-item" 
+//                           key={`${business.business_id}-${categoryId}`}
+//                           onClick={() => handleBusinessClick(business)}
+//                           style={{ cursor: 'pointer' }}
+//                         >
+//                           <div
+//                             className="mani-as-offer-card"
+//                             style={{ 
+//                               backgroundImage: bannerImage ? `url(${bannerImage})` : 'none',
+//                               backgroundColor: bannerImage ? 'transparent' : '#f0f0f0',
+//                               backgroundSize: 'cover',
+//                               backgroundPosition: 'center',
+//                               position: 'relative',
+//                               borderRadius: '12px',
+//                               overflow: 'hidden',
+//                               transition: 'transform 0.3s ease'
+//                             }}
+//                             onMouseEnter={(e) => {
+//                               e.currentTarget.style.transform = 'scale(1.05)';
+//                             }}
+//                             onMouseLeave={(e) => {
+//                               e.currentTarget.style.transform = 'scale(1)';
+//                             }}
+//                           >
+//                             {/* Business Info Overlay - commented out */}
+//                           </div>
+//                         </div>
+//                       );
+//                     })}
+//                   </div>
+//                 </div>
+//               );
+//             })}
+            
+//             {hasMoreCategories && (
+//               <div className="load-more-container" style={{ textAlign: 'center', margin: '30px 0' }}>
+//                 <button 
+//                   onClick={loadMoreCategories}
+//                   className="load-more-btn"
+//                   disabled={loadingMore}
+//                   style={{
+//                     padding: '12px 30px',
+//                     backgroundColor: '#f78e24',
+//                     color: 'white',
+//                     border: 'none',
+//                     borderRadius: '25px',
+//                     cursor: loadingMore ? 'not-allowed' : 'pointer',
+//                     fontSize: '16px',
+//                     fontWeight: '500',
+//                     transition: 'all 0.3s ease',
+//                     opacity: loadingMore ? 0.6 : 1
+//                   }}
+//                   onMouseEnter={(e) => {
+//                     if (!loadingMore) {
+//                       e.target.style.backgroundColor = '#e67e22';
+//                       e.target.style.transform = 'translateY(-2px)';
+//                     }
+//                   }}
+//                   onMouseLeave={(e) => {
+//                     if (!loadingMore) {
+//                       e.target.style.backgroundColor = '#f78e24';
+//                       e.target.style.transform = 'translateY(0)';
+//                     }
+//                   }}
+//                 >
+//                   {loadingMore ? (
+//                     <>
+//                       <span className="loading-spinner" style={{
+//                         display: 'inline-block',
+//                         width: '16px',
+//                         height: '16px',
+//                         border: '2px solid #fff',
+//                         borderTop: '2px solid transparent',
+//                         borderRadius: '50%',
+//                         animation: 'spin 0.6s linear infinite',
+//                         marginRight: '8px',
+//                         verticalAlign: 'middle'
+//                       }}></span>
+//                       Loading More...
+//                     </>
+//                   ) : (
+//                     `View More (${allCategoriesWithBusinesses.length - displayedCategories.length} remaining)`
+//                   )}
+//                 </button>
+//               </div>
+//             )}
+//           </>
+//         )}
+//       </div>
+      
+//       <style jsx>{`
+//         @keyframes spin {
+//           0% { transform: rotate(0deg); }
+//           100% { transform: rotate(360deg); }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// };
+
+// export default AgentHome;
+
+
+
 import React, { useEffect, useState, useCallback } from "react";
 import "./style.css";
 import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
@@ -959,39 +1441,29 @@ const AgentHome = () => {
   const [groupedBusinesses, setGroupedBusinesses] = useState({});
   const [currentUserId, setCurrentUserId] = useState(null);
   const [error, setError] = useState(null);
-  
+
   // Pagination states
   const [displayedCategories, setDisplayedCategories] = useState([]);
   const [categoriesToShow, setCategoriesToShow] = useState(10);
   const [loadingMore, setLoadingMore] = useState(false);
   const INCREMENT_COUNT = 10;
-  
+
   const navigate = useNavigate();
 
-  // Helper function to get user ID from localStorage
   const getUserIdFromStorage = () => {
     try {
-      const userId = localStorage.getItem('user_id');
-      if (userId) {
-        console.log("Found user_id directly in localStorage:", userId);
-        return userId;
-      }
-      
-      const userData = localStorage.getItem('user');
+      const userId = localStorage.getItem("user_id");
+      if (userId) return userId;
+
+      const userData = localStorage.getItem("user");
       if (userData) {
         const parsedUser = JSON.parse(userData);
-        console.log("Found user object:", parsedUser);
         return parsedUser?.id || parsedUser?.user_id || null;
       }
-      
-      const userIdAlt = localStorage.getItem('userId');
-      if (userIdAlt) {
-        console.log("Found userId:", userIdAlt);
-        return userIdAlt;
-      }
-      
-      console.log("No user ID found in localStorage");
-      console.log("All localStorage keys:", Object.keys(localStorage));
+
+      const userIdAlt = localStorage.getItem("userId");
+      if (userIdAlt) return userIdAlt;
+
       return null;
     } catch (error) {
       console.error("Error parsing user data from localStorage:", error);
@@ -1001,7 +1473,6 @@ const AgentHome = () => {
 
   useEffect(() => {
     const userId = getUserIdFromStorage();
-    console.log("Current User ID extracted:", userId, "Type:", typeof userId);
     setCurrentUserId(userId);
     fetchAllBusinesses(userId);
     fetchOffers();
@@ -1013,93 +1484,45 @@ const AgentHome = () => {
     setError(null);
     try {
       let businessesData = [];
-      
+
       if (userId && userId !== null && userId !== "null") {
         const excludeUrl = `${baseurl}/business/?exclude_user_id=${userId}&verification_status=verified`;
-        console.log("Fetching businesses excluding user ID:", userId);
-        console.log("Full URL:", excludeUrl);
-        
         const res = await fetch(excludeUrl);
-        
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
-        console.log("API Response (exclude user):", data);
-        
         businessesData = data.results || data || [];
-        console.log("Businesses from other users:", businessesData.length);
       } else {
         const allUrl = `${baseurl}/business/`;
-        console.log("No user ID found, fetching all businesses:", allUrl);
-        
         const res = await fetch(allUrl);
-        
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
-        console.log("API Response (all businesses):", data);
-        
         businessesData = data.results || data || [];
-        console.log("All businesses:", businessesData.length);
       }
-      
-      // Filter businesses that have banners only
-      const businessesWithBanners = businessesData.filter(business => 
-        business.banner && 
-        business.banner.trim() !== ""
+
+      const businessesWithBanners = businessesData.filter(
+        (business) => business.banner && business.banner.trim() !== ""
       );
-      
-      console.log("Businesses with banners:", businessesWithBanners.length);
-      console.log("Businesses details:", businessesWithBanners.map(b => ({ 
-        id: b.business_id, 
-        name: b.business_name, 
-        user: b.user, 
-        is_active: b.is_active,
-        categories: b.categories 
-      })));
-      
+
       setBusinesses(businessesWithBanners);
-      
-      // FIXED: Group businesses by ALL their categories (not just the first one)
+
       const grouped = {};
-      businessesWithBanners.forEach(business => {
-        // Check if business has categories
+      businessesWithBanners.forEach((business) => {
         if (business.categories && business.categories.length > 0) {
-          // Iterate through ALL categories the business belongs to
-          business.categories.forEach(categoryId => {
-            if (!grouped[categoryId]) {
-              grouped[categoryId] = [];
-            }
-            // Add business to this category group (avoid duplicates)
-            const existingBusiness = grouped[categoryId].find(
-              b => b.business_id === business.business_id
+          business.categories.forEach((categoryId) => {
+            if (!grouped[categoryId]) grouped[categoryId] = [];
+            const exists = grouped[categoryId].find(
+              (b) => b.business_id === business.business_id
             );
-            if (!existingBusiness) {
-              grouped[categoryId].push(business);
-            }
+            if (!exists) grouped[categoryId].push(business);
           });
         } else {
-          // If no categories, put in "uncategorized" group
           const uncategorizedId = "uncategorized";
-          if (!grouped[uncategorizedId]) {
-            grouped[uncategorizedId] = [];
-          }
+          if (!grouped[uncategorizedId]) grouped[uncategorizedId] = [];
           grouped[uncategorizedId].push(business);
         }
       });
-      
-      console.log("Grouped businesses by categories:", Object.keys(grouped).length, "categories");
-      console.log("Category groups:", Object.keys(grouped).map(key => ({
-        categoryId: key,
-        businessCount: grouped[key].length
-      })));
-      
+
       setGroupedBusinesses(grouped);
-      
     } catch (error) {
       console.error("Business API error:", error);
       setError(error.message);
@@ -1114,25 +1537,18 @@ const AgentHome = () => {
     setCategoriesLoading(true);
     try {
       const res = await fetch(`${baseurl}/categories/`);
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
-      console.log("Categories API Response:", data);
-      
       const categoriesData = data.results || data || [];
-      
+
       const map = {};
-      categoriesData.forEach(category => {
+      categoriesData.forEach((category) => {
         map[category.category_id] = {
           name: category.name,
           slug: category.slug,
-          category_id: category.category_id
+          category_id: category.category_id,
         };
       });
-      
       setCategoriesMap(map);
     } catch (error) {
       console.error("Categories API error:", error);
@@ -1144,14 +1560,8 @@ const AgentHome = () => {
   const fetchOffers = async () => {
     try {
       const res = await fetch(`${baseurl}/offers/`);
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
-      console.log("Offers API Response:", data);
-      
       const map = {};
       (data.results || data || []).forEach((offer) => {
         map[offer.id] = offer;
@@ -1162,27 +1572,36 @@ const AgentHome = () => {
     }
   };
 
-  // Update displayed categories when groupedBusinesses or categoriesToShow changes
   useEffect(() => {
     const categoriesWithBusinesses = Object.keys(groupedBusinesses).filter(
-      categoryId => groupedBusinesses[categoryId].length > 0
+      (categoryId) => groupedBusinesses[categoryId].length > 0
     );
     setDisplayedCategories(categoriesWithBusinesses.slice(0, categoriesToShow));
   }, [groupedBusinesses, categoriesToShow]);
 
+  // ✅ View All → show ALL products for that category (across all businesses)
   const handleViewAll = (categoryId) => {
-    navigate(`/agent-home-subcategory/${categoryId}`);
+    const categoryInfo = categoriesMap[categoryId];
+    navigate(`/agent-home-subcategory/${categoryId}`, {
+      state: {
+        categoryId: categoryId,
+        categoryName: categoryInfo?.name || "Products",
+        viewType: "category",
+      },
+    });
   };
 
-  const handleBusinessClick = (business) => {
+  // ✅ Business card click → show ONLY that business's products
+  const handleBusinessClick = (business, categoryId) => {
     if (business && business.business_id) {
-      console.log("Navigating to business products with ID:", business.business_id);
-      navigate(`/agent-home-subcategory/${business.business_id}`, { 
-        state: { 
+      navigate(`/agent-home-subcategory/${business.business_id}`, {
+        state: {
           businessId: business.business_id,
           businessName: business.business_name,
-          categoryId: business.categories?.[0] || null
-        }
+          // Pass the categoryId this card was shown under (for sidebar use)
+          categoryId: categoryId !== "uncategorized" ? categoryId : null,
+          viewType: "business",
+        },
       });
     }
   };
@@ -1190,7 +1609,7 @@ const AgentHome = () => {
   const loadMoreCategories = () => {
     setLoadingMore(true);
     setTimeout(() => {
-      setCategoriesToShow(prev => prev + INCREMENT_COUNT);
+      setCategoriesToShow((prev) => prev + INCREMENT_COUNT);
       setLoadingMore(false);
     }, 500);
   };
@@ -1213,17 +1632,17 @@ const AgentHome = () => {
         <div className="mani-as-offer-wrapper">
           <div className="mani-as-offer-error">
             Error loading businesses: {error}
-            <button 
-              onClick={() => fetchAllBusinesses(currentUserId)} 
+            <button
+              onClick={() => fetchAllBusinesses(currentUserId)}
               className="retry-btn"
               style={{
-                marginLeft: '10px',
-                padding: '5px 10px',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
+                marginLeft: "10px",
+                padding: "5px 10px",
+                backgroundColor: "#007bff",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
               }}
             >
               Retry
@@ -1240,8 +1659,8 @@ const AgentHome = () => {
         <AgentNavbar />
         <div className="mani-as-offer-wrapper">
           <div className="mani-as-offer-loading">
-            {currentUserId && currentUserId !== "null" 
-              ? `No other businesses available at the moment. Your business (User ID: ${currentUserId}) is currently listed, but no other businesses exist.` 
+            {currentUserId && currentUserId !== "null"
+              ? `No other businesses available at the moment.`
               : "Please log in to view businesses."}
           </div>
         </div>
@@ -1250,16 +1669,17 @@ const AgentHome = () => {
   }
 
   const allCategoriesWithBusinesses = Object.keys(groupedBusinesses).filter(
-    categoryId => groupedBusinesses[categoryId].length > 0
+    (categoryId) => groupedBusinesses[categoryId].length > 0
   );
-  
-  const hasMoreCategories = displayedCategories.length < allCategoriesWithBusinesses.length;
+
+  const hasMoreCategories =
+    displayedCategories.length < allCategoriesWithBusinesses.length;
 
   return (
     <div>
       <AgentNavbar />
-      <Categories/>
-      
+      <Categories />
+
       <div className="agent-home-container">
         {displayedCategories.length === 0 ? (
           <div className="mani-as-offer-wrapper">
@@ -1272,25 +1692,28 @@ const AgentHome = () => {
             {displayedCategories.map((categoryId) => {
               const categoryBusinesses = groupedBusinesses[categoryId];
               const categoryInfo = categoriesMap[categoryId];
-              const categoryName = categoryInfo?.name || 
+              const categoryName =
+                categoryInfo?.name ||
                 (categoryId === "uncategorized" ? "Uncategorized" : "Businesses");
-              
+
               const displayBusinesses = categoryBusinesses.slice(0, 3);
-              
+
               return (
                 <div key={categoryId} className="mani-as-offer-wrapper">
                   <div className="mani-as-offer-header">
                     <h2 className="mani-as-offer-heading">
                       {categoriesLoading ? (
-                        <span className="mani-as-offer-loading-dots">Loading Category</span>
+                        <span className="mani-as-offer-loading-dots">
+                          Loading Category
+                        </span>
                       ) : (
                         categoryName
                       )}
                     </h2>
                     {categoryId !== "uncategorized" && (
                       <div className="mani-as-offer-viewall-wrap">
-                        <button 
-                          onClick={() => handleViewAll(categoryId)} 
+                        <button
+                          onClick={() => handleViewAll(categoryId)}
                           className="mani-as-offer-viewall-btn"
                         >
                           <span className="mani-as-viewall-circle">→</span>
@@ -1303,41 +1726,44 @@ const AgentHome = () => {
                     {displayBusinesses.map((business) => {
                       const offer = offersMap[business.offer];
                       const discountValue = offer?.value || 0;
-                      
-                      const bannerImage = business.banner 
-                        ? business.banner.startsWith('http') 
-                          ? business.banner 
+
+                      const bannerImage = business.banner
+                        ? business.banner.startsWith("http")
+                          ? business.banner
                           : `${baseurl}${business.banner}`
                         : null;
 
                       return (
-                        <div 
-                          className="mani-as-offer-card-item" 
+                        <div
+                          className="mani-as-offer-card-item"
                           key={`${business.business_id}-${categoryId}`}
-                          onClick={() => handleBusinessClick(business)}
-                          style={{ cursor: 'pointer' }}
+                          // ✅ Pass both business AND the categoryId it's shown under
+                          onClick={() => handleBusinessClick(business, categoryId)}
+                          style={{ cursor: "pointer" }}
                         >
                           <div
                             className="mani-as-offer-card"
-                            style={{ 
-                              backgroundImage: bannerImage ? `url(${bannerImage})` : 'none',
-                              backgroundColor: bannerImage ? 'transparent' : '#f0f0f0',
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center',
-                              position: 'relative',
-                              borderRadius: '12px',
-                              overflow: 'hidden',
-                              transition: 'transform 0.3s ease'
+                            style={{
+                              backgroundImage: bannerImage
+                                ? `url(${bannerImage})`
+                                : "none",
+                              backgroundColor: bannerImage
+                                ? "transparent"
+                                : "#f0f0f0",
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                              position: "relative",
+                              borderRadius: "12px",
+                              overflow: "hidden",
+                              transition: "transform 0.3s ease",
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.transform = 'scale(1.05)';
+                              e.currentTarget.style.transform = "scale(1.05)";
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.transform = 'scale(1)';
+                              e.currentTarget.style.transform = "scale(1)";
                             }}
-                          >
-                            {/* Business Info Overlay - commented out */}
-                          </div>
+                          />
                         </div>
                       );
                     })}
@@ -1345,55 +1771,64 @@ const AgentHome = () => {
                 </div>
               );
             })}
-            
+
             {hasMoreCategories && (
-              <div className="load-more-container" style={{ textAlign: 'center', margin: '30px 0' }}>
-                <button 
+              <div
+                className="load-more-container"
+                style={{ textAlign: "center", margin: "30px 0" }}
+              >
+                <button
                   onClick={loadMoreCategories}
                   className="load-more-btn"
                   disabled={loadingMore}
                   style={{
-                    padding: '12px 30px',
-                    backgroundColor: '#f78e24',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '25px',
-                    cursor: loadingMore ? 'not-allowed' : 'pointer',
-                    fontSize: '16px',
-                    fontWeight: '500',
-                    transition: 'all 0.3s ease',
-                    opacity: loadingMore ? 0.6 : 1
+                    padding: "12px 30px",
+                    backgroundColor: "#f78e24",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "25px",
+                    cursor: loadingMore ? "not-allowed" : "pointer",
+                    fontSize: "16px",
+                    fontWeight: "500",
+                    transition: "all 0.3s ease",
+                    opacity: loadingMore ? 0.6 : 1,
                   }}
                   onMouseEnter={(e) => {
                     if (!loadingMore) {
-                      e.target.style.backgroundColor = '#e67e22';
-                      e.target.style.transform = 'translateY(-2px)';
+                      e.target.style.backgroundColor = "#e67e22";
+                      e.target.style.transform = "translateY(-2px)";
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!loadingMore) {
-                      e.target.style.backgroundColor = '#f78e24';
-                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.backgroundColor = "#f78e24";
+                      e.target.style.transform = "translateY(0)";
                     }
                   }}
                 >
                   {loadingMore ? (
                     <>
-                      <span className="loading-spinner" style={{
-                        display: 'inline-block',
-                        width: '16px',
-                        height: '16px',
-                        border: '2px solid #fff',
-                        borderTop: '2px solid transparent',
-                        borderRadius: '50%',
-                        animation: 'spin 0.6s linear infinite',
-                        marginRight: '8px',
-                        verticalAlign: 'middle'
-                      }}></span>
+                      <span
+                        className="loading-spinner"
+                        style={{
+                          display: "inline-block",
+                          width: "16px",
+                          height: "16px",
+                          border: "2px solid #fff",
+                          borderTop: "2px solid transparent",
+                          borderRadius: "50%",
+                          animation: "spin 0.6s linear infinite",
+                          marginRight: "8px",
+                          verticalAlign: "middle",
+                        }}
+                      ></span>
                       Loading More...
                     </>
                   ) : (
-                    `View More (${allCategoriesWithBusinesses.length - displayedCategories.length} remaining)`
+                    `View More (${
+                      allCategoriesWithBusinesses.length -
+                      displayedCategories.length
+                    } remaining)`
                   )}
                 </button>
               </div>
@@ -1401,11 +1836,15 @@ const AgentHome = () => {
           </>
         )}
       </div>
-      
+
       <style jsx>{`
         @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
       `}</style>
     </div>
