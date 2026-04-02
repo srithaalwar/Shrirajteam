@@ -8474,8 +8474,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
       });
 
       if (onSuccess) onSuccess(response.data);
-      navigate('/agent-my-products');
-
+      navigate('/agent-my-business');
       // Reset form
       setProductData({ business: '', product_name: '', description: '', brand: '', model_no: '', category: '', attributes: {}, has_variants: false });
       setVariants([{ sku: '', mrp: '', selling_price: '', stock: '', max_order_quantity: '', attributes: {}, cgst_percent: 0, sgst_percent: 0, tax_percent: 0, hsn_code: '', weight_kg: '', length_cm: '', width_cm: '', height_cm: '', manufacture_date: '', expiry_date: '', is_returnable: true, return_days: 7, product_commission: '', offer_id: '', media: [{ media_type: 'image', sort_order: 0, is_primary: true }] }]);
