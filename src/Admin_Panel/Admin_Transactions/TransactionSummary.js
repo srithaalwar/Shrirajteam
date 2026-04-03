@@ -979,7 +979,7 @@ function TransactionSummary() {
                                 <th>DATE & TIME</th>
                                 <th>PROPERTY NAME</th>
                                 <th>PLAN NAME</th>
-                                <th>PAYMENT TYPE</th>
+                                <th>TRANSACTION FOR</th>
                                 <th>AMOUNT</th>
                                 <th>PAYMENT MODE</th>
                                 <th>PAYMENT METHOD</th>

@@ -14170,8 +14170,8 @@ const handleQuantityChange = async (cartItemId, newQuantity) => {
               </span>
             )}
           </h3>
-          <button className="btn btn-outline-secondary" onClick={handleContinueShopping}>
-            <FaArrowLeft className="me-2" />Continue Shopping
+          <button className="continue-shopping-btn improved" onClick={handleContinueShopping}>
+            Continue Shopping
           </button>
         </div>
 

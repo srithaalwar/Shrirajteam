@@ -193,6 +193,11 @@
   font-size: 13px; font-weight: 700; letter-spacing: 0.8px;
   cursor: pointer; transition: background 0.2s, transform 0.1s;
 }
+
+.cbpc-add-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 .cbpc-add-btn:hover { background: var(--cbpc-orange-dark); transform: scale(1.02); }
 .cbpc-add-btn:active { transform: scale(0.98); }
 

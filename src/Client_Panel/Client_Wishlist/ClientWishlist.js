@@ -444,7 +444,7 @@ function ClientWishlist() {
                           
                           <div className="item-stock">
                             <span className={`stock-badge ${variant.stock > 10 ? 'in-stock' : 'low-stock'}`}>
-                              {variant.stock > 10 ? 'In Stock' : `Only ${variant.stock} left`}
+                              {variant.stock > 10 ? 'In Stock' : `Out Of Stack`}
                             </span>
                           </div>
                         </div>
