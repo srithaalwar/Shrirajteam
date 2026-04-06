@@ -366,6 +366,7 @@ import ClientAddressPageRoute from "./Client_Panel/Client_AddToCart/ClientAddres
 import AgentSearchResults from './Agent_Panel/Agent_Navbar/AgentSearchResults';
 import ClientSearchResults from './Client_Panel/Client_Navbar/ClientSearchResults';
 import CategoryProducts from "./Agent_Panel/Agent_Home_Page/CategoryProducts"
+import AdminPayouts from "./Admin_Panel/Admin_Payouts/TotalCommissions"
 function App() {
   return (
     <BrowserRouter>
@@ -445,6 +446,8 @@ function App() {
 
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin-properties" element={<PropertiesList />} />
+         <Route path="/admin-payouts" element={<AdminPayouts />} />
+
 
        <Route path="/admin-properties-details/:propertyId" element={<AdminPropertyDetails />} />
 

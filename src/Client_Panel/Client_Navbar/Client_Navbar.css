@@ -696,7 +696,7 @@
 @media (max-width: 768px) {
   .wn-notifications-dropdown {
     width: 280px;
-    right: -50px;
+    /* right: -50px; */
   }
   
   .wn-notification {
@@ -1026,7 +1026,7 @@
 @media (max-width: 768px) {
   .wn-notifications-dropdown {
     width: 300px;
-    right: -50px;
+    /* right: -50px; */
   }
   
   .wn-cart-text {

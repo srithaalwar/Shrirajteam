@@ -14410,6 +14410,40 @@ const fetchCartItems = async () => {
   </div>
 )}
 
+
+
+{/* Wishlist Icon with Dynamic Count */}
+<div 
+  className="wn-wishlist" 
+  onClick={handleWishlistClick}
+  title={`Wishlist: ${wishlistCount} item${wishlistCount !== 1 ? 's' : ''}`}
+  style={{ 
+    opacity: wishlistLoading ? 0.7 : 1,
+    cursor: wishlistLoading ? 'not-allowed' : 'pointer'
+  }}
+>
+  <FaHeart size={16} />
+  {wishlistCount > 0 && (
+    <span className="wn-wishlist-badge">{wishlistCount > 99 ? '99+' : wishlistCount}</span>
+  )}
+</div>
+
+{/* Cart Icon with Dynamic Count - FIXED: Now shows total quantity instead of item count */}
+<div 
+  className="wn-cart" 
+  onClick={handleCartClick}
+  title={`Cart: ${cartTotalQuantity} item${cartTotalQuantity !== 1 ? 's' : ''} total`}
+  style={{ 
+    opacity: cartLoading ? 0.7 : 1,
+    cursor: cartLoading ? 'not-allowed' : 'pointer'
+  }}
+>
+  <FaShoppingCart size={16} />
+  {cartTotalQuantity > 0 && (
+    <span className="wn-cart-badge">{cartTotalQuantity > 99 ? '99+' : cartTotalQuantity}</span>
+  )}
+</div>
+
 {/* Notification Icon with Dropdown */}
 <div 
   ref={notificationRef}
@@ -14464,38 +14498,6 @@ const fetchCartItems = async () => {
         )}
       </div>
     </div>
-  )}
-</div>
-
-{/* Wishlist Icon with Dynamic Count */}
-<div 
-  className="wn-wishlist" 
-  onClick={handleWishlistClick}
-  title={`Wishlist: ${wishlistCount} item${wishlistCount !== 1 ? 's' : ''}`}
-  style={{ 
-    opacity: wishlistLoading ? 0.7 : 1,
-    cursor: wishlistLoading ? 'not-allowed' : 'pointer'
-  }}
->
-  <FaHeart size={16} />
-  {wishlistCount > 0 && (
-    <span className="wn-wishlist-badge">{wishlistCount > 99 ? '99+' : wishlistCount}</span>
-  )}
-</div>
-
-{/* Cart Icon with Dynamic Count - FIXED: Now shows total quantity instead of item count */}
-<div 
-  className="wn-cart" 
-  onClick={handleCartClick}
-  title={`Cart: ${cartTotalQuantity} item${cartTotalQuantity !== 1 ? 's' : ''} total`}
-  style={{ 
-    opacity: cartLoading ? 0.7 : 1,
-    cursor: cartLoading ? 'not-allowed' : 'pointer'
-  }}
->
-  <FaShoppingCart size={16} />
-  {cartTotalQuantity > 0 && (
-    <span className="wn-cart-badge">{cartTotalQuantity > 99 ? '99+' : cartTotalQuantity}</span>
   )}
 </div>
 

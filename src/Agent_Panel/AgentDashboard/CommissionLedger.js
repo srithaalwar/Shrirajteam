@@ -2,179 +2,415 @@
 
 
 
-import React from 'react';
-import './CommissionLedger.css';
+import React, { useState, useEffect } from 'react';
+import './TotalCommissions.css';
 import { baseurl } from "../../BaseURL/BaseURL";
 import { useNavigate } from "react-router-dom";
- import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar"
+import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 
-const CommissionLedger = () => {
+const AgentTotalCommissions = () => {
   const navigate = useNavigate();
+  
+  const [agentId, setAgentId] = useState(null);
+  const [referralData, setReferralData] = useState([]);
+  const [productData, setProductData] = useState([]);
+  const [propertyData, setPropertyData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [activeTable, setActiveTable] = useState('total');
+  const [totals, setTotals] = useState({
+    totalEarned: 0,
+    referrals: 0,
+    productSales: 0,
+    propertySales: 0
+  });
 
-  // Static data matching the image
-  const totals = {
-    totalEarned: 43850,
-    referrals: 3970,
-    productSales: 5130,
-    propertySales: 34750,
-    growth: {
-      totalEarned: 18.2,
-      referrals: 7.3,
-      productSales: 24.8,
-      propertySales: 12.1
+  useEffect(() => {
+    const storedAgentId = localStorage.getItem('agent_id') || 
+                          localStorage.getItem('userId') || 
+                          sessionStorage.getItem('agent_id');
+    
+    if (storedAgentId) {
+      setAgentId(storedAgentId);
+    } else {
+      setError('Agent ID not found. Please login again.');
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchReferralData = async (id) => {
+    try {
+      const response = await fetch(`${baseurl}/referral-report/?user_id=${id}`);
+      const data = await response.json();
+      setReferralData(data.results || []);
+      
+      const totalReferralAmount = data.results?.reduce((sum, item) => 
+        sum + (parseFloat(item.total_referral_amount_or_wallet_amount) || 0), 0
+      );
+      
+      return totalReferralAmount;
+    } catch (err) {
+      console.error('Error fetching referral data:', err);
+      return 0;
     }
   };
 
-  // Monthly data for the chart
-  const monthlyData = {
-    months: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
-    referral: [2800, 3100, 3400, 3600, 3700, 3970],
-    product: [3200, 3800, 4200, 4600, 4800, 5130],
-    property: [24500, 26800, 29500, 31200, 32800, 34750]
+  const fetchProductData = async (id) => {
+    try {
+      const response = await fetch(`${baseurl}/product-commissions/?agent_id=${id}`);
+      const data = await response.json();
+      setProductData(data.results || []);
+      
+      const totalProductAmount = data.results?.reduce((sum, item) => 
+        sum + (parseFloat(item.amount) || 0), 0
+      );
+      
+      return totalProductAmount;
+    } catch (err) {
+      console.error('Error fetching product data:', err);
+      return 0;
+    }
   };
 
-  // Calculate max value for chart scaling
-  const maxValue = Math.max(
-    ...monthlyData.referral,
-    ...monthlyData.product,
-    ...monthlyData.property
-  );
-  const chartMax = Math.ceil(maxValue / 5000) * 5000;
+  useEffect(() => {
+    const fetchAllData = async () => {
+      if (!agentId) return;
+      
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const [referralTotal, productTotal] = await Promise.all([
+          fetchReferralData(agentId),
+          fetchProductData(agentId)
+        ]);
+        
+        const propertyTotal = 0;
+        
+        setTotals({
+          totalEarned: referralTotal + productTotal + propertyTotal,
+          referrals: referralTotal,
+          productSales: productTotal,
+          propertySales: propertyTotal
+        });
+      } catch (err) {
+        setError('Failed to fetch data. Please try again later.');
+        console.error('Error fetching all data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchAllData();
+  }, [agentId]);
 
-  // Format currency in Rupees
   const formatRupee = (amount) => {
-    return `₹${amount.toLocaleString('en-IN')}`;
+    return `₹${parseFloat(amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
-  // Handle back button click - navigate to dashboard
   const handleBack = () => {
     navigate('/agent-dashboard');
   };
 
-  return (
-        <>
-        <AgentNavbar/>
-    <div className="cl-container">
-      <div className="cl-ledger-card">
-        {/* Back Button - Top Right */}
-        <button className="cl-back-button" onClick={handleBack}>
-          ← Back
-        </button>
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
 
-        {/* Header */}
-        <div className="cl-header">
-          <div className="cl-header-left">
-            <h1 className="cl-title">Commissions</h1>
-            {/* <p className="cl-subtitle">March 2026 overview</p>
-            <p className="cl-last-updated">Last updated: Mar 23, 2026</p> */}
-          </div>
-          {/* <div className="cl-action-buttons">
-            <button className="cl-btn cl-btn-outline">Share</button>
-            <button className="cl-btn cl-btn-primary">Upgrade</button>
-            <button className="cl-btn cl-btn-outline">Publish</button>
-          </div> */}
-        </div>
+  const handleCardClick = (tableType) => {
+    setActiveTable(tableType);
+  };
 
-        {/* Stats Cards */}
-        <div className="cl-stats-grid">
-          <div className="cl-stat-card">
-            <div className="cl-stat-label">TOTAL EARNED</div>
-            <div className="cl-stat-value">{formatRupee(totals.totalEarned)}</div>
-            {/* <div className="cl-stat-change cl-positive">
-              +{totals.growth.totalEarned}% vs last month
-            </div> */}
+  const renderTotalSummary = () => (
+    <>
+      {referralData.length > 0 && referralData[0].total_referral_amount_or_wallet_amount > 0 ? (
+        <div className="cl-table-section">
+          <div className="cl-table-header">
+            <h5 className="cl-table-title">Referral Commissions</h5>
+            <p className="cl-table-subtitle">Total: {formatRupee(totals.referrals)}</p>
           </div>
-          <div className="cl-stat-card">
-            <div className="cl-stat-label">REFERRALS</div>
-            <div className="cl-stat-value">{formatRupee(totals.referrals)}</div>
-            {/* <div className="cl-stat-change cl-positive">
-              +{totals.growth.referrals}% vs last month
-            </div> */}
-          </div>
-          <div className="cl-stat-card">
-            <div className="cl-stat-label">PRODUCT SALES</div>
-            <div className="cl-stat-value">{formatRupee(totals.productSales)}</div>
-            {/* <div className="cl-stat-change cl-positive">
-              +{totals.growth.productSales}% vs last month
-            </div> */}
-          </div>
-          <div className="cl-stat-card">
-            <div className="cl-stat-label">PROPERTY SALES</div>
-            <div className="cl-stat-value">{formatRupee(totals.propertySales)}</div>
-            {/* <div className="cl-stat-change cl-positive">
-              +{totals.growth.propertySales}% vs last month
-            </div> */}
+          <div className="cl-table-wrapper">
+            <table className="cl-data-table">
+              <thead>
+                <tr>
+                  <th>Referral ID</th>
+                  <th>Agent Name</th>
+                  <th>Total Referrals</th>
+                  <th>Amount</th>
+                  <th>Paid Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {referralData.map((item) => (
+                  <tr key={item.user_id}>
+                    <td>{item.referral_id}</td>
+                    <td>{`${item.first_name} ${item.last_name}`}</td>
+                    <td>{item.total_referrals}</td>
+                    <td>{formatRupee(item.total_referral_amount_or_wallet_amount)}</td>
+                    <td>{formatRupee(item.total_referral_amount_or_wallet_amount_paid)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-
-        {/* Chart Section */}
-        <div className="cl-chart-section">
-          <div className="cl-chart-header">
-            <div>
-              <h5 className="cl-chart-title">Earnings Over Time</h5>
-              <p className="cl-chart-subtitle">Monthly breakdown by source</p>
-            </div>
-            <div className="cl-legend">
-              <span className="cl-legend-item">
-                <span className="cl-legend-color cl-legend-referral"></span>
-                Referral
-              </span>
-              <span className="cl-legend-item">
-                <span className="cl-legend-color cl-legend-product"></span>
-                Product
-              </span>
-              <span className="cl-legend-item">
-                <span className="cl-legend-color cl-legend-property"></span>
-                Property
-              </span>
-            </div>
+      ) : (
+        <div className="cl-table-section">
+          <div className="cl-table-header">
+            <h5 className="cl-table-title">Referral Commissions</h5>
+            <p className="cl-table-subtitle">Total: {formatRupee(totals.referrals)}</p>
           </div>
-
-          {/* Bar Chart */}
-          <div className="cl-chart-wrapper">
-            <div className="cl-y-axis">
-              {[chartMax, chartMax * 0.75, chartMax * 0.5, chartMax * 0.25, 0].map((value, idx) => (
-                <div key={idx} className="cl-y-axis-label">
-                  ₹{(value / 1000).toFixed(0)}k
-                </div>
-              ))}
-            </div>
-            <div className="cl-bars-container">
-              {monthlyData.months.map((month, idx) => {
-                const referralHeight = (monthlyData.referral[idx] / chartMax) * 100;
-                const productHeight = (monthlyData.product[idx] / chartMax) * 100;
-                const propertyHeight = (monthlyData.property[idx] / chartMax) * 100;
-                
-                return (
-                  <div key={month} className="cl-bar-group">
-                    <div className="cl-bars">
-                      <div 
-                        className="cl-bar cl-bar-referral" 
-                        style={{ height: `${referralHeight}%` }}
-                        title={`Referral: ${formatRupee(monthlyData.referral[idx])}`}
-                      ></div>
-                      <div 
-                        className="cl-bar cl-bar-product" 
-                        style={{ height: `${productHeight}%` }}
-                        title={`Product: ${formatRupee(monthlyData.product[idx])}`}
-                      ></div>
-                      <div 
-                        className="cl-bar cl-bar-property" 
-                        style={{ height: `${propertyHeight}%` }}
-                        title={`Property: ${formatRupee(monthlyData.property[idx])}`}
-                      ></div>
-                    </div>
-                    <div className="cl-bar-label">{month}</div>
-                  </div>
-                );
-              })}
-            </div>
+          <div className="cl-placeholder">
+            <p>No referral commissions available yet.</p>
           </div>
+        </div>
+      )}
+
+      {productData.length > 0 ? (
+        <div className="cl-table-section">
+          <div className="cl-table-header">
+            <h5 className="cl-table-title">Product Commissions</h5>
+            <p className="cl-table-subtitle">Total: {formatRupee(totals.productSales)}</p>
+          </div>
+          <div className="cl-table-wrapper">
+            <table className="cl-data-table">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Variant</th>
+                  <th>Level</th>
+                  <th>Percentage</th>
+                  <th>Amount</th>
+                  {/* <th>Created At</th> */}
+                </tr>
+              </thead>
+              <tbody>
+                {productData.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.product_name}</td>
+                    <td>
+                      {item.variant_attributes?.size && `Size: ${item.variant_attributes.size}, `}
+                      {item.variant_attributes?.color && `Color: ${item.variant_attributes.color}`}
+                    </td>
+                    <td>{item.level_no}</td>
+                    <td>{item.percentage}%</td>
+                    <td>{formatRupee(item.amount)}</td>
+                    {/* <td>{formatDate(item.created_at)}</td> */}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        <div className="cl-table-section">
+          <div className="cl-table-header">
+            <h5 className="cl-table-title">Product Commissions</h5>
+            <p className="cl-table-subtitle">Total: {formatRupee(totals.productSales)}</p>
+          </div>
+          <div className="cl-placeholder">
+            <p>No product commissions available yet.</p>
+          </div>
+        </div>
+      )}
+
+      <div className="cl-table-section">
+        <div className="cl-table-header">
+          <h5 className="cl-table-title">Property Commissions</h5>
+          <p className="cl-table-subtitle">Total: {formatRupee(totals.propertySales)}</p>
+        </div>
+        <div className="cl-placeholder">
+          <p>Property commission data will be available soon.</p>
         </div>
       </div>
+    </>
+  );
+
+  const renderReferralTable = () => (
+    <div className="cl-table-section">
+      <div className="cl-table-header">
+        <h5 className="cl-table-title">Referral Commissions</h5>
+        <p className="cl-table-subtitle">Your referral earnings breakdown</p>
+      </div>
+      <div className="cl-table-wrapper">
+        <table className="cl-data-table">
+          <thead>
+            <tr>
+              <th>Referral ID</th>
+              <th>Agent Name</th>
+              <th>Total Referrals</th>
+              <th>Amount</th>
+              <th>Paid Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {referralData.length > 0 ? (
+              referralData.map((item) => (
+                <tr key={item.user_id}>
+                  <td>{item.referral_id}</td>
+                  <td>{`${item.first_name} ${item.last_name}`}</td>
+                  <td>{item.total_referrals}</td>
+                  <td>{formatRupee(item.total_referral_amount_or_wallet_amount)}</td>
+                  <td>{formatRupee(item.total_referral_amount_or_wallet_amount_paid)}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="cl-no-data">No referral data available</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
+  );
+
+  const renderProductTable = () => (
+    <div className="cl-table-section">
+      <div className="cl-table-header">
+        <h5 className="cl-table-title">Product Commissions</h5>
+        <p className="cl-table-subtitle">Your product commission breakdown</p>
+      </div>
+      <div className="cl-table-wrapper">
+        <table className="cl-data-table">
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Variant</th>
+              <th>Level</th>
+              <th>Percentage</th>
+              <th>Amount</th>
+              {/* <th>Created At</th> */}
+            </tr>
+          </thead>
+          <tbody>
+            {productData.length > 0 ? (
+              productData.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.product_name}</td>
+                  <td>
+                    {item.variant_attributes?.size && `Size: ${item.variant_attributes.size}, `}
+                    {item.variant_attributes?.color && `Color: ${item.variant_attributes.color}`}
+                  </td>
+                  <td>{item.level_no}</td>
+                  <td>{item.percentage}%</td>
+                  <td>{formatRupee(item.amount)}</td>
+                  {/* <td>{formatDate(item.created_at)}</td> */}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="cl-no-data">No product commission data available</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+
+  const renderPropertyTable = () => (
+    <div className="cl-table-section">
+      <div className="cl-table-header">
+        <h5 className="cl-table-title">Property Commissions</h5>
+        <p className="cl-table-subtitle">Coming soon</p>
+      </div>
+      <div className="cl-placeholder">
+        <p>Property commission data will be available soon.</p>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <>
+        <AgentNavbar />
+        <div className="cl-container">
+          <div className="cl-ledger-card">
+            <div className="cl-loading">Loading your commission data...</div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <AgentNavbar />
+        <div className="cl-container">
+          <div className="cl-ledger-card">
+            <div className="cl-error">{error}</div>
+            <button className="cl-retry-button" onClick={() => window.location.reload()}>
+              Retry
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <AgentNavbar />
+      <div className="cl-container">
+        <div className="cl-ledger-card">
+          <button className="cl-back-button" onClick={handleBack}>
+            ← Back to Dashboard
+          </button>
+
+          <div className="cl-header">
+            <div className="cl-header-left">
+              <h1 className="cl-title">My Commissions</h1>
+              <p className="cl-subtitle">Track your earnings from referrals and sales</p>
+            </div>
+          </div>
+
+          <div className="cl-stats-grid">
+            <div 
+              className={`cl-stat-card ${activeTable === 'total' ? 'cl-active-card' : ''}`}
+              onClick={() => handleCardClick('total')}
+            >
+              <div className="cl-stat-label">TOTAL EARNED</div>
+              <div className="cl-stat-value">{formatRupee(totals.totalEarned)}</div>
+            </div>
+            <div 
+              className={`cl-stat-card ${activeTable === 'referral' ? 'cl-active-card' : ''}`}
+              onClick={() => handleCardClick('referral')}
+            >
+              <div className="cl-stat-label">REFERRALS AMOUNT</div>
+              <div className="cl-stat-value">{formatRupee(totals.referrals)}</div>
+            </div>
+            <div 
+              className={`cl-stat-card ${activeTable === 'product' ? 'cl-active-card' : ''}`}
+              onClick={() => handleCardClick('product')}
+            >
+              <div className="cl-stat-label">PRODUCT PAYOUTS</div>
+              <div className="cl-stat-value">{formatRupee(totals.productSales)}</div>
+            </div>
+            <div 
+              className={`cl-stat-card ${activeTable === 'property' ? 'cl-active-card' : ''}`}
+              onClick={() => handleCardClick('property')}
+            >
+              <div className="cl-stat-label">PROPERTY PAYOUTS</div>
+              <div className="cl-stat-value">{formatRupee(totals.propertySales)}</div>
+            </div>
+          </div>
+
+          {activeTable === 'total' && renderTotalSummary()}
+          {activeTable === 'referral' && renderReferralTable()}
+          {activeTable === 'product' && renderProductTable()}
+          {activeTable === 'property' && renderPropertyTable()}
+        </div>
+      </div>
     </>
   );
 };
 
-export default CommissionLedger;
+export default AgentTotalCommissions;

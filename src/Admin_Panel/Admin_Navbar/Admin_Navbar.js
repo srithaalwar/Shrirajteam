@@ -1928,6 +1928,8 @@ const AdminNavbar = () => {
     { path: "/admin-trainingmaterial", name: "Training Material", icon: <FaGraduationCap /> },
     { path: "/admin-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
     { path: "/admin-commissionmaster", name: "Payout Master", icon: <FaDatabase /> },
+   { path: "/admin-payouts", name: "Payouts", icon: <FaDatabase /> },
+
     { path: "/a-departments", name: "Departments", icon: <FaSitemap /> },
     { path: "/admin-chatbot", name: "Chat Bot", icon: <FaRobot /> },
     { path: "/admin-carousel-list", name: "Add Carousel", icon: <FaQuestionCircle /> },

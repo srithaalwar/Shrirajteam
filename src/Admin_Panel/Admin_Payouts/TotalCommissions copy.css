@@ -1,0 +1,517 @@
+/* CommissionLedger.css - Optimized for Mobile View */
+
+/* Container */
+.cl-container {
+  padding: 1rem;
+  background: #f5f7fb;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+}
+
+/* Main Card */
+.cl-ledger-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+/* Back Button */
+.cl-back-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 30px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4b5565;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 10;
+}
+
+.cl-back-button:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateX(-2px);
+}
+
+/* Header */
+.cl-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-right: 70px;
+}
+
+.cl-header-left {
+  flex: 1;
+}
+
+.cl-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1f36;
+  margin: 0 0 4px 0;
+  font-family: inherit;
+}
+
+.cl-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 4px 0;
+}
+
+.cl-last-updated {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* Action Buttons */
+.cl-action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cl-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+}
+
+.cl-btn-outline {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  color: #4b5565;
+}
+
+.cl-btn-outline:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.cl-btn-primary {
+  background: #1a1f36;
+  color: white;
+}
+
+.cl-btn-primary:hover {
+  background: #2d3a5e;
+}
+
+/* Stats Grid - Mobile First */
+.cl-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Tablet */
+@media (min-width: 640px) {
+  .cl-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .cl-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.cl-stat-card {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+}
+
+.cl-stat-card:hover {
+  background: #f1f5f9;
+}
+
+.cl-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.cl-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1f36;
+  margin-bottom: 6px;
+  font-family: inherit;
+}
+
+.cl-stat-change {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.cl-positive {
+  color: #10b981;
+}
+
+.cl-negative {
+  color: #ef4444;
+}
+
+/* Chart Section */
+.cl-chart-section {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9eef3;
+}
+
+.cl-chart-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Tablet and Desktop */
+@media (min-width: 768px) {
+  .cl-chart-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.cl-chart-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1f36;
+  margin: 0 0 4px 0;
+}
+
+.cl-chart-subtitle {
+  font-size: 13px;
+  color: #8b96a5;
+  margin: 0;
+}
+
+/* Legend - Mobile Friendly */
+.cl-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.cl-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #4b5565;
+}
+
+.cl-legend-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.cl-legend-referral {
+  background-color: #3b82f6;
+}
+
+.cl-legend-product {
+  background-color: #10b981;
+}
+
+.cl-legend-property {
+  background-color: #8b5cf6;
+}
+
+/* Chart Wrapper - Mobile Optimized */
+.cl-chart-wrapper {
+  display: flex;
+  gap: 8px;
+  height: 280px;
+  margin-top: 1rem;
+}
+
+/* Tablet and Desktop */
+@media (min-width: 768px) {
+  .cl-chart-wrapper {
+    height: 320px;
+    gap: 16px;
+  }
+}
+
+/* Y-Axis */
+.cl-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 8px;
+  border-right: 1px solid #e9eef3;
+  min-width: 40px;
+  text-align: right;
+}
+
+@media (min-width: 768px) {
+  .cl-y-axis {
+    min-width: 50px;
+    padding-right: 12px;
+  }
+}
+
+.cl-y-axis-label {
+  font-size: 10px;
+  color: #8b96a5;
+  line-height: 1;
+}
+
+@media (min-width: 768px) {
+  .cl-y-axis-label {
+    font-size: 12px;
+  }
+}
+
+/* Bars Container */
+.cl-bars-container {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 8px;
+  padding-bottom: 8px;
+  overflow-x: auto;
+}
+
+@media (min-width: 768px) {
+  .cl-bars-container {
+    gap: 16px;
+  }
+}
+
+.cl-bar-group {
+  flex: 1;
+  min-width: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+@media (max-width: 480px) {
+  .cl-bar-group {
+    min-width: 45px;
+  }
+}
+
+.cl-bars {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: calc(100% - 28px);
+  width: 100%;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .cl-bars {
+    gap: 4px;
+    height: calc(100% - 30px);
+  }
+}
+
+.cl-bar {
+  width: 20px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  min-height: 3px;
+}
+
+@media (min-width: 768px) {
+  .cl-bar {
+    width: 28px;
+    border-radius: 6px 6px 0 0;
+  }
+}
+
+.cl-bar:hover {
+  opacity: 0.85;
+  transform: scaleX(1.05);
+}
+
+.cl-bar-referral {
+  background-color: #3b82f6;
+}
+
+.cl-bar-product {
+  background-color: #10b981;
+}
+
+.cl-bar-property {
+  background-color: #8b5cf6;
+}
+
+.cl-bar-label {
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 500;
+  margin-top: 8px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .cl-bar-label {
+    font-size: 13px;
+    margin-top: 12px;
+  }
+}
+
+/* Mobile Specific Adjustments */
+@media (max-width: 480px) {
+  .cl-ledger-card {
+    padding: 1rem;
+  }
+  
+  .cl-header {
+    padding-right: 60px;
+    margin-bottom: 1rem;
+  }
+  
+  .cl-back-button {
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+  
+  .cl-title {
+    font-size: 20px;
+  }
+  
+  .cl-subtitle {
+    font-size: 12px;
+  }
+  
+  .cl-last-updated {
+    font-size: 10px;
+  }
+  
+  .cl-action-buttons {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .cl-btn {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+  
+  .cl-stat-card {
+    padding: 0.875rem;
+  }
+  
+  .cl-stat-value {
+    font-size: 20px;
+  }
+  
+  .cl-chart-title {
+    font-size: 16px;
+  }
+  
+  .cl-chart-subtitle {
+    font-size: 12px;
+  }
+  
+  .cl-legend-item {
+    font-size: 10px;
+  }
+  
+  .cl-chart-wrapper {
+    height: 240px;
+    gap: 6px;
+  }
+  
+  .cl-bar {
+    width: 16px;
+  }
+  
+  .cl-bars {
+    gap: 2px;
+  }
+  
+  .cl-bar-label {
+    font-size: 10px;
+    margin-top: 6px;
+  }
+  
+  .cl-y-axis-label {
+    font-size: 9px;
+  }
+}
+
+/* For very small devices */
+@media (max-width: 360px) {
+  .cl-bar-group {
+    min-width: 40px;
+  }
+  
+  .cl-bar {
+    width: 14px;
+  }
+  
+  .cl-legend {
+    gap: 0.75rem;
+  }
+  
+  .cl-chart-wrapper {
+    height: 220px;
+  }
+}
+
+/* Scrollbar styling for horizontal scroll on mobile */
+.cl-bars-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.cl-bars-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.cl-bars-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.cl-bars-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
