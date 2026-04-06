@@ -26,9 +26,9 @@ const AgentTotalCommissions = () => {
   });
 
   useEffect(() => {
-    const storedAgentId = localStorage.getItem('agent_id') || 
+    const storedAgentId = localStorage.getItem('user_id') || 
                           localStorage.getItem('userId') || 
-                          sessionStorage.getItem('agent_id');
+                          sessionStorage.getItem('user_id');
     
     if (storedAgentId) {
       setAgentId(storedAgentId);
