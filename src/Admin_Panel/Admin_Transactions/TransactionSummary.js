@@ -2795,7 +2795,7 @@ import AdminNavbar from "./../Admin_Navbar/Admin_Navbar";
 import { baseurl } from '../../BaseURL/BaseURL';
 import Swal from "sweetalert2";
 
-function TransactionSummary() {
+function AdminTransactionSummary() {
 
     const [transactions, setTransactions] = useState([]);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
@@ -3159,174 +3159,355 @@ function TransactionSummary() {
     };
 
     // Fetch transactions from API
-    const fetchTransactions = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            let url = `${baseurl}/transactions/`; 
-            const params = new URLSearchParams();
+    // const fetchTransactions = async () => {
+    //     setLoading(true);
+    //     setError(null);
+    //     try {
+    //         let url = `${baseurl}/transactions/`; 
+    //         const params = new URLSearchParams();
             
-            // Add search query
-            if (searchQuery.trim()) {
-                params.append('search', searchQuery.trim());
-            }
+    //         // Add search query
+    //         if (searchQuery.trim()) {
+    //             params.append('search', searchQuery.trim());
+    //         }
             
-            // Add transaction_for filter if not "All"
-            if (selectedType !== "All") {
-                const apiTransactionFor = Object.keys(TRANSACTION_FOR_CHOICES).find(
-                    key => TRANSACTION_FOR_CHOICES[key] === selectedType
-                );
-                if (apiTransactionFor) {
-                    params.append('transaction_for', apiTransactionFor);
-                }
-            }
+    //         // Add transaction_for filter if not "All"
+    //         if (selectedType !== "All") {
+    //             const apiTransactionFor = Object.keys(TRANSACTION_FOR_CHOICES).find(
+    //                 key => TRANSACTION_FOR_CHOICES[key] === selectedType
+    //             );
+    //             if (apiTransactionFor) {
+    //                 params.append('transaction_for', apiTransactionFor);
+    //             }
+    //         }
             
-            // Add role filter - Only Client or Agent
-            if (selectedRole !== "All" && (selectedRole === 'Client' || selectedRole === 'Agent')) {
-                params.append('role_name', selectedRole);
-            }
+    //         // Add role filter - Only Client or Agent
+    //         if (selectedRole !== "All" && (selectedRole === 'Client' || selectedRole === 'Agent')) {
+    //             params.append('role_name', selectedRole);
+    //         }
             
-            // Add user_id filter if provided
-            if (selectedUserId && selectedUserId.trim()) {
-                params.append('user_id', selectedUserId.trim());
-            }
+    //         // Add user_id filter if provided
+    //         if (selectedUserId && selectedUserId.trim()) {
+    //             params.append('user_id', selectedUserId.trim());
+    //         }
             
-            // Add status filter - use backend status values directly
-            if (statusFilter !== "All") {
-                // Use status exactly as from backend (success, pending, failed)
-                params.append('status', statusFilter);
-            }
+    //         // Add status filter - use backend status values directly
+    //         if (statusFilter !== "All") {
+    //             // Use status exactly as from backend (success, pending, failed)
+    //             params.append('status', statusFilter);
+    //         }
             
-            // Add payment mode filter if not "All"
-            if (paymentModeFilter !== "All") {
-                params.append('payment_mode', reverseMapPaymentMode(paymentModeFilter));
-            }
+    //         // Add payment mode filter if not "All"
+    //         if (paymentModeFilter !== "All") {
+    //             params.append('payment_mode', reverseMapPaymentMode(paymentModeFilter));
+    //         }
             
-            // Add date range filters
-            if (dateFrom) {
-                params.append('start_date', formatDateForAPI(dateFrom));
-            }
-            if (dateTo) {
-                params.append('end_date', formatDateForAPI(dateTo));
-            }
+    //         // Add date range filters
+    //         if (dateFrom) {
+    //             params.append('start_date', formatDateForAPI(dateFrom));
+    //         }
+    //         if (dateTo) {
+    //             params.append('end_date', formatDateForAPI(dateTo));
+    //         }
             
-            // Add pagination parameters
-            params.append('page', currentPage);
-            params.append('page_size', itemsPerPage);
+    //         // Add pagination parameters
+    //         params.append('page', currentPage);
+    //         params.append('page_size', itemsPerPage);
             
-            // Build final URL
-            const queryString = params.toString();
-            if (queryString) {
-                url += `?${queryString}`;
-            }
+    //         // Build final URL
+    //         const queryString = params.toString();
+    //         if (queryString) {
+    //             url += `?${queryString}`;
+    //         }
             
-            console.log("Fetching from URL:", url);
+    //         console.log("Fetching from URL:", url);
             
-            const response = await axios.get(url);
-            console.log('API Response:', response.data);
+    //         const response = await axios.get(url);
+    //         console.log('API Response:', response.data);
             
-            let data = [];
-            let count = 0;
+    //         let data = [];
+    //         let count = 0;
             
-            if (response.data && response.data.results) {
-                data = response.data.results;
-                count = response.data.count || data.length;
-            } else if (Array.isArray(response.data)) {
-                data = response.data;
-                count = response.data.length;
-            } else {
-                data = [];
-                count = 0;
-            }
+    //         if (response.data && response.data.results) {
+    //             data = response.data.results;
+    //             count = response.data.count || data.length;
+    //         } else if (Array.isArray(response.data)) {
+    //             data = response.data;
+    //             count = response.data.length;
+    //         } else {
+    //             data = [];
+    //             count = 0;
+    //         }
             
-            // Fetch all users to get role information
-            const allUsersResponse = await axios.get(`${baseurl}/users/`);
-            let usersList = [];
-            if (allUsersResponse.data && allUsersResponse.data.results) {
-                usersList = allUsersResponse.data.results;
-            } else if (Array.isArray(allUsersResponse.data)) {
-                usersList = allUsersResponse.data;
-            }
+    //         // Fetch all users to get role information
+    //         const allUsersResponse = await axios.get(`${baseurl}/users/`);
+    //         let usersList = [];
+    //         if (allUsersResponse.data && allUsersResponse.data.results) {
+    //             usersList = allUsersResponse.data.results;
+    //         } else if (Array.isArray(allUsersResponse.data)) {
+    //             usersList = allUsersResponse.data;
+    //         }
             
-            // Create a map of user_id to role
-            const userRolesMap = new Map();
-            usersList.forEach(user => {
-                let userRole = 'User';
-                if (user.roles && user.roles.length > 0) {
-                    userRole = user.roles[0].role_name;
-                }
-                userRolesMap.set(user.user_id, userRole);
-            });
+    //         // Create a map of user_id to role
+    //         const userRolesMap = new Map();
+    //         usersList.forEach(user => {
+    //             let userRole = 'User';
+    //             if (user.roles && user.roles.length > 0) {
+    //                 userRole = user.roles[0].role_name;
+    //             }
+    //             userRolesMap.set(user.user_id, userRole);
+    //         });
             
-            // Check for existing commission transactions to mark which orders already have commission
-            const commissionTransactions = data.filter(
-                item => item.transaction_for === 'product_commission'
-            );
+    //         // Check for existing commission transactions to mark which orders already have commission
+    //         const commissionTransactions = data.filter(
+    //             item => item.transaction_for === 'product_commission'
+    //         );
             
-            const ordersWithCommission = new Set();
-            commissionTransactions.forEach(commission => {
-                if (commission.order) {
-                    ordersWithCommission.add(commission.order);
-                }
-            });
+    //         const ordersWithCommission = new Set();
+    //         commissionTransactions.forEach(commission => {
+    //             if (commission.order) {
+    //                 ordersWithCommission.add(commission.order);
+    //             }
+    //         });
             
-            setCommissionDistributedOrders(ordersWithCommission);
+    //         setCommissionDistributedOrders(ordersWithCommission);
             
-            // Transform API data with role information - keep status as is from backend
-            const transformedData = data.map((item) => ({
-                transaction_id: item.transaction_id,
-                transaction_date: item.transaction_date,
-                property_name: item.property_name || 'N/A',
-                plan_name: item.plan_name || 'N/A',
-                payment_type: item.payment_type || 
-                              (item.transaction_for === 'subscription' ? 'Subscription' : 
-                               item.transaction_for === 'product' ? 'Product' : 'N/A'),
-                transaction_for: item.transaction_for,
-                paid_amount: item.paid_amount,
-                payment_mode: mapPaymentMode(item.payment_mode, item.payment_method),
-                payment_method: item.payment_method || 'N/A',
-                role: userRolesMap.get(item.user_id) || 'User',
-                username: item.username || `user_${item.user_id}`,
-                user_id: item.user_id,
-                phone_pe_merchant_order_id: item.phone_pe_merchant_order_id,
-                phone_pe_order_id: item.phone_pe_order_id,
-                phone_pe_transaction_id: item.phone_pe_transaction_id,
-                document_file: item.document_file,
-                document_number: item.document_number,
-                status: item.status, // Keep original status from backend (success, pending, failed)
-                order: item.order,
-                displayDate: formatDateForDisplay(item.transaction_date || ""),
-                api_data: item
-            }));
+    //         // Transform API data with role information - keep status as is from backend
+    //         const transformedData = data.map((item) => ({
+    //             transaction_id: item.transaction_id,
+    //             transaction_date: item.transaction_date,
+    //             property_name: item.property_name || 'N/A',
+    //             plan_name: item.plan_name || 'N/A',
+    //             payment_type: item.payment_type || 
+    //                           (item.transaction_for === 'subscription' ? 'Subscription' : 
+    //                            item.transaction_for === 'product' ? 'Product' : 'N/A'),
+    //             transaction_for: item.transaction_for,
+    //             paid_amount: item.paid_amount,
+    //             payment_mode: mapPaymentMode(item.payment_mode, item.payment_method),
+    //             payment_method: item.payment_method || 'N/A',
+    //             role: userRolesMap.get(item.user_id) || 'User',
+    //             username: item.username || `user_${item.user_id}`,
+    //             user_id: item.user_id,
+    //             phone_pe_merchant_order_id: item.phone_pe_merchant_order_id,
+    //             phone_pe_order_id: item.phone_pe_order_id,
+    //             phone_pe_transaction_id: item.phone_pe_transaction_id,
+    //             document_file: item.document_file,
+    //             document_number: item.document_number,
+    //             status: item.status, // Keep original status from backend (success, pending, failed)
+    //             order: item.order,
+    //             displayDate: formatDateForDisplay(item.transaction_date || ""),
+    //             api_data: item
+    //         }));
             
-            console.log("Transformed Data with Roles:", transformedData);
+    //         console.log("Transformed Data with Roles:", transformedData);
             
-            setTransactions(transformedData);
-            setFilteredTransactions(transformedData);
-            setTotalItems(count);
+    //         setTransactions(transformedData);
+    //         setFilteredTransactions(transformedData);
+    //         setTotalItems(count);
             
-            const calculatedPages = Math.ceil(count / itemsPerPage);
-            setTotalPages(calculatedPages || 1);
+    //         const calculatedPages = Math.ceil(count / itemsPerPage);
+    //         setTotalPages(calculatedPages || 1);
             
-            extractUniqueValues(transformedData);
+    //         extractUniqueValues(transformedData);
             
-        } catch (error) {
-            console.error('Error fetching transactions:', error);
-            setError(`Failed to fetch transactions: ${error.message}`);
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: `Failed to load transactions: ${error.response?.data?.message || error.message}`,
-                confirmButtonColor: "#6C63FF",
-            });
-            setTransactions([]);
-            setFilteredTransactions([]);
-            setTotalItems(0);
-            setTotalPages(1);
-        } finally {
-            setLoading(false);
+    //     } catch (error) {
+    //         console.error('Error fetching transactions:', error);
+    //         setError(`Failed to fetch transactions: ${error.message}`);
+    //         Swal.fire({
+    //             icon: "error",
+    //             title: "Error",
+    //             text: `Failed to load transactions: ${error.response?.data?.message || error.message}`,
+    //             confirmButtonColor: "#6C63FF",
+    //         });
+    //         setTransactions([]);
+    //         setFilteredTransactions([]);
+    //         setTotalItems(0);
+    //         setTotalPages(1);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
+
+    // Update the fetchTransactions function to properly set commissionDistributedOrders
+const fetchTransactions = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+        let url = `${baseurl}/transactions/`; 
+        const params = new URLSearchParams();
+        
+        // Add search query
+        if (searchQuery.trim()) {
+            params.append('search', searchQuery.trim());
         }
-    };
+        
+        // Add transaction_for filter if not "All"
+        if (selectedType !== "All") {
+            const apiTransactionFor = Object.keys(TRANSACTION_FOR_CHOICES).find(
+                key => TRANSACTION_FOR_CHOICES[key] === selectedType
+            );
+            if (apiTransactionFor) {
+                params.append('transaction_for', apiTransactionFor);
+            }
+        }
+        
+        // Add role filter - Only Client or Agent
+        if (selectedRole !== "All" && (selectedRole === 'Client' || selectedRole === 'Agent')) {
+            params.append('role_name', selectedRole);
+        }
+        
+        // Add user_id filter if provided
+        if (selectedUserId && selectedUserId.trim()) {
+            params.append('user_id', selectedUserId.trim());
+        }
+        
+        // Add status filter - use backend status values directly
+        if (statusFilter !== "All") {
+            params.append('status', statusFilter);
+        }
+        
+        // Add payment mode filter if not "All"
+        if (paymentModeFilter !== "All") {
+            params.append('payment_mode', reverseMapPaymentMode(paymentModeFilter));
+        }
+        
+        // Add date range filters
+        if (dateFrom) {
+            params.append('start_date', formatDateForAPI(dateFrom));
+        }
+        if (dateTo) {
+            params.append('end_date', formatDateForAPI(dateTo));
+        }
+        
+        // Add pagination parameters
+        params.append('page', currentPage);
+        params.append('page_size', itemsPerPage);
+        
+        // Build final URL
+        const queryString = params.toString();
+        if (queryString) {
+            url += `?${queryString}`;
+        }
+        
+        console.log("Fetching from URL:", url);
+        
+        const response = await axios.get(url);
+        console.log('API Response:', response.data);
+        
+        let data = [];
+        let count = 0;
+        
+        if (response.data && response.data.results) {
+            data = response.data.results;
+            count = response.data.count || data.length;
+        } else if (Array.isArray(response.data)) {
+            data = response.data;
+            count = response.data.length;
+        } else {
+            data = [];
+            count = 0;
+        }
+        
+        // Fetch all users to get role information
+        const allUsersResponse = await axios.get(`${baseurl}/users/`);
+        let usersList = [];
+        if (allUsersResponse.data && allUsersResponse.data.results) {
+            usersList = allUsersResponse.data.results;
+        } else if (Array.isArray(allUsersResponse.data)) {
+            usersList = allUsersResponse.data;
+        }
+        
+        // Create a map of user_id to role
+        const userRolesMap = new Map();
+        usersList.forEach(user => {
+            let userRole = 'User';
+            if (user.roles && user.roles.length > 0) {
+                userRole = user.roles[0].role_name;
+            }
+            userRolesMap.set(user.user_id, userRole);
+        });
+        
+        // Fetch ALL commission transactions (not just filtered ones) to check which orders have commission
+        // This ensures that even when filtered, we know which orders already have commission
+        let allCommissionTransactions = [];
+        try {
+            const commissionResponse = await axios.get(`${baseurl}/transactions/?transaction_for=product_commission&page_size=1000`);
+            if (commissionResponse.data && commissionResponse.data.results) {
+                allCommissionTransactions = commissionResponse.data.results;
+            } else if (Array.isArray(commissionResponse.data)) {
+                allCommissionTransactions = commissionResponse.data;
+            }
+        } catch (err) {
+            console.error("Error fetching commission transactions:", err);
+        }
+        
+        // Check for existing commission transactions to mark which orders already have commission
+        const ordersWithCommission = new Set();
+        allCommissionTransactions.forEach(commission => {
+            if (commission.order) {
+                ordersWithCommission.add(commission.order);
+            }
+        });
+        
+        setCommissionDistributedOrders(ordersWithCommission);
+        
+        // Transform API data with role information - keep status as is from backend
+        const transformedData = data.map((item) => ({
+            transaction_id: item.transaction_id,
+            transaction_date: item.transaction_date,
+            property_name: item.property_name || 'N/A',
+            plan_name: item.plan_name || 'N/A',
+            payment_type: item.payment_type || 
+                          (item.transaction_for === 'subscription' ? 'Subscription' : 
+                           item.transaction_for === 'product' ? 'Product' : 'N/A'),
+            transaction_for: item.transaction_for,
+            paid_amount: item.paid_amount,
+            payment_mode: mapPaymentMode(item.payment_mode, item.payment_method),
+            payment_method: item.payment_method || 'N/A',
+            role: userRolesMap.get(item.user_id) || 'User',
+            username: item.username || `user_${item.user_id}`,
+            user_id: item.user_id,
+            phone_pe_merchant_order_id: item.phone_pe_merchant_order_id,
+            phone_pe_order_id: item.phone_pe_order_id,
+            phone_pe_transaction_id: item.phone_pe_transaction_id,
+            document_file: item.document_file,
+            document_number: item.document_number,
+            status: item.status,
+            order: item.order,
+            displayDate: formatDateForDisplay(item.transaction_date || ""),
+            api_data: item
+        }));
+        
+        console.log("Transformed Data with Roles:", transformedData);
+        console.log("Orders with Commission:", Array.from(ordersWithCommission));
+        
+        setTransactions(transformedData);
+        setFilteredTransactions(transformedData);
+        setTotalItems(count);
+        
+        const calculatedPages = Math.ceil(count / itemsPerPage);
+        setTotalPages(calculatedPages || 1);
+        
+        extractUniqueValues(transformedData);
+        
+    } catch (error) {
+        console.error('Error fetching transactions:', error);
+        setError(`Failed to fetch transactions: ${error.message}`);
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: `Failed to load transactions: ${error.response?.data?.message || error.message}`,
+            confirmButtonColor: "#6C63FF",
+        });
+        setTransactions([]);
+        setFilteredTransactions([]);
+        setTotalItems(0);
+        setTotalPages(1);
+    } finally {
+        setLoading(false);
+    }
+};
 
     // Extract unique values for filter dropdowns
     const extractUniqueValues = (data) => {
@@ -3627,46 +3808,110 @@ function TransactionSummary() {
     };
 
     // Render actions cell with commission button
-    const renderActionsCell = (transaction) => {
-        if (shouldShowCommissionButton(transaction)) {
-            const isDistributing = distributingCommission === transaction.transaction_id;
-            const isAlreadyDistributed = commissionDistributedOrders.has(transaction.order);
+    // const renderActionsCell = (transaction) => {
+    //     if (shouldShowCommissionButton(transaction)) {
+    //         const isDistributing = distributingCommission === transaction.transaction_id;
+    //         const isAlreadyDistributed = commissionDistributedOrders.has(transaction.order);
             
-            return (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <button
-                        onClick={() => handleDistributeCommission(transaction)}
-                        disabled={isDistributing || isAlreadyDistributed}
-                        style={{
-                            padding: '6px 12px',
-                            backgroundColor: isAlreadyDistributed ? '#9ca3af' : '#10b981',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            fontSize: '12px',
-                            cursor: isDistributing || isAlreadyDistributed ? 'not-allowed' : 'pointer',
-                            fontWeight: '500',
-                            whiteSpace: 'nowrap',
-                            opacity: isDistributing || isAlreadyDistributed ? 0.6 : 1
-                        }}
-                    >
-                        {isDistributing ? (
-                            <>
-                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" style={{ marginRight: '4px' }}></span>
-                                Distributing...
-                            </>
-                        ) : isAlreadyDistributed ? (
-                            'Commission Distributed ✓'
-                        ) : (
-                            'Distribute Commission'
-                        )}
-                    </button>
-                </div>
-            );
+    //         return (
+    //             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    //                 <button
+    //                     onClick={() => handleDistributeCommission(transaction)}
+    //                     disabled={isDistributing || isAlreadyDistributed}
+    //                     style={{
+    //                         padding: '6px 12px',
+    //                         backgroundColor: isAlreadyDistributed ? '#9ca3af' : '#10b981',
+    //                         color: 'white',
+    //                         border: 'none',
+    //                         borderRadius: '4px',
+    //                         fontSize: '12px',
+    //                         cursor: isDistributing || isAlreadyDistributed ? 'not-allowed' : 'pointer',
+    //                         fontWeight: '500',
+    //                         whiteSpace: 'nowrap',
+    //                         opacity: isDistributing || isAlreadyDistributed ? 0.6 : 1
+    //                     }}
+    //                 >
+    //                     {isDistributing ? (
+    //                         <>
+    //                             <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" style={{ marginRight: '4px' }}></span>
+    //                             Distributing...
+    //                         </>
+    //                     ) : isAlreadyDistributed ? (
+    //                         'Commission Distributed ✓'
+    //                     ) : (
+    //                         'Distribute Commission'
+    //                     )}
+    //                 </button>
+    //             </div>
+    //         );
+    //     }
+    //     return <span style={{ color: '#999' }}>-</span>;
+    // };
+// Render actions cell with commission button
+const renderActionsCell = (transaction) => {
+    if (shouldShowCommissionButton(transaction)) {
+        const isDistributing = distributingCommission === transaction.transaction_id;
+        // Check if commission is already distributed for this order
+        const isAlreadyDistributed = transaction.order && commissionDistributedOrders.has(transaction.order);
+        
+        return (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button
+                    onClick={() => handleDistributeCommission(transaction)}
+                    disabled={isDistributing || isAlreadyDistributed}
+                    style={{
+                        padding: '6px 12px',
+                        backgroundColor: isAlreadyDistributed ? '#9ca3af' : '#10b981',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        fontSize: '12px',
+                        cursor: isDistributing || isAlreadyDistributed ? 'not-allowed' : 'pointer',
+                        fontWeight: '500',
+                        whiteSpace: 'nowrap',
+                        opacity: isDistributing || isAlreadyDistributed ? 0.6 : 1
+                    }}
+                >
+                    {isDistributing ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" style={{ marginRight: '4px' }}></span>
+                            Distributing...
+                        </>
+                    ) : isAlreadyDistributed ? (
+                        'Commission Distributed ✓'
+                    ) : (
+                        'Distribute Commission'
+                    )}
+                </button>
+            </div>
+        );
+    }
+    return <span style={{ color: '#999' }}>-</span>;
+};
+
+
+
+// Add this useEffect at the bottom of your component (before the return statement)
+// This handles clicking outside the user dropdown
+useEffect(() => {
+    const handleClickOutside = (event) => {
+        // Check if the click is outside the user dropdown container
+        const userDropdownContainer = document.querySelector('.user-dropdown-container');
+        if (userDropdownContainer && !userDropdownContainer.contains(event.target)) {
+            setShowUserDropdown(false);
         }
-        return <span style={{ color: '#999' }}>-</span>;
     };
 
+    // Add event listener when dropdown is open
+    if (showUserDropdown) {
+        document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    // Cleanup event listener
+    return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+    };
+}, [showUserDropdown]);
     return (
         <>
             <AdminNavbar />
@@ -3879,109 +4124,110 @@ function TransactionSummary() {
                         </div>
 
                         {/* User ID Filter with Searchable Dropdown */}
-                        <div style={{ minWidth: '250px', position: 'relative' }}>
-                            <label style={{ display: 'block', fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                                Select User
-                            </label>
-                            <div style={{ position: 'relative' }}>
-                                <input
-                                    type="text"
-                                    placeholder="Search by ID, Name, Email, or Phone..."
-                                    value={userSearchTerm}
-                                    onChange={(e) => {
-                                        setUserSearchTerm(e.target.value);
-                                        setShowUserDropdown(true);
-                                        if (e.target.value === "") {
-                                            setSelectedUserId("");
-                                        }
-                                    }}
-                                    onFocus={() => setShowUserDropdown(true)}
-                                    style={{
-                                        padding: '8px 12px',
-                                        border: '1px solid #ddd',
-                                        borderRadius: '4px',
-                                        fontSize: '14px',
-                                        width: '100%',
-                                        paddingRight: selectedUserId ? '30px' : '12px'
-                                    }}
-                                />
-                                {selectedUserId && (
-                                    <button
-                                        onClick={clearSelectedUser}
-                                        style={{
-                                            position: 'absolute',
-                                            right: '8px',
-                                            top: '50%',
-                                            transform: 'translateY(-50%)',
-                                            background: 'transparent',
-                                            border: 'none',
-                                            cursor: 'pointer',
-                                            color: '#999',
-                                            fontSize: '16px'
-                                        }}
-                                    >
-                                        ✕
-                                    </button>
-                                )}
-                                
-                                {/* User Dropdown */}
-                                {showUserDropdown && (
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: '100%',
-                                        left: 0,
-                                        right: 0,
-                                        maxHeight: '300px',
-                                        overflowY: 'auto',
-                                        backgroundColor: 'white',
-                                        border: '1px solid #ddd',
-                                        borderRadius: '4px',
-                                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                                        zIndex: 1000,
-                                        marginTop: '2px'
-                                    }}>
-                                        {loadingUsers ? (
-                                            <div style={{ padding: '12px', textAlign: 'center', color: '#666' }}>
-                                                Loading users...
-                                            </div>
-                                        ) : getFilteredUsers().length === 0 ? (
-                                            <div style={{ padding: '12px', textAlign: 'center', color: '#666' }}>
-                                                No users found
-                                            </div>
-                                        ) : (
-                                            getFilteredUsers().map((user) => (
-                                                <div
-                                                    key={user.user_id}
-                                                    onClick={() => handleUserSelect(user)}
-                                                    style={{
-                                                        padding: '10px 12px',
-                                                        cursor: 'pointer',
-                                                        borderBottom: '1px solid #f0f0f0',
-                                                        transition: 'background 0.2s'
-                                                    }}
-                                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
-                                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
-                                                >
-                                                    <div style={{ fontWeight: '500', marginBottom: '4px' }}>
-                                                        ID: {user.user_id}
-                                                    </div>
-                                                    <div style={{ fontSize: '12px', color: '#666' }}>
-                                                        {user.first_name || ''} {user.last_name || ''}
-                                                        {user.email && ` • ${user.email}`}
-                                                        {user.phone_number && ` • ${user.phone_number}`}
-                                                    </div>
-                                                    {user.roles && user.roles.length > 0 && (
-                                                        <div style={{ fontSize: '11px', color: '#999', marginTop: '2px' }}>
-                                                            Role: {user.roles.map(r => r.role_name).join(', ')}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            ))
-                                        )}
-                                    </div>
-                                )}
+                      {/* User ID Filter with Searchable Dropdown */}
+<div style={{ minWidth: '250px', position: 'relative' }} className="user-dropdown-container">
+    <label style={{ display: 'block', fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+        Select User
+    </label>
+    <div style={{ position: 'relative' }}>
+        <input
+            type="text"
+            placeholder="Search by ID, Name, Email, or Phone..."
+            value={userSearchTerm}
+            onChange={(e) => {
+                setUserSearchTerm(e.target.value);
+                setShowUserDropdown(true);
+                if (e.target.value === "") {
+                    setSelectedUserId("");
+                }
+            }}
+            onFocus={() => setShowUserDropdown(true)}
+            style={{
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px',
+                width: '100%',
+                paddingRight: selectedUserId ? '30px' : '12px'
+            }}
+        />
+        {selectedUserId && (
+            <button
+                onClick={clearSelectedUser}
+                style={{
+                    position: 'absolute',
+                    right: '8px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#999',
+                    fontSize: '16px'
+                }}
+            >
+                ✕
+            </button>
+        )}
+        
+        {/* User Dropdown */}
+        {showUserDropdown && (
+            <div style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
+                maxHeight: '300px',
+                overflowY: 'auto',
+                backgroundColor: 'white',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                zIndex: 1000,
+                marginTop: '2px'
+            }}>
+                {loadingUsers ? (
+                    <div style={{ padding: '12px', textAlign: 'center', color: '#666' }}>
+                        Loading users...
+                    </div>
+                ) : getFilteredUsers().length === 0 ? (
+                    <div style={{ padding: '12px', textAlign: 'center', color: '#666' }}>
+                        No users found
+                    </div>
+                ) : (
+                    getFilteredUsers().map((user) => (
+                        <div
+                            key={user.user_id}
+                            onClick={() => handleUserSelect(user)}
+                            style={{
+                                padding: '10px 12px',
+                                cursor: 'pointer',
+                                borderBottom: '1px solid #f0f0f0',
+                                transition: 'background 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                        >
+                            <div style={{ fontWeight: '500', marginBottom: '4px' }}>
+                                ID: {user.user_id}
                             </div>
+                            <div style={{ fontSize: '12px', color: '#666' }}>
+                                {user.first_name || ''} {user.last_name || ''}
+                                {user.email && ` • ${user.email}`}
+                                {user.phone_number && ` • ${user.phone_number}`}
+                            </div>
+                            {user.roles && user.roles.length > 0 && (
+                                <div style={{ fontSize: '11px', color: '#999', marginTop: '2px' }}>
+                                    Role: {user.roles.map(r => r.role_name).join(', ')}
+                                </div>
+                            )}
                         </div>
+                    ))
+                )}
+            </div>
+        )}
+    </div>
+</div>
 
                         {/* Status Filter */}
                         <div style={{ minWidth: '150px' }}>
@@ -4452,4 +4698,4 @@ function TransactionSummary() {
     );
 }
 
-export default TransactionSummary;
+export default AdminTransactionSummary;

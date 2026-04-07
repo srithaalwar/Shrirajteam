@@ -367,6 +367,8 @@ import AgentSearchResults from './Agent_Panel/Agent_Navbar/AgentSearchResults';
 import ClientSearchResults from './Client_Panel/Client_Navbar/ClientSearchResults';
 import CategoryProducts from "./Agent_Panel/Agent_Home_Page/CategoryProducts"
 import AdminPayouts from "./Admin_Panel/Admin_Payouts/TotalCommissions"
+import ClientBusinessProducts from "./Client_Panel/Client_AddToCart/ClientBusinessProducts";
+import RegisterVerifyOTP from "./Register/RegisterVerifyOTP";
 function App() {
   return (
     <BrowserRouter>
@@ -423,6 +425,8 @@ function App() {
         <Route path="/about_us" element={<AboutUs />} />
 
         <Route path="/verify-otp" element={<VerifyOTP />} />
+        <Route path="/register-verify-otp" element={<RegisterVerifyOTP />} />
+
         <Route path="/privacypolicy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
@@ -631,6 +635,8 @@ function App() {
         <Route path="/client-meetings" element={<ClientMeetings />} />
         <Route path="/client-meetingrequest" element={<ClientMeetingRequestForm />} />
           <Route path="/client-add-to-cart" element={<ClientAddToCart />} />
+           <Route path="/client-business-products" element={<ClientBusinessProducts />} />
+
           <Route path="/client-addresses" element={<ClientAddressPageRoute />} />
          <Route path="/client-wishlist" element={<ClientWishlist />} />
         <Route path="/client-transactions" element={<ClientTransactions />} />

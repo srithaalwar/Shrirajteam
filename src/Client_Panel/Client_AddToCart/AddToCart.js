@@ -6294,7 +6294,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import AgentNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
+import  ClientNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
 import { baseurl, redirecturl } from '../../BaseURL/BaseURL';
 import "./AddToCart.css";
 import ClientAddressManager from "./ClientAddressManager";
@@ -6681,7 +6681,7 @@ const handleQuantityChange = async (cartItemId, newQuantity) => {
   if (!userId) {
     return (
       <>
-        <AgentNavbar />
+        <ClientNavbar />
         <div className="agent-cart-container">
           <div className="agent-cart-empty text-center py-5">
             <div className="empty-cart-icon mb-3"><FaShoppingCart size={64} /></div>
@@ -6699,7 +6699,7 @@ const handleQuantityChange = async (cartItemId, newQuantity) => {
   if (loading) {
     return (
       <>
-        <AgentNavbar />
+        <ClientNavbar />
         <div className="agent-cart-container">
           <div className="text-center py-5">
             <div className="spinner-border text-primary" role="status">
@@ -6715,7 +6715,7 @@ const handleQuantityChange = async (cartItemId, newQuantity) => {
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <>
-      <AgentNavbar />
+      <ClientNavbar />
 
       {/* Centered Snackbar */}
       {snackbarOpen && (
