@@ -1320,7 +1320,7 @@
 .wn-nav-right {
   display: flex;
   align-items: center;
-  gap: 0px;
+  gap: 8px;
   flex-shrink: 0;
 }
 

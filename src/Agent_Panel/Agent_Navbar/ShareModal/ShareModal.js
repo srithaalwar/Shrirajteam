@@ -3974,6 +3974,1102 @@
 // this below is after changing expo code also 
 
 
+// import { useState, useEffect, useRef } from "react";
+// import { Share2, X, Search, Copy, Check, Download, Globe, Smartphone, Apple } from "lucide-react";
+// import { QRCodeCanvas } from "qrcode.react";
+
+// // Detect if running in React Native WebView
+// const isReactNativeWebView = () => {
+//   return typeof window !== 'undefined' && (
+//     window.ReactNativeWebView || 
+//     navigator.userAgent.includes('ReactNative') ||
+//     navigator.userAgent.includes('Expo') ||
+//     window.__REACT_NATIVE_WEBVIEW__ === true
+//   );
+// };
+
+// // Function to send QR code to React Native
+// const sendQRToReactNative = (qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title) => {
+//   if (window.ReactNativeWebView) {
+//     const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 Scan QR code above or tap to open link.`;
+    
+//     window.ReactNativeWebView.postMessage(JSON.stringify({
+//       type: 'SHARE_WITH_QR',
+//       data: {
+//         qrCode: qrDataUrl,
+//         webUrl: webUrl,
+//         playStoreUrl: playStoreUrl,
+//         appStoreUrl: appStoreUrl,
+//         title: title,
+//         message: message
+//       }
+//     }));
+//     return true;
+//   }
+//   return false;
+// };
+
+// const SHARE_SERVICES = [
+//   {
+//     name: "Facebook",
+//     color: "#1877F2",
+//     icon: (
+//       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+//         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 4.991 3.243 9.21 7.758 10.682V15.02H5.413v-2.947h2.345V9.983c0-2.318 1.38-3.6 3.497-3.6.998 0 2.043.178 2.043.178v2.252h-1.15c-1.134 0-1.488.704-1.488 1.425v1.71h2.532l-.405 2.947h-2.127v7.736C20.757 21.283 24 17.064 24 12.073z"/>
+//       </svg>
+//     ),
+//     share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+//       // Try React Native first
+//       if (isReactNativeWebView()) {
+//         sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+//         return;
+//       }
+      
+//       window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, "_blank");
+//       const link = document.createElement('a');
+//       link.href = qrDataUrl;
+//       link.download = 'qrcode.png';
+//       link.click();
+//       setTimeout(() => URL.revokeObjectURL(link.href), 100);
+//     },
+//   },
+//   {
+//     name: "WhatsApp",
+//     color: "#25D366",
+//     icon: (
+//       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+//         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+//       </svg>
+//     ),
+//     share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+//       const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 Scan QR code attached below:`;
+      
+//       // Try React Native first
+//       if (isReactNativeWebView()) {
+//         sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+//         return;
+//       }
+      
+//       // Try native share with file
+//       if (navigator.share && navigator.canShare) {
+//         try {
+//           const response = await fetch(qrDataUrl);
+//           const blob = await response.blob();
+//           const file = new File([blob], 'qrcode.png', { type: 'image/png' });
+          
+//           if (navigator.canShare({ files: [file] })) {
+//             await navigator.share({
+//               title: title,
+//               text: message,
+//               files: [file]
+//             });
+//             return;
+//           }
+//         } catch (err) {
+//           console.log('Share with file failed:', err);
+//         }
+//       }
+      
+//       // Fallback: Open WhatsApp with text only
+//       window.open(`https://wa.me/?text=${encodeURIComponent(message + " [QR Code image attached]")}`, "_blank");
+//     },
+//   },
+//   {
+//     name: "Telegram",
+//     color: "#26A5E4",
+//     icon: (
+//       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+//         <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+//       </svg>
+//     ),
+//     share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+//       const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 Scan QR code attached below:`;
+      
+//       // Try React Native first
+//       if (isReactNativeWebView()) {
+//         sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+//         return;
+//       }
+      
+//       // Try native share with file
+//       if (navigator.share && navigator.canShare) {
+//         try {
+//           const response = await fetch(qrDataUrl);
+//           const blob = await response.blob();
+//           const file = new File([blob], 'qrcode.png', { type: 'image/png' });
+          
+//           if (navigator.canShare({ files: [file] })) {
+//             await navigator.share({
+//               title: title,
+//               text: message,
+//               files: [file]
+//             });
+//             return;
+//           }
+//         } catch (err) {
+//           console.log('Share with file failed:', err);
+//         }
+//       }
+      
+//       // Fallback
+//       window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message + " [QR Code image attached]")}`, "_blank");
+//     },
+//   },
+//   {
+//     name: "Reddit",
+//     color: "#FF4500",
+//     icon: (
+//       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+//         <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
+//       </svg>
+//     ),
+//     share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+//       const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 Scan QR code attached below:`;
+      
+//       // Try React Native first
+//       if (isReactNativeWebView()) {
+//         sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+//         return;
+//       }
+      
+//       window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&text=${encodeURIComponent(message)}`, "_blank");
+//       const link = document.createElement('a');
+//       link.href = qrDataUrl;
+//       link.download = 'qrcode.png';
+//       link.click();
+//       setTimeout(() => URL.revokeObjectURL(link.href), 100);
+//     },
+//   },
+//   {
+//     name: "Threads",
+//     color: "#000000",
+//     icon: (
+//       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+//         <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.689-2.046 1.579-1.671 1.62-3.583 1.573-4.92-.013-.394-.024-.734-.013-1.057-.709.17-1.43.25-2.164.245-1.636 0-3.137-.432-4.337-1.25-1.473-1.003-2.268-2.518-2.268-4.272 0-3.51 2.79-5.763 7.022-5.763 1.282 0 2.432.2 3.39.567.888.34 1.64.846 2.232 1.504l-1.467 1.363c-.893-.953-2.275-1.435-4.11-1.435-2.818 0-4.985 1.388-4.985 3.763 0 1.115.444 1.998 1.284 2.564.883.593 2.114.903 3.556.903.743 0 1.452-.09 2.106-.264.013-.213.022-.429.032-.642.041-1.123.087-2.399-.253-3.476-.296-.941-.968-1.452-1.994-1.52-.874-.056-1.613.206-2.127.741-.467.484-.725 1.156-.733 1.942l-2.037-.033c.024-1.341.492-2.491 1.32-3.362.866-.91 2.065-1.393 3.478-1.393h.052c2.675.065 4.073 1.634 4.515 4.937.193 1.42.137 2.836.083 4.211-.014.361-.027.718-.036 1.076v.042c0 .263.005.504.01.743.038 1.836-.007 4.4-2.137 6.681C17.274 23.213 15.157 24 12.186 24z"/>
+//       </svg>
+//     ),
+//     share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+//       const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 Scan QR code attached below:`;
+      
+//       if (isReactNativeWebView()) {
+//         sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+//         return;
+//       }
+      
+//       window.open(`https://www.threads.net/intent/post?text=${encodeURIComponent(message)}`, "_blank");
+//       const link = document.createElement('a');
+//       link.href = qrDataUrl;
+//       link.download = 'qrcode.png';
+//       link.click();
+//       setTimeout(() => URL.revokeObjectURL(link.href), 100);
+//     },
+//   },
+//   {
+//     name: "Email",
+//     color: "#6D6D6D",
+//     icon: (
+//       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+//         <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+//       </svg>
+//     ),
+//     share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+//       const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 QR code is attached separately. Please find the QR code image file that was downloaded.`;
+      
+//       if (isReactNativeWebView()) {
+//         sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+//         return;
+//       }
+      
+//       window.open(`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(message)}`, "_blank");
+//       const link = document.createElement('a');
+//       link.href = qrDataUrl;
+//       link.download = 'qrcode.png';
+//       link.click();
+//       setTimeout(() => URL.revokeObjectURL(link.href), 100);
+//     },
+//   },
+//   {
+//     name: "Gmail",
+//     color: "#EA4335",
+//     icon: (
+//       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+//         <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+//       </svg>
+//     ),
+//     share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+//       const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 QR code image has been downloaded - please attach it to this email.`;
+      
+//       if (isReactNativeWebView()) {
+//         sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+//         return;
+//       }
+      
+//       window.open(`https://mail.google.com/mail/?view=cm&su=${encodeURIComponent(title)}&body=${encodeURIComponent(message)}`, "_blank");
+//       const link = document.createElement('a');
+//       link.href = qrDataUrl;
+//       link.download = 'qrcode.png';
+//       link.click();
+//       setTimeout(() => URL.revokeObjectURL(link.href), 100);
+//     },
+//   },
+//   {
+//     name: "LinkedIn",
+//     color: "#0A66C2",
+//     icon: (
+//       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+//         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+//       </svg>
+//     ),
+//     share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+//       const message = `${title}\n\nCheck out this link: ${url}\n\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}`;
+      
+//       if (isReactNativeWebView()) {
+//         sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+//         return;
+//       }
+      
+//       window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, "_blank");
+//     },
+//   },
+//   {
+//     name: "Bluesky",
+//     color: "#0085FF",
+//     icon: (
+//       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+//         <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.902.139 2.66-.018 3.748.004 4.62.022 5.342.61 11.77.679 12.526c.324 3.279 2.594 4.482 5.074 4.19-.229.23-.471.49-.674.725-.508.599-.908 1.265-1.016 1.792-.241 1.195.23 2.246 1.11 2.793 1.148.724 2.584.306 3.43-.452.677-.619 1.144-1.533 1.397-2.444.253.91.72 1.825 1.397 2.444.846.758 2.282 1.176 3.43.452.88-.547 1.351-1.598 1.11-2.793-.108-.527-.508-1.193-1.016-1.792a9.337 9.337 0 0 0-.674-.725c2.48.292 4.75-.911 5.074-4.19.069-.756.657-7.184.675-7.906.022-.872-.135-1.96-.898-2.718-.659-.636-1.664-.958-4.3 1.203C16.046 4.747 13.087 8.686 12 10.8z"/>
+//       </svg>
+//     ),
+//     share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+//       const message = `${title}\n\n🔗 Web Link: ${url}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}`;
+      
+//       if (isReactNativeWebView()) {
+//         sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+//         return;
+//       }
+      
+//       window.open(`https://bsky.app/intent/compose?text=${encodeURIComponent(message)}`, "_blank");
+//     },
+//   },
+//   {
+//     name: "Pinterest",
+//     color: "#E60023",
+//     icon: (
+//       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+//         <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
+//       </svg>
+//     ),
+//     share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+//       const message = `${title}\n\nCheck out this link: ${url}\n\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}`;
+      
+//       if (isReactNativeWebView()) {
+//         sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+//         return;
+//       }
+      
+//       window.open(`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(message)}`, "_blank");
+//     },
+//   },
+//   {
+//     name: "Messenger",
+//     color: "#0084FF",
+//     icon: (
+//       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+//         <path d="M12 0C5.373 0 0 5.149 0 11.5c0 3.607 1.786 6.832 4.591 8.933V24l4.184-2.299c1.117.308 2.301.474 3.524.474 6.627 0 12-5.149 12-11.5S18.627 0 12 0zm1.191 15.494l-3.054-3.253-5.965 3.253 6.559-6.971 3.128 3.253 5.891-3.253-6.559 6.971z"/>
+//       </svg>
+//     ),
+//     share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+//       if (isReactNativeWebView()) {
+//         sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+//         return;
+//       }
+      
+//       window.open(`https://www.facebook.com/dialog/send?link=${encodeURIComponent(url)}&app_id=291494307733634`, "_blank");
+//     },
+//   },
+//   {
+//     name: "Teams",
+//     color: "#6264A7",
+//     icon: (
+//       <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+//         <path d="M20.625 5.813a2.813 2.813 0 100-5.626 2.813 2.813 0 000 5.626zm-3.375 1.5h-3.75a5.25 5.25 0 00-5.25 5.25v4.125a.75.75 0 00.75.75h.75v3.75a.75.75 0 001.5 0v-3.75H12v3.75a.75.75 0 001.5 0v-3.75h.75a.75.75 0 00.75-.75v-4.125a5.25 5.25 0 00-5.25-5.25V7.313h8.25v2.437a5.25 5.25 0 00-5.25 5.25v.375h4.5v-.375a.75.75 0 011.5 0v.375h.75a.75.75 0 00.75-.75v-4.125a3.75 3.75 0 00-3.75-3.75zM8.625 5.063a2.438 2.438 0 100-4.876 2.438 2.438 0 000 4.876z"/>
+//       </svg>
+//     ),
+//     share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+//       const message = `${title}\n\n🔗 Web Link: ${url}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}`;
+      
+//       if (isReactNativeWebView()) {
+//         sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+//         return;
+//       }
+      
+//       window.open(`https://teams.microsoft.com/share?href=${encodeURIComponent(url)}&msgText=${encodeURIComponent(message)}`, "_blank");
+//     },
+//   },
+// ];
+
+// export default function ShareModal({
+//   productId,
+//   variantId,
+//   selectedVariant,
+//   productTitle = "Check out this product!",
+//   mode = "product",
+//   shareUrl = "",
+//   triggerAs = "icon",
+//   triggerLabel = "Share",
+//   triggerClassName = "",
+//   onClose,
+// }) {
+//   const [isOpen, setIsOpen] = useState(false);
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [copied, setCopied] = useState(false);
+//   const [copiedWebUrl, setCopiedWebUrl] = useState(false);
+//   const [copiedPlayStore, setCopiedPlayStore] = useState(false);
+//   const [copiedAppStore, setCopiedAppStore] = useState(false);
+//   const [qrDataUrl, setQrDataUrl] = useState(null);
+//   const modalRef = useRef(null);
+//   const searchRef = useRef(null);
+
+//   // Define URLs
+//   const webUrl = mode === "custom"
+//     ? shareUrl
+//     : (typeof window !== "undefined"
+//         ? `${window.location.origin}/product/${productId}/?variant=${variantId || selectedVariant?.id || ""}`
+//         : "");
+  
+//   const playStoreUrl = "https://play.google.com/store/apps/details?id=com.yasla.shrirajteam";
+//   const appStoreUrl = "https://apps.apple.com/in/app/shriraj/id6754551709";
+
+//   const filteredServices = SHARE_SERVICES.filter(s =>
+//     s.name.toLowerCase().includes(searchQuery.toLowerCase())
+//   );
+
+//   // Generate QR code data URL when modal opens
+//   useEffect(() => {
+//     if (isOpen) {
+//       setTimeout(() => {
+//         const canvas = document.getElementById('share-modal-qrcode');
+//         if (canvas) {
+//           const dataUrl = canvas.toDataURL('image/png');
+//           setQrDataUrl(dataUrl);
+//         }
+//       }, 100);
+//     } else {
+//       setQrDataUrl(null);
+//     }
+//   }, [isOpen]);
+
+//   const handleShareClick = () => {
+//     setIsOpen(true);
+//     setSearchQuery("");
+//   };
+
+//   const handleClose = () => {
+//     setIsOpen(false);
+//     setSearchQuery("");
+//     setCopied(false);
+//     setCopiedWebUrl(false);
+//     setCopiedPlayStore(false);
+//     setCopiedAppStore(false);
+//     setQrDataUrl(null);
+//     if (onClose) onClose();
+//   };
+
+//   const handleCopyLink = async (url, setCopiedState) => {
+//     try {
+//       await navigator.clipboard.writeText(url);
+//     } catch {
+//       const ta = document.createElement("textarea");
+//       ta.value = url;
+//       document.body.appendChild(ta);
+//       ta.select();
+//       document.execCommand("copy");
+//       document.body.removeChild(ta);
+//     }
+//     setCopiedState(true);
+//     setTimeout(() => setCopiedState(false), 2500);
+//   };
+
+//   const handleServiceClick = async (service) => {
+//     if (!qrDataUrl) {
+//       await new Promise(resolve => setTimeout(resolve, 200));
+//       if (!qrDataUrl) return;
+//     }
+    
+//     await service.share(webUrl, productTitle, qrDataUrl, webUrl, playStoreUrl, appStoreUrl);
+//   };
+
+//   const handleDownloadQR = () => {
+//     const canvas = document.getElementById('share-modal-qrcode');
+//     if (canvas) {
+//       const pngUrl = canvas
+//         .toDataURL('image/png')
+//         .replace('image/png', 'image/octet-stream');
+      
+//       const downloadLink = document.createElement('a');
+//       downloadLink.href = pngUrl;
+//       downloadLink.download = `qrcode-${Date.now()}.png`;
+//       document.body.appendChild(downloadLink);
+//       downloadLink.click();
+//       document.body.removeChild(downloadLink);
+//     }
+//   };
+
+//   // Handle native share
+//   const handleNativeShare = async () => {
+//     if (!qrDataUrl) return;
+    
+//     const shareMessage = `${productTitle}\n\n🔗 Web: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}`;
+    
+//     // Try React Native first
+//     if (isReactNativeWebView()) {
+//       sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, productTitle);
+//       return;
+//     }
+    
+//     // Try native share with file
+//     try {
+//       const response = await fetch(qrDataUrl);
+//       const blob = await response.blob();
+//       const file = new File([blob], 'qrcode.png', { type: 'image/png' });
+      
+//       if (navigator.canShare && navigator.canShare({ files: [file] })) {
+//         await navigator.share({
+//           title: productTitle,
+//           text: shareMessage,
+//           files: [file]
+//         });
+//       } else if (navigator.share) {
+//         await navigator.share({
+//           title: productTitle,
+//           text: shareMessage,
+//         });
+//       } else {
+//         await navigator.clipboard.writeText(shareMessage);
+//         alert('Links copied to clipboard!');
+//       }
+//     } catch (error) {
+//       console.error('Error sharing:', error);
+//       await navigator.clipboard.writeText(shareMessage);
+//       alert('Links copied to clipboard!');
+//     }
+//   };
+
+//   // Close on outside click
+//   useEffect(() => {
+//     const handleOutside = (e) => {
+//       if (modalRef.current && !modalRef.current.contains(e.target)) handleClose();
+//     };
+//     if (isOpen) {
+//       document.addEventListener("mousedown", handleOutside);
+//       setTimeout(() => searchRef.current?.focus(), 100);
+//     }
+//     return () => document.removeEventListener("mousedown", handleOutside);
+//   }, [isOpen]);
+
+//   // Close on Escape
+//   useEffect(() => {
+//     const handleKey = (e) => { if (e.key === "Escape") handleClose(); };
+//     document.addEventListener("keydown", handleKey);
+//     return () => document.removeEventListener("keydown", handleKey);
+//   }, []);
+
+//   const isInReactNative = isReactNativeWebView();
+
+//   return (
+//     <>
+//       <style>{`
+//         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+
+//         .share-root * { 
+//           box-sizing: border-box; 
+//           font-family: 'DM Sans', sans-serif; 
+//         }
+
+//         .share-trigger {
+//           display: inline-flex; 
+//           align-items: center; 
+//           justify-content: center;
+//           width: 40px; 
+//           height: 40px; 
+//           border-radius: 50%;
+//           border: 1.5px solid #e0e0e0; 
+//           background: #fff;
+//           cursor: pointer; 
+//           transition: all 0.2s ease;
+//           color: #444;
+//         }
+        
+//         .share-trigger:hover { 
+//           background: #f5f5f5; 
+//           border-color: #bbb; 
+//           color: #111; 
+//           transform: scale(1.05); 
+//         }
+
+//         .share-overlay {
+//           position: fixed; 
+//           inset: 0; 
+//           background: rgba(0,0,0,0.5);
+//           backdrop-filter: blur(4px);
+//           display: flex; 
+//           align-items: center; 
+//           justify-content: center;
+//           z-index: 9999;
+//           animation: fadeInOverlay 0.2s ease;
+//           padding: 16px;
+//         }
+        
+//         @keyframes fadeInOverlay { 
+//           from { opacity: 0; } 
+//           to { opacity: 1; } 
+//         }
+
+//         .share-modal {
+//           background: #fff; 
+//           border-radius: 24px;
+//           width: 100%;
+//           max-width: 500px;
+//           max-height: 90vh;
+//           overflow-y: auto;
+//           padding: 20px;
+//           box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+//           animation: slideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+//           position: relative;
+//         }
+        
+//         @keyframes slideUp {
+//           from { opacity: 0; transform: translateY(30px) scale(0.96); }
+//           to { opacity: 1; transform: translateY(0) scale(1); }
+//         }
+
+//         .share-close-btn {
+//           position: sticky;
+//           top: 0;
+//           float: right;
+//           width: 32px;
+//           height: 32px;
+//           border-radius: 50%;
+//           border: none;
+//           background: #f0f0f0;
+//           cursor: pointer;
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//           color: #666;
+//           transition: all 0.2s;
+//           margin-bottom: 8px;
+//           z-index: 10;
+//         }
+        
+//         .share-close-btn:hover { 
+//           background: #e0e0e0; 
+//           color: #111; 
+//         }
+
+//         .share-header {
+//           margin-bottom: 20px;
+//           padding-right: 0;
+//           clear: both;
+//         }
+
+//         .share-header h3 {
+//           margin: 0;
+//           font-size: 18px;
+//           font-weight: 600;
+//           color: #333;
+//         }
+
+//         .native-share-btn {
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//           gap: 8px;
+//           width: 100%;
+//           padding: 12px;
+//           margin-bottom: 20px;
+//           background: linear-gradient(135deg, #3498db, #2980b9);
+//           color: white;
+//           border: none;
+//           border-radius: 12px;
+//           font-size: 14px;
+//           font-weight: 600;
+//           cursor: pointer;
+//           transition: all 0.2s;
+//         }
+
+//         .native-share-btn:active {
+//           transform: scale(0.98);
+//         }
+
+//         .share-search-wrap {
+//           position: relative; 
+//           margin-bottom: 16px;
+//         }
+        
+//         .share-search-icon {
+//           position: absolute; 
+//           left: 12px; 
+//           top: 50%; 
+//           transform: translateY(-50%);
+//           color: #aaa; 
+//           pointer-events: none;
+//         }
+        
+//         .share-search {
+//           width: 100%; 
+//           padding: 12px 14px 12px 40px;
+//           border: 1.5px solid #e8e8e8; 
+//           border-radius: 12px;
+//           font-size: 14px; 
+//           color: #333; 
+//           background: #fafafa;
+//           outline: none; 
+//           transition: all 0.2s;
+//         }
+        
+//         .share-search:focus { 
+//           border-color: #667eea; 
+//           background: #fff;
+//           box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+//         }
+
+//         .share-grid {
+//           display: grid;
+//           grid-template-columns: repeat(2, 1fr);
+//           gap: 8px;
+//           max-height: 280px;
+//           overflow-y: auto;
+//           padding: 4px;
+//           margin-bottom: 12px;
+//         }
+
+//         .share-service-btn {
+//           display: flex; 
+//           align-items: center; 
+//           gap: 10px;
+//           padding: 10px 12px; 
+//           border-radius: 12px;
+//           border: 1px solid #f0f0f0;
+//           background: white;
+//           cursor: pointer;
+//           transition: all 0.2s;
+//           width: 100%;
+//         }
+        
+//         .share-service-btn:hover { 
+//           background: #f8f8f8;
+//           border-color: #e0e0e0;
+//           transform: translateY(-1px);
+//         }
+        
+//         .share-service-btn:active {
+//           transform: translateY(0);
+//         }
+
+//         .share-icon-wrap {
+//           width: 36px; 
+//           height: 36px; 
+//           border-radius: 10px;
+//           display: flex; 
+//           align-items: center; 
+//           justify-content: center;
+//           flex-shrink: 0;
+//         }
+        
+//         .share-service-name {
+//           font-size: 13px; 
+//           font-weight: 500;
+//           color: #333;
+//         }
+
+//         .qr-section {
+//           background: #f8f9fa;
+//           border-radius: 16px;
+//           padding: 16px;
+//           margin-bottom: 20px;
+//           text-align: center;
+//         }
+
+//         .qr-section-title {
+//           font-size: 14px;
+//           font-weight: 600;
+//           color: #333;
+//           margin: 0 0 12px 0;
+//         }
+
+//         .qr-code-container {
+//           background: white;
+//           padding: 12px;
+//           border-radius: 16px;
+//           display: inline-block;
+//           margin-bottom: 12px;
+//           box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+//         }
+
+//         .qr-download-btn {
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//           gap: 8px;
+//           width: 100%;
+//           padding: 10px;
+//           border-radius: 12px;
+//           border: none;
+//           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+//           color: white;
+//           font-size: 13px;
+//           font-weight: 600;
+//           cursor: pointer;
+//           transition: all 0.2s;
+//           margin-bottom: 8px;
+//         }
+
+//         .qr-download-btn:active {
+//           transform: scale(0.98);
+//         }
+
+//         .qr-note {
+//           color: #888;
+//           font-size: 11px;
+//           margin: 8px 0 0 0;
+//           line-height: 1.4;
+//         }
+
+//         .links-section {
+//           display: flex;
+//           flex-direction: column;
+//           gap: 10px;
+//           margin-top: 8px;
+//         }
+
+//         .link-item {
+//           display: flex;
+//           align-items: center;
+//           justify-content: space-between;
+//           gap: 8px;
+//           background: #f8f9fa;
+//           padding: 10px 12px;
+//           border-radius: 12px;
+//         }
+
+//         .link-info {
+//           display: flex;
+//           align-items: center;
+//           gap: 10px;
+//           flex: 1;
+//           min-width: 0;
+//         }
+
+//         .link-icon {
+//           flex-shrink: 0;
+//           width: 32px;
+//           height: 32px;
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//           border-radius: 8px;
+//           background: white;
+//         }
+
+//         .link-text {
+//           flex: 1;
+//           font-size: 11px;
+//           color: #555;
+//           word-break: break-all;
+//           line-height: 1.3;
+//         }
+
+//         .link-copy-btn {
+//           display: flex;
+//           align-items: center;
+//           gap: 4px;
+//           padding: 6px 12px;
+//           border-radius: 8px;
+//           border: 1px solid #e0e0e0;
+//           background: white;
+//           font-size: 11px;
+//           font-weight: 500;
+//           color: #666;
+//           cursor: pointer;
+//           transition: all 0.2s;
+//           flex-shrink: 0;
+//           white-space: nowrap;
+//         }
+
+//         .link-copy-btn:active {
+//           transform: scale(0.95);
+//         }
+
+//         .link-copy-btn.copied {
+//           border-color: #22c55e;
+//           color: #16a34a;
+//           background: #f0fdf4;
+//         }
+
+//         .share-brand {
+//           text-align: center; 
+//           margin-top: 16px;
+//           padding-top: 12px;
+//           border-top: 1px solid #f0f0f0;
+//           font-size: 11px; 
+//           color: #bbb;
+//         }
+        
+//         .share-brand a { 
+//           color: #bbb; 
+//           text-decoration: none; 
+//         }
+        
+//         .share-brand a:hover { 
+//           color: #888; 
+//         }
+
+//         /* Mobile Responsive Styles */
+//         @media (max-width: 480px) {
+//           .share-modal {
+//             padding: 16px;
+//             border-radius: 20px;
+//           }
+
+//           .share-header h3 {
+//             font-size: 16px;
+//           }
+
+//           .share-grid {
+//             grid-template-columns: 1fr;
+//             gap: 6px;
+//             max-height: 240px;
+//           }
+
+//           .share-service-btn {
+//             padding: 8px 12px;
+//           }
+
+//           .share-icon-wrap {
+//             width: 32px;
+//             height: 32px;
+//           }
+
+//           .share-service-name {
+//             font-size: 12px;
+//           }
+
+//           .qr-code-container canvas {
+//             width: 140px !important;
+//             height: 140px !important;
+//           }
+
+//           .link-text {
+//             font-size: 10px;
+//           }
+
+//           .link-copy-btn {
+//             padding: 4px 8px;
+//             font-size: 10px;
+//           }
+
+//           .native-share-btn {
+//             padding: 10px;
+//             font-size: 13px;
+//           }
+//         }
+
+//         /* Scrollbar styling */
+//         .share-grid::-webkit-scrollbar {
+//           width: 4px;
+//         }
+
+//         .share-grid::-webkit-scrollbar-track {
+//           background: #f1f1f1;
+//           border-radius: 10px;
+//         }
+
+//         .share-grid::-webkit-scrollbar-thumb {
+//           background: #ccc;
+//           border-radius: 10px;
+//         }
+
+//         .share-grid::-webkit-scrollbar-thumb:hover {
+//           background: #aaa;
+//         }
+//       `}</style>
+
+//       <div className="share-root">
+//         {/* Trigger */}
+//         {triggerAs === "button" ? (
+//           <button
+//             className={triggerClassName}
+//             onClick={handleShareClick}
+//             title="Share Link + QR Code"
+//           >
+//             {triggerLabel}
+//           </button>
+//         ) : (
+//           <div className="share-trigger" onClick={handleShareClick} title="Share Link + QR Code">
+//             <Share2 size={18} />
+//           </div>
+//         )}
+
+//         {/* Modal */}
+//         {isOpen && (
+//           <div className="share-overlay">
+//             <div className="share-modal" ref={modalRef}>
+//               {/* Close */}
+//               <button className="share-close-btn" onClick={handleClose} aria-label="Close">
+//                 <X size={16} />
+//               </button>
+
+//               {/* Header */}
+//               <div className="share-header">
+//                 <h3>Share Link + QR Code</h3>
+//               </div>
+
+//               {/* Native Share Button */}
+//               {(navigator.share || isInReactNative) && (
+//                 <button onClick={handleNativeShare} className="native-share-btn">
+//                   <Share2 size={16} />
+//                   Share All + QR Code
+//                 </button>
+//               )}
+
+//               {/* Search */}
+//               <div className="share-search-wrap">
+//                 <Search size={15} className="share-search-icon" />
+//                 <input
+//                   ref={searchRef}
+//                   className="share-search"
+//                   placeholder="Search services..."
+//                   value={searchQuery}
+//                   onChange={e => setSearchQuery(e.target.value)}
+//                 />
+//               </div>
+
+//               {/* Services Grid */}
+//               <div className="share-grid">
+//                 {filteredServices.length > 0 ? (
+//                   filteredServices.map((service) => (
+//                     <button
+//                       key={service.name}
+//                       className="share-service-btn"
+//                       onClick={() => handleServiceClick(service)}
+//                       title={`Share on ${service.name}`}
+//                     >
+//                       <div className="share-icon-wrap" style={{ background: service.color }}>
+//                         {service.icon}
+//                       </div>
+//                       <span className="share-service-name">{service.name}</span>
+//                     </button>
+//                   ))
+//                 ) : (
+//                   <div style={{ textAlign: 'center', padding: '20px', color: '#aaa', gridColumn: '1/-1' }}>
+//                     No services found
+//                   </div>
+//                 )}
+//               </div>
+
+//               {/* QR Code Section */}
+//               <div className="qr-section">
+//                 <h4 className="qr-section-title">QR Code</h4>
+//                 <div className="qr-code-container">
+//                   <QRCodeCanvas
+//                     id="share-modal-qrcode"
+//                     value={webUrl}
+//                     size={140}
+//                     bgColor="#ffffff"
+//                     fgColor="#000000"
+//                     level="H"
+//                     includeMargin={true}
+//                   />
+//                 </div>
+                
+//                 <button onClick={handleDownloadQR} className="qr-download-btn">
+//                   <Download size={14} />
+//                   Download QR Code
+//                 </button>
+
+//                 <p className="qr-note">
+//                   QR code will be included automatically when sharing
+//                 </p>
+//               </div>
+
+//               {/* Links Section */}
+//               <div className="links-section">
+//                 {/* Web URL */}
+//                 <div className="link-item">
+//                   <div className="link-info">
+//                     <div className="link-icon">
+//                       <Globe size={14} color="#667eea" />
+//                     </div>
+//                     <div className="link-text" title={webUrl}>
+//                       {webUrl.length > 50 ? webUrl.substring(0, 47) + '...' : webUrl}
+//                     </div>
+//                   </div>
+//                   <button
+//                     className={`link-copy-btn ${copiedWebUrl ? "copied" : ""}`}
+//                     onClick={() => handleCopyLink(webUrl, setCopiedWebUrl)}
+//                   >
+//                     {copiedWebUrl ? <Check size={10} /> : <Copy size={10} />}
+//                     {copiedWebUrl ? "Copied" : "Copy"}
+//                   </button>
+//                 </div>
+
+//                 {/* Play Store Link */}
+//                 <div className="link-item">
+//                   <div className="link-info">
+//                     <div className="link-icon">
+//                       <Smartphone size={14} color="#34A853" />
+//                     </div>
+//                     <div className="link-text" title={playStoreUrl}>
+//                       Android App
+//                     </div>
+//                   </div>
+//                   <button
+//                     className={`link-copy-btn ${copiedPlayStore ? "copied" : ""}`}
+//                     onClick={() => handleCopyLink(playStoreUrl, setCopiedPlayStore)}
+//                   >
+//                     {copiedPlayStore ? <Check size={10} /> : <Copy size={10} />}
+//                     {copiedPlayStore ? "Copied" : "Copy"}
+//                   </button>
+//                 </div>
+
+//                 {/* App Store Link */}
+//                 <div className="link-item">
+//                   <div className="link-info">
+//                     <div className="link-icon">
+//                       <Apple size={14} color="#000000" />
+//                     </div>
+//                     <div className="link-text" title={appStoreUrl}>
+//                       iOS App
+//                     </div>
+//                   </div>
+//                   <button
+//                     className={`link-copy-btn ${copiedAppStore ? "copied" : ""}`}
+//                     onClick={() => handleCopyLink(appStoreUrl, setCopiedAppStore)}
+//                   >
+//                     {copiedAppStore ? <Check size={10} /> : <Copy size={10} />}
+//                     {copiedAppStore ? "Copied" : "Copy"}
+//                   </button>
+//                 </div>
+//               </div>
+
+//               {/* Brand */}
+//               <div className="share-brand">
+//                 <a href="https://www.addtoany.com" target="_blank" rel="noopener noreferrer">
+//                   Share via AddToAny
+//                 </a>
+//               </div>
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//     </>
+//   );
+// }
+
+
+//================================================
+// Code updated Date on = 08-04-2026
+
 import { useState, useEffect, useRef } from "react";
 import { Share2, X, Search, Copy, Check, Download, Globe, Smartphone, Apple } from "lucide-react";
 import { QRCodeCanvas } from "qrcode.react";
@@ -3989,15 +5085,14 @@ const isReactNativeWebView = () => {
 };
 
 // Function to send QR code to React Native
-const sendQRToReactNative = (qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title) => {
+const sendQRToReactNative = (qrDataUrl, playStoreUrl, appStoreUrl, title) => {
   if (window.ReactNativeWebView) {
-    const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 Scan QR code above or tap to open link.`;
+    const message = `${title}\n\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 Scan QR code above or tap to open link.`;
     
     window.ReactNativeWebView.postMessage(JSON.stringify({
       type: 'SHARE_WITH_QR',
       data: {
         qrCode: qrDataUrl,
-        webUrl: webUrl,
         playStoreUrl: playStoreUrl,
         appStoreUrl: appStoreUrl,
         title: title,
@@ -4018,14 +5113,16 @@ const SHARE_SERVICES = [
         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 4.991 3.243 9.21 7.758 10.682V15.02H5.413v-2.947h2.345V9.983c0-2.318 1.38-3.6 3.497-3.6.998 0 2.043.178 2.043.178v2.252h-1.15c-1.134 0-1.488.704-1.488 1.425v1.71h2.532l-.405 2.947h-2.127v7.736C20.757 21.283 24 17.064 24 12.073z"/>
       </svg>
     ),
-    share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+    share: async (title, qrDataUrl, playStoreUrl, appStoreUrl) => {
       // Try React Native first
       if (isReactNativeWebView()) {
-        sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+        sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, title);
         return;
       }
       
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, "_blank");
+      // Fallback: Open Facebook with message
+      const message = `${title}\n\n📱 Android App: ${playStoreUrl}\n🍎 iOS App: ${appStoreUrl}`;
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(playStoreUrl)}&quote=${encodeURIComponent(message)}`, "_blank");
       const link = document.createElement('a');
       link.href = qrDataUrl;
       link.download = 'qrcode.png';
@@ -4041,12 +5138,12 @@ const SHARE_SERVICES = [
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
       </svg>
     ),
-    share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
-      const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 Scan QR code attached below:`;
+    share: async (title, qrDataUrl, playStoreUrl, appStoreUrl) => {
+      const message = `${title}\n\n📱 Android App: ${playStoreUrl}\n🍎 iOS App: ${appStoreUrl}\n\n📲 Scan QR code attached below:`;
       
       // Try React Native first
       if (isReactNativeWebView()) {
-        sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+        sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, title);
         return;
       }
       
@@ -4082,12 +5179,12 @@ const SHARE_SERVICES = [
         <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
       </svg>
     ),
-    share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
-      const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 Scan QR code attached below:`;
+    share: async (title, qrDataUrl, playStoreUrl, appStoreUrl) => {
+      const message = `${title}\n\n📱 Android App: ${playStoreUrl}\n🍎 iOS App: ${appStoreUrl}\n\n📲 Scan QR code attached below:`;
       
       // Try React Native first
       if (isReactNativeWebView()) {
-        sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+        sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, title);
         return;
       }
       
@@ -4112,7 +5209,7 @@ const SHARE_SERVICES = [
       }
       
       // Fallback
-      window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message + " [QR Code image attached]")}`, "_blank");
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(playStoreUrl)}&text=${encodeURIComponent(message + " [QR Code image attached]")}`, "_blank");
     },
   },
   {
@@ -4123,16 +5220,16 @@ const SHARE_SERVICES = [
         <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
       </svg>
     ),
-    share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
-      const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 Scan QR code attached below:`;
+    share: async (title, qrDataUrl, playStoreUrl, appStoreUrl) => {
+      const message = `${title}\n\n📱 Android App: ${playStoreUrl}\n🍎 iOS App: ${appStoreUrl}\n\n📲 Scan QR code attached below:`;
       
       // Try React Native first
       if (isReactNativeWebView()) {
-        sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+        sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, title);
         return;
       }
       
-      window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&text=${encodeURIComponent(message)}`, "_blank");
+      window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(playStoreUrl)}&title=${encodeURIComponent(title)}&text=${encodeURIComponent(message)}`, "_blank");
       const link = document.createElement('a');
       link.href = qrDataUrl;
       link.download = 'qrcode.png';
@@ -4148,11 +5245,11 @@ const SHARE_SERVICES = [
         <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.689-2.046 1.579-1.671 1.62-3.583 1.573-4.92-.013-.394-.024-.734-.013-1.057-.709.17-1.43.25-2.164.245-1.636 0-3.137-.432-4.337-1.25-1.473-1.003-2.268-2.518-2.268-4.272 0-3.51 2.79-5.763 7.022-5.763 1.282 0 2.432.2 3.39.567.888.34 1.64.846 2.232 1.504l-1.467 1.363c-.893-.953-2.275-1.435-4.11-1.435-2.818 0-4.985 1.388-4.985 3.763 0 1.115.444 1.998 1.284 2.564.883.593 2.114.903 3.556.903.743 0 1.452-.09 2.106-.264.013-.213.022-.429.032-.642.041-1.123.087-2.399-.253-3.476-.296-.941-.968-1.452-1.994-1.52-.874-.056-1.613.206-2.127.741-.467.484-.725 1.156-.733 1.942l-2.037-.033c.024-1.341.492-2.491 1.32-3.362.866-.91 2.065-1.393 3.478-1.393h.052c2.675.065 4.073 1.634 4.515 4.937.193 1.42.137 2.836.083 4.211-.014.361-.027.718-.036 1.076v.042c0 .263.005.504.01.743.038 1.836-.007 4.4-2.137 6.681C17.274 23.213 15.157 24 12.186 24z"/>
       </svg>
     ),
-    share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
-      const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 Scan QR code attached below:`;
+    share: async (title, qrDataUrl, playStoreUrl, appStoreUrl) => {
+      const message = `${title}\n\n📱 Android App: ${playStoreUrl}\n🍎 iOS App: ${appStoreUrl}\n\n📲 Scan QR code attached below:`;
       
       if (isReactNativeWebView()) {
-        sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+        sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, title);
         return;
       }
       
@@ -4172,11 +5269,11 @@ const SHARE_SERVICES = [
         <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
       </svg>
     ),
-    share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
-      const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 QR code is attached separately. Please find the QR code image file that was downloaded.`;
+    share: async (title, qrDataUrl, playStoreUrl, appStoreUrl) => {
+      const message = `${title}\n\n📱 Android App: ${playStoreUrl}\n🍎 iOS App: ${appStoreUrl}\n\n📲 QR code is attached separately. Please find the QR code image file that was downloaded.`;
       
       if (isReactNativeWebView()) {
-        sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+        sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, title);
         return;
       }
       
@@ -4196,11 +5293,11 @@ const SHARE_SERVICES = [
         <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
       </svg>
     ),
-    share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
-      const message = `${title}\n\n🔗 Web Link: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}\n\n📲 QR code image has been downloaded - please attach it to this email.`;
+    share: async (title, qrDataUrl, playStoreUrl, appStoreUrl) => {
+      const message = `${title}\n\n📱 Android App: ${playStoreUrl}\n🍎 iOS App: ${appStoreUrl}\n\n📲 QR code image has been downloaded - please attach it to this email.`;
       
       if (isReactNativeWebView()) {
-        sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+        sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, title);
         return;
       }
       
@@ -4220,15 +5317,15 @@ const SHARE_SERVICES = [
         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
       </svg>
     ),
-    share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
-      const message = `${title}\n\nCheck out this link: ${url}\n\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}`;
+    share: async (title, qrDataUrl, playStoreUrl, appStoreUrl) => {
+      const message = `${title}\n\n📱 Android App: ${playStoreUrl}\n🍎 iOS App: ${appStoreUrl}`;
       
       if (isReactNativeWebView()) {
-        sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+        sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, title);
         return;
       }
       
-      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, "_blank");
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(playStoreUrl)}`, "_blank");
     },
   },
   {
@@ -4239,11 +5336,11 @@ const SHARE_SERVICES = [
         <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.902.139 2.66-.018 3.748.004 4.62.022 5.342.61 11.77.679 12.526c.324 3.279 2.594 4.482 5.074 4.19-.229.23-.471.49-.674.725-.508.599-.908 1.265-1.016 1.792-.241 1.195.23 2.246 1.11 2.793 1.148.724 2.584.306 3.43-.452.677-.619 1.144-1.533 1.397-2.444.253.91.72 1.825 1.397 2.444.846.758 2.282 1.176 3.43.452.88-.547 1.351-1.598 1.11-2.793-.108-.527-.508-1.193-1.016-1.792a9.337 9.337 0 0 0-.674-.725c2.48.292 4.75-.911 5.074-4.19.069-.756.657-7.184.675-7.906.022-.872-.135-1.96-.898-2.718-.659-.636-1.664-.958-4.3 1.203C16.046 4.747 13.087 8.686 12 10.8z"/>
       </svg>
     ),
-    share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
-      const message = `${title}\n\n🔗 Web Link: ${url}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}`;
+    share: async (title, qrDataUrl, playStoreUrl, appStoreUrl) => {
+      const message = `${title}\n\n📱 Android App: ${playStoreUrl}\n🍎 iOS App: ${appStoreUrl}`;
       
       if (isReactNativeWebView()) {
-        sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+        sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, title);
         return;
       }
       
@@ -4258,15 +5355,15 @@ const SHARE_SERVICES = [
         <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
       </svg>
     ),
-    share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
-      const message = `${title}\n\nCheck out this link: ${url}\n\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}`;
+    share: async (title, qrDataUrl, playStoreUrl, appStoreUrl) => {
+      const message = `${title}\n\n📱 Android App: ${playStoreUrl}\n🍎 iOS App: ${appStoreUrl}`;
       
       if (isReactNativeWebView()) {
-        sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+        sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, title);
         return;
       }
       
-      window.open(`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(message)}`, "_blank");
+      window.open(`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(playStoreUrl)}&description=${encodeURIComponent(message)}`, "_blank");
     },
   },
   {
@@ -4277,13 +5374,13 @@ const SHARE_SERVICES = [
         <path d="M12 0C5.373 0 0 5.149 0 11.5c0 3.607 1.786 6.832 4.591 8.933V24l4.184-2.299c1.117.308 2.301.474 3.524.474 6.627 0 12-5.149 12-11.5S18.627 0 12 0zm1.191 15.494l-3.054-3.253-5.965 3.253 6.559-6.971 3.128 3.253 5.891-3.253-6.559 6.971z"/>
       </svg>
     ),
-    share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
+    share: async (title, qrDataUrl, playStoreUrl, appStoreUrl) => {
       if (isReactNativeWebView()) {
-        sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+        sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, title);
         return;
       }
       
-      window.open(`https://www.facebook.com/dialog/send?link=${encodeURIComponent(url)}&app_id=291494307733634`, "_blank");
+      window.open(`https://www.facebook.com/dialog/send?link=${encodeURIComponent(playStoreUrl)}&app_id=291494307733634`, "_blank");
     },
   },
   {
@@ -4294,15 +5391,15 @@ const SHARE_SERVICES = [
         <path d="M20.625 5.813a2.813 2.813 0 100-5.626 2.813 2.813 0 000 5.626zm-3.375 1.5h-3.75a5.25 5.25 0 00-5.25 5.25v4.125a.75.75 0 00.75.75h.75v3.75a.75.75 0 001.5 0v-3.75H12v3.75a.75.75 0 001.5 0v-3.75h.75a.75.75 0 00.75-.75v-4.125a5.25 5.25 0 00-5.25-5.25V7.313h8.25v2.437a5.25 5.25 0 00-5.25 5.25v.375h4.5v-.375a.75.75 0 011.5 0v.375h.75a.75.75 0 00.75-.75v-4.125a3.75 3.75 0 00-3.75-3.75zM8.625 5.063a2.438 2.438 0 100-4.876 2.438 2.438 0 000 4.876z"/>
       </svg>
     ),
-    share: async (url, title, qrDataUrl, webUrl, playStoreUrl, appStoreUrl) => {
-      const message = `${title}\n\n🔗 Web Link: ${url}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}`;
+    share: async (title, qrDataUrl, playStoreUrl, appStoreUrl) => {
+      const message = `${title}\n\n📱 Android App: ${playStoreUrl}\n🍎 iOS App: ${appStoreUrl}`;
       
       if (isReactNativeWebView()) {
-        sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, title);
+        sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, title);
         return;
       }
       
-      window.open(`https://teams.microsoft.com/share?href=${encodeURIComponent(url)}&msgText=${encodeURIComponent(message)}`, "_blank");
+      window.open(`https://teams.microsoft.com/share?href=${encodeURIComponent(playStoreUrl)}&msgText=${encodeURIComponent(message)}`, "_blank");
     },
   },
 ];
@@ -4322,20 +5419,13 @@ export default function ShareModal({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [copied, setCopied] = useState(false);
-  const [copiedWebUrl, setCopiedWebUrl] = useState(false);
   const [copiedPlayStore, setCopiedPlayStore] = useState(false);
   const [copiedAppStore, setCopiedAppStore] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState(null);
   const modalRef = useRef(null);
   const searchRef = useRef(null);
 
-  // Define URLs
-  const webUrl = mode === "custom"
-    ? shareUrl
-    : (typeof window !== "undefined"
-        ? `${window.location.origin}/product/${productId}/?variant=${variantId || selectedVariant?.id || ""}`
-        : "");
-  
+  // Define URLs - Removed webUrl, only keeping app store links
   const playStoreUrl = "https://play.google.com/store/apps/details?id=com.yasla.shrirajteam";
   const appStoreUrl = "https://apps.apple.com/in/app/shriraj/id6754551709";
 
@@ -4367,7 +5457,6 @@ export default function ShareModal({
     setIsOpen(false);
     setSearchQuery("");
     setCopied(false);
-    setCopiedWebUrl(false);
     setCopiedPlayStore(false);
     setCopiedAppStore(false);
     setQrDataUrl(null);
@@ -4395,7 +5484,7 @@ export default function ShareModal({
       if (!qrDataUrl) return;
     }
     
-    await service.share(webUrl, productTitle, qrDataUrl, webUrl, playStoreUrl, appStoreUrl);
+    await service.share(productTitle, qrDataUrl, playStoreUrl, appStoreUrl);
   };
 
   const handleDownloadQR = () => {
@@ -4418,11 +5507,11 @@ export default function ShareModal({
   const handleNativeShare = async () => {
     if (!qrDataUrl) return;
     
-    const shareMessage = `${productTitle}\n\n🔗 Web: ${webUrl}\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}`;
+    const shareMessage = `${productTitle}\n\n📱 Android: ${playStoreUrl}\n🍎 iOS: ${appStoreUrl}`;
     
     // Try React Native first
     if (isReactNativeWebView()) {
-      sendQRToReactNative(qrDataUrl, webUrl, playStoreUrl, appStoreUrl, productTitle);
+      sendQRToReactNative(qrDataUrl, playStoreUrl, appStoreUrl, productTitle);
       return;
     }
     
@@ -4900,12 +5989,12 @@ export default function ShareModal({
           <button
             className={triggerClassName}
             onClick={handleShareClick}
-            title="Share Link + QR Code"
+            title="Share App Links + QR Code"
           >
             {triggerLabel}
           </button>
         ) : (
-          <div className="share-trigger" onClick={handleShareClick} title="Share Link + QR Code">
+          <div className="share-trigger" onClick={handleShareClick} title="Share App Links + QR Code">
             <Share2 size={18} />
           </div>
         )}
@@ -4921,7 +6010,7 @@ export default function ShareModal({
 
               {/* Header */}
               <div className="share-header">
-                <h3>Share Link + QR Code</h3>
+                <h3>Share App Links + QR Code</h3>
               </div>
 
               {/* Native Share Button */}
@@ -4969,11 +6058,11 @@ export default function ShareModal({
 
               {/* QR Code Section */}
               <div className="qr-section">
-                <h4 className="qr-section-title">QR Code</h4>
+                <h4 className="qr-section-title">QR Code (App Download)</h4>
                 <div className="qr-code-container">
                   <QRCodeCanvas
                     id="share-modal-qrcode"
-                    value={webUrl}
+                    value={playStoreUrl}
                     size={140}
                     bgColor="#ffffff"
                     fgColor="#000000"
@@ -4988,31 +6077,12 @@ export default function ShareModal({
                 </button>
 
                 <p className="qr-note">
-                  QR code will be included automatically when sharing
+                  Scan QR code to download Android App
                 </p>
               </div>
 
-              {/* Links Section */}
+              {/* Links Section - Only App Store Links */}
               <div className="links-section">
-                {/* Web URL */}
-                <div className="link-item">
-                  <div className="link-info">
-                    <div className="link-icon">
-                      <Globe size={14} color="#667eea" />
-                    </div>
-                    <div className="link-text" title={webUrl}>
-                      {webUrl.length > 50 ? webUrl.substring(0, 47) + '...' : webUrl}
-                    </div>
-                  </div>
-                  <button
-                    className={`link-copy-btn ${copiedWebUrl ? "copied" : ""}`}
-                    onClick={() => handleCopyLink(webUrl, setCopiedWebUrl)}
-                  >
-                    {copiedWebUrl ? <Check size={10} /> : <Copy size={10} />}
-                    {copiedWebUrl ? "Copied" : "Copy"}
-                  </button>
-                </div>
-
                 {/* Play Store Link */}
                 <div className="link-item">
                   <div className="link-info">

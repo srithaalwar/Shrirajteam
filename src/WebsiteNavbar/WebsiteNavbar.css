@@ -497,7 +497,7 @@
 .wn-navbar
     .web-nav-right{
       /* margin-left: 10px; */
-              margin-right: -158px;
+              /* margin-right: -158px; */
               gap: 9px !important;
     }
 }
