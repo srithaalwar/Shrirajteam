@@ -494,7 +494,7 @@ const AgentSearchBar = ({ placeholder = "Search products..." }) => {
     try {
       // Use the dynamic userId instead of hardcoded 37
       const excludeParam = userId ? `?exclude_user_id=${userId}` : '';
-      productsRes = await axios.get(`${baseurl}/products/${excludeParam}`, {
+      productsRes = await axios.get(`${baseurl}/products/${excludeParam}&variant_verification_status=verified`, {
         params: { 
           search: query, 
           limit: 10

@@ -33,7 +33,7 @@ const ClientSearchBar = ({ placeholder = "Search products..." }) => {
     setIsLoading(true);
     try {
       // Search Products only
-      const productsRes = await axios.get(`${baseurl}/products/`, {
+      const productsRes = await axios.get(`${baseurl}/products/?variant_verification_status=verified`, {
         params: { search: query, limit: 10 }
       });
       

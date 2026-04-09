@@ -196,7 +196,7 @@ const AddCommissionLevels = () => {
   const [formData, setFormData] = useState({
     level_no: "",
     percentage: "",
-    commission_type: "product_commission", // Default value
+    commission_type: "product_commission",
   });
 
   const [loading, setLoading] = useState(false);
@@ -218,13 +218,13 @@ const AddCommissionLevels = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation
+    // Frontend validation
     if (!formData.level_no || !formData.percentage || !formData.commission_type) {
       Swal.fire({
         icon: "error",
-        title: "Error",
+        title: "Validation Error",
         text: "Please fill in all required fields",
-        confirmButtonColor: "#6C63FF",
+        confirmButtonColor: "#273c75",
       });
       return;
     }
@@ -232,22 +232,19 @@ const AddCommissionLevels = () => {
     if (Number(formData.level_no) < 0) {
       Swal.fire({
         icon: "error",
-        title: "Error",
+        title: "Validation Error",
         text: "Level No cannot be negative",
-        confirmButtonColor: "#6C63FF",
+        confirmButtonColor: "#273c75",
       });
       return;
     }
 
-    if (
-      Number(formData.percentage) < 0 ||
-      Number(formData.percentage) > 100
-    ) {
+    if (Number(formData.percentage) < 0 || Number(formData.percentage) > 100) {
       Swal.fire({
         icon: "error",
-        title: "Error",
+        title: "Validation Error",
         text: "Percentage must be between 0 and 100",
-        confirmButtonColor: "#6C63FF",
+        confirmButtonColor: "#273c75",
       });
       return;
     }
@@ -255,30 +252,56 @@ const AddCommissionLevels = () => {
     setLoading(true);
 
     try {
-      await axios.post(`${baseurl}/commissions-master/`, {
+      const response = await axios.post(`${baseurl}/commissions-master/`, {
         level_no: Number(formData.level_no),
         percentage: Number(formData.percentage),
         commission_type: formData.commission_type,
       });
 
-      // SUCCESS SWEETALERT
+      // Success
       Swal.fire({
         icon: "success",
         title: "Success",
         text: "Commission Level added successfully",
-        confirmButtonColor: "#6C63FF",
+        confirmButtonColor: "#273c75",
         confirmButtonText: "OK",
       }).then(() => navigate("/admin-commissionmaster"));
+      
     } catch (error) {
       console.error("Error submitting form:", error);
-
+      
+      // Extract error message from backend response
+      let errorMessage = "Failed to add commission level";
+      
+      if (error.response) {
+        // Backend responded with error
+        const backendError = error.response.data;
+        
+        if (backendError.error) {
+          errorMessage = backendError.error;
+        } else if (backendError.detail) {
+          errorMessage = backendError.detail;
+        } else if (typeof backendError === 'string') {
+          errorMessage = backendError;
+        } else if (backendError.message) {
+          errorMessage = backendError.message;
+        }
+        
+        // Handle specific validation errors from serializer
+        if (backendError.level_no) {
+          errorMessage = `Level No: ${backendError.level_no.join(', ')}`;
+        } else if (backendError.percentage) {
+          errorMessage = `Percentage: ${backendError.percentage.join(', ')}`;
+        } else if (backendError.commission_type) {
+          errorMessage = `Commission Type: ${backendError.commission_type.join(', ')}`;
+        }
+      }
+      
       Swal.fire({
         icon: "error",
         title: "Error",
-        text:
-          error.response?.data?.detail ||
-          "Failed to add commission level",
-        confirmButtonColor: "#6C63FF",
+        text: errorMessage,
+        confirmButtonColor: "#273c75",
       });
     } finally {
       setLoading(false);
@@ -294,7 +317,6 @@ const AddCommissionLevels = () => {
           <h4 className="text-center mb-4">Add Commission Level</h4>
 
           <form onSubmit={handleSubmit}>
-            {/* Fields Row */}
             <div className="row mb-3">
               {/* Level No */}
               <div className="col-md-4">
@@ -314,6 +336,7 @@ const AddCommissionLevels = () => {
                     required
                     disabled={loading}
                   />
+                  <small className="text-muted">Optional for some commission types</small>
                 </div>
               </div>
 
@@ -336,9 +359,7 @@ const AddCommissionLevels = () => {
                     required
                     disabled={loading}
                   />
-                  <small className="text-muted">
-                    Enter value like 10 for 10%
-                  </small>
+                  <small className="text-muted">Enter value like 10 for 10%</small>
                 </div>
               </div>
 
@@ -362,9 +383,28 @@ const AddCommissionLevels = () => {
                       </option>
                     ))}
                   </select>
+                  <small className="text-muted">Select commission category</small>
                 </div>
               </div>
             </div>
+
+            {/* Info Alert for Product + Seller Commission */}
+            {(formData.commission_type === 'product_commission' || formData.commission_type === 'seller_referral_commission') && (
+              <div className="alert alert-info mb-3">
+                <small>
+                  ℹ️ Product and Seller Referral commissions share a combined limit of 100%.
+                  Current total must not exceed 100%.
+                </small>
+              </div>
+            )}
+
+            {(formData.commission_type === 'referral_commission' || formData.commission_type === 'property_commission') && (
+              <div className="alert alert-info mb-3">
+                <small>
+                  ℹ️ {formData.commission_type === 'referral_commission' ? 'Referral' : 'Property'} commissions have a total limit of 100% across all levels.
+                </small>
+              </div>
+            )}
 
             {/* Buttons */}
             <div className="row">
