@@ -1431,7 +1431,7 @@ import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
 import { useNavigate } from "react-router-dom";
 import Categories from "./Categories";
-
+import AgentHomeBanner from "./Agent_Home_Banners";
 const AgentHome = () => {
   const [businesses, setBusinesses] = useState([]);
   const [offersMap, setOffersMap] = useState({});
@@ -1678,6 +1678,10 @@ const AgentHome = () => {
   return (
     <div>
       <AgentNavbar />
+
+
+<AgentHomeBanner/>
+
       <Categories />
 
       <div className="agent-home-container">

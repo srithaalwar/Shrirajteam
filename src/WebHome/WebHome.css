@@ -9,7 +9,7 @@
 .mani-as-home-wrap {
   font-family: 'Nunito', sans-serif;
   background: #f4f5f7;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   width: 100%;
   overflow-x: hidden;
 }

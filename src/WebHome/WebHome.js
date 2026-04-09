@@ -11,15 +11,15 @@ import FootWearCarousel from "../FootWearCarousel/Carousel";
 
 const WebHome = () => {
   const [carouselImages, setCarouselImages] = useState([]);
-  const [currentIndex, setCurrentIndex]     = useState(0);
-  const [loading, setLoading]               = useState(true);
-  const videoRef                            = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const videoRef = useRef(null);
 
 
-  
+
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [isVideoSlide, setIsVideoSlide]     = useState(false);
-  const touchStartX                         = useRef(null);
+  const [isVideoSlide, setIsVideoSlide] = useState(false);
+  const touchStartX = useRef(null);
 
   /* ── Fetch banner slides ── */
   useEffect(() => {
@@ -93,7 +93,7 @@ const WebHome = () => {
 
   /* ── Touch swipe ── */
   const onTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
-  const onTouchEnd   = (e) => {
+  const onTouchEnd = (e) => {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 45) diff > 0 ? next() : prev();
@@ -109,80 +109,80 @@ const WebHome = () => {
         {/* ══════════════════════════════════ */}
         {/* ════  MAIN BANNER CAROUSEL  ═════ */}
         {/* ══════════════════════════════════ */}
-       <div
-  className="mani-as-banner-wrap"
-  onTouchStart={onTouchStart}
-  onTouchEnd={onTouchEnd}
->
-  <div className="mani-as-banner-media">
-    {!loading && carouselImages.length > 0 && carouselImages[currentIndex] && (
-      isVideo(carouselImages[currentIndex]) ? (
-        <div className="mani-as-video-box" onClick={toggleVideo}>
-          <video
-            ref={videoRef}
-            className="mani-as-banner-vid"
-            src={getUrl(carouselImages[currentIndex].video)}
-            muted
-            playsInline
-            onPlay={() => setIsVideoPlaying(true)}
-            onPause={() => setIsVideoPlaying(false)}
-            onEnded={next}
-            onError={(e) => console.error("Video error:", e.target.src)}
-          />
-          <span className="mani-as-vid-icon">
-            {isVideoPlaying ? "⏸" : "▶"}
-          </span>
+        <div
+          className="mani-as-banner-wrap"
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
+          <div className="mani-as-banner-media">
+            {!loading && carouselImages.length > 0 && carouselImages[currentIndex] && (
+              isVideo(carouselImages[currentIndex]) ? (
+                <div className="mani-as-video-box" onClick={toggleVideo}>
+                  <video
+                    ref={videoRef}
+                    className="mani-as-banner-vid"
+                    src={getUrl(carouselImages[currentIndex].video)}
+                    muted
+                    playsInline
+                    onPlay={() => setIsVideoPlaying(true)}
+                    onPause={() => setIsVideoPlaying(false)}
+                    onEnded={next}
+                    onError={(e) => console.error("Video error:", e.target.src)}
+                  />
+                  <span className="mani-as-vid-icon">
+                    {isVideoPlaying ? "⏸" : "▶"}
+                  </span>
+                </div>
+              ) : (
+                // Check if link exists, wrap img in anchor tag if it does
+                carouselImages[currentIndex]?.link ? (
+                  <a
+                    href={carouselImages[currentIndex].link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mani-as-banner-link"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <img
+                      key={currentIndex}
+                      src={getUrl(carouselImages[currentIndex].image)}
+                      alt={`Slide ${currentIndex + 1}`}
+                      className="mani-as-banner-img"
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </a>
+                ) : (
+                  <img
+                    key={currentIndex}
+                    src={getUrl(carouselImages[currentIndex].image)}
+                    alt={`Slide ${currentIndex + 1}`}
+                    className="mani-as-banner-img"
+                    style={{ cursor: 'default' }}
+                  />
+                )
+              )
+            )}
+          </div>
+
+          {/* Overlay */}
+          <div className="mani-as-banner-overlay" />
+
+          {/* Arrows */}
+          <button className="mani-as-slide-btn mani-as-slide-prev" onClick={prev} aria-label="Previous">‹</button>
+          <button className="mani-as-slide-btn mani-as-slide-next" onClick={next} aria-label="Next">›</button>
+
+          {/* Dots */}
+          <div className="mani-as-dots-row">
+            {carouselImages.map((_, i) => (
+              <button
+                key={i}
+                className={`mani-as-dot ${i === currentIndex ? "mani-as-dot--active" : ""}`}
+                onClick={() => goTo(i)}
+                aria-label={`Slide ${i + 1}`}
+              />
+            ))}
+          </div>
         </div>
-      ) : (
-        // Check if link exists, wrap img in anchor tag if it does
-        carouselImages[currentIndex]?.link ? (
-          <a 
-            href={carouselImages[currentIndex].link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mani-as-banner-link"
-            style={{ cursor: 'pointer' }}
-          >
-            <img
-              key={currentIndex}
-              src={getUrl(carouselImages[currentIndex].image)}
-              alt={`Slide ${currentIndex + 1}`}
-              className="mani-as-banner-img"
-              style={{ cursor: 'pointer' }}
-            />
-          </a>
-        ) : (
-          <img
-            key={currentIndex}
-            src={getUrl(carouselImages[currentIndex].image)}
-            alt={`Slide ${currentIndex + 1}`}
-            className="mani-as-banner-img"
-            style={{ cursor: 'default' }}
-          />
-        )
-      )
-    )}
-  </div>
-
-  {/* Overlay */}
-  <div className="mani-as-banner-overlay" />
-
-  {/* Arrows */}
-  <button className="mani-as-slide-btn mani-as-slide-prev" onClick={prev} aria-label="Previous">‹</button>
-  <button className="mani-as-slide-btn mani-as-slide-next" onClick={next} aria-label="Next">›</button>
-
-  {/* Dots */}
-  <div className="mani-as-dots-row">
-    {carouselImages.map((_, i) => (
-      <button
-        key={i}
-        className={`mani-as-dot ${i === currentIndex ? "mani-as-dot--active" : ""}`}
-        onClick={() => goTo(i)}
-        aria-label={`Slide ${i + 1}`}
-      />
-    ))}
-  </div>
-</div>
 
         {/* ── Categories ── */}
         <Categories />
