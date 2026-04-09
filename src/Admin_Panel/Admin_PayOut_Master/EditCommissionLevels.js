@@ -527,7 +527,7 @@ function EditCommissionLevels() {
       })
       .catch((error) => {
         setLoading(false);
-        let errorMessage = "Failed to load commission level data.";
+        let errorMessage = "Failed to load commission level data";
         
         if (error.response?.data?.error) {
           errorMessage = error.response.data.error;
@@ -555,17 +555,7 @@ function EditCommissionLevels() {
     e.preventDefault();
 
     // Validation
-    if (!formData.level_no && formData.commission_type !== 'property_commission') {
-      Swal.fire({
-        icon: "error",
-        title: "Validation Error",
-        text: "Level No is required for this commission type",
-        confirmButtonColor: "#273c75",
-      });
-      return;
-    }
-
-    if (!formData.percentage) {
+    if (!formData.level_no || !formData.percentage || !formData.commission_type) {
       Swal.fire({
         icon: "error",
         title: "Validation Error",
@@ -585,7 +575,10 @@ function EditCommissionLevels() {
       return;
     }
 
-    if (Number(formData.percentage) < 0 || Number(formData.percentage) > 100) {
+    if (
+      Number(formData.percentage) < 0 ||
+      Number(formData.percentage) > 100
+    ) {
       Swal.fire({
         icon: "error",
         title: "Validation Error",
@@ -599,7 +592,7 @@ function EditCommissionLevels() {
 
     try {
       await axios.put(`${baseurl}/commissions-master/${id}/`, {
-        level_no: formData.level_no ? Number(formData.level_no) : null,
+        level_no: Number(formData.level_no),
         percentage: Number(formData.percentage),
         commission_type: formData.commission_type,
       });
@@ -611,7 +604,6 @@ function EditCommissionLevels() {
         confirmButtonColor: "#273c75",
         confirmButtonText: "OK",
       }).then(() => navigate("/admin-commissionmaster"));
-      
     } catch (error) {
       console.error("Update failed:", error);
       
@@ -619,31 +611,31 @@ function EditCommissionLevels() {
       let errorMessage = "Failed to update commission level";
       
       if (error.response) {
-        const backendError = error.response.data;
-        
-        if (backendError.error) {
-          errorMessage = backendError.error;
-        } else if (backendError.detail) {
-          errorMessage = backendError.detail;
-        } else if (typeof backendError === 'string') {
-          errorMessage = backendError;
-        } else if (backendError.message) {
-          errorMessage = backendError.message;
+        if (error.response.data?.error) {
+          errorMessage = error.response.data.error;
+        } else if (error.response.data?.detail) {
+          errorMessage = error.response.data.detail;
+        } else if (typeof error.response.data === 'string') {
+          errorMessage = error.response.data;
+        } else if (error.response.data) {
+          const firstError = Object.values(error.response.data)[0];
+          if (Array.isArray(firstError)) {
+            errorMessage = firstError[0];
+          } else if (typeof firstError === 'string') {
+            errorMessage = firstError;
+          } else {
+            errorMessage = JSON.stringify(error.response.data);
+          }
         }
-        
-        // Handle specific validation errors from serializer
-        if (backendError.level_no) {
-          errorMessage = `Level No: ${backendError.level_no.join(', ')}`;
-        } else if (backendError.percentage) {
-          errorMessage = `Percentage: ${backendError.percentage.join(', ')}`;
-        } else if (backendError.commission_type) {
-          errorMessage = `Commission Type: ${backendError.commission_type.join(', ')}`;
-        }
+      } else if (error.request) {
+        errorMessage = "No response from server. Please check your connection.";
+      } else {
+        errorMessage = error.message || "Failed to update commission level";
       }
-      
+
       Swal.fire({
         icon: "error",
-        title: "Error",
+        title: "Update Failed",
         text: errorMessage,
         confirmButtonColor: "#273c75",
       });
@@ -673,6 +665,7 @@ function EditCommissionLevels() {
           <h4 className="text-center mb-4">Edit Commission Level</h4>
 
           <form onSubmit={handleSubmit}>
+            {/* Fields Row */}
             <div className="row mb-3">
               {/* Level No */}
               <div className="col-md-4">
@@ -689,9 +682,9 @@ function EditCommissionLevels() {
                     placeholder="Enter level number"
                     min="0"
                     step="1"
+                    required
                     disabled={submitting}
                   />
-                  <small className="text-muted">Optional for property commission</small>
                 </div>
               </div>
 
@@ -714,7 +707,9 @@ function EditCommissionLevels() {
                     required
                     disabled={submitting}
                   />
-                  <small className="text-muted">Enter value like 10 for 10%</small>
+                  <small className="text-muted">
+                    Enter value like 10 for 10%
+                  </small>
                 </div>
               </div>
 
@@ -741,16 +736,6 @@ function EditCommissionLevels() {
                 </div>
               </div>
             </div>
-
-            {/* Info Alert for Product + Seller Commission */}
-            {(formData.commission_type === 'product_commission' || formData.commission_type === 'seller_referral_commission') && (
-              <div className="alert alert-info mb-3">
-                <small>
-                  ℹ️ Product and Seller Referral commissions share a combined limit of 100%.
-                  Current total must not exceed 100%.
-                </small>
-              </div>
-            )}
 
             {/* Buttons */}
             <div className="row">

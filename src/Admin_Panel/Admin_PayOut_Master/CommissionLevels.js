@@ -262,27 +262,48 @@ function CommissionLevels() {
   const safeToString = (v) => (v !== null && v !== undefined ? v.toString() : "");
 
   /* ================= DELETE ================= */
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "This commission level will be deleted!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axios
-          .delete(`${baseurl}/commissions-master/${id}/`)
-          .then(() => {
-            Swal.fire("Deleted!", "Commission level deleted.", "success");
-            fetchLevels();
-          })
-          .catch(() =>
-            Swal.fire("Error", "Delete failed. Try again.", "error")
-          );
-      }
-    });
-  };
+ // Update the handleDelete function in CommissionLevels.js
+const handleDelete = (id) => {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "This commission level will be deleted!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#6c757d",
+    confirmButtonText: "Yes, delete it!"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      axios
+        .delete(`${baseurl}/commissions-master/${id}/`)
+        .then(() => {
+          Swal.fire({
+            icon: "success",
+            title: "Deleted!",
+            text: "Commission level deleted successfully.",
+            confirmButtonColor: "#273c75",
+          });
+          fetchLevels();
+        })
+        .catch((error) => {
+          let errorMessage = "Delete failed. Try again.";
+          
+          if (error.response?.data?.error) {
+            errorMessage = error.response.data.error;
+          } else if (error.response?.data?.detail) {
+            errorMessage = error.response.data.detail;
+          }
+          
+          Swal.fire({
+            icon: "error",
+            title: "Delete Failed",
+            text: errorMessage,
+            confirmButtonColor: "#273c75",
+          });
+        });
+    }
+  });
+};
 
   /* ================= CLEAR FILTERS ================= */
   const clearFilters = () => {
