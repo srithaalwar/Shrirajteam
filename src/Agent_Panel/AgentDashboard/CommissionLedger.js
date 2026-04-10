@@ -551,23 +551,16 @@ const AgentTotalCommissions = () => {
     navigate('/agent-dashboard');
   };
 
- const formatDate = (dateString) => {
+const formatDate = (dateString) => {
   if (!dateString) return 'N/A';
   const date = new Date(dateString);
-  
-  // Extract day, month, year components
   const day = date.getDate().toString().padStart(2, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-indexed
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const year = date.getFullYear();
-  
-  // Extract hours and minutes
   const hours = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
-  
-  // Return in DD/MM/YYYY HH:MM format
   return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
-
   const handleCardClick = (tableType) => {
     setActiveTable(tableType);
   };
@@ -588,7 +581,6 @@ const AgentTotalCommissions = () => {
                   <th>Level</th>
                   <th>Percentage</th>
                   <th>Amount</th>
-                  <th>Created At</th>
                 </tr>
               </thead>
               <tbody>
