@@ -551,16 +551,14 @@ const AgentTotalCommissions = () => {
     navigate('/agent-dashboard');
   };
 
-const formatDate = (dateString) => {
-  if (!dateString) return 'N/A';
-  const date = new Date(dateString);
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const year = date.getFullYear();
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  return `${day}/${month}/${year} ${hours}:${minutes}`;
-};
+  // Updated formatDate function - backend already returns date in DD-MM-YYYY HH:MM:SS format
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    // The backend already returns date in DD-MM-YYYY HH:MM:SS format
+    // So just return it directly
+    return dateString;
+  };
+
   const handleCardClick = (tableType) => {
     setActiveTable(tableType);
   };
@@ -577,7 +575,9 @@ const formatDate = (dateString) => {
             <table className="cl-data-table">
               <thead>
                 <tr>
-                 <th>Date</th>
+                  <th>Date</th>
+                  <th>Referral ID</th>
+                  <th>Agent Name</th>
                   <th>Level</th>
                   <th>Percentage</th>
                   <th>Amount</th>
@@ -587,6 +587,8 @@ const formatDate = (dateString) => {
                 {referralData.map((item, index) => (
                   <tr key={item.id || index}>
                     <td>{formatDate(item.created_at)}</td>
+                    <td>{item.referral_id || 'N/A'}</td>
+                    <td>{item.agent_name || 'N/A'}</td>
                     <td>{item.level_no || 'N/A'}</td>
                     <td>{item.percentage || '0'}%</td>
                     <td>{formatRupee(item.amount)}</td>
@@ -618,7 +620,7 @@ const formatDate = (dateString) => {
             <table className="cl-data-table">
               <thead>
                 <tr>
-                 <th>Date</th>
+                  <th>Date</th>
                   <th>Product Name</th>
                   <th>Variant</th>
                   <th>Level</th>
@@ -629,7 +631,7 @@ const formatDate = (dateString) => {
               <tbody>
                 {productData.map((item) => (
                   <tr key={item.id}>
-                   <td>{formatDate(item.created_at)}</td>
+                    <td>{formatDate(item.created_at)}</td>
                     <td>{item.product_name}</td>
                     <td>
                       {item.variant_attributes?.size && `Size: ${item.variant_attributes.size}, `}
@@ -677,7 +679,7 @@ const formatDate = (dateString) => {
               <tbody>
                 {propertyData.map((item) => (
                   <tr key={item.id}>
-                     <td>{formatDate(item.created_at)}</td>
+                    <td>{formatDate(item.created_at)}</td>
                     <td>{item.property_name || item.name || `Property ${item.id}`}</td>
                     <td>{item.property_type || 'N/A'}</td>
                     <td>{item.level_no}</td>
@@ -714,6 +716,8 @@ const formatDate = (dateString) => {
           <thead>
             <tr>
               <th>Date</th>
+              <th>Referral ID</th>
+              <th>Agent Name</th>
               <th>Level</th>
               <th>Percentage</th>
               <th>Amount</th>
@@ -723,7 +727,9 @@ const formatDate = (dateString) => {
             {referralData.length > 0 ? (
               referralData.map((item, index) => (
                 <tr key={item.id || index}>
-                      <td>{formatDate(item.created_at)}</td>
+                  <td>{formatDate(item.created_at)}</td>
+                  <td>{item.referral_id || 'N/A'}</td>
+                  <td>{item.agent_name || 'N/A'}</td>
                   <td>{item.level_no || 'N/A'}</td>
                   <td>{item.percentage || '0'}%</td>
                   <td>{formatRupee(item.amount)}</td>
@@ -731,7 +737,7 @@ const formatDate = (dateString) => {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="cl-no-data">No referral data available</td>
+                <td colSpan="6" className="cl-no-data">No referral data available</td>
               </tr>
             )}
           </tbody>
@@ -762,7 +768,7 @@ const formatDate = (dateString) => {
             {productData.length > 0 ? (
               productData.map((item) => (
                 <tr key={item.id}>
-                <td>{formatDate(item.created_at)}</td>
+                  <td>{formatDate(item.created_at)}</td>
                   <td>{item.product_name}</td>
                   <td>
                     {item.variant_attributes?.size && `Size: ${item.variant_attributes.size}, `}
@@ -794,7 +800,7 @@ const formatDate = (dateString) => {
         <table className="cl-data-table">
           <thead>
             <tr>
-            <th>Date</th>
+              <th>Date</th>
               <th>Property Name</th>
               <th>Property Type</th>
               <th>Level</th>
