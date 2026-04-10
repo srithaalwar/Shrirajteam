@@ -551,16 +551,22 @@ const AgentTotalCommissions = () => {
     navigate('/agent-dashboard');
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString('en-IN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+ const formatDate = (dateString) => {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  
+  // Extract day, month, year components
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-indexed
+  const year = date.getFullYear();
+  
+  // Extract hours and minutes
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  
+  // Return in DD/MM/YYYY HH:MM format
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+};
 
   const handleCardClick = (tableType) => {
     setActiveTable(tableType);
@@ -578,7 +584,7 @@ const AgentTotalCommissions = () => {
             <table className="cl-data-table">
               <thead>
                 <tr>
-                  <th>Commission ID</th>
+                 <th>Date</th>
                   <th>Level</th>
                   <th>Percentage</th>
                   <th>Amount</th>
@@ -588,11 +594,10 @@ const AgentTotalCommissions = () => {
               <tbody>
                 {referralData.map((item, index) => (
                   <tr key={item.id || index}>
-                    <td>{item.id || 'N/A'}</td>
+                    <td>{formatDate(item.created_at)}</td>
                     <td>{item.level_no || 'N/A'}</td>
                     <td>{item.percentage || '0'}%</td>
                     <td>{formatRupee(item.amount)}</td>
-                    <td>{formatDate(item.created_at)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -621,17 +626,18 @@ const AgentTotalCommissions = () => {
             <table className="cl-data-table">
               <thead>
                 <tr>
+                 <th>Date</th>
                   <th>Product Name</th>
                   <th>Variant</th>
                   <th>Level</th>
                   <th>Percentage</th>
                   <th>Amount</th>
-                  <th>Created At</th>
                 </tr>
               </thead>
               <tbody>
                 {productData.map((item) => (
                   <tr key={item.id}>
+                   <td>{formatDate(item.created_at)}</td>
                     <td>{item.product_name}</td>
                     <td>
                       {item.variant_attributes?.size && `Size: ${item.variant_attributes.size}, `}
@@ -640,7 +646,6 @@ const AgentTotalCommissions = () => {
                     <td>{item.level_no}</td>
                     <td>{item.percentage}%</td>
                     <td>{formatRupee(item.amount)}</td>
-                    <td>{formatDate(item.created_at)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -669,23 +674,23 @@ const AgentTotalCommissions = () => {
             <table className="cl-data-table">
               <thead>
                 <tr>
+                  <th>Date</th>
                   <th>Property Name</th>
                   <th>Property Type</th>
                   <th>Level</th>
                   <th>Percentage</th>
                   <th>Amount</th>
-                  <th>Created At</th>
                 </tr>
               </thead>
               <tbody>
                 {propertyData.map((item) => (
                   <tr key={item.id}>
+                     <td>{formatDate(item.created_at)}</td>
                     <td>{item.property_name || item.name || `Property ${item.id}`}</td>
                     <td>{item.property_type || 'N/A'}</td>
                     <td>{item.level_no}</td>
                     <td>{item.percentage}%</td>
                     <td>{formatRupee(item.amount)}</td>
-                    <td>{formatDate(item.created_at)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -716,22 +721,20 @@ const AgentTotalCommissions = () => {
         <table className="cl-data-table">
           <thead>
             <tr>
-              <th>Commission ID</th>
+              <th>Date</th>
               <th>Level</th>
               <th>Percentage</th>
               <th>Amount</th>
-              <th>Created At</th>
             </tr>
           </thead>
           <tbody>
             {referralData.length > 0 ? (
               referralData.map((item, index) => (
                 <tr key={item.id || index}>
-                  <td>{item.id || 'N/A'}</td>
+                      <td>{formatDate(item.created_at)}</td>
                   <td>{item.level_no || 'N/A'}</td>
                   <td>{item.percentage || '0'}%</td>
                   <td>{formatRupee(item.amount)}</td>
-                  <td>{formatDate(item.created_at)}</td>
                 </tr>
               ))
             ) : (
@@ -755,18 +758,19 @@ const AgentTotalCommissions = () => {
         <table className="cl-data-table">
           <thead>
             <tr>
+              <th>Date</th>
               <th>Product Name</th>
               <th>Variant</th>
               <th>Level</th>
               <th>Percentage</th>
               <th>Amount</th>
-              <th>Created At</th>
             </tr>
           </thead>
           <tbody>
             {productData.length > 0 ? (
               productData.map((item) => (
                 <tr key={item.id}>
+                <td>{formatDate(item.created_at)}</td>
                   <td>{item.product_name}</td>
                   <td>
                     {item.variant_attributes?.size && `Size: ${item.variant_attributes.size}, `}
@@ -775,7 +779,6 @@ const AgentTotalCommissions = () => {
                   <td>{item.level_no}</td>
                   <td>{item.percentage}%</td>
                   <td>{formatRupee(item.amount)}</td>
-                  <td>{formatDate(item.created_at)}</td>
                 </tr>
               ))
             ) : (
@@ -799,24 +802,24 @@ const AgentTotalCommissions = () => {
         <table className="cl-data-table">
           <thead>
             <tr>
+            <th>Date</th>
               <th>Property Name</th>
               <th>Property Type</th>
               <th>Level</th>
               <th>Percentage</th>
               <th>Amount</th>
-              <th>Created At</th>
             </tr>
           </thead>
           <tbody>
             {propertyData.length > 0 ? (
               propertyData.map((item) => (
                 <tr key={item.id}>
+                  <td>{formatDate(item.created_at)}</td>
                   <td>{item.property_name || item.name || `Property ${item.id}`}</td>
                   <td>{item.property_type || 'N/A'}</td>
                   <td>{item.level_no}</td>
                   <td>{item.percentage}%</td>
                   <td>{formatRupee(item.amount)}</td>
-                  <td>{formatDate(item.created_at)}</td>
                 </tr>
               ))
             ) : (
