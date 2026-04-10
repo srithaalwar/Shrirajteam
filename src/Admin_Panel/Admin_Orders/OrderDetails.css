@@ -1,0 +1,478 @@
+/* OrderDetails.css */
+
+.order-details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 70px);
+}
+
+/* Header */
+.order-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 1px solid #4361ee;
+  border-radius: 6px;
+  color: #4361ee;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background-color: #4361ee;
+  color: white;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.print-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.print-btn:hover {
+  background-color: #5a6268;
+}
+
+.download-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.download-btn:hover {
+  background-color: #218838;
+}
+
+/* Order Title */
+.order-title-section {
+  margin-bottom: 2rem;
+}
+
+.order-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0 0 0.5rem 0;
+}
+
+.order-date {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Grid Layout */
+.order-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Summary Section */
+.summary-section,
+.buyer-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0 0 1.25rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-icon {
+  color: #4361ee;
+}
+
+/* Summary Table */
+.summary-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-label {
+  font-weight: 500;
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.summary-value {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.875rem;
+}
+
+.summary-value.amount {
+  color: #4361ee;
+  font-size: 1.125rem;
+}
+
+/* Buyer Info */
+.buyer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.buyer-detail {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.detail-icon {
+  color: #4361ee;
+  font-size: 1rem;
+  margin-top: 0.125rem;
+}
+
+.buyer-detail > div {
+  flex: 1;
+}
+
+.detail-label {
+  font-weight: 500;
+  color: #6c757d;
+  font-size: 0.813rem;
+  margin-right: 0.5rem;
+}
+
+.detail-value {
+  color: #2d3748;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-cancelled {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.status-processing {
+  background-color: #fff3e0;
+  color: #e67e22;
+}
+
+.status-delivered {
+  background-color: #e3f7ec;
+  color: #27ae60;
+}
+
+.status-default {
+  background-color: #e9ecef;
+  color: #6c757d;
+}
+
+/* Products Section */
+.products-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.products-table-wrapper {
+  overflow-x: auto;
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.products-table th {
+  text-align: left;
+  padding: 0.875rem 0.75rem;
+  background-color: #f8f9fa;
+  color: #4a5568;
+  font-weight: 600;
+  font-size: 0.813rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.products-table td {
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid #edf2f7;
+  color: #2d3748;
+  vertical-align: top;
+}
+
+.products-table tr:hover td {
+  background-color: #f8f9fa;
+}
+
+.product-name-cell {
+  max-width: 300px;
+}
+
+.product-name {
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 0.25rem;
+}
+
+.product-description {
+  font-size: 0.75rem;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+.sku-cell {
+  font-family: monospace;
+  font-size: 0.813rem;
+  color: #6c757d;
+}
+
+.price-cell,
+.total-cell {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.total-cell {
+  color: #4361ee;
+  font-weight: 600;
+}
+
+/* Commission Section */
+.commission-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.commission-table-wrapper {
+  overflow-x: auto;
+}
+
+.commission-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.commission-table th {
+  text-align: left;
+  padding: 0.875rem 0.75rem;
+  background-color: #f8f9fa;
+  color: #4a5568;
+  font-weight: 600;
+  font-size: 0.813rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.commission-table td {
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid #edf2f7;
+  color: #2d3748;
+}
+
+.commission-table tr:hover td {
+  background-color: #f8f9fa;
+}
+
+.level-cell {
+  width: 100px;
+}
+
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background-color: #e3f0ff;
+  color: #4361ee;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.agent-name {
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 0.25rem;
+}
+
+.referral-id {
+  font-size: 0.688rem;
+  color: #6c757d;
+  font-family: monospace;
+}
+
+.percentage-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.percent-icon {
+  font-size: 0.75rem;
+  color: #28a745;
+}
+
+.commission-amount {
+  font-weight: 600;
+  color: #4361ee;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  text-align: center;
+  padding: 4rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e9ecef;
+  border-top-color: #4361ee;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error Message */
+.error-message {
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 12px;
+}
+
+.error-message p {
+  color: #dc2626;
+  margin-bottom: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .order-details-container {
+    padding: 1rem;
+  }
+  
+  .order-details-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .order-details-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .header-actions {
+    width: 100%;
+  }
+  
+  .action-btn {
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .products-table,
+  .commission-table {
+    font-size: 0.75rem;
+  }
+  
+  .products-table th,
+  .products-table td,
+  .commission-table th,
+  .commission-table td {
+    padding: 0.5rem;
+  }
+}
+
+@media print {
+  .order-details-header,
+  .back-button,
+  .header-actions,
+  .action-btn,
+  .agent-navbar {
+    display: none !important;
+  }
+  
+  .order-details-container {
+    padding: 0;
+    background: white;
+  }
+  
+  .summary-section,
+  .buyer-section,
+  .products-section,
+  .commission-section {
+    box-shadow: none;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 1rem;
+  }
+}

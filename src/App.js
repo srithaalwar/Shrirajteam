@@ -99,10 +99,9 @@
 //         <Route path="/refund-policy" element={<RefundPolicy />} />
 //         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
 
-
 //         <Route path="/faqs" element={<FAQAccordion />} />
 
-//         {/* website-home */}
+//         {/* website-home */}p
 //         <Route path="/Electronics-carousel" element={<ElectronicAndMobilesCarousel />} />
 //         <Route path="/Clothing-carousel" element={<ClothingAndGarmentsCarousel />} />
 //         <Route path="/Grocery-carousel" element={<GroceryAndKiranamCarousel />} />
@@ -369,6 +368,8 @@ import CategoryProducts from "./Agent_Panel/Agent_Home_Page/CategoryProducts"
 import AdminPayouts from "./Admin_Panel/Admin_Payouts/TotalCommissions"
 import ClientBusinessProducts from "./Client_Panel/Client_AddToCart/ClientBusinessProducts";
 import RegisterVerifyOTP from "./Register/RegisterVerifyOTP";
+import OrderCommission from "./Admin_Panel/Admin_Orders/Order_commission"
+import OrderDetails from "./Admin_Panel/Admin_Orders/OrderDetails";
 function App() {
   return (
     <BrowserRouter>
@@ -534,6 +535,10 @@ function App() {
 <Route path="/editproductcategory/:id" element={<EditProductCategory />} />
         <Route path="/admin-transactions" element={<AdminTransactions />} />
         <Route path="/admin-orders" element={<AdminOrders />} />
+                <Route path="/admin-commission" element={<OrderCommission />} />
+                 <Route path="/order/:orderId" element={<OrderDetails />} />
+
+
         <Route path="/agent-my-orders" element={<AgentMyOrders />} />
         <Route path="/agent-orders" element={<AgentOrders />} />
         <Route path="/client-orders" element={<ClientOrders />} />

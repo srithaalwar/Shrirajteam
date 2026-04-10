@@ -59,29 +59,29 @@
 //     referred_by: "",
 //     image: ""
 //   });
-  
+
 //   // Notification states
 //   const [notifications, setNotifications] = useState([]);
 //   const [unreadCount, setUnreadCount] = useState(0);
 //   const [showNotifications, setShowNotifications] = useState(false);
-  
+
 //   // Cart states
 //   const [cartItems, setCartItems] = useState([]);
 //   const [cartItemCount, setCartItemCount] = useState(0); // Number of distinct items
 //   const [cartTotalQuantity, setCartTotalQuantity] = useState(0); // Total quantity sum
 //   const [cartLoading, setCartLoading] = useState(false);
-  
+
 //   // Wishlist states
 //   const [wishlistItems, setWishlistItems] = useState([]);
 //   const [wishlistCount, setWishlistCount] = useState(0); // Number of wishlist items
 //   const [wishlistLoading, setWishlistLoading] = useState(false);
-  
+
 //   const dropdownRef = useRef(null);
 //   const notificationRef = useRef(null);
 //   const profileRef = useRef(null);
 //   const loginUrl = "/login";
 //   const signupUrl = "/register";
-  
+
 //   const navigate = useNavigate();
 
 //   // Get user ID from localStorage
@@ -90,17 +90,17 @@
 //   // Fetch user data from API to get the image
 //   const fetchUserDataFromAPI = async () => {
 //     if (!userId) return;
-    
+
 //     try {
 //       const response = await axios.get(`${baseurl}/users/${userId}/`);
 //       console.log("User data from API:", response.data);
-      
+
 //       if (response.data) {
 //         // Update localStorage with the image
 //         if (response.data.image) {
 //           localStorage.setItem("user_image", response.data.image);
 //         }
-        
+
 //         setUserData(prevData => ({
 //           ...prevData,
 //           email: response.data.email || prevData.email,
@@ -134,17 +134,17 @@
 //     };
 
 //     fetchUserData();
-    
+
 //     // Fetch fresh user data from API to get the image
 //     fetchUserDataFromAPI();
-    
+
 //     // Listen for storage changes
 //     const handleStorageChange = () => {
 //       fetchUserData();
 //     };
-    
+
 //     window.addEventListener('storage', handleStorageChange);
-    
+
 //     return () => {
 //       window.removeEventListener('storage', handleStorageChange);
 //     };
@@ -163,15 +163,15 @@
 //     setCartLoading(true);
 //     try {
 //       console.log("Fetching cart items for user:", userId);
-      
+
 //       // Fetch cart items from API with user filter
 //       const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
 //       console.log("Cart API Response:", response.data);
-      
+
 //       // Handle paginated response - get items from results array
 //       const cartResponse = response.data;
 //       let userCartItems = [];
-      
+
 //       if (cartResponse.results && Array.isArray(cartResponse.results)) {
 //         // Get items from results array
 //         userCartItems = cartResponse.results;
@@ -179,25 +179,25 @@
 //         // If response is already an array
 //         userCartItems = cartResponse;
 //       }
-      
+
 //       console.log("User cart items:", userCartItems);
-      
+
 //       setCartItems(userCartItems);
-      
+
 //       // Use the count from API response
 //       if (cartResponse.count !== undefined) {
 //         setCartItemCount(cartResponse.count);
 //       } else {
 //         setCartItemCount(userCartItems.length);
 //       }
-      
+
 //       // Calculate total quantity
 //       const totalQuantity = userCartItems.reduce((total, item) => {
 //         return total + (item.quantity || 1);
 //       }, 0);
-      
+
 //       setCartTotalQuantity(totalQuantity);
-      
+
 //     } catch (error) {
 //       console.error("Error fetching cart items:", error);
 //       setCartItems([]);
@@ -220,15 +220,15 @@
 //     setWishlistLoading(true);
 //     try {
 //       console.log("Fetching wishlist items for user:", userId);
-      
+
 //       // Fetch wishlist items from API with user filter
 //       const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
 //       console.log("Wishlist API Response:", response.data);
-      
+
 //       // Handle paginated response - get items from results array
 //       const wishlistResponse = response.data;
 //       let userWishlistItems = [];
-      
+
 //       if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
 //         // Get items from results array
 //         userWishlistItems = wishlistResponse.results;
@@ -236,18 +236,18 @@
 //         // If response is already an array
 //         userWishlistItems = wishlistResponse;
 //       }
-      
+
 //       console.log("User wishlist items:", userWishlistItems);
-      
+
 //       setWishlistItems(userWishlistItems);
-      
+
 //       // Use the count from API response
 //       if (wishlistResponse.count !== undefined) {
 //         setWishlistCount(wishlistResponse.count);
 //       } else {
 //         setWishlistCount(userWishlistItems.length);
 //       }
-      
+
 //     } catch (error) {
 //       console.error("Error fetching wishlist items:", error);
 //       setWishlistItems([]);
@@ -262,10 +262,10 @@
 //     if (userId) {
 //       console.log("Setting up cart polling for user:", userId);
 //       fetchCartItems();
-      
+
 //       // Poll for cart updates every 5 seconds for real-time updates
 //       const cartIntervalId = setInterval(fetchCartItems, 5000);
-      
+
 //       return () => clearInterval(cartIntervalId);
 //     } else {
 //       setCartItems([]);
@@ -279,10 +279,10 @@
 //     if (userId) {
 //       console.log("Setting up wishlist polling for user:", userId);
 //       fetchWishlistItems();
-      
+
 //       // Poll for wishlist updates every 5 seconds for real-time updates
 //       const wishlistIntervalId = setInterval(fetchWishlistItems, 5000);
-      
+
 //       return () => clearInterval(wishlistIntervalId);
 //     } else {
 //       setWishlistItems([]);
@@ -309,7 +309,7 @@
 
 //     // Listen for custom event when cart is updated
 //     window.addEventListener('cartUpdated', handleCartUpdate);
-    
+
 //     return () => {
 //       window.removeEventListener('cartUpdated', handleCartUpdate);
 //     };
@@ -324,7 +324,7 @@
 
 //     // Listen for custom event when wishlist is updated
 //     window.addEventListener('wishlistUpdated', handleWishlistUpdate);
-    
+
 //     return () => {
 //       window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
 //     };
@@ -340,12 +340,12 @@
 //       }
 
 //       console.log("Fetching notifications for client user:", userId);
-      
+
 //       const response = await axios.get(`${baseurl}/notifications/?user=${userId}&is_read=false`);
 //       console.log("Client Notifications API Response:", response.data);
-      
+
 //       const allNotifications = response.data.results || [];
-      
+
 //       const apiUnreadCount = response.data.unread_count;
 //       if (apiUnreadCount !== undefined) {
 //         setUnreadCount(apiUnreadCount);
@@ -353,9 +353,9 @@
 //         const localUnreadCount = allNotifications.filter(n => !n.is_read).length;
 //         setUnreadCount(localUnreadCount);
 //       }
-      
+
 //       setNotifications(allNotifications);
-      
+
 //     } catch (error) {
 //       console.error("Error fetching client notifications:", error);
 //       const unread = notifications.filter(notification => !notification.is_read);
@@ -369,10 +369,10 @@
 //     if (userId) {
 //       console.log("Setting up notification polling for client user:", userId);
 //       fetchNotifications();
-      
+
 //       // Poll for new notifications every 30 seconds
 //       const intervalId = setInterval(fetchNotifications, 30000);
-      
+
 //       return () => clearInterval(intervalId);
 //     }
 //   }, []);
@@ -383,7 +383,7 @@
 //       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
 //         setShowCategories(false);
 //       }
-      
+
 //       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
 //         setShowNotifications(false);
 //       }
@@ -428,29 +428,29 @@
 //         console.error("No user_id found in localStorage");
 //         return;
 //       }
-      
+
 //       console.log("Marking client notification as read:", notification);
-      
+
 //       await axios.post(`${baseurl}/notifications/mark-read/`, {
 //         user_id: parseInt(userId),
 //         notification_status_ids: [notification.notification_status_id]
 //       });
-      
+
 //       console.log("Successfully marked client notification as read");
-      
+
 //       const updatedNotifications = notifications.map(n => 
 //         n.notification_status_id === notification.notification_status_id 
 //           ? { ...n, is_read: true } 
 //           : n
 //       );
-      
+
 //       setNotifications(updatedNotifications);
-      
+
 //       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
 //       setUnreadCount(newUnreadCount);
-      
+
 //       setShowNotifications(false);
-      
+
 //       // Navigate based on notification type for client
 //       if (notification.property !== null) {
 //         // Navigate to client property details
@@ -459,7 +459,7 @@
 //         // Navigate to client product details with product_id and variant_id
 //         const productId = notification.product.product_id;
 //         const variantId = notification.product.variant_id;
-        
+
 //         // Navigate to the correct URL for client
 //         if (productId && variantId) {
 //           navigate(`/client-business-product-details/${productId}/?variant=${variantId}`);
@@ -475,7 +475,7 @@
 //       } else {
 //         fetchNotifications();
 //       }
-      
+
 //     } catch (error) {
 //       console.error("Error marking client notification as read:", error);
 //       const updatedNotifications = notifications.map(n => 
@@ -483,20 +483,20 @@
 //           ? { ...n, is_read: true } 
 //           : n
 //       );
-      
+
 //       setNotifications(updatedNotifications);
 //       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
 //       setUnreadCount(newUnreadCount);
-      
+
 //       setShowNotifications(false);
-      
+
 //       // Try navigation anyway even if API fails
 //       if (notification.property !== null) {
 //         navigate(`/client-properties-details/${notification.property.id}`);
 //       } else if (notification.product !== null) {
 //         const productId = notification.product.product_id;
 //         const variantId = notification.product.variant_id;
-        
+
 //         if (productId && variantId) {
 //           navigate(`/client-business-product-details/${productId}/?variant=${variantId}`);
 //         } else if (productId) {
@@ -590,22 +590,22 @@
 //   // Function to get full image URL
 //   const getFullImageUrl = (imagePath) => {
 //     if (!imagePath) return null;
-    
+
 //     // If it's already a full URL, return as is
 //     if (imagePath.startsWith('http')) {
 //       return imagePath;
 //     }
-    
+
 //     // If it starts with /media/, append baseurl
 //     if (imagePath.startsWith('/media/')) {
 //       return `${baseurl}${imagePath}`;
 //     }
-    
+
 //     // If it's just a filename or path without /media/, add /media/ prefix
 //     if (!imagePath.startsWith('/')) {
 //       return `${baseurl}/media/${imagePath}`;
 //     }
-    
+
 //     // Default case
 //     return `${baseurl}${imagePath}`;
 //   };
@@ -658,14 +658,14 @@
 //                 <span className="wn-notification-badge">{unreadCount}</span>
 //               )}
 //             </div>
-            
+
 //             {/* Notifications Dropdown */}
 //             {showNotifications && (
 //               <div className="wn-notifications-dropdown">
 //                 <div className="wn-notifications-header">
 //                   <h4>Client Notifications</h4>
 //                 </div>
-                
+
 //                 <div className="wn-notifications-list">
 //                   {notifications.length > 0 ? (
 //                     notifications.map((notification) => (
@@ -699,7 +699,7 @@
 //               </div>
 //             )}
 //           </div>
-          
+
 //           {/* Wishlist Icon with Dynamic Count */}
 //           <div 
 //             className="wn-wishlist" 
@@ -715,7 +715,7 @@
 //               <span className="wn-wishlist-badge">{wishlistCount > 99 ? '99+' : wishlistCount}</span>
 //             )}
 //           </div>
-          
+
 //           {/* Cart Icon with Dynamic Count */}
 //           <div 
 //             className="wn-cart" 
@@ -790,7 +790,7 @@
 //                     <span className="wn-detail-text">{userData.email}</span>
 //                   </div>
 //                 )}
-                
+
 //                 {userData.phone_number && (
 //                   <div className="wn-detail-item">
 //                     <FaPhone className="wn-detail-icon" size={10} />
@@ -799,7 +799,7 @@
 //                     </span>
 //                   </div>
 //                 )}
-                
+
 //                 {userData.referral_id ? (
 //                   <div className="wn-detail-item">
 //                     <FaIdCard className="wn-detail-icon" size={10} />
@@ -816,7 +816,7 @@
 //               </div>
 //             </div>
 //           </div>
-          
+
 //           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
 //         </div>
 
@@ -932,32 +932,32 @@
 //     referred_by: "",
 //     image: ""
 //   });
-  
+
 //   // Notification states
 //   const [notifications, setNotifications] = useState([]);
 //   const [unreadCount, setUnreadCount] = useState(0);
 //   const [showNotifications, setShowNotifications] = useState(false);
-  
+
 //   // Cart states
 //   const [cartItems, setCartItems] = useState([]);
 //   const [cartItemCount, setCartItemCount] = useState(0);
 //   const [cartTotalQuantity, setCartTotalQuantity] = useState(0);
 //   const [cartLoading, setCartLoading] = useState(false);
-  
+
 //   // Wishlist states
 //   const [wishlistItems, setWishlistItems] = useState([]);
 //   const [wishlistCount, setWishlistCount] = useState(0);
 //   const [wishlistLoading, setWishlistLoading] = useState(false);
-  
+
 //   // Mobile search modal state
 //   const [showMobileSearch, setShowMobileSearch] = useState(false);
-  
+
 //   const dropdownRef = useRef(null);
 //   const notificationRef = useRef(null);
 //   const profileRef = useRef(null);
 //   const loginUrl = "/login";
 //   const signupUrl = "/register";
-  
+
 //   const navigate = useNavigate();
 
 //   // Get user ID from localStorage
@@ -966,16 +966,16 @@
 //   // Fetch user data from API to get the image
 //   const fetchUserDataFromAPI = async () => {
 //     if (!userId) return;
-    
+
 //     try {
 //       const response = await axios.get(`${baseurl}/users/${userId}/`);
 //       console.log("User data from API:", response.data);
-      
+
 //       if (response.data) {
 //         if (response.data.image) {
 //           localStorage.setItem("user_image", response.data.image);
 //         }
-        
+
 //         setUserData(prevData => ({
 //           ...prevData,
 //           email: response.data.email || prevData.email,
@@ -1010,13 +1010,13 @@
 
 //     fetchUserData();
 //     fetchUserDataFromAPI();
-    
+
 //     const handleStorageChange = () => {
 //       fetchUserData();
 //     };
-    
+
 //     window.addEventListener('storage', handleStorageChange);
-    
+
 //     return () => {
 //       window.removeEventListener('storage', handleStorageChange);
 //     };
@@ -1034,30 +1034,30 @@
 //     setCartLoading(true);
 //     try {
 //       const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
-      
+
 //       const cartResponse = response.data;
 //       let userCartItems = [];
-      
+
 //       if (cartResponse.results && Array.isArray(cartResponse.results)) {
 //         userCartItems = cartResponse.results;
 //       } else if (Array.isArray(cartResponse)) {
 //         userCartItems = cartResponse;
 //       }
-      
+
 //       setCartItems(userCartItems);
-      
+
 //       if (cartResponse.count !== undefined) {
 //         setCartItemCount(cartResponse.count);
 //       } else {
 //         setCartItemCount(userCartItems.length);
 //       }
-      
+
 //       const totalQuantity = userCartItems.reduce((total, item) => {
 //         return total + (item.quantity || 1);
 //       }, 0);
-      
+
 //       setCartTotalQuantity(totalQuantity);
-      
+
 //     } catch (error) {
 //       console.error("Error fetching cart items:", error);
 //       setCartItems([]);
@@ -1079,24 +1079,24 @@
 //     setWishlistLoading(true);
 //     try {
 //       const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
-      
+
 //       const wishlistResponse = response.data;
 //       let userWishlistItems = [];
-      
+
 //       if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
 //         userWishlistItems = wishlistResponse.results;
 //       } else if (Array.isArray(wishlistResponse)) {
 //         userWishlistItems = wishlistResponse;
 //       }
-      
+
 //       setWishlistItems(userWishlistItems);
-      
+
 //       if (wishlistResponse.count !== undefined) {
 //         setWishlistCount(wishlistResponse.count);
 //       } else {
 //         setWishlistCount(userWishlistItems.length);
 //       }
-      
+
 //     } catch (error) {
 //       console.error("Error fetching wishlist items:", error);
 //       setWishlistItems([]);
@@ -1138,7 +1138,7 @@
 //     };
 
 //     window.addEventListener('cartUpdated', handleCartUpdate);
-    
+
 //     return () => {
 //       window.removeEventListener('cartUpdated', handleCartUpdate);
 //     };
@@ -1151,7 +1151,7 @@
 //     };
 
 //     window.addEventListener('wishlistUpdated', handleWishlistUpdate);
-    
+
 //     return () => {
 //       window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
 //     };
@@ -1164,9 +1164,9 @@
 //       if (!userId) return;
 
 //       const response = await axios.get(`${baseurl}/notifications/?user=${userId}&is_read=false`);
-      
+
 //       const allNotifications = response.data.results || [];
-      
+
 //       const apiUnreadCount = response.data.unread_count;
 //       if (apiUnreadCount !== undefined) {
 //         setUnreadCount(apiUnreadCount);
@@ -1174,9 +1174,9 @@
 //         const localUnreadCount = allNotifications.filter(n => !n.is_read).length;
 //         setUnreadCount(localUnreadCount);
 //       }
-      
+
 //       setNotifications(allNotifications);
-      
+
 //     } catch (error) {
 //       console.error("Error fetching client notifications:", error);
 //       const unread = notifications.filter(notification => !notification.is_read);
@@ -1200,7 +1200,7 @@
 //       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
 //         setShowCategories(false);
 //       }
-      
+
 //       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
 //         setShowNotifications(false);
 //       }
@@ -1242,31 +1242,31 @@
 //     try {
 //       const userId = localStorage.getItem("user_id");
 //       if (!userId) return;
-      
+
 //       await axios.post(`${baseurl}/notifications/mark-read/`, {
 //         user_id: parseInt(userId),
 //         notification_status_ids: [notification.notification_status_id]
 //       });
-      
+
 //       const updatedNotifications = notifications.map(n => 
 //         n.notification_status_id === notification.notification_status_id 
 //           ? { ...n, is_read: true } 
 //           : n
 //       );
-      
+
 //       setNotifications(updatedNotifications);
-      
+
 //       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
 //       setUnreadCount(newUnreadCount);
-      
+
 //       setShowNotifications(false);
-      
+
 //       if (notification.property !== null) {
 //         navigate(`/client-properties-details/${notification.property.id}`);
 //       } else if (notification.product !== null) {
 //         const productId = notification.product.product_id;
 //         const variantId = notification.product.variant_id;
-        
+
 //         if (productId && variantId) {
 //           navigate(`/client-business-product-details/${productId}/?variant=${variantId}`);
 //         } else if (productId) {
@@ -1275,7 +1275,7 @@
 //           navigate(`/client-product-details/${variantId}`);
 //         }
 //       }
-      
+
 //     } catch (error) {
 //       console.error("Error marking client notification as read:", error);
 //       const updatedNotifications = notifications.map(n => 
@@ -1283,19 +1283,19 @@
 //           ? { ...n, is_read: true } 
 //           : n
 //       );
-      
+
 //       setNotifications(updatedNotifications);
 //       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
 //       setUnreadCount(newUnreadCount);
-      
+
 //       setShowNotifications(false);
-      
+
 //       if (notification.property !== null) {
 //         navigate(`/client-properties-details/${notification.property.id}`);
 //       } else if (notification.product !== null) {
 //         const productId = notification.product.product_id;
 //         const variantId = notification.product.variant_id;
-        
+
 //         if (productId && variantId) {
 //           navigate(`/client-business-product-details/${productId}/?variant=${variantId}`);
 //         } else if (productId) {
@@ -1465,13 +1465,13 @@
 //                 <span className="wn-notification-badge">{unreadCount}</span>
 //               )}
 //             </div>
-            
+
 //             {showNotifications && (
 //               <div className="wn-notifications-dropdown">
 //                 <div className="wn-notifications-header">
 //                   <h4>Client Notifications</h4>
 //                 </div>
-                
+
 //                 <div className="wn-notifications-list">
 //                   {notifications.length > 0 ? (
 //                     notifications.map((notification) => (
@@ -1505,7 +1505,7 @@
 //               </div>
 //             )}
 //           </div>
-          
+
 //           {/* Wishlist Icon */}
 //           <div 
 //             className="wn-wishlist" 
@@ -1521,7 +1521,7 @@
 //               <span className="wn-wishlist-badge">{wishlistCount > 99 ? '99+' : wishlistCount}</span>
 //             )}
 //           </div>
-          
+
 //           {/* Cart Icon */}
 //           <div 
 //             className="wn-cart" 
@@ -1613,7 +1613,7 @@
 //                     <span className="wn-detail-text">{userData.email}</span>
 //                   </div>
 //                 )}
-                
+
 //                 {userData.phone_number && (
 //                   <div className="wn-detail-item">
 //                     <FaPhone className="wn-detail-icon" size={10} />
@@ -1622,7 +1622,7 @@
 //                     </span>
 //                   </div>
 //                 )}
-                
+
 //                 {userData.referral_id ? (
 //                   <div className="wn-detail-item">
 //                     <FaIdCard className="wn-detail-icon" size={10} />
@@ -1639,7 +1639,7 @@
 //               </div>
 //             </div>
 //           </div>
-          
+
 //           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
 //         </div>
 
@@ -1754,32 +1754,32 @@
 //     referred_by: "",
 //     image: ""
 //   });
-  
+
 //   // Notification states
 //   const [notifications, setNotifications] = useState([]);
 //   const [unreadCount, setUnreadCount] = useState(0);
 //   const [showNotifications, setShowNotifications] = useState(false);
-  
+
 //   // Cart states
 //   const [cartItems, setCartItems] = useState([]);
 //   const [cartItemCount, setCartItemCount] = useState(0);
 //   const [cartTotalQuantity, setCartTotalQuantity] = useState(0);
 //   const [cartLoading, setCartLoading] = useState(false);
-  
+
 //   // Wishlist states
 //   const [wishlistItems, setWishlistItems] = useState([]);
 //   const [wishlistCount, setWishlistCount] = useState(0);
 //   const [wishlistLoading, setWishlistLoading] = useState(false);
-  
+
 //   // Mobile search modal state
 //   const [showMobileSearch, setShowMobileSearch] = useState(false);
-  
+
 //   const dropdownRef = useRef(null);
 //   const notificationRef = useRef(null);
 //   const profileRef = useRef(null);
 //   const loginUrl = "/login";
 //   const signupUrl = "/register";
-  
+
 //   const navigate = useNavigate();
 
 //   // Get user ID from localStorage
@@ -1788,16 +1788,16 @@
 //   // Fetch user data from API to get the image
 //   const fetchUserDataFromAPI = async () => {
 //     if (!userId) return;
-    
+
 //     try {
 //       const response = await axios.get(`${baseurl}/users/${userId}/`);
 //       console.log("User data from API:", response.data);
-      
+
 //       if (response.data) {
 //         if (response.data.image) {
 //           localStorage.setItem("user_image", response.data.image);
 //         }
-        
+
 //         setUserData(prevData => ({
 //           ...prevData,
 //           email: response.data.email || prevData.email,
@@ -1832,13 +1832,13 @@
 
 //     fetchUserData();
 //     fetchUserDataFromAPI();
-    
+
 //     const handleStorageChange = () => {
 //       fetchUserData();
 //     };
-    
+
 //     window.addEventListener('storage', handleStorageChange);
-    
+
 //     return () => {
 //       window.removeEventListener('storage', handleStorageChange);
 //     };
@@ -1856,30 +1856,30 @@
 //     setCartLoading(true);
 //     try {
 //       const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
-      
+
 //       const cartResponse = response.data;
 //       let userCartItems = [];
-      
+
 //       if (cartResponse.results && Array.isArray(cartResponse.results)) {
 //         userCartItems = cartResponse.results;
 //       } else if (Array.isArray(cartResponse)) {
 //         userCartItems = cartResponse;
 //       }
-      
+
 //       setCartItems(userCartItems);
-      
+
 //       if (cartResponse.count !== undefined) {
 //         setCartItemCount(cartResponse.count);
 //       } else {
 //         setCartItemCount(userCartItems.length);
 //       }
-      
+
 //       const totalQuantity = userCartItems.reduce((total, item) => {
 //         return total + (item.quantity || 1);
 //       }, 0);
-      
+
 //       setCartTotalQuantity(totalQuantity);
-      
+
 //     } catch (error) {
 //       console.error("Error fetching cart items:", error);
 //       setCartItems([]);
@@ -1901,24 +1901,24 @@
 //     setWishlistLoading(true);
 //     try {
 //       const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
-      
+
 //       const wishlistResponse = response.data;
 //       let userWishlistItems = [];
-      
+
 //       if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
 //         userWishlistItems = wishlistResponse.results;
 //       } else if (Array.isArray(wishlistResponse)) {
 //         userWishlistItems = wishlistResponse;
 //       }
-      
+
 //       setWishlistItems(userWishlistItems);
-      
+
 //       if (wishlistResponse.count !== undefined) {
 //         setWishlistCount(wishlistResponse.count);
 //       } else {
 //         setWishlistCount(userWishlistItems.length);
 //       }
-      
+
 //     } catch (error) {
 //       console.error("Error fetching wishlist items:", error);
 //       setWishlistItems([]);
@@ -1960,7 +1960,7 @@
 //     };
 
 //     window.addEventListener('cartUpdated', handleCartUpdate);
-    
+
 //     return () => {
 //       window.removeEventListener('cartUpdated', handleCartUpdate);
 //     };
@@ -1973,7 +1973,7 @@
 //     };
 
 //     window.addEventListener('wishlistUpdated', handleWishlistUpdate);
-    
+
 //     return () => {
 //       window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
 //     };
@@ -1986,9 +1986,9 @@
 //       if (!userId) return;
 
 //       const response = await axios.get(`${baseurl}/notifications/?user=${userId}&is_read=false`);
-      
+
 //       const allNotifications = response.data.results || [];
-      
+
 //       const apiUnreadCount = response.data.unread_count;
 //       if (apiUnreadCount !== undefined) {
 //         setUnreadCount(apiUnreadCount);
@@ -1996,9 +1996,9 @@
 //         const localUnreadCount = allNotifications.filter(n => !n.is_read).length;
 //         setUnreadCount(localUnreadCount);
 //       }
-      
+
 //       setNotifications(allNotifications);
-      
+
 //     } catch (error) {
 //       console.error("Error fetching client notifications:", error);
 //       const unread = notifications.filter(notification => !notification.is_read);
@@ -2022,7 +2022,7 @@
 //       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
 //         setShowCategories(false);
 //       }
-      
+
 //       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
 //         setShowNotifications(false);
 //       }
@@ -2064,31 +2064,31 @@
 //     try {
 //       const userId = localStorage.getItem("user_id");
 //       if (!userId) return;
-      
+
 //       await axios.post(`${baseurl}/notifications/mark-read/`, {
 //         user_id: parseInt(userId),
 //         notification_status_ids: [notification.notification_status_id]
 //       });
-      
+
 //       const updatedNotifications = notifications.map(n => 
 //         n.notification_status_id === notification.notification_status_id 
 //           ? { ...n, is_read: true } 
 //           : n
 //       );
-      
+
 //       setNotifications(updatedNotifications);
-      
+
 //       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
 //       setUnreadCount(newUnreadCount);
-      
+
 //       setShowNotifications(false);
-      
+
 //       if (notification.property !== null) {
 //         navigate(`/client-properties-details/${notification.property.id}`);
 //       } else if (notification.product !== null) {
 //         const productId = notification.product.product_id;
 //         const variantId = notification.product.variant_id;
-        
+
 //         if (productId && variantId) {
 //           navigate(`/client-business-product-details/${productId}/?variant=${variantId}`);
 //         } else if (productId) {
@@ -2097,7 +2097,7 @@
 //           navigate(`/client-product-details/${variantId}`);
 //         }
 //       }
-      
+
 //     } catch (error) {
 //       console.error("Error marking client notification as read:", error);
 //       const updatedNotifications = notifications.map(n => 
@@ -2105,19 +2105,19 @@
 //           ? { ...n, is_read: true } 
 //           : n
 //       );
-      
+
 //       setNotifications(updatedNotifications);
 //       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
 //       setUnreadCount(newUnreadCount);
-      
+
 //       setShowNotifications(false);
-      
+
 //       if (notification.property !== null) {
 //         navigate(`/client-properties-details/${notification.property.id}`);
 //       } else if (notification.product !== null) {
 //         const productId = notification.product.product_id;
 //         const variantId = notification.product.variant_id;
-        
+
 //         if (productId && variantId) {
 //           navigate(`/client-business-product-details/${productId}/?variant=${variantId}`);
 //         } else if (productId) {
@@ -2306,13 +2306,13 @@
 //                 <span className="wn-notification-badge">{unreadCount}</span>
 //               )}
 //             </div>
-            
+
 //             {showNotifications && (
 //               <div className="wn-notifications-dropdown">
 //                 <div className="wn-notifications-header">
 //                   <h4>Client Notifications</h4>
 //                 </div>
-                
+
 //                 <div className="wn-notifications-list">
 //                   {notifications.length > 0 ? (
 //                     notifications.map((notification) => (
@@ -2346,7 +2346,7 @@
 //               </div>
 //             )}
 //           </div>
-          
+
 //           {/* Wishlist Icon */}
 //           <div 
 //             className="wn-wishlist" 
@@ -2362,7 +2362,7 @@
 //               <span className="wn-wishlist-badge">{wishlistCount > 99 ? '99+' : wishlistCount}</span>
 //             )}
 //           </div>
-          
+
 //           {/* Cart Icon */}
 //           <div 
 //             className="wn-cart" 
@@ -2454,7 +2454,7 @@
 //                     <span className="wn-detail-text">{userData.email}</span>
 //                   </div>
 //                 )}
-                
+
 //                 {userData.phone_number && (
 //                   <div className="wn-detail-item">
 //                     <FaPhone className="wn-detail-icon" size={10} />
@@ -2463,7 +2463,7 @@
 //                     </span>
 //                   </div>
 //                 )}
-                
+
 //                 {userData.referral_id ? (
 //                   <div className="wn-detail-item">
 //                     <FaIdCard className="wn-detail-icon" size={10} />
@@ -2480,7 +2480,7 @@
 //               </div>
 //             </div>
 //           </div>
-          
+
 //           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
 //         </div>
 
@@ -2593,32 +2593,32 @@
 //     referred_by: "",
 //     image: ""
 //   });
-  
+
 //   // Notification states
 //   const [notifications, setNotifications] = useState([]);
 //   const [unreadCount, setUnreadCount] = useState(0);
 //   const [showNotifications, setShowNotifications] = useState(false);
-  
+
 //   // Cart states
 //   const [cartItems, setCartItems] = useState([]);
 //   const [cartItemCount, setCartItemCount] = useState(0);
 //   const [cartTotalQuantity, setCartTotalQuantity] = useState(0);
 //   const [cartLoading, setCartLoading] = useState(false);
-  
+
 //   // Wishlist states
 //   const [wishlistItems, setWishlistItems] = useState([]);
 //   const [wishlistCount, setWishlistCount] = useState(0);
 //   const [wishlistLoading, setWishlistLoading] = useState(false);
-  
+
 //   // Mobile search modal state
 //   const [showMobileSearch, setShowMobileSearch] = useState(false);
-  
+
 //   const dropdownRef = useRef(null);
 //   const notificationRef = useRef(null);
 //   const profileRef = useRef(null);
 //   const loginUrl = "/login";
 //   const signupUrl = "/register";
-  
+
 //   const navigate = useNavigate();
 
 //   // Get user ID from localStorage
@@ -2627,16 +2627,16 @@
 //   // Fetch user data from API to get the image
 //   const fetchUserDataFromAPI = async () => {
 //     if (!userId) return;
-    
+
 //     try {
 //       const response = await axios.get(`${baseurl}/users/${userId}/`);
 //       console.log("User data from API:", response.data);
-      
+
 //       if (response.data) {
 //         if (response.data.image) {
 //           localStorage.setItem("user_image", response.data.image);
 //         }
-        
+
 //         setUserData(prevData => ({
 //           ...prevData,
 //           email: response.data.email || prevData.email,
@@ -2671,13 +2671,13 @@
 
 //     fetchUserData();
 //     fetchUserDataFromAPI();
-    
+
 //     const handleStorageChange = () => {
 //       fetchUserData();
 //     };
-    
+
 //     window.addEventListener('storage', handleStorageChange);
-    
+
 //     return () => {
 //       window.removeEventListener('storage', handleStorageChange);
 //     };
@@ -2695,30 +2695,30 @@
 //     setCartLoading(true);
 //     try {
 //       const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
-      
+
 //       const cartResponse = response.data;
 //       let userCartItems = [];
-      
+
 //       if (cartResponse.results && Array.isArray(cartResponse.results)) {
 //         userCartItems = cartResponse.results;
 //       } else if (Array.isArray(cartResponse)) {
 //         userCartItems = cartResponse;
 //       }
-      
+
 //       setCartItems(userCartItems);
-      
+
 //       if (cartResponse.count !== undefined) {
 //         setCartItemCount(cartResponse.count);
 //       } else {
 //         setCartItemCount(userCartItems.length);
 //       }
-      
+
 //       const totalQuantity = userCartItems.reduce((total, item) => {
 //         return total + (item.quantity || 1);
 //       }, 0);
-      
+
 //       setCartTotalQuantity(totalQuantity);
-      
+
 //     } catch (error) {
 //       console.error("Error fetching cart items:", error);
 //       setCartItems([]);
@@ -2740,24 +2740,24 @@
 //     setWishlistLoading(true);
 //     try {
 //       const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
-      
+
 //       const wishlistResponse = response.data;
 //       let userWishlistItems = [];
-      
+
 //       if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
 //         userWishlistItems = wishlistResponse.results;
 //       } else if (Array.isArray(wishlistResponse)) {
 //         userWishlistItems = wishlistResponse;
 //       }
-      
+
 //       setWishlistItems(userWishlistItems);
-      
+
 //       if (wishlistResponse.count !== undefined) {
 //         setWishlistCount(wishlistResponse.count);
 //       } else {
 //         setWishlistCount(userWishlistItems.length);
 //       }
-      
+
 //     } catch (error) {
 //       console.error("Error fetching wishlist items:", error);
 //       setWishlistItems([]);
@@ -2799,7 +2799,7 @@
 //     };
 
 //     window.addEventListener('cartUpdated', handleCartUpdate);
-    
+
 //     return () => {
 //       window.removeEventListener('cartUpdated', handleCartUpdate);
 //     };
@@ -2812,7 +2812,7 @@
 //     };
 
 //     window.addEventListener('wishlistUpdated', handleWishlistUpdate);
-    
+
 //     return () => {
 //       window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
 //     };
@@ -2825,9 +2825,9 @@
 //       if (!userId) return;
 
 //       const response = await axios.get(`${baseurl}/notifications/?user=${userId}&is_read=false`);
-      
+
 //       const allNotifications = response.data.results || [];
-      
+
 //       const apiUnreadCount = response.data.unread_count;
 //       if (apiUnreadCount !== undefined) {
 //         setUnreadCount(apiUnreadCount);
@@ -2835,9 +2835,9 @@
 //         const localUnreadCount = allNotifications.filter(n => !n.is_read).length;
 //         setUnreadCount(localUnreadCount);
 //       }
-      
+
 //       setNotifications(allNotifications);
-      
+
 //     } catch (error) {
 //       console.error("Error fetching client notifications:", error);
 //       const unread = notifications.filter(notification => !notification.is_read);
@@ -2861,7 +2861,7 @@
 //       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
 //         setShowCategories(false);
 //       }
-      
+
 //       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
 //         setShowNotifications(false);
 //       }
@@ -2903,31 +2903,31 @@
 //     try {
 //       const userId = localStorage.getItem("user_id");
 //       if (!userId) return;
-      
+
 //       await axios.post(`${baseurl}/notifications/mark-read/`, {
 //         user_id: parseInt(userId),
 //         notification_status_ids: [notification.notification_status_id]
 //       });
-      
+
 //       const updatedNotifications = notifications.map(n => 
 //         n.notification_status_id === notification.notification_status_id 
 //           ? { ...n, is_read: true } 
 //           : n
 //       );
-      
+
 //       setNotifications(updatedNotifications);
-      
+
 //       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
 //       setUnreadCount(newUnreadCount);
-      
+
 //       setShowNotifications(false);
-      
+
 //       if (notification.property !== null) {
 //         navigate(`/client-properties-details/${notification.property.id}`);
 //       } else if (notification.product !== null) {
 //         const productId = notification.product.product_id;
 //         const variantId = notification.product.variant_id;
-        
+
 //         if (productId && variantId) {
 //           navigate(`/client-business-product-details/${productId}/?variant=${variantId}`);
 //         } else if (productId) {
@@ -2936,7 +2936,7 @@
 //           navigate(`/client-product-details/${variantId}`);
 //         }
 //       }
-      
+
 //     } catch (error) {
 //       console.error("Error marking client notification as read:", error);
 //       const updatedNotifications = notifications.map(n => 
@@ -2944,19 +2944,19 @@
 //           ? { ...n, is_read: true } 
 //           : n
 //       );
-      
+
 //       setNotifications(updatedNotifications);
 //       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
 //       setUnreadCount(newUnreadCount);
-      
+
 //       setShowNotifications(false);
-      
+
 //       if (notification.property !== null) {
 //         navigate(`/client-properties-details/${notification.property.id}`);
 //       } else if (notification.product !== null) {
 //         const productId = notification.product.product_id;
 //         const variantId = notification.product.variant_id;
-        
+
 //         if (productId && variantId) {
 //           navigate(`/client-business-product-details/${productId}/?variant=${variantId}`);
 //         } else if (productId) {
@@ -3161,13 +3161,13 @@
 //                 <span className="wn-notification-badge">{unreadCount}</span>
 //               )}
 //             </div>
-            
+
 //             {showNotifications && (
 //               <div className="wn-notifications-dropdown">
 //                 <div className="wn-notifications-header">
 //                   <h4>Client Notifications</h4>
 //                 </div>
-                
+
 //                 <div className="wn-notifications-list">
 //                   {notifications.length > 0 ? (
 //                     notifications.map((notification) => (
@@ -3201,7 +3201,7 @@
 //               </div>
 //             )}
 //           </div>
-          
+
 //           {/* Wishlist Icon */}
 //           <div 
 //             className="wn-wishlist" 
@@ -3217,7 +3217,7 @@
 //               <span className="wn-wishlist-badge">{wishlistCount > 99 ? '99+' : wishlistCount}</span>
 //             )}
 //           </div>
-          
+
 //           {/* Cart Icon */}
 //           <div 
 //             className="wn-cart" 
@@ -3309,7 +3309,7 @@
 //                     <span className="wn-detail-text">{userData.email}</span>
 //                   </div>
 //                 )}
-                
+
 //                 {userData.phone_number && (
 //                   <div className="wn-detail-item">
 //                     <FaPhone className="wn-detail-icon" size={10} />
@@ -3318,7 +3318,7 @@
 //                     </span>
 //                   </div>
 //                 )}
-                
+
 //                 {userData.referral_id ? (
 //                   <div className="wn-detail-item">
 //                     <FaIdCard className="wn-detail-icon" size={10} />
@@ -3335,7 +3335,7 @@
 //               </div>
 //             </div>
 //           </div>
-          
+
 //           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
 //         </div>
 
@@ -3394,12 +3394,12 @@ import { baseurl } from "../../BaseURL/BaseURL";
 import ClientSearchBar from "./ClientSearchBar";
 
 // Import FontAwesome icons
-import { 
-  FaTachometerAlt, 
-  FaHome, 
-  FaBuilding, 
-  FaUsers, 
-  FaClipboardList, 
+import {
+  FaTachometerAlt,
+  FaHome,
+  FaBuilding,
+  FaUsers,
+  FaClipboardList,
   FaCogs,
   FaCalendarAlt,
   FaChartLine,
@@ -3449,32 +3449,32 @@ const ClientNavbar = () => {
     image: ""
   });
   const [showProfileTooltip, setShowProfileTooltip] = useState(false);
-  
+
   // Notification states
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
-  
+
   // Cart states
   const [cartItems, setCartItems] = useState([]);
   const [cartItemCount, setCartItemCount] = useState(0);
   const [cartTotalQuantity, setCartTotalQuantity] = useState(0);
   const [cartLoading, setCartLoading] = useState(false);
-  
+
   // Wishlist states
   const [wishlistItems, setWishlistItems] = useState([]);
   const [wishlistCount, setWishlistCount] = useState(0);
   const [wishlistLoading, setWishlistLoading] = useState(false);
-  
+
   // Mobile search modal state
   const [showMobileSearch, setShowMobileSearch] = useState(false);
-  
+
   const dropdownRef = useRef(null);
   const notificationRef = useRef(null);
   const profilePanelRef = useRef(null);
   const loginUrl = "/login";
   const signupUrl = "/register";
-  
+
   const navigate = useNavigate();
 
   // Get user ID from localStorage
@@ -3483,16 +3483,16 @@ const ClientNavbar = () => {
   // Fetch user data from API to get the image
   const fetchUserDataFromAPI = async () => {
     if (!userId) return;
-    
+
     try {
       const response = await axios.get(`${baseurl}/users/${userId}/`);
       console.log("User data from API:", response.data);
-      
+
       if (response.data) {
         if (response.data.image) {
           localStorage.setItem("user_image", response.data.image);
         }
-        
+
         setUserData(prevData => ({
           ...prevData,
           email: response.data.email || prevData.email,
@@ -3527,13 +3527,13 @@ const ClientNavbar = () => {
 
     fetchUserData();
     fetchUserDataFromAPI();
-    
+
     const handleStorageChange = () => {
       fetchUserData();
     };
-    
+
     window.addEventListener('storage', handleStorageChange);
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
@@ -3555,53 +3555,53 @@ const ClientNavbar = () => {
   }, []);
 
   /* ================= FETCH CART ITEMS ================= */
- /* ================= FETCH CART ITEMS ================= */
-const fetchCartItems = async () => {
-  if (!userId) {
-    setCartItems([]);
-    setCartItemCount(0);
-    setCartTotalQuantity(0);
-    return;
-  }
+  /* ================= FETCH CART ITEMS ================= */
+  const fetchCartItems = async () => {
+    if (!userId) {
+      setCartItems([]);
+      setCartItemCount(0);
+      setCartTotalQuantity(0);
+      return;
+    }
 
-  setCartLoading(true);
-  try {
-    const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
-    
-    const cartResponse = response.data;
-    let userCartItems = [];
-    
-    if (cartResponse.results && Array.isArray(cartResponse.results)) {
-      userCartItems = cartResponse.results;
-    } else if (Array.isArray(cartResponse)) {
-      userCartItems = cartResponse;
+    setCartLoading(true);
+    try {
+      const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
+
+      const cartResponse = response.data;
+      let userCartItems = [];
+
+      if (cartResponse.results && Array.isArray(cartResponse.results)) {
+        userCartItems = cartResponse.results;
+      } else if (Array.isArray(cartResponse)) {
+        userCartItems = cartResponse;
+      }
+
+      setCartItems(userCartItems);
+
+      // Set cart item count (number of unique products)
+      if (cartResponse.count !== undefined) {
+        setCartItemCount(cartResponse.count);
+      } else {
+        setCartItemCount(userCartItems.length);
+      }
+
+      // Calculate total quantity (sum of all quantities)
+      const totalQuantity = userCartItems.reduce((total, item) => {
+        return total + (item.quantity || 1);
+      }, 0);
+
+      setCartTotalQuantity(totalQuantity);
+
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+      setCartItems([]);
+      setCartItemCount(0);
+      setCartTotalQuantity(0);
+    } finally {
+      setCartLoading(false);
     }
-    
-    setCartItems(userCartItems);
-    
-    // Set cart item count (number of unique products)
-    if (cartResponse.count !== undefined) {
-      setCartItemCount(cartResponse.count);
-    } else {
-      setCartItemCount(userCartItems.length);
-    }
-    
-    // Calculate total quantity (sum of all quantities)
-    const totalQuantity = userCartItems.reduce((total, item) => {
-      return total + (item.quantity || 1);
-    }, 0);
-    
-    setCartTotalQuantity(totalQuantity);
-    
-  } catch (error) {
-    console.error("Error fetching cart items:", error);
-    setCartItems([]);
-    setCartItemCount(0);
-    setCartTotalQuantity(0);
-  } finally {
-    setCartLoading(false);
-  }
-};
+  };
   /* ================= FETCH WISHLIST ITEMS ================= */
   const fetchWishlistItems = async () => {
     if (!userId) {
@@ -3613,24 +3613,24 @@ const fetchCartItems = async () => {
     setWishlistLoading(true);
     try {
       const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
-      
+
       const wishlistResponse = response.data;
       let userWishlistItems = [];
-      
+
       if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
         userWishlistItems = wishlistResponse.results;
       } else if (Array.isArray(wishlistResponse)) {
         userWishlistItems = wishlistResponse;
       }
-      
+
       setWishlistItems(userWishlistItems);
-      
+
       if (wishlistResponse.count !== undefined) {
         setWishlistCount(wishlistResponse.count);
       } else {
         setWishlistCount(userWishlistItems.length);
       }
-      
+
     } catch (error) {
       console.error("Error fetching wishlist items:", error);
       setWishlistItems([]);
@@ -3672,7 +3672,7 @@ const fetchCartItems = async () => {
     };
 
     window.addEventListener('cartUpdated', handleCartUpdate);
-    
+
     return () => {
       window.removeEventListener('cartUpdated', handleCartUpdate);
     };
@@ -3685,7 +3685,7 @@ const fetchCartItems = async () => {
     };
 
     window.addEventListener('wishlistUpdated', handleWishlistUpdate);
-    
+
     return () => {
       window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
     };
@@ -3698,9 +3698,9 @@ const fetchCartItems = async () => {
       if (!userId) return;
 
       const response = await axios.get(`${baseurl}/notifications/?user=${userId}&is_read=false`);
-      
+
       const allNotifications = response.data.results || [];
-      
+
       const apiUnreadCount = response.data.unread_count;
       if (apiUnreadCount !== undefined) {
         setUnreadCount(apiUnreadCount);
@@ -3708,9 +3708,9 @@ const fetchCartItems = async () => {
         const localUnreadCount = allNotifications.filter(n => !n.is_read).length;
         setUnreadCount(localUnreadCount);
       }
-      
+
       setNotifications(allNotifications);
-      
+
     } catch (error) {
       console.error("Error fetching client notifications:", error);
       const unread = notifications.filter(notification => !notification.is_read);
@@ -3734,7 +3734,7 @@ const fetchCartItems = async () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowCategories(false);
       }
-      
+
       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
         setShowNotifications(false);
       }
@@ -3776,31 +3776,31 @@ const fetchCartItems = async () => {
     try {
       const userId = localStorage.getItem("user_id");
       if (!userId) return;
-      
+
       await axios.post(`${baseurl}/notifications/mark-read/`, {
         user_id: parseInt(userId),
         notification_status_ids: [notification.notification_status_id]
       });
-      
-      const updatedNotifications = notifications.map(n => 
-        n.notification_status_id === notification.notification_status_id 
-          ? { ...n, is_read: true } 
+
+      const updatedNotifications = notifications.map(n =>
+        n.notification_status_id === notification.notification_status_id
+          ? { ...n, is_read: true }
           : n
       );
-      
+
       setNotifications(updatedNotifications);
-      
+
       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
       setUnreadCount(newUnreadCount);
-      
+
       setShowNotifications(false);
-      
+
       if (notification.property !== null) {
         navigate(`/client-properties-details/${notification.property.id}`);
       } else if (notification.product !== null) {
         const productId = notification.product.product_id;
         const variantId = notification.product.variant_id;
-        
+
         if (productId && variantId) {
           navigate(`/client-business-product-details/${productId}/?variant=${variantId}`);
         } else if (productId) {
@@ -3809,27 +3809,27 @@ const fetchCartItems = async () => {
           navigate(`/client-product-details/${variantId}`);
         }
       }
-      
+
     } catch (error) {
       console.error("Error marking client notification as read:", error);
-      const updatedNotifications = notifications.map(n => 
-        n.notification_status_id === notification.notification_status_id 
-          ? { ...n, is_read: true } 
+      const updatedNotifications = notifications.map(n =>
+        n.notification_status_id === notification.notification_status_id
+          ? { ...n, is_read: true }
           : n
       );
-      
+
       setNotifications(updatedNotifications);
       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
       setUnreadCount(newUnreadCount);
-      
+
       setShowNotifications(false);
-      
+
       if (notification.property !== null) {
         navigate(`/client-properties-details/${notification.property.id}`);
       } else if (notification.product !== null) {
         const productId = notification.product.product_id;
         const variantId = notification.product.variant_id;
-        
+
         if (productId && variantId) {
           navigate(`/client-business-product-details/${productId}/?variant=${variantId}`);
         } else if (productId) {
@@ -3847,14 +3847,14 @@ const fetchCartItems = async () => {
       return (
         <div className="wn-notification-message-content">
           <strong className="wn-notification-title">{notification.message}</strong>
-          <div className="wn-notification-subtitle">Property Update</div>
+          <div className="wn-notification-subtitle">{notification.notification_for}</div>
         </div>
       );
     } else if (notification.product !== null) {
       return (
         <div className="wn-notification-message-content">
           <strong className="wn-notification-title">{notification.message}</strong>
-          <div className="wn-notification-subtitle">Product Update</div>
+          <div className="wn-notification-subtitle">{notification.notification_for}</div>
         </div>
       );
     } else {
@@ -3975,14 +3975,14 @@ const fetchCartItems = async () => {
         <div className="wn-nav-left">
           <button className="wn-menu-btn" onClick={() => setOpen(true)}>☰</button>
           {/* FIXED: Logo now navigates to client products page */}
-          <div 
-            className="wn-logo" 
+          <div
+            className="wn-logo"
             onClick={() => navigate("/client-busineess-category")}
             style={{ cursor: "pointer" }}
           >
-            <img 
-              src={logoImage} 
-              alt="Shriraj Logo" 
+            <img
+              src={logoImage}
+              alt="Shriraj Logo"
               className="wn-logo-img"
             />
           </div>
@@ -3994,11 +3994,11 @@ const fetchCartItems = async () => {
         </div>
 
         {/* User Panel Indicator - Clickable with Tooltip */}
-       
+
 
         {/* Desktop Navigation Items */}
         <div className="wn-desktop-nav-items">
-          <div 
+          <div
             className="wn-desktop-nav-item"
             onClick={handleOrdersClick}
           >
@@ -4008,7 +4008,7 @@ const fetchCartItems = async () => {
         </div>
 
         {/* Mobile Search Button */}
-        <button 
+        <button
           className="wn-mobile-search-btn"
           onClick={handleMobileSearchClick}
           aria-label="Search"
@@ -4018,7 +4018,41 @@ const fetchCartItems = async () => {
 
         <div className="wn-nav-right">
           {/* Notification Icon */}
-          <div 
+
+
+          {/* Wishlist Icon */}
+          <div
+            className="wn-wishlist"
+            onClick={handleWishlistClick}
+            title={`Wishlist: ${wishlistCount} item${wishlistCount !== 1 ? 's' : ''}`}
+            style={{
+              opacity: wishlistLoading ? 0.7 : 1,
+              cursor: wishlistLoading ? 'not-allowed' : 'pointer'
+            }}
+          >
+            <FaHeart size={16} />
+            {wishlistCount > 0 && (
+              <span className="wn-wishlist-badge">{wishlistCount > 99 ? '99+' : wishlistCount}</span>
+            )}
+          </div>
+
+          {/* Cart Icon */}
+          {/* Cart Icon - FIXED: Now shows total quantity instead of item count */}
+          <div
+            className="wn-cart"
+            onClick={handleCartClick}
+            title={`Cart: ${cartTotalQuantity} item${cartTotalQuantity !== 1 ? 's' : ''} total`}
+            style={{
+              opacity: cartLoading ? 0.7 : 1,
+              cursor: cartLoading ? 'not-allowed' : 'pointer'
+            }}
+          >
+            <FaShoppingCart size={16} />
+            {cartTotalQuantity > 0 && (
+              <span className="wn-cart-badge">{cartTotalQuantity > 99 ? '99+' : cartTotalQuantity}</span>
+            )}
+          </div>
+            <div 
             ref={notificationRef}
             className="wn-notification-container"
           >
@@ -4072,70 +4106,37 @@ const fetchCartItems = async () => {
               </div>
             )}
           </div>
-          
-          {/* Wishlist Icon */}
-          <div 
-            className="wn-wishlist" 
-            onClick={handleWishlistClick}
-            title={`Wishlist: ${wishlistCount} item${wishlistCount !== 1 ? 's' : ''}`}
-            style={{ 
-              opacity: wishlistLoading ? 0.7 : 1,
-              cursor: wishlistLoading ? 'not-allowed' : 'pointer'
-            }}
+          <div
+            className="wn-user-panel-indicator"
+            ref={profilePanelRef}
+            onClick={handleProfilePanelClick}
+            onMouseEnter={handleProfilePanelMouseEnter}
+            onMouseLeave={handleProfilePanelMouseLeave}
+            style={{ cursor: 'pointer', position: 'relative' }}
           >
-            <FaHeart size={16} />
-            {wishlistCount > 0 && (
-              <span className="wn-wishlist-badge">{wishlistCount > 99 ? '99+' : wishlistCount}</span>
-            )}
-          </div>
-          
-          {/* Cart Icon */}
-      {/* Cart Icon - FIXED: Now shows total quantity instead of item count */}
-<div 
-  className="wn-cart" 
-  onClick={handleCartClick}
-  title={`Cart: ${cartTotalQuantity} item${cartTotalQuantity !== 1 ? 's' : ''} total`}
-  style={{ 
-    opacity: cartLoading ? 0.7 : 1,
-    cursor: cartLoading ? 'not-allowed' : 'pointer'
-  }}
->
-  <FaShoppingCart size={16} />
-  {cartTotalQuantity > 0 && (
-    <span className="wn-cart-badge">{cartTotalQuantity > 99 ? '99+' : cartTotalQuantity}</span>
-  )}
-</div>
-           <div 
-          className="wn-user-panel-indicator"
-          ref={profilePanelRef}
-          onClick={handleProfilePanelClick}
-          onMouseEnter={handleProfilePanelMouseEnter}
-          onMouseLeave={handleProfilePanelMouseLeave}
-          style={{ cursor: 'pointer', position: 'relative' }}
-        >
-          <div className="wn-panel-badge">
-            <FaUserCircle className="wn-panel-icon" />
-            <span className="wn-panel-name">Client</span>
-          </div>
-          <div className="wn-user-role-info">
-            <span className="wn-user-name">
-              {userData.user_name || userData.username || "Client"}
-            </span>
-          </div>
-          
-          {/* Tooltip on hover */}
-          {showProfileTooltip && (
-            <div className="wn-profile-tooltip">
-              <div className="wn-tooltip-content">
-                <div className="wn-tooltip-arrow"></div>
-                <div className="wn-tooltip-text">
-                  <FaUserCircle size={14} style={{ marginRight: '8px' }} />
-                  Click here to view profile details
+            <div className="wn-panel-badge">
+              <FaUserCircle className="wn-panel-icon" />
+              <span className="wn-panel-name">Client</span>
+            </div>
+            <div className="wn-user-role-info">
+              <span className="wn-user-name">
+                {userData.user_name || userData.username || "Client"}
+              </span>
+            </div>
+
+            {/* Tooltip on hover */}
+            {showProfileTooltip && (
+              <div className="wn-profile-tooltip">
+                <div className="wn-tooltip-content">
+                  <div className="wn-tooltip-arrow"></div>
+                  <div className="wn-tooltip-text">
+                    <FaUserCircle size={14} style={{ marginRight: '8px' }} />
+                    Click here to view profile details
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
         </div>
       </header>
 
@@ -4145,7 +4146,7 @@ const fetchCartItems = async () => {
           <div className="wn-mobile-search-content" onClick={(e) => e.stopPropagation()}>
             <div className="wn-mobile-search-header">
               <h4>Search</h4>
-              <button 
+              <button
                 className="wn-mobile-search-close"
                 onClick={closeMobileSearch}
               >
@@ -4165,9 +4166,9 @@ const fetchCartItems = async () => {
         {/* Header with Logo and User Info */}
         <div className="wn-sidebar-header">
           <div className="wn-logo-with-user">
-            <img 
-              src={logoImage} 
-              alt="Shriraj Logo" 
+            <img
+              src={logoImage}
+              alt="Shriraj Logo"
               className="wn-logo-img-sidebar"
             />
             <div className="wn-user-info-compact">
@@ -4178,7 +4179,7 @@ const fetchCartItems = async () => {
                     <span className="wn-detail-text">{userData.email}</span>
                   </div>
                 )}
-                
+
                 {userData.phone_number && (
                   <div className="wn-detail-item">
                     <FaPhone className="wn-detail-icon" size={10} />
@@ -4187,7 +4188,7 @@ const fetchCartItems = async () => {
                     </span>
                   </div>
                 )}
-                
+
                 {userData.referral_id ? (
                   <div className="wn-detail-item">
                     <FaIdCard className="wn-detail-icon" size={10} />
@@ -4204,7 +4205,7 @@ const fetchCartItems = async () => {
               </div>
             </div>
           </div>
-          
+
           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
         </div>
 
@@ -4214,8 +4215,8 @@ const fetchCartItems = async () => {
           <ul className="wn-menu-list">
             {menuItems.map((item, index) => (
               <li key={item.name || item.path}>
-                <Link 
-                  to={item.path} 
+                <Link
+                  to={item.path}
                   className="wn-sidebar-link"
                   onClick={() => setOpen(false)}
                 >
@@ -4233,7 +4234,7 @@ const fetchCartItems = async () => {
 
         {/* Logout Button */}
         <div className="wn-logout-section">
-          <button 
+          <button
             className="wn-logout-btn"
             onClick={handleLogout}
           >

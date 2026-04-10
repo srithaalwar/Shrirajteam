@@ -5862,8 +5862,8 @@ const ClientProductDetails = () => {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
   const [qty, setQty] = useState(1);
-  const [openAbout, setOpenAbout] = useState(false);
-  const [openDetails, setOpenDetails] = useState(false);
+  const [openAbout, setOpenAbout] = useState(true);
+  const [openDetails, setOpenDetails] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showCopyAlert, setShowCopyAlert] = useState(false);

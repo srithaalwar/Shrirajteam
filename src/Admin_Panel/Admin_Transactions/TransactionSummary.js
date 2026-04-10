@@ -4411,11 +4411,11 @@ useEffect(() => {
                                     <tr key={transaction.transaction_id}>
                                         <td>{startIndex + index + 1}</td>
                                         <td className="transaction-id">
-                                            <strong>#{transaction.transaction_id}</strong>
+                                            <strong>{transaction.transaction_id}</strong>
                                         </td>
                                         <td>
                                             {transaction.order ? (
-                                                <span className="order-badge">#{transaction.order}</span>
+                                                <span className="order-badge">{transaction.order}</span>
                                             ) : (
                                                 <span className="text-muted">-</span>
                                             )}

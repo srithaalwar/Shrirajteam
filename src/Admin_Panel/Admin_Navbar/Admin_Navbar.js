@@ -1486,9 +1486,7 @@
 
 
 //=============================================================
-// 
-
-
+// Date on 09-04-2026
 
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -1556,7 +1554,7 @@ const AdminNavbar = () => {
   const [openBusinessDropdown, setOpenBusinessDropdown] = useState(false);
   const [openUsersDropdown, setOpenUsersDropdown] = useState(false);
   const [openOperationsDropdown, setOpenOperationsDropdown] = useState(false);
-  
+  const [openPayoutsDropdown, setOpenPayoutsDropdown] = useState(false);
   // Notification states
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -1565,6 +1563,7 @@ const AdminNavbar = () => {
   const dropdownRef = useRef(null);
   const notificationRef = useRef(null);
   const realEstateDropdownRef = useRef(null);
+  const payoutsDropdownRef = useRef(null);
   const businessDropdownRef = useRef(null);
   const usersDropdownRef = useRef(null);
   const operationsDropdownRef = useRef(null);
@@ -1611,6 +1610,9 @@ const AdminNavbar = () => {
       if (businessDropdownRef.current && !businessDropdownRef.current.contains(event.target)) {
         setOpenBusinessDropdown(false);
       }
+        if (payoutsDropdownRef.current && !payoutsDropdownRef.current.contains(event.target)) {
+      setOpenPayoutsDropdown(false);
+    }
       if (usersDropdownRef.current && !usersDropdownRef.current.contains(event.target)) {
         setOpenUsersDropdown(false);
       }
@@ -1833,21 +1835,21 @@ const AdminNavbar = () => {
       return (
         <div className="wn-notification-message-content">
           <strong className="wn-notification-title">{notification.message}</strong>
-          <div className="wn-notification-subtitle">Property Update</div>
+          <div className="wn-notification-subtitle">{notification.notification_for}</div>
         </div>
       );
     } else if (notification.product !== null) {
       return (
         <div className="wn-notification-message-content">
           <strong className="wn-notification-title">{notification.message}</strong>
-          <div className="wn-notification-subtitle">Product Update</div>
+          <div className="wn-notification-subtitle">{notification.notification_for}</div>
         </div>
       );
     } else if (notification.user !== null) {
       return (
         <div className="wn-notification-message-content">
           <strong className="wn-notification-title">{notification.message}</strong>
-          <div className="wn-notification-subtitle">User Activity</div>
+          <div className="wn-notification-subtitle">{notification.notification_for}</div>
         </div>
       );
     } else if (notification.meeting) {
@@ -1921,6 +1923,13 @@ const AdminNavbar = () => {
     { path: "/admin-users", name: "All Users", icon: <FaUsers /> },
     { path: "/users-subscriptions", name: "User Subscriptions", icon: <FaCreditCard /> }
   ];
+// Payouts Dropdown Items (New)
+const payoutsItems = [
+  { path: "/admin-commissionmaster", name: "Payout Master", icon: <FaDatabase /> },
+  { path: "/admin-payouts", name: "Payouts", icon: <FaDatabase /> },
+   { path: "/referral-reports", name: "Referral Reports", icon: <FaFileAlt /> },
+
+];
 
   const operationsItems = [
     { path: "/admin-subscriptions", name: "Subscription Plans", icon: <FaCreditCard /> },
@@ -1928,7 +1937,7 @@ const AdminNavbar = () => {
     { path: "/admin-trainingmaterial", name: "Training Material", icon: <FaGraduationCap /> },
     { path: "/admin-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
     { path: "/admin-commissionmaster", name: "Payout Master", icon: <FaDatabase /> },
-   { path: "/admin-payouts", name: "Payouts", icon: <FaDatabase /> },
+  //  { path: "/admin-payouts", name: "Payouts", icon: <FaDatabase /> },
 
     { path: "/a-departments", name: "Departments", icon: <FaSitemap /> },
     { path: "/admin-chatbot", name: "Chat Bot", icon: <FaRobot /> },
@@ -1977,7 +1986,12 @@ const AdminNavbar = () => {
       icon: <FaBriefcase />,
       subMenu: businessItems,
     },
-    
+      // Payouts Main Category (New)
+  {
+    name: "All Payouts",
+    icon: <FaMoneyBillWave />,
+    subMenu: payoutsItems,
+  },
     // Users Main Category
     {
       name: "Users",
@@ -1998,7 +2012,7 @@ const AdminNavbar = () => {
     { path: "/admin-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/a-leads", name: "Leads", icon: <FaChartLine /> },
     { path: "/admin-reports", name: "Reports", icon: <FaFileAlt /> },
-    { path: "/referral-reports", name: "Referral Reports", icon: <FaFileAlt /> },
+    // { path: "/referral-reports", name: "Referral Reports", icon: <FaFileAlt /> },
     { path: "/a-settings", name: "Settings", icon: <FaTag /> },
     { path: "/admin-profile", name: "Profile", icon: <FaUserCircle /> },
   ];
@@ -2053,6 +2067,23 @@ const AdminNavbar = () => {
               </div>
             )}
           </div>
+          
+  {/* Payouts Dropdown (New) */}
+  <div className="wn-header-dropdown" ref={usersDropdownRef}>
+    <button 
+      className="wn-header-dropdown-btn"
+      onClick={() => setOpenUsersDropdown(!openUsersDropdown)}
+    >
+      <FaMoneyBillWave className="wn-dropdown-btn-icon" />
+      <span>All Payouts</span>
+      <FaCaretDown className="wn-dropdown-arrow" />
+    </button>
+    {openUsersDropdown && (
+      <div className="wn-header-dropdown-menu">
+        {payoutsItems.map((item, idx) => renderDropdownItem(item, idx))}
+      </div>
+    )}
+  </div>
 
           {/* Users Dropdown */}
           {/* <div className="wn-header-dropdown" ref={usersDropdownRef}>
@@ -2091,6 +2122,10 @@ const AdminNavbar = () => {
   <FaShoppingCart className="wn-dropdown-btn-icon" />
   <span>Orders</span>
 </Link>
+  <Link to="/admin-commission" className="wn-header-direct-link">
+  <FaShoppingCart className="wn-dropdown-btn-icon" />
+  <span>Orders-commission</span>
+</Link>
         </div>
 
         <div className="wn-nav-right">
@@ -2099,7 +2134,7 @@ const AdminNavbar = () => {
             ref={notificationRef}
             className="wn-notification-container"
           >
-            <div 
+            {/* <div 
               className="wn-notification-icon" 
               onClick={handleNotificationClick}
               title="Notifications"
@@ -2108,7 +2143,19 @@ const AdminNavbar = () => {
               {unreadCount > 0 && (
                 <span className="wn-notification-badge">{unreadCount}</span>
               )}
-            </div>
+            </div> */}
+            <div 
+  className="wn-notification-icon" 
+  onClick={handleNotificationClick}
+  title="Notifications"
+>
+  <FaBell size={16} />
+  {unreadCount > 0 && (
+    <span className="wn-notification-badge">
+      {unreadCount > 99 ? '99+' : unreadCount}
+    </span>
+  )}
+</div>
             
             {/* Notifications Dropdown */}
             {showNotifications && (
@@ -2156,7 +2203,7 @@ const AdminNavbar = () => {
                   )}
                 </div>
                 
-                {notifications.length > 0 && (
+                {/* {notifications.length > 0 && (
                   <div className="wn-notifications-footer">
                     <Link 
                       to="/admin-notifications" 
@@ -2166,7 +2213,7 @@ const AdminNavbar = () => {
                       View all notifications
                     </Link>
                   </div>
-                )}
+                )} */}
               </div>
             )}
           </div>

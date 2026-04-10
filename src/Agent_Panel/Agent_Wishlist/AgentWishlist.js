@@ -444,7 +444,7 @@ function AgentWishlist() {
                           
                           <div className="item-stock">
                             <span className={`stock-badge ${variant.stock > 10 ? 'in-stock' : 'low-stock'}`}>
-                              {variant.stock > 10 ? 'In Stock' : `  Out Of Stack`}
+                              {variant.stock > 10 ? 'In Stock' : `  Out Of Stock`}
                             </span>
                           </div>
                         </div>

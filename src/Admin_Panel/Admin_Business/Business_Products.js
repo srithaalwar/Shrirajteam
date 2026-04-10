@@ -1764,8 +1764,10 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
           <div className="col-md-6 mb-3"><label className="form-label d-flex align-items-center gap-1"><TrendingUp size={14} />Product Commission (₹)</label><input type="number" className="form-control" name="product_commission" value={f.product_commission} onChange={ch} step="0.01" min="0" /></div>
           <div className="col-md-6 mb-3"><label className="form-label d-flex align-items-center gap-1"><TrendingUp size={14} />Distribution Commission (₹)</label><input type="number" className="form-control" name="distribution_commission" value={f.distribution_commission} onChange={ch} step="0.01" min="0" /></div>
           <div className="col-md-6 mb-3"><label className="form-label">Verification Status</label><select className="form-select" name="verification_status" value={f.verification_status} onChange={ch}><option value="pending">Pending</option><option value="verified">Verified</option><option value="rejected">Rejected</option></select></div>
-          <div className="col-md-3 mb-3 d-flex align-items-end"><div className="form-check form-switch"><input className="form-check-input" type="checkbox" name="is_returnable" checked={f.is_returnable} onChange={ch} /><label className="form-check-label">Returnable</label></div></div>
-          <div className="col-md-3 mb-3 d-flex align-items-end"><div className="form-check form-switch"><input className="form-check-input" type="checkbox" name="is_active" checked={f.is_active} onChange={ch} /><label className="form-check-label">Active</label></div></div>
+          {/* <div className="col-md-3 mb-3 d-flex align-items-end">
+            <div className="form-check form-switch"><input className="form-check-input" type="checkbox" name="is_returnable" checked={f.is_returnable} onChange={ch} /><label className="form-check-label">Returnable</label></div></div>
+          <div className="col-md-3 mb-3 d-flex align-items-end"><div className="form-check form-switch"><input className="form-check-input" type="checkbox" name="is_active" checked={f.is_active} onChange={ch} /><label className="form-check-label">Actives</label></div>
+          </div> */}
           <div className="col-md-12 mb-3"><h6>Attributes</h6><pre className="bg-light p-3 rounded" style={{ fontSize: 12 }}>{JSON.stringify(variant?.attributes || {}, null, 2)}</pre></div>
         </div></div>
         <div className="modal-footer">

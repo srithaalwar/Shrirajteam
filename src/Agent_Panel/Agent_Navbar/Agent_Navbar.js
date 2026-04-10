@@ -13968,14 +13968,14 @@ const fetchCartItems = async () => {
       return (
         <div className="wn-notification-message-content">
           <strong className="wn-notification-title">{notification.message}</strong>
-          <div className="wn-notification-subtitle">Property Update</div>
+          <div className="wn-notification-subtitle">{notification.notification_for}</div>
         </div>
       );
     } else if (notification.product !== null) {
       return (
         <div className="wn-notification-message-content">
           <strong className="wn-notification-title">{notification.message}</strong>
-          <div className="wn-notification-subtitle">Product Update</div>
+          <div className="wn-notification-subtitle">{notification.notification_for}</div>
         </div>
       );
     } else if (notification.meeting) {
