@@ -3192,7 +3192,7 @@ const ClientBusinessProductsCategories = () => {
   const fetchProducts = useCallback(async () => {
     setProductsLoading(true);
     try {
-      const params = new URLSearchParams({ variant_verification_status: "verified" });
+      const params = new URLSearchParams({ variant_verification_status: "verified",  business_verification_status: "verified" });
       
       selectedPriceRanges.forEach(r => params.append("price_range", r));
       selectedDiscountRanges.forEach(r => params.append("discount_range", r));

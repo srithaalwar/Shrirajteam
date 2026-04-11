@@ -2554,7 +2554,8 @@ const CategoryProducts = () => {
       }
       
       // Always filter for verified variants
-      params.append("variant_verification_status", "verified");
+      params.append("variant_verification_status", "verified", );
+      params.append("business_verification_status", "verified");
       
       const url = `${baseurl}/products/?${params}`;
       console.log("Fetching products with URL:", url);

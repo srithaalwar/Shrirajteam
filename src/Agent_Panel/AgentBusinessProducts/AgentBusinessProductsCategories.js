@@ -4398,7 +4398,7 @@ const AgentBusinessProductsCategories = () => {
     setProductsLoading(true);
     try {
       const userId = localStorage.getItem("user_id");
-      const params = new URLSearchParams({ variant_verification_status: "verified" });
+      const params = new URLSearchParams({ variant_verification_status: "verified",  business_verification_status: "verified" });
 
       if (userId) {
         params.append("exclude_user_id", userId);

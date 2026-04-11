@@ -2254,7 +2254,8 @@ const WebsiteSubCategories = () => {
           const promises = categoriesToFetch.map(async catId => {
             const params = new URLSearchParams({ 
               category_id: catId, 
-              variant_verification_status: "verified" 
+              variant_verification_status: "verified" ,
+              business_verification_status:"verified"
             });
             const res = await fetch(`${baseurl}/products/?${params}`);
             if (!res.ok) return [];
