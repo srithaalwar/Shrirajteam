@@ -455,7 +455,7 @@ const AgentTotalCommissions = () => {
   // Function to fetch commissions based on commission_type
   const fetchCommissionsByType = async (agentId, commissionType) => {
     try {
-      const response = await fetch(`${baseurl}/product-commissions/?agent_id=${agentId}&commission_type=${commissionType}`);
+      const response = await fetch(`${baseurl}/commissions/?agent_id=${agentId}&commission_type=${commissionType}`);
       const data = await response.json();
       return data.results || [];
     } catch (err) {

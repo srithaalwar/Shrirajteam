@@ -160,14 +160,14 @@ function OrderDetails() {
           <button onClick={handleBack} className="back-button">
             <FaArrowLeft /> Back to Orders
           </button>
-          
+           <div className="order-title-section">
+          <h1 className="order-title">Order {order.order_id}</h1>
+          <p className="order-date">{formatDate(order.created_at)}</p>
+        </div>
         </div>
 
         {/* Order Title */}
-        <div className="order-title-section">
-          <h1 className="order-title">Order #{order.order_id}</h1>
-          <p className="order-date">{formatDate(order.created_at)}</p>
-        </div>
+       
 
         <div className="order-details-grid">
           {/* Sale Summary Section */}
@@ -240,7 +240,7 @@ function OrderDetails() {
             <table className="products-table">
               <thead>
                 <tr>
-                  <th>#</th>
+                  <th>S.No.</th>
                   <th>Product</th>
                   <th>Category</th>
                   <th>SKU</th>
