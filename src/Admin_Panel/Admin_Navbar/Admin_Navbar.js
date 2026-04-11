@@ -1927,7 +1927,9 @@ const AdminNavbar = () => {
 const payoutsItems = [
   { path: "/admin-commissionmaster", name: "Payout Master", icon: <FaDatabase /> },
   { path: "/admin-payouts", name: "Payouts", icon: <FaDatabase /> },
-   { path: "/referral-reports", name: "Referral Reports", icon: <FaFileAlt /> },
+   { path: "/referral-reports", name: "Referral Distribution", icon: <FaFileAlt /> },
+ { path: "/products-commission-distribution", name: "Products Distribution", icon: <FaFileAlt /> },
+
 
 ];
 

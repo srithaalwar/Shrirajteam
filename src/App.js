@@ -259,6 +259,7 @@ import TableProductCategory from './Admin_Panel/Product_Category/TableCategory';
 import ProductCategoryForm from './Admin_Panel/Product_Category/AddCategory';
 import EditProductCategory from './Admin_Panel/Product_Category/EditCategory';
 import AdminTransactions from './Admin_Panel/Admin_Transactions/TransactionSummary'
+import AdminProductsDistribution from "./Admin_Panel/Admin_Products_distribution/TransactionSummary"
 
 import AgentDashboard from './Agent_Panel/AgentDashboard/Dashboard'
 import AgentAddProperty from './Agent_Panel/AgentAddProperty/Add_Property'
@@ -534,6 +535,8 @@ function App() {
 <Route path="/productcategoryform" element={<ProductCategoryForm />} />
 <Route path="/editproductcategory/:id" element={<EditProductCategory />} />
         <Route path="/admin-transactions" element={<AdminTransactions />} />
+        <Route path="/products-commission-distribution" element={<AdminProductsDistribution />} />
+
         <Route path="/admin-orders" element={<AdminOrders />} />
                 <Route path="/admin-commission" element={<OrderCommission />} />
                  <Route path="/order/:orderId" element={<OrderDetails />} />
