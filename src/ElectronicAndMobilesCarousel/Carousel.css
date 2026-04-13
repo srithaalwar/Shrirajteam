@@ -72,9 +72,14 @@
 
 /* ===== CARDS GRID — DESKTOP: 3 columns ===== */
 .mani-as-offer-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory !important;
+  -webkit-overflow-scrolling: touch;
   gap: 16px;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
   width: 100%;
 }
 

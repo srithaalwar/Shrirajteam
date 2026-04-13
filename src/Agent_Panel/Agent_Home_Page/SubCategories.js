@@ -3629,12 +3629,934 @@
 
 
 
+// import React, { useEffect, useState, useCallback, useMemo } from "react";
+// import { useParams, useNavigate, useLocation } from "react-router-dom";
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import {
+//   Search, X, ChevronDown, Tag, DollarSign, ArrowLeft,
+//   Filter, Check, ChevronRight, SlidersHorizontal, Info
+// } from "lucide-react";
+// import { baseurl } from "../../BaseURL/BaseURL";
+// import Swal from "sweetalert2";
+// import axios from "axios";
+// import "./style.css"
+
+// // ============= useIsMobile Hook =============
+// const useIsMobile = () => {
+//   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+//   useEffect(() => {
+//     const handler = () => setIsMobile(window.innerWidth < 768);
+//     window.addEventListener("resize", handler);
+//     return () => window.removeEventListener("resize", handler);
+//   }, []);
+//   return isMobile;
+// };
+
+// // ============= Commission Tooltip =============
+// const CommissionTooltip = ({ show, commissions, distributionCommission }) => {
+//   if (!show || !commissions || commissions.length === 0) return null;
+//   const commissionAmount = parseFloat(distributionCommission) || 0;
+//   const list = commissions.map(c => ({
+//     level: c.level_no,
+//     amount: (commissionAmount * parseFloat(c.percentage)) / 100,
+//   }));
+//   return (
+//     <div className="msub-commission-tooltip">
+//       {list.map(c => (
+//         <div key={c.level} className="msub-commission-row">
+//           <span>Team {c.level}:</span>
+//           <span>₹{c.amount.toLocaleString("en-IN", { maximumFractionDigits: 2 })}</span>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+// // ============= Sort Options =============
+// const SORT_OPTIONS = [
+//   { value: "default", label: "Relevance" },
+//   { value: "price_asc", label: "Price: Low to High" },
+//   { value: "price_desc", label: "Price: High to Low" },
+//   { value: "discount_desc", label: "Highest Discount" },
+//   { value: "name_asc", label: "Name: A to Z" },
+//   { value: "name_desc", label: "Name: Z to A" },
+// ];
+
+// // ============= Bottom Sheet (Mobile) =============
+// const BottomSheet = ({ isOpen, onClose, title, children, footer }) => {
+//   useEffect(() => {
+//     document.body.style.overflow = isOpen ? "hidden" : "";
+//     return () => { document.body.style.overflow = ""; };
+//   }, [isOpen]);
+
+//   return (
+//     <>
+//       <div className={`msub-overlay ${isOpen ? "msub-overlay--on" : ""}`} onClick={onClose} />
+//       <div className={`msub-sheet ${isOpen ? "msub-sheet--open" : ""}`}>
+//         <div className="msub-sheet-handle" />
+//         <div className="msub-sheet-header">
+//           <span className="msub-sheet-title">{title}</span>
+//           <button className="msub-sheet-close" onClick={onClose}><X size={20} /></button>
+//         </div>
+//         <div className="msub-sheet-body">{children}</div>
+//         {footer && <div className="msub-sheet-footer">{footer}</div>}
+//       </div>
+//     </>
+//   );
+// };
+
+// // ============= Sort List =============
+// const SortList = ({ sortBy, setSortBy, onClose }) => (
+//   <div className="msub-sort-list">
+//     {SORT_OPTIONS.map(opt => (
+//       <button key={opt.value}
+//         className={`msub-sort-opt ${sortBy === opt.value ? "msub-sort-opt--on" : ""}`}
+//         onClick={() => { setSortBy(opt.value); onClose?.(); }}>
+//         <span>{opt.label}</span>
+//         {sortBy === opt.value && <Check size={16} />}
+//       </button>
+//     ))}
+//   </div>
+// );
+
+// // ============= Nested Category Item =============
+// const NestedCategoryItem = ({ category, level = 0, selectedCategories, onToggle }) => {
+//   const [expanded, setExpanded] = useState(false);
+//   const hasChildren = category.children?.length > 0;
+//   const on = selectedCategories.includes(category.category_id);
+//   return (
+//     <div>
+//       <div className={`msub-cat-row ${level > 0 ? "msub-cat-row--child" : ""}`}
+//         onClick={() => onToggle(category.category_id)}>
+//         <div className={`msub-checkbox ${on ? "msub-checkbox--on" : ""}`}>
+//           {on && <Check size={10} color="#fff" strokeWidth={3} />}
+//         </div>
+//         <span className={`msub-cat-label ${on ? "msub-cat-label--on" : ""}`}>{category.name}</span>
+//         {hasChildren && (
+//           <button className="msub-expand-btn" onClick={e => { e.stopPropagation(); setExpanded(v => !v); }}>
+//             <ChevronRight size={13} style={{ transform: expanded ? "rotate(90deg)" : "none", transition: "0.2s" }} />
+//           </button>
+//         )}
+//       </div>
+//       {expanded && hasChildren && (
+//         <div className="msub-cat-children">
+//           {category.children.map(child => (
+//             <NestedCategoryItem key={child.category_id} category={child} level={level + 1}
+//               selectedCategories={selectedCategories} onToggle={onToggle} />
+//           ))}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// // ============= Filter Content =============
+// const PRICE_RANGES = [
+//   { value: "0-500", label: "Under ₹500" },
+//   { value: "500-1000", label: "₹500 – ₹1,000" },
+//   { value: "1000-5000", label: "₹1,000 – ₹5,000" },
+//   { value: "5000-10000", label: "₹5,000 – ₹10,000" },
+//   { value: "10000+", label: "Over ₹10,000" },
+// ];
+// const DISCOUNT_RANGES = [
+//   { value: "0-10", label: "Up to 10%" },
+//   { value: "10-20", label: "10% – 20%" },
+//   { value: "20-30", label: "20% – 30%" },
+//   { value: "30-50", label: "30% – 50%" },
+//   { value: "50-60", label: "50% – 60%" },
+//   { value: "60+", label: "60% & above" },
+// ];
+
+// const CheckRow = ({ label, on, onClick }) => (
+//   <div className={`msub-filter-row ${on ? "msub-filter-row--on" : ""}`} onClick={onClick}>
+//     <div className={`msub-checkbox ${on ? "msub-checkbox--on" : ""}`}>
+//       {on && <Check size={10} color="#fff" strokeWidth={3} />}
+//     </div>
+//     <span>{label}</span>
+//   </div>
+// );
+
+// const FilterContent = ({
+//   categoryTree, loading, isSidebar,
+//   selectedCategories, setSelectedCategories,
+//   selectedPriceRanges, setSelectedPriceRanges,
+//   selectedDiscountRanges, setSelectedDiscountRanges,
+//   sortBy, setSortBy,
+// }) => {
+//   const [tab, setTab] = useState("categories");
+//   const toggle = (setter, val) => setter(p => p.includes(val) ? p.filter(x => x !== val) : [...p, val]);
+
+//   if (isSidebar) {
+//     return (
+//       <div className="msub-sidebar-filter">
+//         <SidebarSection title="Categories" count={selectedCategories.length}>
+//           {loading
+//             ? <div className="msub-load-inline"><div className="msub-spinner-sm" /> Loading...</div>
+//             : categoryTree.length === 0
+//               ? <p className="msub-empty-txt">No subcategories</p>
+//               : categoryTree.map(cat => (
+//                 <NestedCategoryItem key={cat.category_id} category={cat}
+//                   selectedCategories={selectedCategories}
+//                   onToggle={id => toggle(setSelectedCategories, id)} />
+//               ))
+//           }
+//         </SidebarSection>
+//         <SidebarSection title="Price Range" count={selectedPriceRanges.length}>
+//           {PRICE_RANGES.map(r => (
+//             <CheckRow key={r.value} label={r.label} on={selectedPriceRanges.includes(r.value)}
+//               onClick={() => toggle(setSelectedPriceRanges, r.value)} />
+//           ))}
+//         </SidebarSection>
+//         <SidebarSection title="Discount" count={selectedDiscountRanges.length}>
+//           {DISCOUNT_RANGES.map(r => (
+//             <CheckRow key={r.value} label={r.label} on={selectedDiscountRanges.includes(r.value)}
+//               onClick={() => toggle(setSelectedDiscountRanges, r.value)} />
+//           ))}
+//         </SidebarSection>
+//         <SidebarSection title="Relevance" count={0}>
+//           <div className="msub-relevance-options">
+//             {SORT_OPTIONS.map(opt => (
+//               <CheckRow 
+//                 key={opt.value} 
+//                 label={opt.label} 
+//                 on={sortBy === opt.value}
+//                 onClick={() => setSortBy(opt.value)} 
+//               />
+//             ))}
+//           </div>
+//         </SidebarSection>
+//       </div>
+//     );
+//   }
+
+//   const tabs = [
+//     { key: "categories", label: "Category", count: selectedCategories.length },
+//     { key: "price", label: "Price", count: selectedPriceRanges.length },
+//     { key: "discount", label: "Discount", count: selectedDiscountRanges.length },
+//     { key: "relevance", label: "Relevance", count: 0 },
+//   ];
+//   return (
+//     <>
+//       <div className="msub-filter-tabs">
+//         {tabs.map(t => (
+//           <button key={t.key} className={`msub-filter-tab ${tab === t.key ? "msub-filter-tab--on" : ""}`}
+//             onClick={() => setTab(t.key)}>
+//             {t.label}
+//             {t.count > 0 && <span className="msub-tab-badge">{t.count}</span>}
+//           </button>
+//         ))}
+//       </div>
+//       <div className="msub-filter-tab-body">
+//         {tab === "categories" && (loading
+//           ? <div className="msub-load-inline"><div className="msub-spinner-sm" /> Loading...</div>
+//           : categoryTree.length === 0
+//             ? <p className="msub-empty-txt">No subcategories</p>
+//             : categoryTree.map(cat => (
+//               <NestedCategoryItem key={cat.category_id} category={cat}
+//                 selectedCategories={selectedCategories}
+//                 onToggle={id => toggle(setSelectedCategories, id)} />
+//             ))
+//         )}
+//         {tab === "price" && PRICE_RANGES.map(r => (
+//           <CheckRow key={r.value} label={r.label} on={selectedPriceRanges.includes(r.value)}
+//             onClick={() => toggle(setSelectedPriceRanges, r.value)} />
+//         ))}
+//         {tab === "discount" && DISCOUNT_RANGES.map(r => (
+//           <CheckRow key={r.value} label={r.label} on={selectedDiscountRanges.includes(r.value)}
+//             onClick={() => toggle(setSelectedDiscountRanges, r.value)} />
+//         ))}
+//         {tab === "relevance" && (
+//           <div className="msub-relevance-options">
+//             {SORT_OPTIONS.map(opt => (
+//               <CheckRow 
+//                 key={opt.value} 
+//                 label={opt.label} 
+//                 on={sortBy === opt.value}
+//                 onClick={() => setSortBy(opt.value)} 
+//               />
+//             ))}
+//           </div>
+//         )}
+//       </div>
+//     </>
+//   );
+// };
+
+// const SidebarSection = ({ title, count, children }) => {
+//   const [open, setOpen] = useState(false);
+//   return (
+//     <div className="msub-sidebar-section">
+//       <button className="msub-sidebar-section-hd" onClick={() => setOpen(v => !v)}>
+//         <span>{title}{count > 0 && <span className="msub-filter-badge">{count}</span>}</span>
+//         <ChevronDown size={15} style={{ transform: open ? "rotate(180deg)" : "none", transition: "0.2s" }} />
+//       </button>
+//       {open && <div className="msub-sidebar-section-body">{children}</div>}
+//     </div>
+//   );
+// };
+
+// // ============= Product Card with Payout =============
+// const ProductCard = ({ product, variant, navigate, commissionData }) => {
+//   const [qty, setQty] = useState(0);
+//   const [loading, setLoading] = useState(false);
+//   const [cartItemId, setCartItemId] = useState(null);
+//   const [showPayout, setShowPayout] = useState(false);
+
+//   const userId = localStorage.getItem("user_id");
+
+//   const getImage = () => {
+//     if (variant.media?.length > 0) return `${baseurl}${variant.media[0].file}`;
+//     const v = product.variants?.find(v => v.media?.length > 0);
+//     if (v) return `${baseurl}${v.media[0].file}`;
+//     return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
+//   };
+
+//   const mrp = parseFloat(variant.mrp) || 0;
+//   const price = parseFloat(variant.selling_price) || 0;
+//   const discount = mrp > 0 && price < mrp ? Math.round(((mrp - price) / mrp) * 100) : 0;
+//   const distributionCommission = parseFloat(variant.distribution_commission || 0);
+//   const variantDisplay = variant.attributes ? Object.values(variant.attributes).join(" • ") : "";
+//   const productName = variantDisplay ? `${product.product_name} - ${variantDisplay}` : product.product_name;
+//   const url = `/agent-business-product-details/${product.product_id}/?variant=${variant.id}`;
+
+//   // Function to refresh cart status from server
+//   const refreshCartStatus = async () => {
+//     if (!userId) return;
+    
+//     try {
+//       const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
+//       const cartResponse = response.data;
+//       let userCartItems = [];
+      
+//       if (cartResponse.results && Array.isArray(cartResponse.results)) {
+//         userCartItems = cartResponse.results;
+//       } else if (Array.isArray(cartResponse)) {
+//         userCartItems = cartResponse;
+//       }
+      
+//       const existingItem = userCartItems.find(item => item.variant === variant.id);
+//       if (existingItem) {
+//         setQty(existingItem.quantity);
+//         setCartItemId(existingItem.id);
+//       } else {
+//         setQty(0);
+//         setCartItemId(null);
+//       }
+//     } catch (error) {
+//       console.error("Error refreshing cart status:", error);
+//     }
+//   };
+
+//   // Check if item is in cart with abort controller
+//   useEffect(() => {
+//     const abortController = new AbortController();
+    
+//     const checkCartStatus = async () => {
+//       if (!userId) return;
+      
+//       try {
+//         const response = await axios.get(`${baseurl}/cart/?user=${userId}`, {
+//           signal: abortController.signal
+//         });
+//         const cartResponse = response.data;
+//         let userCartItems = [];
+        
+//         if (cartResponse.results && Array.isArray(cartResponse.results)) {
+//           userCartItems = cartResponse.results;
+//         } else if (Array.isArray(cartResponse)) {
+//           userCartItems = cartResponse;
+//         }
+        
+//         const existingItem = userCartItems.find(item => item.variant === variant.id);
+//         if (existingItem) {
+//           setQty(existingItem.quantity);
+//           setCartItemId(existingItem.id);
+//         } else {
+//           setQty(0);
+//           setCartItemId(null);
+//         }
+//       } catch (error) {
+//         if (error.name !== 'AbortError') {
+//           console.error("Error checking cart status:", error);
+//         }
+//       }
+//     };
+    
+//     checkCartStatus();
+    
+//     return () => {
+//       abortController.abort();
+//     };
+//   }, [userId, variant.id]);
+
+//   const handleAddToCart = async (e) => {
+//     e.stopPropagation();
+//     if (!userId) {
+//       Swal.fire({ icon: "warning", title: "Login Required", text: "Please login to add items to cart", confirmButtonColor: "#f76f2f" });
+//       return;
+//     }
+//     if (variant.stock <= 0) {
+//       Swal.fire({ icon: "error", title: "Out of Stock", text: "This product is currently out of stock", confirmButtonColor: "#f76f2f" });
+//       return;
+//     }
+//     setLoading(true);
+//     try {
+//       if (cartItemId) {
+//         const newQty = qty + 1;
+//         if (newQty > variant.stock) {
+//           Swal.fire({ icon: "error", title: "Stock Limit Exceeded", text: `Cannot add more than ${variant.stock} units`, confirmButtonColor: "#f76f2f" });
+//           return;
+//         }
+//         await axios.put(`${baseurl}/cart/${cartItemId}/`, { user: parseInt(userId), variant: variant.id, quantity: newQty });
+//         await refreshCartStatus();
+//       } else {
+//         const response = await axios.post(`${baseurl}/cart/`, { user: parseInt(userId), variant: variant.id, quantity: 1 });
+//         await refreshCartStatus();
+//       }
+//       window.dispatchEvent(new Event("cartUpdated"));
+//       Swal.fire({
+//         icon: "success", title: "Added to Cart!", text: `${productName} has been added to your cart.`,
+//         showConfirmButton: true, showCancelButton: true,
+//         confirmButtonText: "View Cart", cancelButtonText: "Continue Shopping",
+//         confirmButtonColor: "#f76f2f", cancelButtonColor: "#6c757d",
+//         timer: 2000, timerProgressBar: true,
+//       }).then((result) => { if (result.isConfirmed) navigate("/agent-add-to-cart"); });
+//     } catch (error) {
+//       console.error("Error adding to cart:", error);
+      
+//       let errorMessage = 'Failed to add to cart. Please try again.';
+//       if (error.response?.data?.error) {
+//         errorMessage = error.response.data.error;
+//       } else if (error.response?.data?.message) {
+//         errorMessage = error.response.data.message;
+//       }
+      
+//       Swal.fire({ icon: "error", title: "Error", text: errorMessage, confirmButtonColor: "#f76f2f" });
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const handleUpdateQuantity = async (e, newQty) => {
+//     e.stopPropagation();
+//     if (!userId || !cartItemId) return;
+//     if (newQty === 0) {
+//       setLoading(true);
+//       try {
+//         await axios.delete(`${baseurl}/cart/${cartItemId}/`);
+//         await refreshCartStatus();
+//         Swal.fire({ icon: "info", title: "Removed from Cart", text: `${productName} has been removed.`, showConfirmButton: false, timer: 1500, timerProgressBar: true });
+//         window.dispatchEvent(new Event("cartUpdated"));
+//       } catch (error) {
+//         console.error("Error removing from cart:", error);
+//         Swal.fire({ icon: "error", title: "Error", text: "Failed to remove from cart. Please try again.", confirmButtonColor: "#f76f2f" });
+//       } finally {
+//         setLoading(false);
+//       }
+//     } else {
+//       if (newQty > variant.stock) {
+//         Swal.fire({ icon: "error", title: "Stock Limit Exceeded", text: `Cannot add more than ${variant.stock} units`, confirmButtonColor: "#f76f2f" });
+//         return;
+//       }
+//       setLoading(true);
+//       try {
+//         await axios.put(`${baseurl}/cart/${cartItemId}/`, { user: parseInt(userId), variant: variant.id, quantity: newQty });
+//         await refreshCartStatus();
+//         window.dispatchEvent(new Event("cartUpdated"));
+//       } catch (error) {
+//         console.error("Error updating cart:", error);
+        
+//         let errorMessage = 'Failed to update cart. Please try again.';
+//         if (error.response?.data?.error) {
+//           errorMessage = error.response.data.error;
+//         } else if (error.response?.data?.message) {
+//           errorMessage = error.response.data.message;
+//         }
+        
+//         Swal.fire({ icon: "error", title: "Error", text: errorMessage, confirmButtonColor: "#f76f2f" });
+//       } finally {
+//         setLoading(false);
+//       }
+//     }
+//   };
+
+//   return (
+//     <div className="msub-card" onClick={() => navigate(url)}>
+//       <div className="msub-card-img-wrap">
+//         <img src={getImage()} alt={productName} className="msub-card-img"
+//           onError={e => { e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300"; }} />
+//         {discount > 0 && <span className="msub-card-disc">{discount}% OFF</span>}
+//       </div>
+//       <div className="msub-card-body">
+//         {variantDisplay && <span className="msub-card-variant">{variantDisplay}</span>}
+//         <p className="msub-card-name">{productName}</p>
+//         {discount > 0 && <span className="msub-card-off">{discount}% OFF</span>}
+//         <div className="msub-card-prices">
+//           <span className="msub-card-price">₹{price.toLocaleString("en-IN", { maximumFractionDigits: 2 })}</span>
+//           {mrp > price && <span className="msub-card-mrp">₹{mrp.toLocaleString("en-IN", { maximumFractionDigits: 2 })}</span>}
+//         </div>
+//       </div>
+//       <div className="msub-card-foot" onClick={e => e.stopPropagation()}>
+//         {loading ? (
+//           <div className="msub-spinner-sm" style={{ margin: "0 auto" }} />
+//         ) : qty === 0 ? (
+//           <button className="msub-add-btn" onClick={handleAddToCart} disabled={variant.stock <= 0}>
+//             {variant.stock <= 0 ? "OUT OF STOCK" : "ADD"}
+//           </button>
+//         ) : (
+//           <div className="msub-qty-control">
+//             <button className="msub-qty-btn" onClick={(e) => handleUpdateQuantity(e, qty - 1)}>−</button>
+//             <span className="msub-qty-value">{qty}</span>
+//             <button className="msub-qty-btn" onClick={(e) => handleUpdateQuantity(e, qty + 1)} disabled={qty >= variant.stock}>+</button>
+//           </div>
+//         )}
+
+//         {/* PAYOUT button */}
+//         <div className="msub-payout-wrap"
+//           onMouseEnter={() => setShowPayout(true)}
+//           onMouseLeave={() => setShowPayout(false)}>
+//           <button className="msub-payout-btn">
+//             <Info size={14} /> PAYOUT
+//           </button>
+//           <CommissionTooltip
+//             show={showPayout}
+//             commissions={commissionData}
+//             distributionCommission={distributionCommission}
+//           />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// // ============= Pagination =============
+// const Pagination = ({ current, total, onChange }) => {
+//   let start = Math.max(1, current - 2);
+//   let end = Math.min(total, start + 4);
+//   if (end - start < 4) start = Math.max(1, end - 4);
+//   const pages = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+//   return (
+//     <div className="msub-pagination">
+//       <button className="msub-page-btn" disabled={current === 1} onClick={() => onChange(current - 1)}>‹</button>
+//       {pages.map(p => (
+//         <button key={p} className={`msub-page-btn ${current === p ? "msub-page-btn--on" : ""}`} onClick={() => onChange(p)}>{p}</button>
+//       ))}
+//       <button className="msub-page-btn" disabled={current === total} onClick={() => onChange(current + 1)}>›</button>
+//     </div>
+//   );
+// };
+
+// // ============= Active Chips =============
+// const ActiveChips = ({ selectedPriceRanges, setSelectedPriceRanges, selectedDiscountRanges, setSelectedDiscountRanges, clearAll }) => (
+//   <div className="msub-chips">
+//     {selectedPriceRanges.map(r => (
+//       <span key={r} className="msub-chip"><DollarSign size={10} />{r}
+//         <button onClick={() => setSelectedPriceRanges(p => p.filter(x => x !== r))}><X size={10} /></button></span>
+//     ))}
+//     {selectedDiscountRanges.map(r => (
+//       <span key={r} className="msub-chip"><Tag size={10} />{r}%
+//         <button onClick={() => setSelectedDiscountRanges(p => p.filter(x => x !== r))}><X size={10} /></button></span>
+//     ))}
+//     <button className="msub-chip msub-chip--clear" onClick={clearAll}>Clear All</button>
+//   </div>
+// );
+
+// // ============= Main Component =============
+// const AgentHomeSubCategories = () => {
+//   const { id } = useParams();
+//   const location = useLocation();
+//   const navigate = useNavigate();
+//   const isMobile = useIsMobile();
+
+//   const [categoryTree, setCategoryTree] = useState([]);
+//   const [products, setProducts] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [productsLoading, setProductsLoading] = useState(true);
+//   const [categoryName, setCategoryName] = useState("");
+//   const [businessName, setBusinessName] = useState("");
+//   const [viewType, setViewType] = useState("category");
+//   const [businessId, setBusinessId] = useState(null);
+//   const [categoryId, setCategoryId] = useState(null);
+//   const [effectiveCategoryId, setEffectiveCategoryId] = useState(null);
+//   const [commissionData, setCommissionData] = useState([]);
+
+//   const [sortBy, setSortBy] = useState("default");
+//   const [currentPage, setCurrentPage] = useState(1);
+
+//   const [showSortSheet, setShowSortSheet] = useState(false);
+//   const [showFilterSheet, setShowFilterSheet] = useState(false);
+//   const [showSortDropdown, setShowSortDropdown] = useState(false);
+
+//   const [selectedCategories, setSelectedCategories] = useState([]);
+//   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+//   const [selectedDiscountRanges, setSelectedDiscountRanges] = useState([]);
+
+//   const PAGE_SIZE = 12;
+
+//   // Fetch commission data
+//   useEffect(() => {
+//     const fetchCommissions = async () => {
+//       try {
+//         const res = await fetch(`${baseurl}/commissions-master/`);
+//         const data = await res.json();
+//         setCommissionData(data.results || []);
+//       } catch (e) { 
+//         console.error("Error fetching commission data:", e); 
+//       }
+//     };
+//     fetchCommissions();
+//   }, []);
+
+//   const buildCategoryTree = useCallback((cats, parentId = null) =>
+//     cats.filter(c => c.parent === parentId)
+//       .map(c => ({ ...c, children: buildCategoryTree(cats, c.category_id) })), []);
+
+//   // ✅ FIX 1: Determine view type & IDs correctly
+//   // Business card click  → viewType="business", businessId set, effectiveCategoryId = passed categoryId (may be null)
+//   // View All click       → viewType="category", categoryId = URL id, effectiveCategoryId = URL id
+//   useEffect(() => {
+//     const passedViewType   = location.state?.viewType;
+//     const passedBusinessId = location.state?.businessId;
+//     const passedBusinessName = location.state?.businessName;
+//     const passedCategoryId = location.state?.categoryId;
+//     const passedCategoryName = location.state?.categoryName;
+
+//     if (passedViewType === "business" && passedBusinessId) {
+//       // ── Business view ──────────────────────────────────────────────────────
+//       setViewType("business");
+//       setBusinessId(passedBusinessId);
+//       setBusinessName(passedBusinessName || "Products");
+//       setCategoryName(passedBusinessName || "Products");
+
+//       // Only use a real categoryId for the sidebar — never use the URL id here
+//       // because the URL id IS the businessId in this route
+//       const realCategoryId = passedCategoryId || null;
+//       setCategoryId(realCategoryId);
+//       setEffectiveCategoryId(realCategoryId); // may be null → sidebar skipped
+//     } else {
+//       // ── Category view (View All) ────────────────────────────────────────────
+//       setViewType("category");
+//       setBusinessId(null);
+//       setCategoryId(id);               // URL id is a real categoryId here
+//       setEffectiveCategoryId(id);
+//       if (passedCategoryName) setCategoryName(passedCategoryName);
+//     }
+//   }, [location.state, id]);
+
+//   // ✅ FIX 2: Fetch sidebar category tree using effectiveCategoryId
+//   // Guard: if effectiveCategoryId is null (business view without a categoryId) → skip
+//   useEffect(() => {
+//     if (!effectiveCategoryId) {
+//       setLoading(false);
+//       setCategoryTree([]);
+//       return;
+//     }
+
+//     const run = async () => {
+//       setLoading(true);
+//       try {
+//         const res = await fetch(`${baseurl}/categories/`);
+//         const data = await res.json();
+//         const allCategories = data.results || data || [];
+
+//         // Set category name only in category view (business view name comes from state)
+//         if (viewType === "category") {
+//           const current = allCategories.find(
+//             c => c.category_id === parseInt(effectiveCategoryId)
+//           );
+//           if (current?.name) setCategoryName(current.name);
+//         }
+
+//         const children = allCategories.filter(
+//           c => c.parent === parseInt(effectiveCategoryId) && c.is_active !== false
+//         );
+//         setCategoryTree(
+//           children.map(c => ({ ...c, children: buildCategoryTree(allCategories, c.category_id) }))
+//         );
+//       } catch (e) {
+//         console.error("Error fetching categories:", e);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     run();
+//   }, [effectiveCategoryId, buildCategoryTree, viewType]);
+
+//   // ✅ FIX 3: Fetch products — strict separation of business vs category view
+//   const fetchProducts = useCallback(async () => {
+//     setProductsLoading(true);
+//     try {
+//       const userId = localStorage.getItem("user_id");
+//       const params = new URLSearchParams();
+//       params.append("variant_verification_status", "verified");
+
+//       if (viewType === "business" && businessId) {
+//         // ── Business view: fetch ONLY this business's products ──────────────
+//         // Do NOT add any category filter here — just the businessId
+//         params.append("business", businessId);
+//       } else if (viewType === "category" && categoryId) {
+//         // ── Category view: fetch products by category (+ any selected subcats)
+//         const categoriesToFetch =
+//           selectedCategories.length > 0 ? selectedCategories : [categoryId];
+//         params.append("category_id", categoriesToFetch.join(","));
+//       } else {
+//         // Neither condition met — nothing to fetch
+//         setProducts([]);
+//         setProductsLoading(false);
+//         return;
+//       }
+
+//       // Exclude current user's own products in both views
+//       if (userId) {
+//         params.append("exclude_user_id", userId);
+//       }
+
+//       // Price / discount filters apply in both views
+//       if (selectedPriceRanges.length > 0) {
+//         selectedPriceRanges.forEach(r => params.append("price_range", r));
+//       }
+//       if (selectedDiscountRanges.length > 0) {
+//         selectedDiscountRanges.forEach(r => params.append("discount_range", r));
+//       }
+
+//       const url = `${baseurl}/products/?${params.toString()}`;
+//       console.log("Fetching products from:", url);
+
+//       const res = await fetch(url);
+//       const data = await res.json();
+
+//       const items = [];
+//       (data.results || []).forEach(product => {
+//         if (product.variants?.length > 0) {
+//           product.variants.forEach(variant => items.push({ product, variant }));
+//         } else if (product.is_active !== false) {
+//           items.push({
+//             product,
+//             variant: {
+//               id: product.product_id,
+//               sku: product.product_id,
+//               mrp: product.mrp || "0.00",
+//               selling_price: product.selling_price || "0.00",
+//               stock: product.stock || 0,
+//               attributes: {},
+//               media: product.media || [],
+//               distribution_commission: product.distribution_commission || "0.00",
+//             },
+//           });
+//         }
+//       });
+
+//       setProducts(items);
+//     } catch (e) {
+//       console.error("Error fetching products:", e);
+//       setProducts([]);
+//     } finally {
+//       setProductsLoading(false);
+//     }
+//   }, [viewType, businessId, categoryId, selectedCategories, selectedPriceRanges, selectedDiscountRanges]);
+
+//   useEffect(() => {
+//     // Only fetch once viewType & IDs are resolved (not both null at start)
+//     if (viewType === "business" && !businessId) return;
+//     if (viewType === "category" && !categoryId) return;
+//     fetchProducts();
+//   }, [fetchProducts]);
+
+//   useEffect(() => {
+//     setCurrentPage(1);
+//   }, [sortBy, selectedCategories, selectedPriceRanges, selectedDiscountRanges]);
+
+//   // Filter + Sort (removed search filter)
+//   const filteredProducts = useMemo(() => {
+//     let list = [...products];
+
+//     const disc = i => {
+//       const m = parseFloat(i.variant.mrp);
+//       const s = parseFloat(i.variant.selling_price);
+//       return m > 0 ? ((m - s) / m) * 100 : 0;
+//     };
+
+//     switch (sortBy) {
+//       case "price_asc":     list.sort((a, b) => parseFloat(a.variant.selling_price) - parseFloat(b.variant.selling_price)); break;
+//       case "price_desc":    list.sort((a, b) => parseFloat(b.variant.selling_price) - parseFloat(a.variant.selling_price)); break;
+//       case "discount_desc": list.sort((a, b) => disc(b) - disc(a)); break;
+//       case "name_asc":      list.sort((a, b) => a.product.product_name?.localeCompare(b.product.product_name || "")); break;
+//       case "name_desc":     list.sort((a, b) => b.product.product_name?.localeCompare(a.product.product_name || "")); break;
+//       default:              list.sort((a, b) => (b.product.product_id || 0) - (a.product.product_id || 0)); break;
+//     }
+
+//     return list;
+//   }, [products, sortBy]);
+
+//   const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
+//   const paginated = filteredProducts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+//   const activeFilterCount = selectedCategories.length + selectedPriceRanges.length + selectedDiscountRanges.length;
+//   const clearAll = () => { setSelectedCategories([]); setSelectedPriceRanges([]); setSelectedDiscountRanges([]); };
+//   const sortLabel = SORT_OPTIONS.find(o => o.value === sortBy)?.label || "Sort By";
+
+//   const filterProps = {
+//     categoryTree, loading,
+//     selectedCategories, setSelectedCategories,
+//     selectedPriceRanges, setSelectedPriceRanges,
+//     selectedDiscountRanges, setSelectedDiscountRanges,
+//     sortBy, setSortBy,
+//   };
+
+//   const mobileFilterFooter = (
+//     <div className="msub-filter-footer-btns">
+//       <button className="msub-btn-clear" onClick={clearAll}>Clear All</button>
+//       <button className="msub-btn-apply" onClick={() => { setCurrentPage(1); setShowFilterSheet(false); }}>Apply Filters</button>
+//     </div>
+//   );
+
+//   // Display title: business name for business view, category name for category view
+//   const displayTitle = viewType === "business" ? businessName : categoryName;
+
+//   const productSection = productsLoading ? (
+//     <div className="msub-loading"><div className="msub-spinner" /><span>Loading products...</span></div>
+//   ) : filteredProducts.length === 0 ? (
+//     <div className="msub-empty">
+//       <p>No products found</p>
+//       <small>Try adjusting your search or filters</small>
+//     </div>
+//   ) : (
+//     <>
+//       <div className={`msub-grid ${isMobile ? "msub-grid--2col" : "msub-grid--desktop"}`}>
+//         {paginated.map((item, index) => (
+//           <ProductCard
+//             key={`${item.product.product_id}-${item.variant.id}-${index}`}
+//             product={item.product}
+//             variant={item.variant}
+//             navigate={navigate}
+//             commissionData={commissionData}
+//           />
+//         ))}
+//       </div>
+//       {totalPages > 1 && <Pagination current={currentPage} total={totalPages} onChange={setCurrentPage} />}
+//     </>
+//   );
+
+//   return (
+//     <>
+//       <AgentNavbar />
+
+//       {/* ======= MOBILE ======= */}
+//       {isMobile && (
+//         <div className="msub-mobile">
+//           <div className="msub-mobile-topbar">
+//             <button className="msub-back" onClick={() => navigate(-1)}><ArrowLeft size={20} /></button>
+//             <h1 className="msub-mobile-title">{displayTitle}</h1>
+//             <div style={{ width: 36 }} />
+//           </div>
+
+//           <div className="msub-toolbar">
+//             <button className="msub-toolbar-btn" onClick={() => setShowSortSheet(true)}>
+//               <span>{sortLabel}</span><ChevronDown size={14} />
+//             </button>
+//             <button
+//               className={`msub-toolbar-btn ${activeFilterCount > 0 ? "msub-toolbar-btn--on" : ""}`}
+//               onClick={() => setShowFilterSheet(true)}
+//             >
+//               <Filter size={14} /><span>Filter</span>
+//               {activeFilterCount > 0 && <span className="msub-toolbar-badge">{activeFilterCount}</span>}
+//             </button>
+//           </div>
+
+//           {activeFilterCount > 0 && (
+//             <ActiveChips
+//               selectedPriceRanges={selectedPriceRanges} setSelectedPriceRanges={setSelectedPriceRanges}
+//               selectedDiscountRanges={selectedDiscountRanges} setSelectedDiscountRanges={setSelectedDiscountRanges}
+//               clearAll={clearAll}
+//             />
+//           )}
+
+//           <div className="msub-count">{filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}</div>
+//           {productSection}
+//           <div style={{ height: 24 }} />
+
+//           <BottomSheet isOpen={showSortSheet} onClose={() => setShowSortSheet(false)} title="Sort By">
+//             <SortList sortBy={sortBy} setSortBy={setSortBy} onClose={() => setShowSortSheet(false)} />
+//           </BottomSheet>
+
+//           <BottomSheet
+//             isOpen={showFilterSheet}
+//             onClose={() => setShowFilterSheet(false)}
+//             title={`Filters${activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}`}
+//             footer={mobileFilterFooter}
+//           >
+//             <FilterContent {...filterProps} isSidebar={false} />
+//           </BottomSheet>
+//         </div>
+//       )}
+
+//       {/* ======= DESKTOP ======= */}
+//       {!isMobile && (
+//         <div className="msub-desktop">
+//           <div className="msub-desktop-body">
+//             <aside className="msub-sidebar">
+//               <div className="msub-sidebar-top">
+//                 <span className="msub-sidebar-heading"><SlidersHorizontal size={15} /> Filters</span>
+//                 {activeFilterCount > 0 && (
+//                   <button className="msub-sidebar-clearall" onClick={clearAll}>
+//                     Clear ({activeFilterCount})
+//                   </button>
+//                 )}
+//               </div>
+//               <FilterContent {...filterProps} isSidebar={true} />
+//             </aside>
+
+//             <main className="msub-main">
+//               <div className="msub-main-header">
+//                 <h1 className="msub-desktop-title">{displayTitle}</h1>
+//                 <button className="msub-back-desktop" onClick={() => navigate(-1)}>
+//                   <ArrowLeft size={17} /><span>Back</span>
+//                 </button>
+//               </div>
+              
+//               {/* <div className="msub-main-topbar">
+//                 <div className="msub-sort-wrap">
+//                   <button className="msub-sort-btn" onClick={() => setShowSortDropdown(v => !v)}>
+//                     <span>{sortLabel}</span><ChevronDown size={14} />
+//                   </button>
+//                   {showSortDropdown && (
+//                     <>
+//                       <div className="msub-dropdown-overlay" onClick={() => setShowSortDropdown(false)} />
+//                       <div className="msub-sort-dropdown">
+//                         <SortList sortBy={sortBy} setSortBy={setSortBy} onClose={() => setShowSortDropdown(false)} />
+//                       </div>
+//                     </>
+//                   )}
+//                 </div>
+//               </div> */}
+
+//               {activeFilterCount > 0 && (
+//                 <ActiveChips
+//                   selectedPriceRanges={selectedPriceRanges} setSelectedPriceRanges={setSelectedPriceRanges}
+//                   selectedDiscountRanges={selectedDiscountRanges} setSelectedDiscountRanges={setSelectedDiscountRanges}
+//                   clearAll={clearAll}
+//                 />
+//               )}
+
+//               <div className="msub-count">{filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}</div>
+//               {productSection}
+//             </main>
+//           </div>
+//         </div>
+//       )}
+//     </>
+//   );
+// };
+
+// export default AgentHomeSubCategories;
+
+
+
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import {
   Search, X, ChevronDown, Tag, DollarSign, ArrowLeft,
-  Filter, Check, ChevronRight, SlidersHorizontal, Info
+  Filter, Check, ChevronRight, SlidersHorizontal, Info, FileText
 } from "lucide-react";
 import { baseurl } from "../../BaseURL/BaseURL";
 import Swal from "sweetalert2";
@@ -3891,6 +4813,191 @@ const SidebarSection = ({ title, count, children }) => {
         <ChevronDown size={15} style={{ transform: open ? "rotate(180deg)" : "none", transition: "0.2s" }} />
       </button>
       {open && <div className="msub-sidebar-section-body">{children}</div>}
+    </div>
+  );
+};
+
+// ============= Enquiry Modal =============
+const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    product_name: "",
+    brand: "",
+    quantity: 1,
+    message: "",
+    contact_name: "",
+    contact_phone: "",
+    contact_email: ""
+  });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      const userEmail = localStorage.getItem("user_email") || "";
+      const userName = localStorage.getItem("user_name") || "";
+      setFormData(prev => ({
+        ...prev,
+        contact_email: userEmail,
+        contact_name: userName
+      }));
+    }
+  }, [isOpen]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validation
+    if (!formData.product_name.trim()) {
+      Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter product name", confirmButtonColor: "#f76f2f" });
+      return;
+    }
+    if (!formData.contact_name.trim()) {
+      Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter contact name", confirmButtonColor: "#f76f2f" });
+      return;
+    }
+    if (!formData.contact_phone.trim()) {
+      Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter contact phone", confirmButtonColor: "#f76f2f" });
+      return;
+    }
+    if (!formData.contact_email.trim()) {
+      Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter contact email", confirmButtonColor: "#f76f2f" });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const userId = localStorage.getItem("user_id");
+      const today = new Date().toISOString().split('T')[0];
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + 7);
+      const defaultDueDate = dueDate.toISOString().split('T')[0];
+
+      const payload = {
+        user: parseInt(userId),
+        business: parseInt(businessId),
+        product_name: formData.product_name,
+        brand: formData.brand || "",
+        enquiry_date: today,
+        quantity: parseInt(formData.quantity),
+        due_date: defaultDueDate,
+        message: formData.message || "",
+        contact_name: formData.contact_name,
+        contact_phone: formData.contact_phone,
+        contact_email: formData.contact_email
+      };
+
+      await onSubmit(payload);
+      onClose();
+      setFormData({
+        product_name: "",
+        brand: "",
+        quantity: 1,
+        message: "",
+        contact_name: "",
+        contact_phone: "",
+        contact_email: ""
+      });
+    } catch (error) {
+      console.error("Error submitting enquiry:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="msub-modal-overlay" onClick={onClose}>
+      <div className="msub-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="msub-modal-header">
+          <h3>Product Enquiry</h3>
+          <button className="msub-modal-close" onClick={onClose}><X size={20} /></button>
+        </div>
+        <form onSubmit={handleSubmit} className="msub-enquiry-form">
+          <div className="msub-form-group">
+            <label>Product Name *</label>
+            <input
+              type="text"
+              name="product_name"
+              value={formData.product_name}
+              onChange={handleChange}
+              placeholder="Enter product name"
+              required
+            />
+          </div>
+          <div className="msub-form-group">
+            <label>Brand</label>
+            <input
+              type="text"
+              name="brand"
+              value={formData.brand}
+              onChange={handleChange}
+              placeholder="Enter brand name"
+            />
+          </div>
+          <div className="msub-form-group">
+            <label>Quantity *</label>
+            <input
+              type="number"
+              name="quantity"
+              value={formData.quantity}
+              onChange={handleChange}
+              min="1"
+              required
+            />
+          </div>
+          <div className="msub-form-group">
+            <label>Message</label>
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              placeholder="Any specific requirements..."
+              rows="3"
+            />
+          </div>
+          <div className="msub-form-group">
+            <label>Contact Name *</label>
+            <input
+              type="text"
+              name="contact_name"
+              value={formData.contact_name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="msub-form-group">
+            <label>Contact Phone *</label>
+            <input
+              type="tel"
+              name="contact_phone"
+              value={formData.contact_phone}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="msub-form-group">
+            <label>Contact Email *</label>
+            <input
+              type="email"
+              name="contact_email"
+              value={formData.contact_email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="msub-modal-footer">
+            <button type="button" className="msub-btn-cancel" onClick={onClose}>Cancel</button>
+            <button type="submit" className="msub-btn-submit" disabled={loading}>
+              {loading ? "Submitting..." : "Submit Enquiry"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
@@ -4179,6 +5286,7 @@ const AgentHomeSubCategories = () => {
   const [categoryId, setCategoryId] = useState(null);
   const [effectiveCategoryId, setEffectiveCategoryId] = useState(null);
   const [commissionData, setCommissionData] = useState([]);
+  const [showEnquiryModal, setShowEnquiryModal] = useState(false);
 
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
@@ -4197,7 +5305,7 @@ const AgentHomeSubCategories = () => {
   useEffect(() => {
     const fetchCommissions = async () => {
       try {
-        const res = await fetch(`${baseurl}/commissions-master/`);
+        const res = await fetch(`${baseurl}/commissions-master/?commission_type=product_commission`);
         const data = await res.json();
         setCommissionData(data.results || []);
       } catch (e) { 
@@ -4409,6 +5517,29 @@ const AgentHomeSubCategories = () => {
     </div>
   );
 
+  const handleEnquirySubmit = async (payload) => {
+    try {
+     const response = await axios.post(`${baseurl}/product-enquiry/`, payload);
+    if (response.status === 200 || response.status === 201) {
+        Swal.fire({
+          icon: "success",
+          title: "Enquiry Submitted!",
+          text: "Your product enquiry has been sent successfully. The seller will contact you soon.",
+          confirmButtonColor: "#f76f2f"
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting enquiry:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Submission Failed",
+        text: error.response?.data?.message || "Failed to submit enquiry. Please try again.",
+        confirmButtonColor: "#f76f2f"
+      });
+      throw error;
+    }
+  };
+
   // Display title: business name for business view, category name for category view
   const displayTitle = viewType === "business" ? businessName : categoryName;
 
@@ -4508,26 +5639,15 @@ const AgentHomeSubCategories = () => {
             <main className="msub-main">
               <div className="msub-main-header">
                 <h1 className="msub-desktop-title">{displayTitle}</h1>
-                <button className="msub-back-desktop" onClick={() => navigate(-1)}>
-                  <ArrowLeft size={17} /><span>Back</span>
-                </button>
-              </div>
-              
-              {/* <div className="msub-main-topbar">
-                <div className="msub-sort-wrap">
-                  <button className="msub-sort-btn" onClick={() => setShowSortDropdown(v => !v)}>
-                    <span>{sortLabel}</span><ChevronDown size={14} />
+                <div className="msub-header-buttons">
+                  <button className="msub-enquiry-btn" onClick={() => setShowEnquiryModal(true)}>
+                    <FileText size={17} /><span>Enquiry Form</span>
                   </button>
-                  {showSortDropdown && (
-                    <>
-                      <div className="msub-dropdown-overlay" onClick={() => setShowSortDropdown(false)} />
-                      <div className="msub-sort-dropdown">
-                        <SortList sortBy={sortBy} setSortBy={setSortBy} onClose={() => setShowSortDropdown(false)} />
-                      </div>
-                    </>
-                  )}
+                  <button className="msub-back-desktop" onClick={() => navigate(-1)}>
+                    <ArrowLeft size={17} /><span>Back</span>
+                  </button>
                 </div>
-              </div> */}
+              </div>
 
               {activeFilterCount > 0 && (
                 <ActiveChips
@@ -4543,6 +5663,14 @@ const AgentHomeSubCategories = () => {
           </div>
         </div>
       )}
+
+      {/* Enquiry Modal */}
+      <EnquiryModal 
+        isOpen={showEnquiryModal}
+        onClose={() => setShowEnquiryModal(false)}
+        businessId={businessId}
+        onSubmit={handleEnquirySubmit}
+      />
     </>
   );
 };

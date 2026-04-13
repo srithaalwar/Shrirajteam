@@ -579,7 +579,7 @@ const AgentTotalCommissions = () => {
                   <th>Referral ID</th>
                   <th>Agent Name</th>
                   <th>Level</th>
-                  <th>Percentage</th>
+                  {/* <th>Percentage</th> */}
                   <th>Amount</th>
                 </tr>
               </thead>
@@ -590,7 +590,7 @@ const AgentTotalCommissions = () => {
                     <td>{item.referral_id || 'N/A'}</td>
                     <td>{item.agent_name || 'N/A'}</td>
                     <td>{item.level_no || 'N/A'}</td>
-                    <td>{item.percentage || '0'}%</td>
+                    {/* <td>{item.percentage || '0'}%</td> */}
                     <td>{formatRupee(item.amount)}</td>
                   </tr>
                 ))}
@@ -624,7 +624,7 @@ const AgentTotalCommissions = () => {
                   <th>Product Name</th>
                   <th>Variant</th>
                   <th>Level</th>
-                  <th>Percentage</th>
+                  {/* <th>Percentage</th> */}
                   <th>Amount</th>
                 </tr>
               </thead>
@@ -638,7 +638,7 @@ const AgentTotalCommissions = () => {
                       {item.variant_attributes?.color && `Color: ${item.variant_attributes.color}`}
                     </td>
                     <td>{item.level_no}</td>
-                    <td>{item.percentage}%</td>
+                    {/* <td>{item.percentage}%</td> */}
                     <td>{formatRupee(item.amount)}</td>
                   </tr>
                 ))}
@@ -672,7 +672,7 @@ const AgentTotalCommissions = () => {
                   <th>Property Name</th>
                   <th>Property Type</th>
                   <th>Level</th>
-                  <th>Percentage</th>
+                  {/* <th>Percentage</th> */}
                   <th>Amount</th>
                 </tr>
               </thead>
@@ -683,7 +683,7 @@ const AgentTotalCommissions = () => {
                     <td>{item.property_name || item.name || `Property ${item.id}`}</td>
                     <td>{item.property_type || 'N/A'}</td>
                     <td>{item.level_no}</td>
-                    <td>{item.percentage}%</td>
+                    {/* <td>{item.percentage}%</td> */}
                     <td>{formatRupee(item.amount)}</td>
                   </tr>
                 ))}
@@ -719,7 +719,7 @@ const AgentTotalCommissions = () => {
               <th>Referral ID</th>
               <th>Agent Name</th>
               <th>Level</th>
-              <th>Percentage</th>
+              {/* <th>Percentage</th> */}
               <th>Amount</th>
             </tr>
           </thead>
@@ -731,7 +731,7 @@ const AgentTotalCommissions = () => {
                   <td>{item.referral_id || 'N/A'}</td>
                   <td>{item.agent_name || 'N/A'}</td>
                   <td>{item.level_no || 'N/A'}</td>
-                  <td>{item.percentage || '0'}%</td>
+                  {/* <td>{item.percentage || '0'}%</td> */}
                   <td>{formatRupee(item.amount)}</td>
                 </tr>
               ))
@@ -760,7 +760,7 @@ const AgentTotalCommissions = () => {
               <th>Product Name</th>
               <th>Variant</th>
               <th>Level</th>
-              <th>Percentage</th>
+              {/* <th>Percentage</th> */}
               <th>Amount</th>
             </tr>
           </thead>
@@ -775,7 +775,7 @@ const AgentTotalCommissions = () => {
                     {item.variant_attributes?.color && `Color: ${item.variant_attributes.color}`}
                   </td>
                   <td>{item.level_no}</td>
-                  <td>{item.percentage}%</td>
+                  {/* <td>{item.percentage}%</td> */}
                   <td>{formatRupee(item.amount)}</td>
                 </tr>
               ))
@@ -804,7 +804,7 @@ const AgentTotalCommissions = () => {
               <th>Property Name</th>
               <th>Property Type</th>
               <th>Level</th>
-              <th>Percentage</th>
+              {/* <th>Percentage</th> */}
               <th>Amount</th>
             </tr>
           </thead>
@@ -816,7 +816,7 @@ const AgentTotalCommissions = () => {
                   <td>{item.property_name || item.name || `Property ${item.id}`}</td>
                   <td>{item.property_type || 'N/A'}</td>
                   <td>{item.level_no}</td>
-                  <td>{item.percentage}%</td>
+                  {/* <td>{item.percentage}%</td> */}
                   <td>{formatRupee(item.amount)}</td>
                 </tr>
               ))

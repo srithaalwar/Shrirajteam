@@ -1,7 +1,7 @@
 /* Orders.css */
 
 .orders-container {
-  max-width: 1400px;
+  /* max-width: 1400px; */
   margin: 0 auto;
   padding: 2rem;
   background-color: #f8f9fa;
@@ -309,5 +309,146 @@
   
   .filter-wrapper select {
     width: 100%;
+  }
+}
+
+
+/* Pagination Styles */
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding: 16px 0;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pagination-info {
+  color: #666;
+  font-size: 14px;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #333;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 4px;
+}
+
+.page-btn {
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #333;
+  font-size: 14px;
+}
+
+.page-btn:hover:not(.active):not(:disabled) {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.page-btn.active {
+  background: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+.page-btn.dots {
+  border: none;
+  cursor: default;
+  background: transparent;
+}
+
+.page-btn.dots:hover {
+  background: transparent;
+}
+
+.items-per-page-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.items-per-page-wrapper label {
+  color: #666;
+  font-size: 14px;
+}
+
+.items-per-page-wrapper select {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  background: white;
+}
+
+/* .loading-spinner {
+  text-align: center;
+  padding: 48px;
+  color: #666;
+  font-size: 16px;
+} */
+
+/* Responsive pagination */
+@media (max-width: 768px) {
+  .pagination-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .pagination-controls {
+    justify-content: center;
+  }
+  
+  .page-btn {
+    min-width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .pagination-btn {
+    padding: 6px 10px;
+  }
+  
+  .items-per-page-wrapper {
+    margin-left: 0;
   }
 }

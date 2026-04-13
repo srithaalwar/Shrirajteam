@@ -323,9 +323,24 @@ const handleDelete = (id) => {
       .join(' ');
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    const date = new Date(dateString);
+ const formatDate = (dateString) => {
+  if (!dateString) return "N/A";
+  
+  try {
+    // Parse the date string which is in "DD-MM-YYYY HH:MM:SS" format
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('-');
+    const [hour, minute, second] = timePart ? timePart.split(':') : ['00', '00', '00'];
+    
+    // Create date object (month is 0-indexed in JS Date)
+    const date = new Date(year, month - 1, day, hour, minute, second);
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return dateString; // Return original string if parsing fails
+    }
+    
+    // Format the date
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -333,7 +348,10 @@ const handleDelete = (id) => {
       hour: '2-digit',
       minute: '2-digit'
     });
-  };
+  } catch (error) {
+    return dateString; // Return original string on error
+  }
+};
 
   return (
     <>

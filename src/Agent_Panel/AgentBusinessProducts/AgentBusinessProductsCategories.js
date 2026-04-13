@@ -4384,7 +4384,7 @@ const AgentBusinessProductsCategories = () => {
     };
     const fetchCommissions = async () => {
       try {
-        const res = await fetch(`${baseurl}/commissions-master/`);
+        const res = await fetch(`${baseurl}/commissions-master/?commission_type=product_commission`);
         const data = await res.json();
         setCommissionData(data.results || []);
       } catch (e) { console.error(e); }
