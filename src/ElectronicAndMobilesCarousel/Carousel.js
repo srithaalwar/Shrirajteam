@@ -1264,7 +1264,7 @@
 //=====================================
 // changes made on Date = 28-03-2026
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./Carousel.css";
 import { baseurl } from "../BaseURL/BaseURL";
 import { useNavigate } from "react-router-dom";
@@ -1276,6 +1276,9 @@ const ElectronicAndMobilesCarousel = ({ categorySlug = "electronics-mobile" }) =
   const [categoryName, setCategoryName] = useState("");
   const [categoryLoading, setCategoryLoading] = useState(false);
   const [categoryId, setCategoryId] = useState(null);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(true);
+  const scrollContainerRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -1283,6 +1286,34 @@ const ElectronicAndMobilesCarousel = ({ categorySlug = "electronics-mobile" }) =
     fetchBusinessesByCategory(categorySlug);
     fetchOffers();
   }, [categorySlug]);
+
+  // Check scroll position to show/hide arrows
+  const checkScrollPosition = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setShowLeftArrow(scrollLeft > 20);
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 20);
+    }
+  };
+
+  // Scroll functions
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: -300,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: 300,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const fetchCategoryBySlug = async (slug) => {
     try {
@@ -1376,11 +1407,9 @@ const ElectronicAndMobilesCarousel = ({ categorySlug = "electronics-mobile" }) =
     }
   };
 
-  // FIXED: Now navigates to subcategory page with business ID in state
   const handleBusinessClick = async (business) => {
     console.log("Business clicked:", business);
     
-    // Get the category ID from the business's categories array
     const businessCategoryId = business.categories && business.categories.length > 0 
       ? business.categories[0] 
       : categoryId;
@@ -1390,7 +1419,6 @@ const ElectronicAndMobilesCarousel = ({ categorySlug = "electronics-mobile" }) =
       return;
     }
     
-    // Navigate to the subcategory page with business information in state
     navigate(`/w-subcategory/${businessCategoryId}`, {
       state: {
         businessId: business.business_id,
@@ -1412,7 +1440,7 @@ const ElectronicAndMobilesCarousel = ({ categorySlug = "electronics-mobile" }) =
     );
   }
 
-  const displayBusinesses = businesses.slice(0, 3);
+  const displayBusinesses = businesses;
 
   return (
     <div className="mani-as-offer-wrapper">
@@ -1432,32 +1460,60 @@ const ElectronicAndMobilesCarousel = ({ categorySlug = "electronics-mobile" }) =
         </div>
       </div>
 
-      {/* Cards */}
-      <div className="mani-as-offer-cards-grid">
-        {displayBusinesses.map((business) => {
-          const offer = offersMap[business.offer];
-          const discountValue = offer?.value || 0;
-          
-          const bannerImage = business.banner?.startsWith('http') 
-            ? business.banner 
-            : `${baseurl}${business.banner}`;
+      {/* Carousel with Arrows */}
+      <div className="mani-as-carousel-container">
+        {/* Left Arrow */}
+        {showLeftArrow && (
+          <button 
+            className="mani-as-carousel-arrow mani-as-carousel-arrow-left"
+            onClick={scrollLeft}
+            aria-label="Scroll left"
+          >
+            ‹
+          </button>
+        )}
 
-          return (
-            <div 
-              className="mani-as-offer-card-item" 
-              key={business.business_id}
-              onClick={() => handleBusinessClick(business)}
-              style={{ cursor: 'pointer' }}
-            >
-              <div
-                className="mani-as-offer-card"
-                style={{ backgroundImage: `url(${bannerImage})` }}
+        {/* Scrollable Cards */}
+        <div 
+          className="mani-as-offer-cards-grid"
+          ref={scrollContainerRef}
+          onScroll={checkScrollPosition}
+        >
+          {displayBusinesses.map((business) => {
+            const offer = offersMap[business.offer];
+            
+            const bannerImage = business.banner?.startsWith('http') 
+              ? business.banner 
+              : `${baseurl}${business.banner}`;
+
+            return (
+              <div 
+                className="mani-as-offer-card-item" 
+                key={business.business_id}
+                onClick={() => handleBusinessClick(business)}
+                style={{ cursor: 'pointer' }}
               >
-                {/* Discount Badge - Commented out */}
-              </div>
-            </div> 
-          );
-        })}
+                <div
+                  className="mani-as-offer-card"
+                  style={{ backgroundImage: `url(${bannerImage})` }}
+                >
+                  {/* Discount Badge - Commented out */}
+                </div>
+              </div> 
+            );
+          })}
+        </div>
+
+        {/* Right Arrow */}
+        {showRightArrow && (
+          <button 
+            className="mani-as-carousel-arrow mani-as-carousel-arrow-right"
+            onClick={scrollRight}
+            aria-label="Scroll right"
+          >
+            ›
+          </button>
+        )}
       </div>
     </div>
   );

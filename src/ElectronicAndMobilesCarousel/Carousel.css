@@ -70,12 +70,12 @@
   box-shadow: 0 5px 16px rgba(255, 107, 53, 0.55);
 }
 
-/* ===== CARDS GRID — DESKTOP: 3 columns ===== */
+/* ===== CARDS GRID — DESKTOP: Grid layout with scroll ===== */
 .mani-as-offer-cards-grid {
-  display: flex;
+ display: flex;
   flex-direction: row;
   overflow-x: auto;
-  scroll-snap-type: x mandatory !important;
+  scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   gap: 16px;
   padding-bottom: 8px;
@@ -84,8 +84,23 @@
 }
 
 /* ===== SINGLE CARD ITEM ===== */
+.mani-as-offer-cards-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.mani-as-offer-cards-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.mani-as-offer-cards-grid::-webkit-scrollbar-thumb {
+  background: #f78e24;
+  border-radius: 10px;
+}
+
 .mani-as-offer-card-item {
-  width: 100%;
+  flex: 0 0 calc(33.333% - 11px);
+  min-width: 280px;
   cursor: pointer;
 }
 
@@ -163,7 +178,7 @@
   }
 }
 
-/* Large mobile (481px – 767px) */
+/* Large mobile (481px – 767px) - Horizontal scroll */
 @media (min-width: 481px) and (max-width: 767px) {
   .mani-as-offer-wrapper { 
     padding: 14px 12px 10px; 
@@ -205,7 +220,7 @@
   }
 }
 
-/* Small mobile (≤ 480px) */
+/* Small mobile (≤ 480px) - Horizontal scroll */
 @media (max-width: 480px) {
   .mani-as-offer-wrapper { 
     padding: 12px 10px 8px; 
@@ -283,5 +298,143 @@
   .mani-as-offer-card-item:hover .mani-as-offer-discount-badge {
     transform: scale(1.1);
     transition: transform 0.3s ease;
+  }
+}
+
+
+
+
+/* ===== CAROUSEL CONTAINER WITH ARROWS ===== */
+.mani-as-carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ===== ARROW BUTTONS ===== */
+.mani-as-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 28px;
+  font-weight: bold;
+  color: #f78e24;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.mani-as-carousel-arrow:hover {
+  background: #f78e24;
+  color: white;
+  box-shadow: 0 4px 12px rgba(247, 142, 36, 0.3);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.mani-as-carousel-arrow-left {
+  left: -12px;
+}
+
+.mani-as-carousel-arrow-right {
+  right: -12px;
+}
+
+/* ===== CARDS GRID — Horizontal Scroll ===== */
+.mani-as-offer-cards-grid {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 16px;
+  padding: 4px 0 12px 0;
+  scrollbar-width: thin;
+  width: 100%;
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar styling */
+.mani-as-offer-cards-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.mani-as-offer-cards-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.mani-as-offer-cards-grid::-webkit-scrollbar-thumb {
+  background: #f78e24;
+  border-radius: 10px;
+}
+
+.mani-as-offer-cards-grid::-webkit-scrollbar-thumb:hover {
+  background: #e07d1a;
+}
+
+/* Card item sizing for desktop */
+.mani-as-offer-card-item {
+  flex: 0 0 calc(33.333% - 11px);
+  min-width: 280px;
+  cursor: pointer;
+  scroll-snap-align: start;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+
+/* Tablet: 2 cards visible */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .mani-as-offer-card-item {
+    flex: 0 0 calc(50% - 8px);
+    min-width: 250px;
+  }
+
+  .mani-as-carousel-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+  }
+}
+
+/* Mobile: hide arrows, keep scroll */
+@media (max-width: 767px) {
+  .mani-as-carousel-arrow {
+    display: none;
+  }
+
+  .mani-as-offer-card-item {
+    flex: 0 0 78vw;
+    max-width: 260px;
+  }
+
+  .mani-as-offer-cards-grid {
+    gap: 12px;
+    padding-bottom: 8px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .mani-as-offer-card-item {
+    flex: 0 0 78vw;
+    max-width: 260px;
+  }
+}
+
+/* Tiny mobile */
+@media (max-width: 360px) {
+  .mani-as-offer-card-item {
+    flex: 0 0 84vw;
   }
 }

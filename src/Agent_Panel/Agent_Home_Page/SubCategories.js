@@ -4819,40 +4819,51 @@ const SidebarSection = ({ title, count, children }) => {
 
 // ============= Enquiry Modal =============
 // ============= Enquiry Modal =============
+// ============= Enquiry Modal with Multiple Products =============
 const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
+  const [products, setProducts] = useState([
+    { name: "", brand: "", qty: 1 }
+  ]);
   const [formData, setFormData] = useState({
-    product_name: "",
-    brand: "",
-    quantity: 1,
-    message: "",
     enquiry_date: "",
     due_date: "",
-    contact_name: "",
-    contact_phone: "",
-    contact_email: ""
+    message: ""
   });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      const userEmail = localStorage.getItem("user_email") || "";
-      const userName = localStorage.getItem("user_name") || "";
       const today = new Date().toISOString().split('T')[0];
       const dueDate = new Date();
       dueDate.setDate(dueDate.getDate() + 7);
       const defaultDueDate = dueDate.toISOString().split('T')[0];
       
-      setFormData(prev => ({
-        ...prev,
+      setFormData({
         enquiry_date: today,
         due_date: defaultDueDate,
-        contact_email: userEmail,
-        contact_name: userName
-      }));
+        message: ""
+      });
     }
   }, [isOpen]);
 
-  const handleChange = (e) => {
+  const handleProductChange = (index, field, value) => {
+    const updatedProducts = [...products];
+    updatedProducts[index][field] = value;
+    setProducts(updatedProducts);
+  };
+
+  const addProduct = () => {
+    setProducts([...products, { name: "", brand: "", qty: 1 }]);
+  };
+
+  const removeProduct = (index) => {
+    if (products.length > 1) {
+      const updatedProducts = products.filter((_, i) => i !== index);
+      setProducts(updatedProducts);
+    }
+  };
+
+  const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -4861,63 +4872,64 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
     e.preventDefault();
     
     // Validation
-    if (!formData.product_name.trim()) {
-      Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter product name", confirmButtonColor: "#f76f2f" });
-      return;
-    }
-    if (!formData.quantity || formData.quantity < 1) {
-      Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter valid quantity", confirmButtonColor: "#f76f2f" });
+    const invalidProducts = products.filter(p => !p.name.trim());
+    if (invalidProducts.length > 0) {
+      Swal.fire({ 
+        icon: "error", 
+        title: "Validation Error", 
+        text: "Please enter product name for all products", 
+        confirmButtonColor: "#f76f2f" 
+      });
       return;
     }
     
-    // Commented out contact fields validation
-    // if (!formData.contact_name.trim()) {
-    //   Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter contact name", confirmButtonColor: "#f76f2f" });
-    //   return;
-    // }
-    // if (!formData.contact_phone.trim()) {
-    //   Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter contact phone", confirmButtonColor: "#f76f2f" });
-    //   return;
-    // }
-    // if (!formData.contact_email.trim()) {
-    //   Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter contact email", confirmButtonColor: "#f76f2f" });
-    //   return;
-    // }
+    const invalidQty = products.filter(p => !p.qty || p.qty < 1);
+    if (invalidQty.length > 0) {
+      Swal.fire({ 
+        icon: "error", 
+        title: "Validation Error", 
+        text: "Please enter valid quantity for all products (minimum 1)", 
+        confirmButtonColor: "#f76f2f" 
+      });
+      return;
+    }
 
     setLoading(true);
     try {
       const userId = localStorage.getItem("user_id");
       
+      // Format products array as per API specification
+      const productsArray = products.map(product => {
+        const productObj = { 
+          name: product.name.trim(), 
+          qty: parseInt(product.qty) 
+        };
+        if (product.brand && product.brand.trim()) {
+          productObj.brand = product.brand.trim();
+        }
+        return productObj;
+      });
+      
       const payload = {
         user: parseInt(userId),
         business: parseInt(businessId),
-        product_name: formData.product_name,
-        brand: formData.brand || "",
+        products: productsArray,
         enquiry_date: formData.enquiry_date,
-        quantity: parseInt(formData.quantity),
         due_date: formData.due_date,
-        message: formData.message || "",
-        contact_name: formData.contact_name,
-        contact_phone: formData.contact_phone,
-        contact_email: formData.contact_email
+        message: formData.message || ""
       };
 
       await onSubmit(payload);
       onClose();
+      // Reset form
+      setProducts([{ name: "", brand: "", qty: 1 }]);
+      const today = new Date().toISOString().split('T')[0];
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + 7);
       setFormData({
-        product_name: "",
-        brand: "",
-        quantity: 1,
-        message: "",
-        enquiry_date: new Date().toISOString().split('T')[0],
-        due_date: (() => {
-          const date = new Date();
-          date.setDate(date.getDate() + 7);
-          return date.toISOString().split('T')[0];
-        })(),
-        contact_name: "",
-        contact_phone: "",
-        contact_email: ""
+        enquiry_date: today,
+        due_date: dueDate.toISOString().split('T')[0],
+        message: ""
       });
     } catch (error) {
       console.error("Error submitting enquiry:", error);
@@ -4930,118 +4942,113 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
 
   return (
     <div className="msub-modal-overlay" onClick={onClose}>
-      <div className="msub-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="msub-modal msub-modal-large" onClick={(e) => e.stopPropagation()}>
         <div className="msub-modal-header">
           <h3>Product Enquiry</h3>
           <button className="msub-modal-close" onClick={onClose}><X size={20} /></button>
         </div>
         <form onSubmit={handleSubmit} className="msub-enquiry-form">
-          <div className="msub-form-group">
-            <label>Product Name *</label>
-            <input
-              type="text"
-              name="product_name"
-              value={formData.product_name}
-              onChange={handleChange}
-              placeholder="Enter product name"
-              required
-            />
-          </div>
-          
-          <div className="msub-form-group">
-            <label>Brand</label>
-            <input
-              type="text"
-              name="brand"
-              value={formData.brand}
-              onChange={handleChange}
-              placeholder="Enter brand name"
-            />
-          </div>
-          
-          <div className="msub-form-group">
-            <label>Quantity *</label>
-            <input
-              type="number"
-              name="quantity"
-              value={formData.quantity}
-              onChange={handleChange}
-              min="1"
-              required
-            />
-          </div>
-          
-          <div className="msub-form-group">
-            <label>Enquiry Date</label>
-            <input
-              type="date"
-              name="enquiry_date"
-              value={formData.enquiry_date}
-              onChange={handleChange}
-              readOnly
-              disabled
-              style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
-            />
-          </div>
-          
-          <div className="msub-form-group">
-            <label>Due Date</label>
-            <input
-              type="date"
-              name="due_date"
-              value={formData.due_date}
-              onChange={handleChange}
-              readOnly
-              disabled
-              style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
-            />
-          </div>
-          
-          <div className="msub-form-group">
-            <label>Message</label>
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              placeholder="Any specific requirements..."
-              rows="3"
-            />
+          {/* Products Section */}
+          <div className="msub-form-section">
+            <div className="msub-section-header">
+              <label className="msub-section-label">Products *</label>
+              <button type="button" className="msub-add-product-btn" onClick={addProduct}>
+                + Add Product
+              </button>
+            </div>
+            
+            {products.map((product, index) => (
+              <div key={index} className="msub-product-row">
+                <div className="msub-product-fields">
+                  <div className="msub-form-group msub-form-group-sm">
+                    <label>Product Name </label>
+                    <input
+                      type="text"
+                      value={product.name}
+                      onChange={(e) => handleProductChange(index, "name", e.target.value)}
+                      placeholder="Enter product name"
+                    />
+                  </div>
+                  
+                  <div className="msub-form-group msub-form-group-sm">
+                    <label>Brand</label>
+                    <input
+                      type="text"
+                      value={product.brand}
+                      onChange={(e) => handleProductChange(index, "brand", e.target.value)}
+                      placeholder="Enter brand name"
+                    />
+                  </div>
+                  
+                  <div className="msub-form-group msub-form-group-sm">
+                    <label>Quantity </label>
+                    <input
+                      type="number"
+                      value={product.qty}
+                      onChange={(e) => handleProductChange(index, "qty", parseInt(e.target.value) || 1)}
+                      min="1"
+                      
+                    />
+                  </div>
+                </div>
+                {products.length > 1 && (
+                  <button 
+                    type="button" 
+                    className="msub-remove-product-btn"
+                    onClick={() => removeProduct(index)}
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
 
-          {/* Contact fields - commented out as they are auto-populated from localStorage
-          <div className="msub-form-group">
-            <label>Contact Name *</label>
-            <input
-              type="text"
-              name="contact_name"
-              value={formData.contact_name}
-              onChange={handleChange}
-              required
-            />
+          {/* Enquiry Details Section */}
+          <div className="msub-form-section">
+            <div className="msub-section-header">
+              <label className="msub-section-label">Enquiry Details</label>
+            </div>
+            
+            <div className="msub-form-row">
+              <div className="msub-form-group">
+                <label>Enquiry Date</label>
+                <input
+                  type="date"
+                  name="enquiry_date"
+                  value={formData.enquiry_date}
+                  onChange={handleFormChange}
+                  readOnly
+                  disabled
+                  style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
+                />
+              </div>
+              
+              <div className="msub-form-group">
+                <label>Due Date</label>
+                <input
+                  type="date"
+                  name="due_date"
+                  value={formData.due_date}
+                  onChange={handleFormChange}
+                  readOnly
+                  disabled
+                  style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
+                />
+              </div>
+            </div>
+            
+            <div className="msub-form-group">
+              <label>Message</label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleFormChange}
+                placeholder="Any specific requirements or additional information..."
+                rows="3"
+              />
+            </div>
           </div>
-          
-          <div className="msub-form-group">
-            <label>Contact Phone *</label>
-            <input
-              type="tel"
-              name="contact_phone"
-              value={formData.contact_phone}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          
-          <div className="msub-form-group">
-            <label>Contact Email *</label>
-            <input
-              type="email"
-              name="contact_email"
-              value={formData.contact_email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          */}
           
           <div className="msub-modal-footer">
             <button type="button" className="msub-btn-cancel" onClick={onClose}>Cancel</button>

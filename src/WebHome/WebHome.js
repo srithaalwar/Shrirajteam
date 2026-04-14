@@ -16,7 +16,6 @@ const WebHome = () => {
   const videoRef = useRef(null);
 
 
-
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isVideoSlide, setIsVideoSlide] = useState(false);
   const touchStartX = useRef(null);
