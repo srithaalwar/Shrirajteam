@@ -371,6 +371,7 @@ import ClientBusinessProducts from "./Client_Panel/Client_AddToCart/ClientBusine
 import RegisterVerifyOTP from "./Register/RegisterVerifyOTP";
 import OrderCommission from "./Admin_Panel/Admin_Orders/Order_commission"
 import OrderDetails from "./Admin_Panel/Admin_Orders/OrderDetails";
+import BusinessEnquiries from "./Agent_Panel/AgentMyBusiness/Agent_Enquiries";
 function App() {
   return (
     <BrowserRouter>
@@ -576,7 +577,8 @@ function App() {
         <Route path="/agent-add-variant-form" element={<AgentAddVariantForm />} />
         <Route path="/agent-my-business" element={<AgentBusinesslist />} />
 
-        
+       <Route path="/business-enquiries/:businessId" element={<BusinessEnquiries />} />
+
         <Route path="/agent-subscription-plan" element={<AgentSubscriptionPlan />} />
         <Route path="/agent-my-subscription-plans" element={<AgentMySubscriptionPlans />} />
 

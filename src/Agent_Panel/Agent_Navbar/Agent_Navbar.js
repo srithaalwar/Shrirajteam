@@ -14112,6 +14112,7 @@ const fetchCartItems = async () => {
     { path: "/agent-training-material", name: "Training Material", icon: <FaGraduationCap /> },
     { path: "/agent-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
     { path: "/agent-my-team", name: "My Team", icon: <FaUsers /> },
+
   ];
 
   // Helper function to render dropdown item
@@ -14223,6 +14224,8 @@ const fetchCartItems = async () => {
         { path: "/agent-training-material", name: "Training Material", icon: <FaGraduationCap /> },
         { path: "/agent-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
         { path: "/agent-my-team", name: "My Team", icon: <FaUsers /> },
+        { path: "/business-enquiries/:businessId", name: "Product Enquiries", icon: <FaUsers /> },
+
       ],
     },
     { path: "/agent-my-orders", name: "My Orders", icon: <FaTag /> },

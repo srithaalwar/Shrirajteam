@@ -1,0 +1,431 @@
+/* BusinessEnquiries.css */
+
+.enquiries-container {
+    padding: 30px;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 60px);
+}
+
+/* Header Styles */
+.back-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    transform: translateX(-3px);
+}
+
+.enquiries-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.enquiries-subtitle {
+    color: #6c757d;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+.stats-summary {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+}
+
+.stat-badge {
+    padding: 8px 16px;
+    background-color: white;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #2c3e50;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.stat-badge.pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+/* Search and Filter Styles */
+.search-box {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.search-box .input-group-text {
+    background-color: white;
+    border-right: none;
+}
+
+.search-box input {
+    border-left: none;
+}
+
+.search-box input:focus {
+    box-shadow: none;
+    border-color: #ced4da;
+}
+
+.filter-select {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Table Styles */
+.enquiries-table {
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 0;
+}
+
+.enquiries-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.enquiries-table thead th {
+    padding: 15px;
+    font-weight: 500;
+    font-size: 14px;
+    border: none;
+}
+
+.enquiries-table tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.enquiries-table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.enquiries-table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+}
+
+/* Enquiry ID */
+.enquiry-id {
+    font-weight: 600;
+    color: #667eea;
+    font-size: 14px;
+}
+
+/* Product Info */
+.product-info strong {
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.brand-text {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 4px;
+}
+
+/* Customer Info */
+.customer-info {
+    font-size: 13px;
+}
+
+.customer-info strong {
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+.contact-details {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.contact-details div {
+    margin-bottom: 4px;
+}
+
+.contact-details a {
+    color: #6c757d;
+    text-decoration: none;
+}
+
+.contact-details a:hover {
+    color: #667eea;
+}
+
+/* Enquiry Details */
+.enquiry-details {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.enquiry-details div {
+    margin-bottom: 4px;
+}
+
+.message-preview {
+    margin-top: 8px;
+    padding: 6px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    font-size: 11px;
+    color: #495057;
+    cursor: help;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 20px;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #856404;
+}
+
+.badge-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.badge-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.badge-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.quoted-price {
+    font-size: 11px;
+    color: #28a745;
+    font-weight: 500;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+}
+
+.action-buttons .btn-primary {
+    background-color: #667eea;
+    border-color: #667eea;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.action-buttons .btn-primary:hover {
+    background-color: #5a67d8;
+    border-color: #5a67d8;
+}
+
+.status-select {
+    font-size: 12px;
+    padding: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Pagination */
+.enquiries-pagination {
+    margin-top: 20px;
+}
+
+.enquiries-pagination .page-link {
+    color: #667eea;
+    border-radius: 8px;
+    margin: 0 3px;
+    padding: 8px 12px;
+}
+
+.enquiries-pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+}
+
+.enquiries-pagination .page-link:hover {
+    background-color: #f8f9fa;
+    color: #5a67d8;
+}
+
+/* No Results */
+.no-results {
+    background-color: white;
+    border-radius: 12px;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+/* Modal Styles */
+.modal {
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    padding: 20px;
+}
+
+.modal-header .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.enquiry-summary {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.enquiry-summary h6 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.enquiry-summary p {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.customer-message {
+    background-color: #fff3cd;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.customer-message strong {
+    color: #856404;
+}
+
+.customer-message p {
+    margin-bottom: 0;
+    color: #856404;
+}
+
+.response-form h6 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.response-form label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+.response-form textarea {
+    resize: vertical;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .enquiries-container {
+        padding: 15px;
+    }
+    
+    .enquiries-title {
+        font-size: 22px;
+    }
+    
+    .stats-summary {
+        justify-content: flex-start;
+        margin-top: 15px;
+    }
+    
+    .enquiries-table {
+        font-size: 12px;
+    }
+    
+    .enquiries-table thead th,
+    .enquiries-table tbody td {
+        padding: 10px;
+    }
+    
+    .action-buttons {
+        flex-direction: row;
+    }
+    
+    .status-select {
+        width: auto;
+        min-width: 100px;
+    }
+}
+
+@media (max-width: 576px) {
+    .enquiries-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .modal-dialog {
+        margin: 10px;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.enquiries-table tbody tr {
+    animation: fadeIn 0.3s ease-out;
+}

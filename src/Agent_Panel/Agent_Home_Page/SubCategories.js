@@ -4818,12 +4818,15 @@ const SidebarSection = ({ title, count, children }) => {
 };
 
 // ============= Enquiry Modal =============
+// ============= Enquiry Modal =============
 const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
   const [formData, setFormData] = useState({
     product_name: "",
     brand: "",
     quantity: 1,
     message: "",
+    enquiry_date: "",
+    due_date: "",
     contact_name: "",
     contact_phone: "",
     contact_email: ""
@@ -4834,8 +4837,15 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
     if (isOpen) {
       const userEmail = localStorage.getItem("user_email") || "";
       const userName = localStorage.getItem("user_name") || "";
+      const today = new Date().toISOString().split('T')[0];
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + 7);
+      const defaultDueDate = dueDate.toISOString().split('T')[0];
+      
       setFormData(prev => ({
         ...prev,
+        enquiry_date: today,
+        due_date: defaultDueDate,
         contact_email: userEmail,
         contact_name: userName
       }));
@@ -4855,35 +4865,37 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
       Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter product name", confirmButtonColor: "#f76f2f" });
       return;
     }
-    if (!formData.contact_name.trim()) {
-      Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter contact name", confirmButtonColor: "#f76f2f" });
+    if (!formData.quantity || formData.quantity < 1) {
+      Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter valid quantity", confirmButtonColor: "#f76f2f" });
       return;
     }
-    if (!formData.contact_phone.trim()) {
-      Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter contact phone", confirmButtonColor: "#f76f2f" });
-      return;
-    }
-    if (!formData.contact_email.trim()) {
-      Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter contact email", confirmButtonColor: "#f76f2f" });
-      return;
-    }
+    
+    // Commented out contact fields validation
+    // if (!formData.contact_name.trim()) {
+    //   Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter contact name", confirmButtonColor: "#f76f2f" });
+    //   return;
+    // }
+    // if (!formData.contact_phone.trim()) {
+    //   Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter contact phone", confirmButtonColor: "#f76f2f" });
+    //   return;
+    // }
+    // if (!formData.contact_email.trim()) {
+    //   Swal.fire({ icon: "error", title: "Validation Error", text: "Please enter contact email", confirmButtonColor: "#f76f2f" });
+    //   return;
+    // }
 
     setLoading(true);
     try {
       const userId = localStorage.getItem("user_id");
-      const today = new Date().toISOString().split('T')[0];
-      const dueDate = new Date();
-      dueDate.setDate(dueDate.getDate() + 7);
-      const defaultDueDate = dueDate.toISOString().split('T')[0];
-
+      
       const payload = {
         user: parseInt(userId),
         business: parseInt(businessId),
         product_name: formData.product_name,
         brand: formData.brand || "",
-        enquiry_date: today,
+        enquiry_date: formData.enquiry_date,
         quantity: parseInt(formData.quantity),
-        due_date: defaultDueDate,
+        due_date: formData.due_date,
         message: formData.message || "",
         contact_name: formData.contact_name,
         contact_phone: formData.contact_phone,
@@ -4897,6 +4909,12 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
         brand: "",
         quantity: 1,
         message: "",
+        enquiry_date: new Date().toISOString().split('T')[0],
+        due_date: (() => {
+          const date = new Date();
+          date.setDate(date.getDate() + 7);
+          return date.toISOString().split('T')[0];
+        })(),
         contact_name: "",
         contact_phone: "",
         contact_email: ""
@@ -4929,6 +4947,7 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
               required
             />
           </div>
+          
           <div className="msub-form-group">
             <label>Brand</label>
             <input
@@ -4939,6 +4958,7 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
               placeholder="Enter brand name"
             />
           </div>
+          
           <div className="msub-form-group">
             <label>Quantity *</label>
             <input
@@ -4950,6 +4970,33 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
               required
             />
           </div>
+          
+          <div className="msub-form-group">
+            <label>Enquiry Date</label>
+            <input
+              type="date"
+              name="enquiry_date"
+              value={formData.enquiry_date}
+              onChange={handleChange}
+              readOnly
+              disabled
+              style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
+            />
+          </div>
+          
+          <div className="msub-form-group">
+            <label>Due Date</label>
+            <input
+              type="date"
+              name="due_date"
+              value={formData.due_date}
+              onChange={handleChange}
+              readOnly
+              disabled
+              style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
+            />
+          </div>
+          
           <div className="msub-form-group">
             <label>Message</label>
             <textarea
@@ -4960,6 +5007,8 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
               rows="3"
             />
           </div>
+
+          {/* Contact fields - commented out as they are auto-populated from localStorage
           <div className="msub-form-group">
             <label>Contact Name *</label>
             <input
@@ -4970,6 +5019,7 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
               required
             />
           </div>
+          
           <div className="msub-form-group">
             <label>Contact Phone *</label>
             <input
@@ -4980,6 +5030,7 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
               required
             />
           </div>
+          
           <div className="msub-form-group">
             <label>Contact Email *</label>
             <input
@@ -4990,6 +5041,8 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
               required
             />
           </div>
+          */}
+          
           <div className="msub-modal-footer">
             <button type="button" className="msub-btn-cancel" onClick={onClose}>Cancel</button>
             <button type="submit" className="msub-btn-submit" disabled={loading}>
@@ -5001,7 +5054,6 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
     </div>
   );
 };
-
 // ============= Product Card with Payout =============
 const ProductCard = ({ product, variant, navigate, commissionData }) => {
   const [qty, setQty] = useState(0);
@@ -5519,7 +5571,7 @@ const AgentHomeSubCategories = () => {
 
   const handleEnquirySubmit = async (payload) => {
     try {
-     const response = await axios.post(`${baseurl}/product-enquiry/`, payload);
+     const response = await axios.post(`${baseurl}/product-enquiries/`, payload);
     if (response.status === 200 || response.status === 201) {
         Swal.fire({
           icon: "success",
