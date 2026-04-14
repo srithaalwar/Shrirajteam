@@ -4817,9 +4817,6 @@ const SidebarSection = ({ title, count, children }) => {
   );
 };
 
-// ============= Enquiry Modal =============
-// ============= Enquiry Modal =============
-// ============= Enquiry Modal with Multiple Products =============
 // ============= Enquiry Modal with Multiple Products =============
 const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
   const [products, setProducts] = useState([
@@ -4834,13 +4831,13 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
 
   useEffect(() => {
     if (isOpen) {
-      // Format date as DD-MM-YYYY (based on your image showing 14-04-20)
+      // Format date as YYYY-MM-DD (API expected format)
       const today = new Date();
-      const formattedToday = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getFullYear()}`;
+      const formattedToday = today.toISOString().split('T')[0];
       
       const dueDate = new Date();
       dueDate.setDate(dueDate.getDate() + 7);
-      const formattedDueDate = `${dueDate.getDate().toString().padStart(2, '0')}-${(dueDate.getMonth() + 1).toString().padStart(2, '0')}-${dueDate.getFullYear()}`;
+      const formattedDueDate = dueDate.toISOString().split('T')[0];
       
       setFormData({
         enquiry_date: formattedToday,
@@ -4929,8 +4926,8 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
         user: parseInt(userId),
         business: parseInt(businessId),
         products: productsArray,
-        enquiry_date: formData.enquiry_date,
-        due_date: formData.due_date,
+        enquiry_date: formData.enquiry_date, // Already in YYYY-MM-DD format
+        due_date: formData.due_date, // Already in YYYY-MM-DD format
         message: formData.message || ""
       };
       
@@ -4941,10 +4938,10 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
       // Reset form
       setProducts([{ name: "", brand: "", qty: 1 }]);
       const today = new Date();
-      const formattedToday = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getFullYear()}`;
+      const formattedToday = today.toISOString().split('T')[0];
       const dueDate = new Date();
       dueDate.setDate(dueDate.getDate() + 7);
-      const formattedDueDate = `${dueDate.getDate().toString().padStart(2, '0')}-${(dueDate.getMonth() + 1).toString().padStart(2, '0')}-${dueDate.getFullYear()}`;
+      const formattedDueDate = dueDate.toISOString().split('T')[0];
       setFormData({
         enquiry_date: formattedToday,
         due_date: formattedDueDate,
@@ -5036,27 +5033,23 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
               <div className="msub-form-group">
                 <label>Enquiry Date</label>
                 <input
-                  type="text"
+                  type="date"
                   name="enquiry_date"
                   value={formData.enquiry_date}
                   onChange={handleFormChange}
-                  placeholder="DD-MM-YYYY"
                   required
                 />
-                <small style={{ color: '#6b7280', fontSize: '11px' }}>Format: DD-MM-YYYY</small>
               </div>
               
               <div className="msub-form-group">
                 <label>Due Date</label>
                 <input
-                  type="text"
+                  type="date"
                   name="due_date"
                   value={formData.due_date}
                   onChange={handleFormChange}
-                  placeholder="DD-MM-YYYY"
                   required
                 />
-                <small style={{ color: '#6b7280', fontSize: '11px' }}>Format: DD-MM-YYYY</small>
               </div>
             </div>
             
@@ -5598,7 +5591,7 @@ const AgentHomeSubCategories = () => {
     </div>
   );
 
- const handleEnquirySubmit = async (payload) => {
+const handleEnquirySubmit = async (payload) => {
   try {
     console.log("Sending payload:", payload); // Debug log
     
@@ -5624,13 +5617,16 @@ const AgentHomeSubCategories = () => {
     if (error.response) {
       console.log("Error response data:", error.response.data);
       console.log("Error response status:", error.response.status);
-      console.log("Error response headers:", error.response.headers);
       
       // Show detailed error message
       let errorMessage = "Failed to submit enquiry. ";
       if (error.response.data) {
         if (typeof error.response.data === 'object') {
-          errorMessage += JSON.stringify(error.response.data);
+          // Format the error message nicely
+          const errors = Object.entries(error.response.data)
+            .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
+            .join('\n');
+          errorMessage += errors;
         } else {
           errorMessage += error.response.data;
         }
@@ -5645,7 +5641,6 @@ const AgentHomeSubCategories = () => {
         confirmButtonColor: "#f76f2f"
       });
     } else if (error.request) {
-      console.log("Error request:", error.request);
       Swal.fire({
         icon: "error",
         title: "Network Error",
@@ -5653,7 +5648,6 @@ const AgentHomeSubCategories = () => {
         confirmButtonColor: "#f76f2f"
       });
     } else {
-      console.log("Error message:", error.message);
       Swal.fire({
         icon: "error",
         title: "Submission Failed",
@@ -5664,7 +5658,6 @@ const AgentHomeSubCategories = () => {
     throw error;
   }
 };
-
   // Display title: business name for business view, category name for category view
   const displayTitle = viewType === "business" ? businessName : categoryName;
 
