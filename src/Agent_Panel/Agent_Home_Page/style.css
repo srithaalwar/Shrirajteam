@@ -1027,3 +1027,54 @@
     gap: 12px;
   }
 }
+
+/* Helper text styling */
+.msub-helper-text {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.msub-helper-text i,
+.msub-helper-text span {
+  font-style: normal;
+}
+
+/* Ensure quantity input is editable */
+.msub-form-group-sm input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.msub-form-group-sm input[type="number"]::-webkit-inner-spin-button,
+.msub-form-group-sm input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  height: auto;
+}
+
+/* Better styling for quantity field */
+.msub-form-group-sm input[type="number"] {
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+
+.msub-form-group-sm input[type="number"]:focus {
+  outline: none;
+  border-color: #f76f2f;
+  box-shadow: 0 0 0 2px rgba(247, 111, 47, 0.1);
+}
+
+/* Remove default spinner buttons if you want custom styling */
+.msub-form-group-sm input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.msub-form-group-sm input[type="number"]::-webkit-inner-spin-button,
+.msub-form-group-sm input[type="number"]::-webkit-outer-spin-button {
+  opacity: 0.5;
+}

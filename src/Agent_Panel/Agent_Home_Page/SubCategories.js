@@ -4818,9 +4818,10 @@ const SidebarSection = ({ title, count, children }) => {
 };
 
 // ============= Enquiry Modal with Multiple Products =============
+// ============= Enquiry Modal with Multiple Products =============
 const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
   const [products, setProducts] = useState([
-    { name: "", brand: "", qty: 1 }
+    { name: "", brand: "",  qty: ""}
   ]);
   const [formData, setFormData] = useState({
     enquiry_date: "",
@@ -4831,10 +4832,11 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
 
   useEffect(() => {
     if (isOpen) {
-      // Format date as YYYY-MM-DD (API expected format)
+      // Get today's date
       const today = new Date();
       const formattedToday = today.toISOString().split('T')[0];
       
+      // Calculate due date (7 days from today)
       const dueDate = new Date();
       dueDate.setDate(dueDate.getDate() + 7);
       const formattedDueDate = dueDate.toISOString().split('T')[0];
@@ -4848,13 +4850,23 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
   }, [isOpen]);
 
   const handleProductChange = (index, field, value) => {
-    const updatedProducts = [...products];
+  const updatedProducts = [...products];
+  if (field === "qty") {
+    // Allow empty string, only convert to number if value is not empty
+    if (value === "") {
+      updatedProducts[index][field] = "";
+    } else {
+      const qtyValue = parseInt(value);
+      updatedProducts[index][field] = isNaN(qtyValue) ? "" : Math.max(1, qtyValue);
+    }
+  } else {
     updatedProducts[index][field] = value;
-    setProducts(updatedProducts);
-  };
+  }
+  setProducts(updatedProducts);
+};
 
   const addProduct = () => {
-    setProducts([...products, { name: "", brand: "", qty: 1 }]);
+    setProducts([...products, { name: "", brand: "", qty: ""  }]);
   };
 
   const removeProduct = (index) => {
@@ -4866,95 +4878,109 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    if (name === 'enquiry_date') {
+      // Auto-calculate due date when enquiry date changes
+      const enquiryDate = new Date(value);
+      const newDueDate = new Date(enquiryDate);
+      newDueDate.setDate(enquiryDate.getDate() + 7);
+      const formattedDueDate = newDueDate.toISOString().split('T')[0];
+      
+      setFormData(prev => ({ 
+        ...prev, 
+        enquiry_date: value,
+        due_date: formattedDueDate 
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Validation
-    const invalidProducts = products.filter(p => !p.name.trim());
-    if (invalidProducts.length > 0) {
-      Swal.fire({ 
-        icon: "error", 
-        title: "Validation Error", 
-        text: "Please enter product name for all products", 
-        confirmButtonColor: "#f76f2f" 
-      });
-      return;
-    }
-    
-    const invalidQty = products.filter(p => !p.qty || p.qty < 1);
-    if (invalidQty.length > 0) {
-      Swal.fire({ 
-        icon: "error", 
-        title: "Validation Error", 
-        text: "Please enter valid quantity for all products (minimum 1)", 
-        confirmButtonColor: "#f76f2f" 
-      });
-      return;
-    }
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // Validation
+  const invalidProducts = products.filter(p => !p.name.trim());
+  if (invalidProducts.length > 0) {
+    Swal.fire({ 
+      icon: "error", 
+      title: "Validation Error", 
+      text: "Please enter product name for all products", 
+      confirmButtonColor: "#f76f2f" 
+    });
+    return;
+  }
+  
+  // Check for empty or invalid quantity
+  const invalidQty = products.filter(p => !p.qty || p.qty === "" || parseInt(p.qty) < 1);
+  if (invalidQty.length > 0) {
+    Swal.fire({ 
+      icon: "error", 
+      title: "Validation Error", 
+      text: "Please enter valid quantity for all products (minimum 1)", 
+      confirmButtonColor: "#f76f2f" 
+    });
+    return;
+  }
 
-    setLoading(true);
-    try {
-      const userId = localStorage.getItem("user_id");
-      
-      if (!userId) {
-        throw new Error("User not logged in");
-      }
-      
-      if (!businessId) {
-        throw new Error("Business ID not found");
-      }
-      
-      // Format products array as per API specification
-      const productsArray = products
-        .filter(product => product.name.trim()) // Remove empty products
-        .map(product => {
-          const productObj = { 
-            name: product.name.trim(), 
-            qty: parseInt(product.qty) 
-          };
-          // Only add brand if it exists and is not empty
-          if (product.brand && product.brand.trim()) {
-            productObj.brand = product.brand.trim();
-          }
-          return productObj;
-        });
-      
-      const payload = {
-        user: parseInt(userId),
-        business: parseInt(businessId),
-        products: productsArray,
-        enquiry_date: formData.enquiry_date, // Already in YYYY-MM-DD format
-        due_date: formData.due_date, // Already in YYYY-MM-DD format
-        message: formData.message || ""
-      };
-      
-      console.log("Submitting payload:", payload); // Debug log
-
-      await onSubmit(payload);
-      onClose();
-      // Reset form
-      setProducts([{ name: "", brand: "", qty: 1 }]);
-      const today = new Date();
-      const formattedToday = today.toISOString().split('T')[0];
-      const dueDate = new Date();
-      dueDate.setDate(dueDate.getDate() + 7);
-      const formattedDueDate = dueDate.toISOString().split('T')[0];
-      setFormData({
-        enquiry_date: formattedToday,
-        due_date: formattedDueDate,
-        message: ""
-      });
-    } catch (error) {
-      console.error("Error submitting enquiry:", error);
-      // Re-throw to let parent handle
-      throw error;
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  try {
+    const userId = localStorage.getItem("user_id");
+    
+    if (!userId) {
+      throw new Error("User not logged in");
     }
-  };
+    
+    if (!businessId) {
+      throw new Error("Business ID not found");
+    }
+    
+    // Format products array as per API specification
+    const productsArray = products
+      .filter(product => product.name.trim())
+      .map(product => {
+        const productObj = { 
+          name: product.name.trim(), 
+          qty: parseInt(product.qty) 
+        };
+        if (product.brand && product.brand.trim()) {
+          productObj.brand = product.brand.trim();
+        }
+        return productObj;
+      });
+    
+    const payload = {
+      user: parseInt(userId),
+      business: parseInt(businessId),
+      products: productsArray,
+      enquiry_date: formData.enquiry_date,
+      due_date: formData.due_date,
+      message: formData.message || ""
+    };
+    
+    console.log("Submitting payload:", payload);
+
+    await onSubmit(payload);
+    onClose();
+    // Reset form - set qty to empty string
+    setProducts([{ name: "", brand: "", qty: "" }]);
+    const today = new Date();
+    const formattedToday = today.toISOString().split('T')[0];
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 7);
+    const formattedDueDate = dueDate.toISOString().split('T')[0];
+    setFormData({
+      enquiry_date: formattedToday,
+      due_date: formattedDueDate,
+      message: ""
+    });
+  } catch (error) {
+    console.error("Error submitting enquiry:", error);
+    throw error;
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (!isOpen) return null;
 
@@ -4969,7 +4995,7 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
           {/* Products Section */}
           <div className="msub-form-section">
             <div className="msub-section-header">
-              <label className="msub-section-label">Products *</label>
+              <label className="msub-section-label">Products </label>
               <button type="button" className="msub-add-product-btn" onClick={addProduct}>
                 + Add Product
               </button>
@@ -5004,8 +5030,10 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
                     <input
                       type="number"
                       value={product.qty}
-                      onChange={(e) => handleProductChange(index, "qty", parseInt(e.target.value) || 1)}
+                      onChange={(e) => handleProductChange(index, "qty", e.target.value)}
+                        placeholder="Enter quantity"
                       min="1"
+                      step="1"
                       required
                     />
                   </div>
@@ -5025,9 +5053,9 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
 
           {/* Enquiry Details Section */}
           <div className="msub-form-section">
-            <div className="msub-section-header">
+            {/* <div className="msub-section-header">
               <label className="msub-section-label">Enquiry Details</label>
-            </div>
+            </div> */}
             
             <div className="msub-form-row">
               <div className="msub-form-group">
@@ -5050,6 +5078,9 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
                   onChange={handleFormChange}
                   required
                 />
+                <small className="msub-helper-text">
+                  ⓘ By default, due date is set to 1 week from enquiry date
+                </small>
               </div>
             </div>
             

@@ -552,7 +552,12 @@ function MyTeam() {
             {currentAgent?.referral_id}
           </small>
           <div className="text-primary mt-1">
-            Direct Team: {childAgents.length}
+            Direct Team: {currentAgent?.direct_team}
+
+          </div>
+           <div className="text-primary mt-1">
+            Total Team: {currentAgent?.total_team}
+
           </div>
         </div>
 
