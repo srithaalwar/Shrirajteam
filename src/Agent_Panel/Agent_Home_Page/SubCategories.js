@@ -4820,6 +4820,7 @@ const SidebarSection = ({ title, count, children }) => {
 // ============= Enquiry Modal =============
 // ============= Enquiry Modal =============
 // ============= Enquiry Modal with Multiple Products =============
+// ============= Enquiry Modal with Multiple Products =============
 const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
   const [products, setProducts] = useState([
     { name: "", brand: "", qty: 1 }
@@ -4833,14 +4834,17 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
 
   useEffect(() => {
     if (isOpen) {
-      const today = new Date().toISOString().split('T')[0];
+      // Format date as DD-MM-YYYY (based on your image showing 14-04-20)
+      const today = new Date();
+      const formattedToday = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getFullYear()}`;
+      
       const dueDate = new Date();
       dueDate.setDate(dueDate.getDate() + 7);
-      const defaultDueDate = dueDate.toISOString().split('T')[0];
+      const formattedDueDate = `${dueDate.getDate().toString().padStart(2, '0')}-${(dueDate.getMonth() + 1).toString().padStart(2, '0')}-${dueDate.getFullYear()}`;
       
       setFormData({
-        enquiry_date: today,
-        due_date: defaultDueDate,
+        enquiry_date: formattedToday,
+        due_date: formattedDueDate,
         message: ""
       });
     }
@@ -4898,17 +4902,28 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
     try {
       const userId = localStorage.getItem("user_id");
       
+      if (!userId) {
+        throw new Error("User not logged in");
+      }
+      
+      if (!businessId) {
+        throw new Error("Business ID not found");
+      }
+      
       // Format products array as per API specification
-      const productsArray = products.map(product => {
-        const productObj = { 
-          name: product.name.trim(), 
-          qty: parseInt(product.qty) 
-        };
-        if (product.brand && product.brand.trim()) {
-          productObj.brand = product.brand.trim();
-        }
-        return productObj;
-      });
+      const productsArray = products
+        .filter(product => product.name.trim()) // Remove empty products
+        .map(product => {
+          const productObj = { 
+            name: product.name.trim(), 
+            qty: parseInt(product.qty) 
+          };
+          // Only add brand if it exists and is not empty
+          if (product.brand && product.brand.trim()) {
+            productObj.brand = product.brand.trim();
+          }
+          return productObj;
+        });
       
       const payload = {
         user: parseInt(userId),
@@ -4918,21 +4933,27 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
         due_date: formData.due_date,
         message: formData.message || ""
       };
+      
+      console.log("Submitting payload:", payload); // Debug log
 
       await onSubmit(payload);
       onClose();
       // Reset form
       setProducts([{ name: "", brand: "", qty: 1 }]);
-      const today = new Date().toISOString().split('T')[0];
+      const today = new Date();
+      const formattedToday = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getFullYear()}`;
       const dueDate = new Date();
       dueDate.setDate(dueDate.getDate() + 7);
+      const formattedDueDate = `${dueDate.getDate().toString().padStart(2, '0')}-${(dueDate.getMonth() + 1).toString().padStart(2, '0')}-${dueDate.getFullYear()}`;
       setFormData({
-        enquiry_date: today,
-        due_date: dueDate.toISOString().split('T')[0],
+        enquiry_date: formattedToday,
+        due_date: formattedDueDate,
         message: ""
       });
     } catch (error) {
       console.error("Error submitting enquiry:", error);
+      // Re-throw to let parent handle
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -4961,17 +4982,18 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
               <div key={index} className="msub-product-row">
                 <div className="msub-product-fields">
                   <div className="msub-form-group msub-form-group-sm">
-                    <label>Product Name </label>
+                    <label>Product Name *</label>
                     <input
                       type="text"
                       value={product.name}
                       onChange={(e) => handleProductChange(index, "name", e.target.value)}
                       placeholder="Enter product name"
+                      required
                     />
                   </div>
                   
                   <div className="msub-form-group msub-form-group-sm">
-                    <label>Brand</label>
+                    <label>Brand (Optional)</label>
                     <input
                       type="text"
                       value={product.brand}
@@ -4981,13 +5003,13 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
                   </div>
                   
                   <div className="msub-form-group msub-form-group-sm">
-                    <label>Quantity </label>
+                    <label>Quantity *</label>
                     <input
                       type="number"
                       value={product.qty}
                       onChange={(e) => handleProductChange(index, "qty", parseInt(e.target.value) || 1)}
                       min="1"
-                      
+                      required
                     />
                   </div>
                 </div>
@@ -5014,27 +5036,27 @@ const EnquiryModal = ({ isOpen, onClose, businessId, onSubmit }) => {
               <div className="msub-form-group">
                 <label>Enquiry Date</label>
                 <input
-                  type="date"
+                  type="text"
                   name="enquiry_date"
                   value={formData.enquiry_date}
                   onChange={handleFormChange}
-                  readOnly
-                  disabled
-                  style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
+                  placeholder="DD-MM-YYYY"
+                  required
                 />
+                <small style={{ color: '#6b7280', fontSize: '11px' }}>Format: DD-MM-YYYY</small>
               </div>
               
               <div className="msub-form-group">
                 <label>Due Date</label>
                 <input
-                  type="date"
+                  type="text"
                   name="due_date"
                   value={formData.due_date}
                   onChange={handleFormChange}
-                  readOnly
-                  disabled
-                  style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
+                  placeholder="DD-MM-YYYY"
+                  required
                 />
+                <small style={{ color: '#6b7280', fontSize: '11px' }}>Format: DD-MM-YYYY</small>
               </div>
             </div>
             
@@ -5576,28 +5598,72 @@ const AgentHomeSubCategories = () => {
     </div>
   );
 
-  const handleEnquirySubmit = async (payload) => {
-    try {
-     const response = await axios.post(`${baseurl}/product-enquiries/`, payload);
-    if (response.status === 200 || response.status === 201) {
-        Swal.fire({
-          icon: "success",
-          title: "Enquiry Submitted!",
-          text: "Your product enquiry has been sent successfully. The seller will contact you soon.",
-          confirmButtonColor: "#f76f2f"
-        });
+ const handleEnquirySubmit = async (payload) => {
+  try {
+    console.log("Sending payload:", payload); // Debug log
+    
+    const response = await axios.post(`${baseurl}/product-enquiries/`, payload, {
+      headers: {
+        'Content-Type': 'application/json',
       }
-    } catch (error) {
-      console.error("Error submitting enquiry:", error);
+    });
+    
+    if (response.status === 200 || response.status === 201) {
+      Swal.fire({
+        icon: "success",
+        title: "Enquiry Submitted!",
+        text: "Your product enquiry has been sent successfully. The seller will contact you soon.",
+        confirmButtonColor: "#f76f2f"
+      });
+      return response;
+    }
+  } catch (error) {
+    console.error("Error submitting enquiry:", error);
+    
+    // Log the full error response for debugging
+    if (error.response) {
+      console.log("Error response data:", error.response.data);
+      console.log("Error response status:", error.response.status);
+      console.log("Error response headers:", error.response.headers);
+      
+      // Show detailed error message
+      let errorMessage = "Failed to submit enquiry. ";
+      if (error.response.data) {
+        if (typeof error.response.data === 'object') {
+          errorMessage += JSON.stringify(error.response.data);
+        } else {
+          errorMessage += error.response.data;
+        }
+      } else {
+        errorMessage += "Please try again.";
+      }
+      
       Swal.fire({
         icon: "error",
         title: "Submission Failed",
-        text: error.response?.data?.message || "Failed to submit enquiry. Please try again.",
+        text: errorMessage,
         confirmButtonColor: "#f76f2f"
       });
-      throw error;
+    } else if (error.request) {
+      console.log("Error request:", error.request);
+      Swal.fire({
+        icon: "error",
+        title: "Network Error",
+        text: "Could not connect to server. Please check your connection.",
+        confirmButtonColor: "#f76f2f"
+      });
+    } else {
+      console.log("Error message:", error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Submission Failed",
+        text: error.message || "Failed to submit enquiry. Please try again.",
+        confirmButtonColor: "#f76f2f"
+      });
     }
-  };
+    throw error;
+  }
+};
 
   // Display title: business name for business view, category name for category view
   const displayTitle = viewType === "business" ? businessName : categoryName;
