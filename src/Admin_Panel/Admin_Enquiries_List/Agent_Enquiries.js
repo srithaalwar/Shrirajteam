@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { baseurl } from '../../BaseURL/BaseURL';
 import './BusinessEnquiries.css';
-import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+import AdminNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
 
 const BusinessEnquiries = () => {
   const [enquiries, setEnquiries] = useState([]);
@@ -84,7 +84,7 @@ const BusinessEnquiries = () => {
   if (loading) {
     return (
       <>
-        <AgentNavbar />
+        <AdminNavbar />
         <div className="container-fluid enquiries-container">
           <div className="row">
             <div className="col-12 text-center py-5">
@@ -101,7 +101,7 @@ const BusinessEnquiries = () => {
 
   return (
     <>
-      <AgentNavbar />
+      <AdminNavbar />
       <div className="container-fluid enquiries-container">
         {/* Header with Back Button */}
         <div className="row mb-4">

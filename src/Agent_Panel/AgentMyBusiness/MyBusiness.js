@@ -2611,8 +2611,8 @@ const getActiveBadge = (isActive) => {
 
   // New function to handle View Enquiries navigation
   const handleViewEnquiries = (businessId) => {
-    navigate(`/business-enquiries/${businessId}`);
-  };
+  navigate(`/business-enquiries?business=${businessId}`);
+};;
 
   const handleAddNew = () => {
     navigate('/agent-add-business-form');

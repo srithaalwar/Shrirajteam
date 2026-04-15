@@ -372,6 +372,7 @@ import RegisterVerifyOTP from "./Register/RegisterVerifyOTP";
 import OrderCommission from "./Admin_Panel/Admin_Orders/Order_commission"
 import OrderDetails from "./Admin_Panel/Admin_Orders/OrderDetails";
 import BusinessEnquiries from "./Agent_Panel/AgentMyBusiness/Agent_Enquiries";
+import AdminBusinessEnquiries from "./Admin_Panel/Admin_Business/Admin_Enquiries_List/Admin_Enquiries"
 function App() {
   return (
     <BrowserRouter>
@@ -507,6 +508,8 @@ function App() {
         <Route path="/admin-add-commissionmaster" element={<AddCommissionLevels />} />
         <Route path="/admin-edit-commissionmaster/:id" element={<EditCommissionLevels />} />
         <Route path="/admin-business" element={<AdminBusiness />} />
+        <Route path="/admin-business-enquiries" element={<AdminBusinessEnquiries />} />
+
          <Route path="/admin-edit-business/:id" element={<AdminAddBusinessForm mode="edit" />} />
         {/* <Route path="/admin-view-business/:id" element={<AdminAddBusinessForm mode="view" />} /> */}
         <Route path="/admin-view-business/:id" element={<AdminViewBusiness />} /> 
@@ -577,7 +580,7 @@ function App() {
         <Route path="/agent-add-variant-form" element={<AgentAddVariantForm />} />
         <Route path="/agent-my-business" element={<AgentBusinesslist />} />
 
-       <Route path="/business-enquiries/:businessId" element={<BusinessEnquiries />} />
+<Route path="/business-enquiries" element={<BusinessEnquiries />} />
 
         <Route path="/agent-subscription-plan" element={<AgentSubscriptionPlan />} />
         <Route path="/agent-my-subscription-plans" element={<AgentMySubscriptionPlans />} />

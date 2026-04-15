@@ -3297,7 +3297,7 @@ import {
 import "./AgentBusinessProductsCategories.css";
 import Swal from "sweetalert2";
 import axios from "axios";
-
+import defaultProductImage from "../../Logos/business-default-image.png";
 // ============= useIsMobile Hook =============
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
@@ -3914,12 +3914,12 @@ const ProductCard = ({ product, variant, commissionData }) => {
   
   const userId = localStorage.getItem("user_id");
 
-  const getImage = () => {
-    if (variant.media?.length > 0) return `${baseurl}${variant.media[0].file}`;
-    const v = product.variants?.find(v => v.media?.length > 0);
-    if (v) return `${baseurl}${v.media[0].file}`;
-    return "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300";
-  };
+const getImage = () => {
+  if (variant.media?.length > 0) return `${baseurl}${variant.media[0].file}`;
+  const v = product.variants?.find(v => v.media?.length > 0);
+  if (v) return `${baseurl}${v.media[0].file}`;
+  return defaultProductImage; // Changed from Unsplash URL
+};
 
   const mrp = parseFloat(variant.mrp) || 0;
   const price = parseFloat(variant.selling_price) || 0;
@@ -4231,8 +4231,12 @@ const ProductCard = ({ product, variant, commissionData }) => {
   return (
     <div className="abpc-card" onClick={() => navigate(url)}>
       <div className="abpc-card-img-wrap">
-        <img src={getImage()} alt={productName} className="abpc-card-img"
-          onError={e => { e.target.src = "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300"; }} />
+        <img 
+  src={getImage()} 
+  alt={productName} 
+  className="abpc-card-img"
+  onError={e => { e.target.src = defaultProductImage; }} 
+/>
         {discount > 0 && <span className="abpc-card-disc">{discount}% OFF</span>}
       </div>
 
