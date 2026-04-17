@@ -62,7 +62,7 @@
   margin-top: -15px;
 }
 
-/* Form grid layout */
+/* Form layout - For desktop: grid layout, For mobile: single column */
 .register-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -78,6 +78,15 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Single column layout for Full Name and Password */
+.form-group-container:first-child,
+.form-group-container:has(input[name="full_name"]),
+.form-group-container:has(input[name="password"]),
+.form-group-container:has(input[name="referred_by"]) {
+  margin-bottom: 15px;
 }
 
 .register-input {
@@ -94,17 +103,18 @@
 /* Specific styles for select dropdown */
 select.register-input {
   appearance: none;
-  /* background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); */
   background-repeat: no-repeat;
   background-position: right 15px center;
   background-size: 15px;
   padding-right: 40px !important;
+  cursor: pointer;
 }
 
-/* .register-input:focus {
+.register-input:focus {
   border-color: #2f3c7e !important;
   box-shadow: 0 0 0 0.2rem rgba(47, 60, 126, 0.25) !important;
-} */
+  background-color: #fff !important;
+}
 
 .register-input.is-invalid {
   border-color: #dc3545 !important;
@@ -139,6 +149,10 @@ select.register-input {
   justify-content: center;
   height: 48px !important;
   white-space: nowrap !important;
+}
+
+.register-eye:hover {
+  background-color: #e9ecef !important;
 }
 
 /* Error message styling */
@@ -264,10 +278,13 @@ select.register-input {
 .register-terms .form-check-input {
   margin-top: 0.3em;
   cursor: pointer;
+  width: 16px;
+  height: 16px;
 }
 
 .register-terms .form-check-label {
   cursor: pointer;
+  margin-left: 8px;
 }
 
 .register-link {
@@ -305,13 +322,15 @@ select.register-input {
   transition: background-color 0.3s ease;
 }
 
-.register-btn:hover {
+.register-btn:hover:not(:disabled) {
   background-color: #1e2857 !important;
+  transform: translateY(-1px);
 }
 
 .register-btn:disabled {
   background-color: #d9d9d9 !important;
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 /* Footer */
@@ -319,6 +338,11 @@ select.register-input {
   text-align: center;
   font-size: 14px;
   color: #666;
+}
+
+.register-footer .register-link {
+  color: #273c75;
+  font-weight: 600;
 }
 
 /* Animations */
@@ -338,43 +362,44 @@ select.register-input {
   }
 }
 
-/* ========== MOBILE RESPONSIVE FIXES ========== */
-@media (max-width: 768px) {
-  .register-card {
-    padding: 15px;
+/* ========== DESKTOP STYLES (Above 768px) ========== */
+@media (min-width: 769px) {
+  /* Full Name and Password take full width */
+  .form-group-container:first-child,
+  .form-group-container:nth-child(2) {
+    width: 100%;
   }
   
-  .register-logo {
-    height: 80px;
-  }
-  
-  .register-title {
-    font-size: 18px;
-    margin-bottom: 20px;
-    margin-top: -10px;
-  }
-  
+  /* Phone and Role stay in 2 columns */
   .register-form-grid {
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  
-  .cart-banner {
-    padding: 10px 12px;
-  }
-  
-  .cart-banner-icon {
-    font-size: 20px;
-    width: 32px;
-    height: 32px;
-  }
-  
-  .cart-banner-text {
-    font-size: 12px;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-/* ========== MOBILE FIXES (Below 576px) ========== */
+/* ========== TABLET STYLES (577px to 768px) ========== */
+@media (min-width: 577px) and (max-width: 768px) {
+  .register-card {
+    padding: 20px;
+  }
+  
+  .register-logo {
+    height: 100px;
+  }
+  
+  .register-title {
+    font-size: 20px;
+  }
+  
+  .register-form-grid {
+    gap: 15px;
+  }
+  
+  .input-group .register-eye {
+    padding: 0 12px;
+  }
+}
+
+/* ========== MOBILE STYLES (Below 577px) ========== */
 @media (max-width: 576px) {
   .register-close {
     top: 15px;
@@ -405,18 +430,25 @@ select.register-input {
     margin-top: -5px;
   }
   
-  /* Force single column layout */
+  /* Force single column layout for ALL form groups */
   .register-form-grid {
     grid-template-columns: 1fr !important;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 0;
+    margin-bottom: 0;
+  }
+  
+  /* Ensure all form-group-containers take full width and have proper spacing */
+  .form-group-container {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  /* Last form group before terms should have margin bottom */
+  .form-group-container:last-of-type {
+    margin-bottom: 0;
   }
   
   /* Ensure all inputs take full width */
-  .form-group-container {
-    width: 100%;
-  }
-  
   .register-input,
   select.register-input,
   .input-group,
@@ -457,6 +489,10 @@ select.register-input {
   }
   
   /* Terms checkbox */
+  .register-terms-container {
+    margin: 15px 0;
+  }
+  
   .register-terms {
     font-size: 13px;
   }
@@ -490,6 +526,22 @@ select.register-input {
   }
   
   .referral-banner-text {
+    font-size: 12px;
+  }
+  
+  /* Cart banner */
+  .cart-banner {
+    padding: 10px 12px;
+    margin-bottom: 15px;
+  }
+  
+  .cart-banner-icon {
+    font-size: 20px;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .cart-banner-text {
     font-size: 12px;
   }
 }
@@ -547,15 +599,50 @@ select.register-input {
     font-size: 11px;
     padding: 5px 8px;
   }
+  
+  .register-btn {
+    height: 40px;
+    font-size: 14px;
+  }
 }
 
-/* iPad Specific Styles */
-@media (min-width: 577px) and (max-width: 768px) {
+/* iPad Specific Styles (Portrait and Landscape) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .register-card {
+    max-width: 600px;
+  }
+  
+  .register-logo {
+    height: 100px;
+  }
+  
   .register-form-grid {
     gap: 15px;
   }
+}
+
+/* Fix for iOS input zoom */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Improve touch targets on mobile */
+@media (max-width: 768px) {
+  .register-eye,
+  .register-btn,
+  .register-link,
+  .register-terms .form-check-input,
+  .register-close {
+    cursor: pointer;
+  }
   
-  .input-group .register-eye {
-    padding: 0 12px;
+  .register-eye {
+    min-width: 44px;
+  }
+  
+  .register-btn {
+    min-height: 44px;
   }
 }

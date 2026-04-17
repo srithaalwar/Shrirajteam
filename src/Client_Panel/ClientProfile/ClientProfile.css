@@ -171,7 +171,7 @@
 
 .modal-header h3 {
   margin: 0;
-  color: #1f2937;
+  color: whitesmoke;
   font-size: 18px;
   font-weight: 600;
 }
@@ -180,7 +180,7 @@
   background: none;
   border: none;
   font-size: 24px;
-  color: #6b7280;
+  color: whitesmoke;
   cursor: pointer;
   padding: 0;
   width: 30px;

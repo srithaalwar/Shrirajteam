@@ -4398,12 +4398,53 @@ const AgentBusinessProductsCategories = () => {
   }, []);
 
   // Fetch products
-  const fetchProducts = useCallback(async () => {
-    setProductsLoading(true);
-    try {
-      const userId = localStorage.getItem("user_id");
-      const params = new URLSearchParams({ variant_verification_status: "verified",  business_verification_status: "verified" });
+  // const fetchProducts = useCallback(async () => {
+  //   setProductsLoading(true);
+  //   try {
+  //     const userId = localStorage.getItem("user_id");
+  //     const params = new URLSearchParams({ variant_verification_status: "verified",  business_verification_status: "verified" });
 
+  //     if (userId) {
+  //       params.append("exclude_user_id", userId);
+  //     }
+      
+  //     selectedPriceRanges.forEach(r => params.append("price_range", r));
+  //     selectedDiscountRanges.forEach(r => params.append("discount_range", r));
+  //     selectedCategories.forEach(c => params.append("category_id", c.category_id));
+
+  //     const url = `${baseurl}/products/?${params}`;
+  //     const res = await fetch(url);
+  //     const data = await res.json();
+  //     const items = [];
+  //     (data.results || []).forEach(product => {
+  //       if (product.variants?.length > 0) {
+  //         product.variants.forEach(variant => items.push({ product, variant }));
+  //       } else {
+  //         items.push({ product, variant: { id: product.product_id, sku: product.product_id, mrp: "0.00", selling_price: "0.00", attributes: {}, distribution_commission: "0.00" } });
+  //       }
+  //     });
+  //     setProducts(items);
+  //   } catch (e) { console.error(e); }
+  //   finally { setProductsLoading(false); }
+  // }, [selectedPriceRanges, selectedDiscountRanges, selectedCategories]);
+
+
+  // Fetch products with pagination support
+const fetchProducts = useCallback(async () => {
+  setProductsLoading(true);
+  try {
+    const userId = localStorage.getItem("user_id");
+    let allItems = [];
+    let nextUrl = null;
+    
+    // Build initial URL with filters
+    const buildUrl = (page = null) => {
+      const params = new URLSearchParams({
+        variant_verification_status: "verified",
+        business_verification_status: "verified",
+        page_size: 100 // Request more items per page (adjust based on backend limit)
+      });
+      
       if (userId) {
         params.append("exclude_user_id", userId);
       }
@@ -4411,22 +4452,66 @@ const AgentBusinessProductsCategories = () => {
       selectedPriceRanges.forEach(r => params.append("price_range", r));
       selectedDiscountRanges.forEach(r => params.append("discount_range", r));
       selectedCategories.forEach(c => params.append("category_id", c.category_id));
-
-      const url = `${baseurl}/products/?${params}`;
-      const res = await fetch(url);
-      const data = await res.json();
+      
+      if (page) {
+        params.append("page", page);
+      }
+      
+      return `${baseurl}/products/?${params}`;
+    };
+    
+    // Fetch first page
+    let response = await fetch(buildUrl());
+    let data = await response.json();
+    
+    // Process items from current page
+    const processItems = (results) => {
       const items = [];
-      (data.results || []).forEach(product => {
+      results.forEach(product => {
         if (product.variants?.length > 0) {
           product.variants.forEach(variant => items.push({ product, variant }));
         } else {
-          items.push({ product, variant: { id: product.product_id, sku: product.product_id, mrp: "0.00", selling_price: "0.00", attributes: {}, distribution_commission: "0.00" } });
+          items.push({ 
+            product, 
+            variant: { 
+              id: product.product_id, 
+              sku: product.product_id, 
+              mrp: "0.00", 
+              selling_price: "0.00", 
+              attributes: {}, 
+              distribution_commission: "0.00" 
+            } 
+          });
         }
       });
-      setProducts(items);
-    } catch (e) { console.error(e); }
-    finally { setProductsLoading(false); }
-  }, [selectedPriceRanges, selectedDiscountRanges, selectedCategories]);
+      return items;
+    };
+    
+    allItems.push(...processItems(data.results || []));
+    
+    // Fetch remaining pages if any
+    let currentPage = 1;
+    const totalPages = Math.ceil(data.count / (data.results?.length || 1));
+    
+    // Fetch all remaining pages in parallel for better performance
+    const pagePromises = [];
+    for (let page = 2; page <= totalPages; page++) {
+      pagePromises.push(fetch(buildUrl(page)).then(res => res.json()));
+    }
+    
+    const remainingPages = await Promise.all(pagePromises);
+    remainingPages.forEach(pageData => {
+      allItems.push(...processItems(pageData.results || []));
+    });
+    
+    setProducts(allItems);
+    
+  } catch (e) { 
+    console.error("Error fetching products:", e);
+  } finally { 
+    setProductsLoading(false); 
+  }
+}, [selectedPriceRanges, selectedDiscountRanges, selectedCategories]);
 
   useEffect(() => { 
     fetchProducts(); 

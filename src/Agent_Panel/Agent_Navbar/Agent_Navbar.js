@@ -13338,6 +13338,1374 @@
 
 
 
+// import React, { useState, useEffect, useRef } from "react";
+// import { useNavigate } from "react-router-dom";
+// import "./Agent_Navbar.css";
+// import logoImage from "../../Logos/logo1.png";
+// import { Link } from "react-router-dom";
+// import axios from "axios";
+// import { baseurl } from "../../BaseURL/BaseURL";
+// import Swal from "sweetalert2";
+// import { useLocation } from "react-router-dom";
+// import AgentSearchBar from './AgentSearchBar';
+// import { FaSearch } from 'react-icons/fa';
+// // Import FontAwesome icons
+// import { 
+//   FaTachometerAlt, 
+//   FaHome, 
+//   FaBuilding, 
+//   FaUsers, 
+//   FaClipboardList, 
+//   FaCogs,
+//   FaCalendarAlt,
+//   FaChartLine,
+//   FaBriefcase,
+//   FaFileAlt,
+//   FaTag,
+//   FaUserCircle,
+//   FaSignOutAlt,
+//   FaCaretDown,
+//   FaCaretRight,
+//   FaMoneyBillWave,
+//   FaHandHoldingUsd,
+//   FaCreditCard,
+//   FaLayerGroup,
+//   FaGraduationCap,
+//   FaQuestionCircle,
+//   FaExchangeAlt,
+//   FaDatabase,
+//   FaSitemap,
+//   FaEye,
+//   FaRobot,
+//   FaUserTie,
+//   FaStar,
+//   FaEnvelope,
+//   FaPhone,
+//   FaIdCard,
+//   FaBell,
+//   FaHeart,
+//   FaShoppingCart,
+//   FaUserPlus,
+//   FaCopy,
+//   FaCheck,
+//   FaPlusCircle,
+//   FaShareAlt,
+//   FaBars,
+// } from "react-icons/fa";
+// import ShareModal from "./ShareModal/ShareModal";
+
+// const AgentNavbar = () => {
+//   const [open, setOpen] = useState(false);
+//   const [categories, setCategories] = useState([]);
+//   const [showCategories, setShowCategories] = useState(false);
+//   const [selectedCategory, setSelectedCategory] = useState("All");
+//   const [expandedMenu, setExpandedMenu] = useState(null);
+//   const [userData, setUserData] = useState({
+//     email: "",
+//     phone_number: "",
+//     referral_id: "",
+//     username: "",
+//     user_name: "",
+//     referred_by: "",
+//     image: ""
+//   });
+//   const [copyStatus, setCopyStatus] = useState({ copied: false, showMessage: false });
+//   const [showProfileTooltip, setShowProfileTooltip] = useState(false);
+  
+//   // Header dropdown states
+//   const [openRealEstateDropdown, setOpenRealEstateDropdown] = useState(false);
+//   const [openBusinessDropdown, setOpenBusinessDropdown] = useState(false);
+//   const [openProductsDropdown, setOpenProductsDropdown] = useState(false);
+//   const [openOperationsDropdown, setOpenOperationsDropdown] = useState(false);
+  
+//   // Notification states
+//   const [notifications, setNotifications] = useState([]);
+//   const [unreadCount, setUnreadCount] = useState(0);
+//   const [showNotifications, setShowNotifications] = useState(false);
+  
+//   // Cart states
+//   const [cartItems, setCartItems] = useState([]);
+//   const [cartItemCount, setCartItemCount] = useState(0);
+//   const [cartTotalQuantity, setCartTotalQuantity] = useState(0);
+//   const [cartLoading, setCartLoading] = useState(false);
+  
+//   // Wishlist states
+//   const [wishlistItems, setWishlistItems] = useState([]);
+//   const [wishlistCount, setWishlistCount] = useState(0);
+//   const [wishlistLoading, setWishlistLoading] = useState(false);
+  
+//   const dropdownRef = useRef(null);
+//   const notificationRef = useRef(null);
+//   const profilePanelRef = useRef(null);
+//   const realEstateDropdownRef = useRef(null);
+//   const businessDropdownRef = useRef(null);
+//   const productsDropdownRef = useRef(null);
+//   const operationsDropdownRef = useRef(null);
+  
+//   const loginUrl = "/login";
+//   const signupUrl = "/register";
+  
+//   const navigate = useNavigate();
+//   const location = useLocation();
+
+//   // Get current user ID from localStorage
+//   const currentUserId = localStorage.getItem("user_id");
+
+//   // Fetch user data from API to get the image
+//   const fetchUserDataFromAPI = async () => {
+//     if (!currentUserId) return;
+    
+//     try {
+//       const response = await axios.get(`${baseurl}/users/${currentUserId}/`);
+//       console.log("User data from API:", response.data);
+      
+//       if (response.data) {
+//         // Update localStorage with the image
+//         if (response.data.image) {
+//           localStorage.setItem("user_image", response.data.image);
+//         }
+        
+//         setUserData(prevData => ({
+//           ...prevData,
+//           email: response.data.email || prevData.email,
+//           phone_number: response.data.phone_number || prevData.phone_number,
+//           referral_id: response.data.referral_id || prevData.referral_id,
+//           username: response.data.username || prevData.username,
+//           user_name: response.data.user_name || prevData.user_name,
+//           referred_by: response.data.referred_by || prevData.referred_by,
+//           image: response.data.image || prevData.image
+//         }));
+//       }
+//     } catch (error) {
+//       console.error("Error fetching user data from API:", error);
+//     }
+//   };
+ 
+//   // Fetch user data from localStorage on component mount
+//   useEffect(() => {
+//     const fetchUserData = () => {
+//       const storedUserData = {
+//         email: localStorage.getItem("email") || "",
+//         phone_number: localStorage.getItem("phone_number") || "",
+//         referral_id: localStorage.getItem("referral_id") || "",
+//         username: localStorage.getItem("username") || "",
+//         user_name: localStorage.getItem("user_name") || "",
+//         referred_by: localStorage.getItem("referred_by") || "",
+//         image: localStorage.getItem("user_image") || ""
+//       };
+//       setUserData(storedUserData);
+//       console.log("User data from localStorage:", storedUserData);
+//     };
+
+//     fetchUserData();
+    
+//     // Fetch fresh user data from API to get the image
+//     fetchUserDataFromAPI();
+    
+//     // Listen for storage changes
+//     const handleStorageChange = () => {
+//       fetchUserData();
+//     };
+    
+//     window.addEventListener('storage', handleStorageChange);
+    
+//     return () => {
+//       window.removeEventListener('storage', handleStorageChange);
+//     };
+//   }, [currentUserId]);
+
+//   // Hide copy message after 3 seconds
+//   useEffect(() => {
+//     if (copyStatus.showMessage) {
+//       const timer = setTimeout(() => {
+//         setCopyStatus({ copied: false, showMessage: false });
+//       }, 3000);
+//       return () => clearTimeout(timer);
+//     }
+//   }, [copyStatus.showMessage]);
+
+//   // Close tooltip when clicking outside
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (profilePanelRef.current && !profilePanelRef.current.contains(event.target)) {
+//         setShowProfileTooltip(false);
+//       }
+//     };
+
+//     document.addEventListener("mousedown", handleClickOutside);
+
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, []);
+
+//   // Close dropdowns when clicking outside
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (realEstateDropdownRef.current && !realEstateDropdownRef.current.contains(event.target)) {
+//         setOpenRealEstateDropdown(false);
+//       }
+//       if (businessDropdownRef.current && !businessDropdownRef.current.contains(event.target)) {
+//         setOpenBusinessDropdown(false);
+//       }
+//       if (productsDropdownRef.current && !productsDropdownRef.current.contains(event.target)) {
+//         setOpenProductsDropdown(false);
+//       }
+//       if (operationsDropdownRef.current && !operationsDropdownRef.current.contains(event.target)) {
+//         setOpenOperationsDropdown(false);
+//       }
+//       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+//         setShowNotifications(false);
+//       }
+//     };
+
+//     document.addEventListener("mousedown", handleClickOutside);
+
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, []);
+
+//   /* ================= FETCH CART ITEMS ================= */
+// //   const fetchCartItems = async () => {
+// //     const userId = localStorage.getItem("user_id");
+    
+// //     if (!userId) {
+// //       console.log("No user_id found, cannot fetch cart items");
+// //       setCartItems([]);
+// //       setCartItemCount(0);
+// //       setCartTotalQuantity(0);
+// //       return;
+// //     }
+
+// //     setCartLoading(true);
+// //     try {
+// //       console.log("Fetching cart items for user:", userId);
+      
+// //       const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
+// //       console.log("Cart API Response:", response.data);
+      
+// //       const cartResponse = response.data;
+// //       let userCartItems = [];
+      
+// //       if (cartResponse.results && Array.isArray(cartResponse.results)) {
+// //         userCartItems = cartResponse.results;
+// //       } else if (Array.isArray(cartResponse)) {
+// //         userCartItems = cartResponse;
+// //       }
+      
+// //       console.log("User cart items:", userCartItems);
+      
+// //       setCartItems(userCartItems);
+      
+// //       if (cartResponse.count !== undefined) {
+// //         setCartItemCount(cartResponse.count);
+// //       } else {
+// //         setCartItemCount(userCartItems.length);
+// //       }
+      
+// //       const totalQuantity = userCartItems.reduce((total, item) => {
+// //         return total + (item.quantity || 1);
+// //       }, 0);
+      
+// //       setCartTotalQuantity(totalQuantity);
+      
+// //     } catch (error) {
+// //       console.error("Error fetching cart items:", error);
+// //       setCartItems([]);
+// //       setCartItemCount(0);
+// //       setCartTotalQuantity(0);
+// //     } finally {
+// //       setCartLoading(false);
+// //     }
+// //   };
+
+
+// const fetchCartItems = async () => {
+//   const userId = localStorage.getItem("user_id");
+  
+//   if (!userId) {
+//     console.log("No user_id found, cannot fetch cart items");
+//     setCartItems([]);
+//     setCartItemCount(0);
+//     setCartTotalQuantity(0);
+//     return;
+//   }
+
+//   setCartLoading(true);
+//   try {
+//     console.log("Fetching cart items for user:", userId);
+    
+//     const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
+//     console.log("Cart API Response:", response.data);
+    
+//     const cartResponse = response.data;
+//     let userCartItems = [];
+    
+//     if (cartResponse.results && Array.isArray(cartResponse.results)) {
+//       userCartItems = cartResponse.results;
+//     } else if (Array.isArray(cartResponse)) {
+//       userCartItems = cartResponse;
+//     }
+    
+//     console.log("User cart items:", userCartItems);
+    
+//     setCartItems(userCartItems);
+    
+//     // Set cart item count (number of unique products)
+//     if (cartResponse.count !== undefined) {
+//       setCartItemCount(cartResponse.count);
+//     } else {
+//       setCartItemCount(userCartItems.length);
+//     }
+    
+//     // Calculate total quantity (sum of all quantities)
+//     const totalQuantity = userCartItems.reduce((total, item) => {
+//       return total + (item.quantity || 1);
+//     }, 0);
+    
+//     setCartTotalQuantity(totalQuantity);
+    
+//   } catch (error) {
+//     console.error("Error fetching cart items:", error);
+//     setCartItems([]);
+//     setCartItemCount(0);
+//     setCartTotalQuantity(0);
+//   } finally {
+//     setCartLoading(false);
+//   }
+// };
+
+//   /* ================= FETCH WISHLIST ITEMS ================= */
+//   const fetchWishlistItems = async () => {
+//     const userId = localStorage.getItem("user_id");
+    
+//     if (!userId) {
+//       console.log("No user_id found, cannot fetch wishlist items");
+//       setWishlistItems([]);
+//       setWishlistCount(0);
+//       return;
+//     }
+
+//     setWishlistLoading(true);
+//     try {
+//       console.log("Fetching wishlist items for user:", userId);
+      
+//       const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
+//       console.log("Wishlist API Response:", response.data);
+      
+//       const wishlistResponse = response.data;
+//       let userWishlistItems = [];
+      
+//       if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
+//         userWishlistItems = wishlistResponse.results;
+//       } else if (Array.isArray(wishlistResponse)) {
+//         userWishlistItems = wishlistResponse;
+//       }
+      
+//       console.log("User wishlist items:", userWishlistItems);
+      
+//       setWishlistItems(userWishlistItems);
+      
+//       if (wishlistResponse.count !== undefined) {
+//         setWishlistCount(wishlistResponse.count);
+//       } else {
+//         setWishlistCount(userWishlistItems.length);
+//       }
+      
+//     } catch (error) {
+//       console.error("Error fetching wishlist items:", error);
+//       setWishlistItems([]);
+//       setWishlistCount(0);
+//     } finally {
+//       setWishlistLoading(false);
+//     }
+//   };
+
+//   // Fetch cart items on component mount and set up polling
+//   useEffect(() => {
+//     const userId = localStorage.getItem("user_id");
+//     if (userId) {
+//       console.log("Setting up cart polling for user:", userId);
+//       fetchCartItems();
+      
+//       const cartIntervalId = setInterval(fetchCartItems, 5000);
+      
+//       return () => clearInterval(cartIntervalId);
+//     } else {
+//       setCartItems([]);
+//       setCartItemCount(0);
+//       setCartTotalQuantity(0);
+//     }
+//   }, []);
+
+//   // Fetch wishlist items on component mount and set up polling
+//   useEffect(() => {
+//     const userId = localStorage.getItem("user_id");
+//     if (userId) {
+//       console.log("Setting up wishlist polling for user:", userId);
+//       fetchWishlistItems();
+      
+//       const wishlistIntervalId = setInterval(fetchWishlistItems, 5000);
+      
+//       return () => clearInterval(wishlistIntervalId);
+//     } else {
+//       setWishlistItems([]);
+//       setWishlistCount(0);
+//     }
+//   }, []);
+
+//   // Also fetch cart when component mounts
+//   useEffect(() => {
+//     fetchCartItems();
+//   }, []);
+
+//   // Also fetch wishlist when component mounts
+//   useEffect(() => {
+//     fetchWishlistItems();
+//   }, []);
+
+//   // Listen for cart updates from other components
+//   useEffect(() => {
+//     const handleCartUpdate = () => {
+//       console.log("Cart update event received, refreshing cart...");
+//       fetchCartItems();
+//     };
+
+//     window.addEventListener('cartUpdated', handleCartUpdate);
+    
+//     return () => {
+//       window.removeEventListener('cartUpdated', handleCartUpdate);
+//     };
+//   }, []);
+
+//   // Listen for wishlist updates from other components
+//   useEffect(() => {
+//     const handleWishlistUpdate = () => {
+//       console.log("Wishlist update event received, refreshing wishlist...");
+//       fetchWishlistItems();
+//     };
+
+//     window.addEventListener('wishlistUpdated', handleWishlistUpdate);
+    
+//     return () => {
+//       window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
+//     };
+//   }, []);
+
+//   // Fetch notifications for the user
+//   const fetchNotifications = async () => {
+//     try {
+//       const userId = localStorage.getItem("user_id");
+//       if (!userId) {
+//         console.log("No user_id found in localStorage");
+//         return;
+//       }
+
+//       console.log("Fetching notifications for user:", userId);
+      
+//       const response = await axios.get(`${baseurl}/notifications/?user=${userId}&is_read=false`);
+//       console.log("Notifications API Response:", response.data);
+      
+//       const allNotifications = response.data.results || [];
+      
+//       const apiUnreadCount = response.data.unread_count;
+//       if (apiUnreadCount !== undefined) {
+//         setUnreadCount(apiUnreadCount);
+//       } else {
+//         const localUnreadCount = allNotifications.filter(n => !n.is_read).length;
+//         setUnreadCount(localUnreadCount);
+//       }
+      
+//       setNotifications(allNotifications);
+      
+//     } catch (error) {
+//       console.error("Error fetching notifications:", error);
+//       const unread = notifications.filter(notification => !notification.is_read);
+//       setUnreadCount(unread.length);
+//     }
+//   };
+
+//   // Fetch notifications on component mount and set up polling
+//   useEffect(() => {
+//     const userId = localStorage.getItem("user_id");
+//     if (userId) {
+//       console.log("Setting up notification polling for user:", userId);
+//       fetchNotifications();
+      
+//       const intervalId = setInterval(fetchNotifications, 30000);
+      
+//       return () => clearInterval(intervalId);
+//     }
+//   }, []);
+
+//   const handleDropdownToggle = (event) => {
+//     event.stopPropagation();
+//     setShowCategories(!showCategories);
+//   };
+
+//   const handleCategorySelect = (categoryName) => {
+//     setSelectedCategory(categoryName);
+//     setShowCategories(false);
+//   };
+
+//   const toggleSubMenu = (menuName) => {
+//     if (expandedMenu === menuName) {
+//       setExpandedMenu(null);
+//     } else {
+//       setExpandedMenu(menuName);
+//     }
+//   };
+
+//   // Handle notification click
+//   const handleNotificationClick = (event) => {
+//     event.stopPropagation();
+//     setShowNotifications(!showNotifications);
+//   };
+
+//   // Handle Add Product click - No subscription check
+//   const handleAddProductClick = (e) => {
+//     e.preventDefault();
+//     navigate('/agent-add-product-form');
+//   };
+
+//   // Handle Add Variant click - No subscription check
+//   const handleAddVariantClick = (e) => {
+//     e.preventDefault();
+//     navigate('/agent-add-variant-form');
+//   };
+
+//   // Mark notification as read and navigate to property/product
+//   const handleNotificationItemClick = async (notification) => {
+//     try {
+//       const userId = localStorage.getItem("user_id");
+//       if (!userId) {
+//         console.error("No user_id found in localStorage");
+//         return;
+//       }
+      
+//       console.log("Marking agent notification as read:", notification);
+      
+//       await axios.post(`${baseurl}/notifications/mark-read/`, {
+//         user_id: parseInt(userId),
+//         notification_status_ids: [notification.notification_status_id]
+//       });
+      
+//       console.log("Successfully marked agent notification as read");
+      
+//       const updatedNotifications = notifications.map(n => 
+//         n.notification_status_id === notification.notification_status_id 
+//           ? { ...n, is_read: true } 
+//           : n
+//       );
+      
+//       setNotifications(updatedNotifications);
+      
+//       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+//       setUnreadCount(newUnreadCount);
+      
+//       setShowNotifications(false);
+      
+//       if (notification.property !== null) {
+//         navigate(`/agent-properties-details/${notification.property.id}`);
+//       } else if (notification.product !== null) {
+//         const productId = notification.product.product_id;
+//         const variantId = notification.product.variant_id;
+        
+//         if (productId && variantId) {
+//           navigate(`/agent-business-product-details/${productId}/?variant=${variantId}`);
+//         } else if (productId) {
+//           navigate(`/agent-business-product-details/${productId}/`);
+//         } else if (variantId) {
+//           navigate(`/agent-product-details/${variantId}`);
+//         } else {
+//           fetchNotifications();
+//         }
+//       } else if (notification.meeting && notification.meeting.id) {
+//         navigate(`/p-meetings/${notification.meeting.id}`);
+//       } else {
+//         fetchNotifications();
+//       }
+      
+//     } catch (error) {
+//       console.error("Error marking agent notification as read:", error);
+      
+//       const updatedNotifications = notifications.map(n => 
+//         n.notification_status_id === notification.notification_status_id 
+//           ? { ...n, is_read: true } 
+//           : n
+//       );
+      
+//       setNotifications(updatedNotifications);
+      
+//       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+//       setUnreadCount(newUnreadCount);
+      
+//       setShowNotifications(false);
+      
+//       if (notification.property !== null) {
+//         navigate(`/agent-properties-details/${notification.property.id}`);
+//       } else if (notification.product !== null) {
+//         const productId = notification.product.product_id;
+//         const variantId = notification.product.variant_id;
+        
+//         if (productId && variantId) {
+//           navigate(`/agent-business-product-details/${productId}/?variant=${variantId}`);
+//         } else if (productId) {
+//           navigate(`/agent-business-product-details/${productId}/`);
+//         } else if (variantId) {
+//           navigate(`/agent-product-details/${variantId}`);
+//         }
+//       } else if (notification.meeting && notification.meeting.id) {
+//         navigate(`/p-meetings/${notification.meeting.id}`);
+//       }
+//     }
+//   };
+
+//   // Format notification message
+//   const formatNotificationMessage = (notification) => {
+//     if (notification.property !== null) {
+//       return (
+//         <div className="wn-notification-message-content">
+//           <strong className="wn-notification-title">{notification.message}</strong>
+//           <div className="wn-notification-subtitle">{notification.notification_for}</div>
+//         </div>
+//       );
+//     } else if (notification.product !== null) {
+//       return (
+//         <div className="wn-notification-message-content">
+//           <strong className="wn-notification-title">{notification.message}</strong>
+//           <div className="wn-notification-subtitle">{notification.notification_for}</div>
+//         </div>
+//       );
+//     } else if (notification.meeting) {
+//       return (
+//         <div className="wn-notification-message-content">
+//           <strong className="wn-notification-title">{notification.message}</strong>
+//           <div className="wn-notification-subtitle">Meeting Update</div>
+//         </div>
+//       );
+//     } else {
+//       return (
+//         <div className="wn-notification-message-content">
+//           <strong className="wn-notification-title">{notification.message}</strong>
+//         </div>
+//       );
+//     }
+//   };
+
+//   const handleLogout = () => {
+//     console.log("Agent logged out");
+//     localStorage.removeItem("authToken");
+//     localStorage.removeItem("userRole");
+//     localStorage.removeItem("agentData");
+//     localStorage.removeItem("user_id");
+//     localStorage.removeItem("email");
+//     localStorage.removeItem("username");
+//     localStorage.removeItem("phone_number");
+//     localStorage.removeItem("referral_id");
+//     localStorage.removeItem("referred_by");
+//     localStorage.removeItem("user_name");
+//     localStorage.removeItem("user_image");
+//     localStorage.removeItem("token");
+//     localStorage.removeItem("access_token");
+//     localStorage.removeItem("refresh_token");
+//     localStorage.removeItem("user_roles");
+    
+//     sessionStorage.clear();
+//     setOpen(false);
+//     setNotifications([]);
+//     setUnreadCount(0);
+//     setCartItems([]);
+//     setCartItemCount(0);
+//     setCartTotalQuantity(0);
+//     setWishlistItems([]);
+//     setWishlistCount(0);
+//     navigate("/");
+//   };
+
+//   // Handle Refer Now button click
+//   const handleReferNowClick = (e) => {
+//     e.preventDefault();
+    
+//     const referralId = userData.referral_id || "SRP000001";
+//     const baseUrl = window.location.origin;
+//     const referUrl = `${baseUrl}/register?referral_id=${referralId}`;
+    
+//     navigator.clipboard.writeText(referUrl)
+//       .then(() => {
+//         setCopyStatus({ copied: true, showMessage: true });
+//       })
+//       .catch(err => {
+//         console.error("Failed to copy: ", err);
+//         const textArea = document.createElement("textarea");
+//         textArea.value = referUrl;
+//         document.body.appendChild(textArea);
+//         textArea.select();
+//         try {
+//           document.execCommand('copy');
+//           setCopyStatus({ copied: true, showMessage: true });
+//         } catch (err) {
+//           console.error("Fallback copy failed: ", err);
+//         }
+//         document.body.removeChild(textArea);
+//       });
+//   };
+
+//   // Handle wishlist click
+//   const handleWishlistClick = () => {
+//     navigate("/agent-wishlist");
+//   };
+
+//   // Handle cart click
+//   const handleCartClick = () => {
+//     navigate("/agent-add-to-cart");
+//   };
+
+//   // Handle profile click from the panel
+//   const handleProfilePanelClick = () => {
+//     navigate("/agent-profile");
+//   };
+
+//   // Handle profile panel hover
+//   const handleProfilePanelMouseEnter = () => {
+//     setShowProfileTooltip(true);
+//   };
+
+//   const handleProfilePanelMouseLeave = () => {
+//     setShowProfileTooltip(false);
+//   };
+
+//   // Define dropdown menu items - Removed requiresSubscription flag
+//   const realEstateItems = [
+//     { path: "/agent-add-property", name: "Add Property", icon: <FaPlusCircle /> },
+//     { path: "/agent-my-properties", name: "My Properties", icon: <FaHome /> },
+//     { path: "/agent-properties", name: "All Properties", icon: <FaClipboardList /> },
+//     { path: "/agent-site-visits", name: "Site Visits", icon: <FaEye /> }
+//   ];
+
+//   const businessItems = [
+//     { path: "/agent-my-business", name: "View Business", icon: <FaUserTie /> },
+//     { path: "/agent-add-business-form", name: "Add Business", icon: <FaPlusCircle /> }
+//   ];
+
+//   const productsItems = [
+//     { path: "/agent-offers", name: "Offers", icon: <FaTag /> },
+//     { 
+//       path: "/agent-add-product-form", 
+//       name: "Add Product", 
+//       icon: <FaPlusCircle />,
+//       onClick: handleAddProductClick
+//     },
+//     { 
+//       path: "/agent-add-variant-form", 
+//       name: "Add Product Variant", 
+//       icon: <FaPlusCircle />,
+//       onClick: handleAddVariantClick
+//     },
+//     { path: "/agent-busineess-category", name: "All Products", icon: <FaLayerGroup /> }
+//   ];
+
+//   const operationsItems = [
+//     { path: "/agent-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
+//     { path: "/agent-my-subscription-plans", name: "My Plans", icon: <FaCreditCard /> },
+//     { path: "/agent-training-material", name: "Training Material", icon: <FaGraduationCap /> },
+//     { path: "/agent-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
+//     { path: "/agent-my-team", name: "My Team", icon: <FaUsers /> },
+
+//   ];
+
+//   // Helper function to render dropdown item
+//   const renderDropdownItem = (item, index) => {
+//     if (item.onClick) {
+//       return (
+//         <a
+//           key={index}
+//           href={item.path}
+//           className="wn-dropdown-link"
+//           onClick={(e) => {
+//             e.preventDefault();
+//             item.onClick(e);
+//             // Close dropdown after click
+//             setOpenRealEstateDropdown(false);
+//             setOpenBusinessDropdown(false);
+//             setOpenProductsDropdown(false);
+//             setOpenOperationsDropdown(false);
+//           }}
+//         >
+//           <span className="wn-dropdown-icon">{item.icon}</span>
+//           <span className="wn-dropdown-text">{item.name}</span>
+//         </a>
+//       );
+//     }
+    
+//     return (
+//       <Link
+//         key={index}
+//         to={item.path}
+//         className="wn-dropdown-link"
+//         onClick={() => {
+//           setOpenRealEstateDropdown(false);
+//           setOpenBusinessDropdown(false);
+//           setOpenProductsDropdown(false);
+//           setOpenOperationsDropdown(false);
+//         }}
+//       >
+//         <span className="wn-dropdown-icon">{item.icon}</span>
+//         <span className="wn-dropdown-text">{item.name}</span>
+//       </Link>
+//     );
+//   };
+
+//   // Define your navigation items for sidebar - Removed requiresSubscription flag
+//   const menuItems = [
+//     { 
+//       path: "/agent-home", 
+//       name: "Home", 
+//       icon: <FaHome /> 
+//     },
+//     { 
+//       path: "/agent-dashboard", 
+//       name: "Dashboard", 
+//       icon: <FaTachometerAlt /> 
+//     },
+    
+//     // Properties Main Category
+//     {
+//       name: "Real Estate",
+//       icon: <FaBuilding />,
+//       subMenu: [
+//         { path: "/agent-add-property", name: "Add Property", icon: <FaPlusCircle /> },
+//         { path: "/agent-my-properties", name: "My Properties", icon: <FaHome /> },
+//         { path: "/agent-properties", name: "All Properties", icon: <FaClipboardList /> },
+//         { path: "/agent-site-visits", name: "Site Visits", icon: <FaEye /> }
+//       ],
+//     },
+    
+//     // Business Main Category
+//     {
+//       name: "Business",
+//       icon: <FaBriefcase />,
+//       subMenu: [
+//         { path: "/agent-my-business", name: "View Business", icon: <FaUserTie /> },
+//         { path: "/agent-add-business-form", name: "Add Business", icon: <FaPlusCircle /> }
+//       ],
+//     },
+    
+//     // Products Main Category
+//     {
+//       name: "Products",
+//       icon: <FaLayerGroup />,
+//       subMenu: [
+//         { path: "/agent-offers", name: "Offers", icon: <FaTag /> },
+//         { 
+//           path: "/agent-add-product-form", 
+//           name: "Add Product", 
+//           icon: <FaPlusCircle />,
+//           onClick: handleAddProductClick
+//         },
+//         { 
+//           path: "/agent-add-variant-form", 
+//           name: "Add Product Variant", 
+//           icon: <FaPlusCircle />,
+//           onClick: handleAddVariantClick
+//         },
+//         { path: "/agent-busineess-category", name: "All Products", icon: <FaLayerGroup /> }
+//       ],
+//     },
+    
+//     // Operations Main Category
+//     {
+//       name: "Operations",
+//       icon: <FaCogs />,
+//       subMenu: [
+//         { path: "/agent-subscription-plan", name: "Plans", icon: <FaCreditCard /> },
+//         { path: "/agent-my-subscription-plans", name: "My Plans", icon: <FaCreditCard /> },
+//         { path: "/agent-training-material", name: "Training Material", icon: <FaGraduationCap /> },
+//         { path: "/agent-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
+//         { path: "/agent-my-team", name: "My Team", icon: <FaUsers /> },
+
+//       ],
+//     },
+//     { path: "/agent-my-orders", name: "My Orders", icon: <FaTag /> },
+//     { path: "/agent-orders", name: "Orders", icon: <FaTag /> },
+//     { path: "/a-service-providers", name: "Service Providers", icon: <FaUserTie /> },
+//     { path: "/p-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
+//     { path: "/agent-profile", name: "Profile", icon: <FaUserCircle /> },
+//   ];
+
+//   // Helper function to render menu item
+//   const renderMenuItem = (item) => {
+//     if (item.onClick) {
+//       return (
+//         <li key={item.name}>
+//           <a 
+//             href={item.path}
+//             className="wn-sidebar-link"
+//             onClick={(e) => {
+//               e.preventDefault();
+//               item.onClick(e);
+//             }}
+//           >
+//             <span className="wn-sidebar-icon">{item.icon}</span>
+//             <span className="wn-sidebar-text" style={{ marginLeft: "10px" }}>{item.name}</span>
+//           </a>
+//         </li>
+//       );
+//     }
+    
+//     return (
+//       <li key={item.path || item.name}>
+//         <Link 
+//           to={item.path} 
+//           className="wn-sidebar-link"
+//           onClick={() => setOpen(false)}
+//         >
+//           <span className="wn-sidebar-icon">{item.icon}</span>
+//           <span className="wn-sidebar-text" style={{ marginLeft: "10px" }}>{item.name}</span>
+//         </Link>
+//       </li>
+//     );
+//   };
+
+//   // Function to get full image URL
+//   const getFullImageUrl = (imagePath) => {
+//     if (!imagePath) return null;
+    
+//     // If it's already a full URL, return as is
+//     if (imagePath.startsWith('http')) {
+//       return imagePath;
+//     }
+    
+//     // If it starts with /media/, append baseurl
+//     if (imagePath.startsWith('/media/')) {
+//       return `${baseurl}${imagePath}`;
+//     }
+    
+//     // If it's just a filename or path without /media/, add /media/ prefix
+//     if (!imagePath.startsWith('/')) {
+//       return `${baseurl}/media/${imagePath}`;
+//     }
+    
+//     // Default case
+//     return `${baseurl}${imagePath}`;
+//   };
+
+//   return (
+//     <>
+//       {/* NAVBAR */}
+//       <header className="wn-navbar">
+//         <div className="wn-nav-left">
+//           <button className="wn-menu-btn" onClick={() => setOpen(true)}>☰</button>
+//         <div className="wn-logo">
+//   <img 
+//     src={logoImage} 
+//     alt="Shriraj Logo" 
+//     className="wn-logo-img"
+//     onClick={() => navigate('/agent-home')}
+//     style={{ cursor: 'pointer' }}
+//   />
+// </div>
+
+//         </div>
+//           <AgentSearchBar placeholder="Search products..." />
+
+        
+//         {/* Header Dropdown Menus - Desktop */}
+//         <div className="wn-header-dropdowns">
+//           {/* Real Estate Dropdown */}
+//           <div className="wn-header-dropdown" ref={realEstateDropdownRef}>
+//             <button 
+//               className="wn-header-dropdown-btn"
+//               onClick={() => setOpenRealEstateDropdown(!openRealEstateDropdown)}
+//             >
+//               <FaBuilding className="wn-dropdown-btn-icon" />
+//               <span>Real Estate</span>
+//               <FaCaretDown className="wn-dropdown-arrow" />
+//             </button>
+//             {openRealEstateDropdown && (
+//               <div className="wn-header-dropdown-menu">
+//                 {realEstateItems.map((item, idx) => renderDropdownItem(item, idx))}
+//               </div>
+//             )}
+//           </div>
+
+//           {/* Business Dropdown */}
+//           <div className="wn-header-dropdown" ref={businessDropdownRef}>
+//             <button 
+//               className="wn-header-dropdown-btn"
+//               onClick={() => setOpenBusinessDropdown(!openBusinessDropdown)}
+//             >
+//               <FaBriefcase className="wn-dropdown-btn-icon" />
+//               <span>Business</span>
+//               <FaCaretDown className="wn-dropdown-arrow" />
+//             </button>
+//             {openBusinessDropdown && (
+//               <div className="wn-header-dropdown-menu">
+//                 {businessItems.map((item, idx) => renderDropdownItem(item, idx))}
+//               </div>
+//             )}
+//           </div>
+
+//           {/* Products Dropdown */}
+//           <div className="wn-header-dropdown" ref={productsDropdownRef}>
+//             <button 
+//               className="wn-header-dropdown-btn"
+//               onClick={() => setOpenProductsDropdown(!openProductsDropdown)}
+//             >
+//               <FaLayerGroup className="wn-dropdown-btn-icon" />
+//               <span>Products</span>
+//               <FaCaretDown className="wn-dropdown-arrow" />
+//             </button>
+//             {openProductsDropdown && (
+//               <div className="wn-header-dropdown-menu">
+//                 {productsItems.map((item, idx) => renderDropdownItem(item, idx))}
+//               </div>
+//             )}
+//           </div>
+          
+//           {/* Orders Dropdown */}
+//           <div className="wn-header-dropdown" ref={operationsDropdownRef}>
+//             <button 
+//               className="wn-header-dropdown-btn"
+//               onClick={() => setOpenOperationsDropdown(!openOperationsDropdown)}
+//             >
+//               <FaTag className="wn-dropdown-btn-icon" />
+//               <span>Orders</span>
+//               <FaCaretDown className="wn-dropdown-arrow" />
+//             </button>
+//             {openOperationsDropdown && (
+//               <div className="wn-header-dropdown-menu">
+//                 <Link
+//                   to="/agent-my-orders"
+//                   className="wn-dropdown-link"
+//                   onClick={() => setOpenOperationsDropdown(false)}
+//                 >
+//                   <span className="wn-dropdown-icon"><FaTag /></span>
+//                   <span className="wn-dropdown-text">My Orders</span>
+//                 </Link>
+//                 <Link
+//                   to="/agent-orders"
+//                   className="wn-dropdown-link"
+//                   onClick={() => setOpenOperationsDropdown(false)}
+//                 >
+//                   <span className="wn-dropdown-icon"><FaClipboardList /></span>
+//                   <span className="wn-dropdown-text">Orders</span>
+//                 </Link>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+
+//         <div className="wn-nav-right">
+//         {/* Copy Status Message */}
+// {copyStatus.showMessage && (
+//   <div className="wn-copy-message">
+//     {copyStatus.copied ? (
+//       <>
+//         <FaCheck style={{ marginRight: "5px", color: "#4CAF50" }} />
+//         Referral link copied!
+//       </>
+//     ) : (
+//       "Copying..."
+//     )}
+//   </div>
+// )}
+
+
+
+// {/* Wishlist Icon with Dynamic Count */}
+// <div 
+//   className="wn-wishlist" 
+//   onClick={handleWishlistClick}
+//   title={`Wishlist: ${wishlistCount} item${wishlistCount !== 1 ? 's' : ''}`}
+//   style={{ 
+//     opacity: wishlistLoading ? 0.7 : 1,
+//     cursor: wishlistLoading ? 'not-allowed' : 'pointer'
+//   }}
+// >
+//   <FaHeart size={16} />
+//   {wishlistCount > 0 && (
+//     <span className="wn-wishlist-badge">{wishlistCount > 99 ? '99+' : wishlistCount}</span>
+//   )}
+// </div>
+
+// {/* Cart Icon with Dynamic Count - FIXED: Now shows total quantity instead of item count */}
+// <div 
+//   className="wn-cart" 
+//   onClick={handleCartClick}
+//   title={`Cart: ${cartTotalQuantity} item${cartTotalQuantity !== 1 ? 's' : ''} total`}
+//   style={{ 
+//     opacity: cartLoading ? 0.7 : 1,
+//     cursor: cartLoading ? 'not-allowed' : 'pointer'
+//   }}
+// >
+//   <FaShoppingCart size={16} />
+//   {cartTotalQuantity > 0 && (
+//     <span className="wn-cart-badge">{cartTotalQuantity > 99 ? '99+' : cartTotalQuantity}</span>
+//   )}
+// </div>
+
+// {/* Notification Icon with Dropdown */}
+// <div 
+//   ref={notificationRef}
+//   className="wn-notification-container"
+// >
+//   <div 
+//     className="wn-notification-icon" 
+//     onClick={handleNotificationClick}
+//     title="Notifications"
+//   >
+//     <FaBell size={16} />
+//     {unreadCount > 0 && (
+//       <span className="wn-notification-badge">{unreadCount}</span>
+//     )}
+//   </div>
+  
+//   {/* Notifications Dropdown */}
+//   {showNotifications && (
+//     <div className="wn-notifications-dropdown">
+//       <div className="wn-notifications-header">
+//         <h4>Notifications</h4>
+//       </div>
+      
+//       <div className="wn-notifications-list">
+//         {notifications.length > 0 ? (
+//           notifications.map((notification) => (
+//             <div 
+//               key={notification.notification_status_id}
+//               className={`wn-notification-item ${!notification.is_read ? 'wn-unread' : ''}`}
+//               onClick={() => handleNotificationItemClick(notification)}
+//             >
+//               <div className="wn-notification-content">
+//                 {formatNotificationMessage(notification)}
+//                 <small className="wn-notification-time">
+//                   {new Date(notification.created_at).toLocaleDateString('en-US', {
+//                     month: 'short',
+//                     day: 'numeric',
+//                     hour: '2-digit',
+//                     minute: '2-digit'
+//                   })}
+//                 </small>
+//               </div>
+//               {!notification.is_read && (
+//                 <div className="wn-unread-dot"></div>
+//               )}
+//             </div>
+//           ))
+//         ) : (
+//           <div className="wn-no-notifications">
+//             No notifications yet
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   )}
+// </div>
+
+// {/* User Panel Indicator */}
+// <div 
+//   className="wn-user-panel-indicator"
+//   ref={profilePanelRef}
+//   onClick={handleProfilePanelClick}
+//   onMouseEnter={handleProfilePanelMouseEnter}
+//   onMouseLeave={handleProfilePanelMouseLeave}
+//   style={{ cursor: 'pointer', position: 'relative' }}
+// >
+//   <div className="wn-panel-badge">
+//     <FaUserTie className="wn-panel-icon" />
+//     <span className="wn-panel-name">Team</span>
+//   </div>
+//   <div className="wn-user-role-info">
+//     <span className="wn-user-name">
+//       {userData.full_name || userData.username || "Team"}
+//     </span>
+//   </div>
+  
+//   {/* Tooltip on hover */}
+//   {showProfileTooltip && (
+//     <div className="wn-profile-tooltip">
+//       <div className="wn-tooltip-content">
+//         <div className="wn-tooltip-arrow"></div>
+//         <div className="wn-tooltip-text">
+//           <FaUserCircle size={14} style={{ marginRight: '8px' }} />
+//           Click here to view profile details
+//         </div>
+//       </div>
+//     </div>
+//   )}
+// </div>
+//         </div>
+//       </header>
+
+//       {/* Mobile Logout Button - Fixed at bottom of sidebar only (removed from navbar) */}
+//       {/* The logout button in sidebar will serve as the mobile logout option */}
+
+//       {/* OVERLAY */}
+//       {open && <div className="wn-overlay" onClick={() => setOpen(false)} />}
+
+//       {/* SIDEBAR */}
+//       <aside className={`wn-sidebar ${open ? "open" : ""}`}>
+//         {/* Header with Logo and User Info Side by Side */}
+//         <div className="wn-sidebar-header">
+//           <div className="wn-logo-with-user">
+//             <img 
+//               src={logoImage} 
+//               alt="Shriraj Logo" 
+//               className="wn-logo-img-sidebar"
+//             />
+//             <div className="wn-user-info-compact">
+//               <div className="wn-user-details-compact">
+//                 {userData.email && (
+//                   <div className="wn-detail-item">
+//                     <FaEnvelope className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">{userData.email}</span>
+//                   </div>
+//                 )}
+                
+//                 {userData.phone_number && (
+//                   <div className="wn-detail-item">
+//                     <FaPhone className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">
+//                       {userData.phone_number}
+//                     </span>
+//                   </div>
+//                 )}
+                
+//                 {userData.referral_id ? (
+//                   <div className="wn-detail-item">
+//                     <FaIdCard className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">
+//                       Ref ID: {userData.referral_id}
+//                     </span>
+//                   </div>
+//                 ) : (
+//                   <div className="wn-detail-item">
+//                     <FaIdCard className="wn-detail-icon" size={10} />
+//                     <span className="wn-detail-text">Ref ID: None</span>
+//                   </div>
+//                 )}
+//               </div>
+//             </div>
+//           </div>
+          
+//           <button className="wn-close-btn" onClick={() => setOpen(false)}>✕</button>
+//         </div>
+
+//         {/* Refer Button Section */}
+//         <div className="wn-sidebar-status-section">
+//           <ShareModal
+//             mode="custom"
+//             shareUrl={`${window.location.origin}/register?referral_id=${userData.referral_id || "SRP000001"}`}
+//             productTitle="Join using my referral link!"
+//             triggerAs="button"
+//             triggerClassName="wn-sidebar-refer-btn"
+//             triggerLabel={
+//               <>
+//                 <FaShareAlt style={{ marginRight: "8px" }} />
+//                 Refer Now
+//               </>
+//             }
+//           />
+//         </div>
+
+//         {/* Navigation Items */}
+//         <div className="wn-nav-section">
+//           <div className="wn-section-title">Team Menu</div>
+//           <ul className="wn-menu-list">
+//             {menuItems.map((item, index) => (
+//               <React.Fragment key={item.name || item.path || index}>
+//                 {/* Check if item has submenu */}
+//                 {item.subMenu ? (
+//                   <li className="wn-menu-item-with-submenu">
+//                     <div 
+//                       className="wn-menu-header"
+//                       onClick={() => toggleSubMenu(item.name)}
+//                     >
+//                       <span className="wn-sidebar-icon">{item.icon}</span>
+//                       <span className="wn-sidebar-text" style={{ marginLeft: "10px" }}>{item.name}</span>
+//                       <span className="wn-menu-arrow">
+//                         {expandedMenu === item.name ? <FaCaretDown /> : <FaCaretRight />}
+//                       </span>
+//                     </div>
+                    
+//                     {/* Submenu items */}
+//                     {expandedMenu === item.name && (
+//                       <ul className="wn-submenu">
+//                         {item.subMenu.map((subItem, subIndex) => {
+//                           if (subItem.onClick) {
+//                             return (
+//                               <li key={`${subItem.name}-${subIndex}`}>
+//                                 <a 
+//                                   href={subItem.path}
+//                                   className="wn-submenu-link"
+//                                   onClick={(e) => {
+//                                     e.preventDefault();
+//                                     subItem.onClick(e);
+//                                     setOpen(false);
+//                                   }}
+//                                 >
+//                                   <span className="wn-submenu-icon">
+//                                     {subItem.icon || <FaCogs />}
+//                                   </span>
+//                                   <span className="wn-submenu-text" style={{ marginLeft: "10px" }}>{subItem.name}</span>
+//                                 </a>
+//                               </li>
+//                             );
+//                           }
+//                           return (
+//                             <li key={`${subItem.name}-${subIndex}`}>
+//                               <Link 
+//                                 to={subItem.path} 
+//                                 className="wn-submenu-link"
+//                                 onClick={() => setOpen(false)}
+//                               >
+//                                 <span className="wn-submenu-icon">
+//                                   {subItem.icon || <FaCogs />}
+//                                 </span>
+//                                 <span className="wn-submenu-text" style={{ marginLeft: "10px" }}>{subItem.name}</span>
+//                               </Link>
+//                             </li>
+//                           );
+//                         })}
+//                       </ul>
+//                     )}
+//                   </li>
+//                 ) : (
+//                   // Regular menu item without submenu
+//                   renderMenuItem(item)
+//                 )}
+//               </React.Fragment>
+//             ))}
+//           </ul>
+//         </div>
+
+//         <div className="wn-divider" />
+
+//         {/* Logout Button - Mobile (in sidebar) */}
+//         <div className="wn-logout-section">
+//           <button 
+//             className="wn-logout-btn"
+//             onClick={handleLogout}
+//           >
+//             <span className="wn-logout-icon">
+//               <FaSignOutAlt />
+//             </span>
+//             <span className="wn-logout-text">Logout</span>
+//           </button>
+//         </div>
+//       </aside>
+//     </>
+//   );
+// };
+
+// export default AgentNavbar;
+
+//==================================================
+
+// Changes done on Date 17-04-2026
+
+
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Agent_Navbar.css";
@@ -13407,7 +14775,10 @@ const AgentNavbar = () => {
     username: "",
     user_name: "",
     referred_by: "",
-    image: ""
+    image: "",
+    first_name: "",
+    last_name: "",
+    full_name: ""
   });
   const [copyStatus, setCopyStatus] = useState({ copied: false, showMessage: false });
   const [showProfileTooltip, setShowProfileTooltip] = useState(false);
@@ -13451,7 +14822,36 @@ const AgentNavbar = () => {
   // Get current user ID from localStorage
   const currentUserId = localStorage.getItem("user_id");
 
-  // Fetch user data from API to get the image
+  // Helper function to get user display name
+  const getUserDisplayName = () => {
+    // Priority: full_name > first_name + last_name > username > user_name > "Team"
+    if (userData.full_name && userData.full_name.trim() !== "") {
+      return userData.full_name;
+    }
+    
+    if (userData.first_name && userData.first_name.trim() !== "") {
+      if (userData.last_name && userData.last_name.trim() !== "") {
+        return `${userData.first_name} ${userData.last_name}`;
+      }
+      return userData.first_name;
+    }
+    
+    if (userData.last_name && userData.last_name.trim() !== "") {
+      return userData.last_name;
+    }
+    
+    if (userData.username && userData.username.trim() !== "") {
+      return userData.username;
+    }
+    
+    if (userData.user_name && userData.user_name.trim() !== "") {
+      return userData.user_name;
+    }
+    
+    return "Team";
+  };
+
+  // Fetch user data from API to get the image and name fields
   const fetchUserDataFromAPI = async () => {
     if (!currentUserId) return;
     
@@ -13460,9 +14860,18 @@ const AgentNavbar = () => {
       console.log("User data from API:", response.data);
       
       if (response.data) {
-        // Update localStorage with the image
+        // Update localStorage with the image and name fields
         if (response.data.image) {
           localStorage.setItem("user_image", response.data.image);
+        }
+        if (response.data.first_name) {
+          localStorage.setItem("first_name", response.data.first_name);
+        }
+        if (response.data.last_name) {
+          localStorage.setItem("last_name", response.data.last_name);
+        }
+        if (response.data.full_name) {
+          localStorage.setItem("full_name", response.data.full_name);
         }
         
         setUserData(prevData => ({
@@ -13473,7 +14882,10 @@ const AgentNavbar = () => {
           username: response.data.username || prevData.username,
           user_name: response.data.user_name || prevData.user_name,
           referred_by: response.data.referred_by || prevData.referred_by,
-          image: response.data.image || prevData.image
+          image: response.data.image || prevData.image,
+          first_name: response.data.first_name || prevData.first_name,
+          last_name: response.data.last_name || prevData.last_name,
+          full_name: response.data.full_name || prevData.full_name
         }));
       }
     } catch (error) {
@@ -13491,7 +14903,10 @@ const AgentNavbar = () => {
         username: localStorage.getItem("username") || "",
         user_name: localStorage.getItem("user_name") || "",
         referred_by: localStorage.getItem("referred_by") || "",
-        image: localStorage.getItem("user_image") || ""
+        image: localStorage.getItem("user_image") || "",
+        first_name: localStorage.getItem("first_name") || "",
+        last_name: localStorage.getItem("last_name") || "",
+        full_name: localStorage.getItem("full_name") || ""
       };
       setUserData(storedUserData);
       console.log("User data from localStorage:", storedUserData);
@@ -13499,7 +14914,7 @@ const AgentNavbar = () => {
 
     fetchUserData();
     
-    // Fetch fresh user data from API to get the image
+    // Fetch fresh user data from API to get the image and name fields
     fetchUserDataFromAPI();
     
     // Listen for storage changes
@@ -13567,114 +14982,60 @@ const AgentNavbar = () => {
   }, []);
 
   /* ================= FETCH CART ITEMS ================= */
-//   const fetchCartItems = async () => {
-//     const userId = localStorage.getItem("user_id");
+  const fetchCartItems = async () => {
+    const userId = localStorage.getItem("user_id");
     
-//     if (!userId) {
-//       console.log("No user_id found, cannot fetch cart items");
-//       setCartItems([]);
-//       setCartItemCount(0);
-//       setCartTotalQuantity(0);
-//       return;
-//     }
-
-//     setCartLoading(true);
-//     try {
-//       console.log("Fetching cart items for user:", userId);
-      
-//       const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
-//       console.log("Cart API Response:", response.data);
-      
-//       const cartResponse = response.data;
-//       let userCartItems = [];
-      
-//       if (cartResponse.results && Array.isArray(cartResponse.results)) {
-//         userCartItems = cartResponse.results;
-//       } else if (Array.isArray(cartResponse)) {
-//         userCartItems = cartResponse;
-//       }
-      
-//       console.log("User cart items:", userCartItems);
-      
-//       setCartItems(userCartItems);
-      
-//       if (cartResponse.count !== undefined) {
-//         setCartItemCount(cartResponse.count);
-//       } else {
-//         setCartItemCount(userCartItems.length);
-//       }
-      
-//       const totalQuantity = userCartItems.reduce((total, item) => {
-//         return total + (item.quantity || 1);
-//       }, 0);
-      
-//       setCartTotalQuantity(totalQuantity);
-      
-//     } catch (error) {
-//       console.error("Error fetching cart items:", error);
-//       setCartItems([]);
-//       setCartItemCount(0);
-//       setCartTotalQuantity(0);
-//     } finally {
-//       setCartLoading(false);
-//     }
-//   };
-
-
-const fetchCartItems = async () => {
-  const userId = localStorage.getItem("user_id");
-  
-  if (!userId) {
-    console.log("No user_id found, cannot fetch cart items");
-    setCartItems([]);
-    setCartItemCount(0);
-    setCartTotalQuantity(0);
-    return;
-  }
-
-  setCartLoading(true);
-  try {
-    console.log("Fetching cart items for user:", userId);
-    
-    const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
-    console.log("Cart API Response:", response.data);
-    
-    const cartResponse = response.data;
-    let userCartItems = [];
-    
-    if (cartResponse.results && Array.isArray(cartResponse.results)) {
-      userCartItems = cartResponse.results;
-    } else if (Array.isArray(cartResponse)) {
-      userCartItems = cartResponse;
+    if (!userId) {
+      console.log("No user_id found, cannot fetch cart items");
+      setCartItems([]);
+      setCartItemCount(0);
+      setCartTotalQuantity(0);
+      return;
     }
-    
-    console.log("User cart items:", userCartItems);
-    
-    setCartItems(userCartItems);
-    
-    // Set cart item count (number of unique products)
-    if (cartResponse.count !== undefined) {
-      setCartItemCount(cartResponse.count);
-    } else {
-      setCartItemCount(userCartItems.length);
+
+    setCartLoading(true);
+    try {
+      console.log("Fetching cart items for user:", userId);
+      
+      const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
+      console.log("Cart API Response:", response.data);
+      
+      const cartResponse = response.data;
+      let userCartItems = [];
+      
+      if (cartResponse.results && Array.isArray(cartResponse.results)) {
+        userCartItems = cartResponse.results;
+      } else if (Array.isArray(cartResponse)) {
+        userCartItems = cartResponse;
+      }
+      
+      console.log("User cart items:", userCartItems);
+      
+      setCartItems(userCartItems);
+      
+      // Set cart item count (number of unique products)
+      if (cartResponse.count !== undefined) {
+        setCartItemCount(cartResponse.count);
+      } else {
+        setCartItemCount(userCartItems.length);
+      }
+      
+      // Calculate total quantity (sum of all quantities)
+      const totalQuantity = userCartItems.reduce((total, item) => {
+        return total + (item.quantity || 1);
+      }, 0);
+      
+      setCartTotalQuantity(totalQuantity);
+      
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+      setCartItems([]);
+      setCartItemCount(0);
+      setCartTotalQuantity(0);
+    } finally {
+      setCartLoading(false);
     }
-    
-    // Calculate total quantity (sum of all quantities)
-    const totalQuantity = userCartItems.reduce((total, item) => {
-      return total + (item.quantity || 1);
-    }, 0);
-    
-    setCartTotalQuantity(totalQuantity);
-    
-  } catch (error) {
-    console.error("Error fetching cart items:", error);
-    setCartItems([]);
-    setCartItemCount(0);
-    setCartTotalQuantity(0);
-  } finally {
-    setCartLoading(false);
-  }
-};
+  };
 
   /* ================= FETCH WISHLIST ITEMS ================= */
   const fetchWishlistItems = async () => {
@@ -14011,6 +15372,9 @@ const fetchCartItems = async () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user_roles");
+    localStorage.removeItem("first_name");
+    localStorage.removeItem("last_name");
+    localStorage.removeItem("full_name");
     
     sessionStorage.clear();
     setOpen(false);
@@ -14224,7 +15588,6 @@ const fetchCartItems = async () => {
         { path: "/agent-training-material", name: "Training Material", icon: <FaGraduationCap /> },
         { path: "/agent-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
         { path: "/agent-my-team", name: "My Team", icon: <FaUsers /> },
-        { path: "/business-enquiries/:businessId", name: "Product Enquiries", icon: <FaUsers /> },
 
       ],
     },
@@ -14291,6 +15654,9 @@ const fetchCartItems = async () => {
     // Default case
     return `${baseurl}${imagePath}`;
   };
+
+  // Get the display name for the current user
+  const displayName = getUserDisplayName();
 
   return (
     <>
@@ -14519,7 +15885,7 @@ const fetchCartItems = async () => {
   </div>
   <div className="wn-user-role-info">
     <span className="wn-user-name">
-      {userData.user_name || userData.username || "Team"}
+      {displayName}
     </span>
   </div>
   

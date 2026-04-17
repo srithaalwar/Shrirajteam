@@ -7833,13 +7833,1131 @@
 //==============================================
 
 
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import Swal from 'sweetalert2';
+// import './AddProductForm.css';
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import { baseurl } from '../../BaseURL/BaseURL';
+// import { FaTrash, FaPlusCircle, FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
+// import { useNavigate } from 'react-router-dom';
+
+// const AddProductForm = ({ onSuccess, onCancel }) => {
+//   const navigate = useNavigate();
+
+//   const [productData, setProductData] = useState({
+//     business: '',
+//     product_name: '',
+//     description: '',
+//     brand: '',
+//     model_no: '',
+//     category: '',
+//     attributes: {},
+//     has_variants: false
+//   });
+
+//   const [variants, setVariants] = useState([{
+//     sku: '',
+//     mrp: '',
+//     selling_price: '',
+//     stock: '',
+//     max_order_quantity: '', // Added field
+//     attributes: {},
+//     cgst_percent: 0,
+//     sgst_percent: 0,
+//     tax_percent: 0,
+//     hsn_code: '',
+//     weight_kg: '',
+//     length_cm: '',
+//     width_cm: '',
+//     height_cm: '',
+//     manufacture_date: '',
+//     expiry_date: '',
+//     is_returnable: true,
+//     return_days: 7,
+//     product_commission: '',
+//     offer_id: '',
+//     media: [{ media_type: 'image', sort_order: 0 }]
+//   }]);
+
+//   const [productAttributes, setProductAttributes] = useState([{ key: '', value: '' }]);
+//   const [variantAttributes, setVariantAttributes] = useState([[{ key: '', value: '' }]]);
+//   const [categories, setCategories] = useState([]);
+//   const [businesses, setBusinesses] = useState([]);
+//   const [offers, setOffers] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [errors, setErrors] = useState({});
+//   const [variantMediaFiles, setVariantMediaFiles] = useState([[]]); // variantMediaFiles[variantIndex][mediaIndex] = File
+//   const [userId, setUserId] = useState(null);
+//   const [userDataLoaded, setUserDataLoaded] = useState(false);
+
+//   // ─── Get user ID from localStorage ───────────────────────────────────────────
+//   useEffect(() => {
+//     const userIdFromStorage = localStorage.getItem('user_id');
+//     if (userIdFromStorage) {
+//       setUserId(userIdFromStorage);
+//       setUserDataLoaded(true);
+//     } else {
+//       const userDataJson = localStorage.getItem('user');
+//       if (userDataJson) {
+//         try {
+//           const parsedUser = JSON.parse(userDataJson);
+//           if (parsedUser.user_id) {
+//             setUserId(parsedUser.user_id);
+//             setUserDataLoaded(true);
+//           } else {
+//             showAuthError();
+//           }
+//         } catch {
+//           showAuthError();
+//         }
+//       } else {
+//         showAuthError();
+//       }
+//     }
+//   }, []);
+
+//   const showAuthError = () => {
+//     Swal.fire({
+//       icon: 'error',
+//       title: 'Authentication Required',
+//       text: 'Please login to access this page.',
+//       confirmButtonColor: '#273c75',
+//       confirmButtonText: 'Go to Login'
+//     }).then((result) => {
+//       if (result.isConfirmed) window.location.href = '/login';
+//     });
+//   };
+
+//   // ─── Fetch businesses & offers once userId is ready ───────────────────────────
+//   useEffect(() => {
+//     if (userId && userDataLoaded) {
+//       fetchBusinesses();
+//       fetchOffers();
+//     }
+//   }, [userId, userDataLoaded]);
+
+//   // ─── Fetch categories when business changes ───────────────────────────────────
+//   useEffect(() => {
+//     if (productData.business && userId) {
+//       fetchCategories(productData.business);
+//     } else {
+//       setCategories([]);
+//       setProductData(prev => ({ ...prev, category: '' }));
+//     }
+//   }, [productData.business, userId]);
+
+//   // ─── Auto-set has_variants when more than 1 variant ──────────────────────────
+//   useEffect(() => {
+//     setProductData(prev => ({
+//       ...prev,
+//       has_variants: variants.length > 1
+//     }));
+//   }, [variants.length]);
+
+//   // ─── Sync productAttributes → productData.attributes ─────────────────────────
+//   useEffect(() => {
+//     const attributesObj = {};
+//     productAttributes.forEach(attr => {
+//       if (attr.key && attr.value) {
+//         if (attr.value.toLowerCase() === 'true') attributesObj[attr.key] = true;
+//         else if (attr.value.toLowerCase() === 'false') attributesObj[attr.key] = false;
+//         else attributesObj[attr.key] = attr.value;
+//       }
+//     });
+//     setProductData(prev => ({ ...prev, attributes: attributesObj }));
+//   }, [productAttributes]);
+
+//   // ─── Sync variantAttributes → variants[].attributes ──────────────────────────
+//   useEffect(() => {
+//     setVariants(prev => prev.map((variant, vi) => {
+//       const attributesObj = {};
+//       (variantAttributes[vi] || []).forEach(attr => {
+//         if (attr.key && attr.value) attributesObj[attr.key] = attr.value;
+//       });
+//       return { ...variant, attributes: attributesObj };
+//     }));
+//   }, [variantAttributes]);
+
+//   // ─── API helpers ──────────────────────────────────────────────────────────────
+//   const fetchCategories = async (businessId) => {
+//     try {
+//       const response = await axios.get(
+//         `${baseurl}/categories/?user_id=${userId}&business_id=${businessId}&level=product`
+//       );
+//       setCategories(response.data.results || []);
+//     } catch (error) {
+//       console.error('Error fetching categories:', error);
+//       setCategories([]);
+//     }
+//   };
+
+//   const fetchBusinesses = async () => {
+//     try {
+//       const response = await axios.get(`${baseurl}/business/?user_id=${userId}&verification_status=verified`);
+//       setBusinesses(response.data.results || []);
+//     } catch (error) {
+//       console.error('Error fetching businesses:', error);
+//     }
+//   };
+
+//   const fetchOffers = async () => {
+//     try {
+//       const response = await axios.get(`${baseurl}/offers/user-id/${userId}/`);
+//       setOffers(response.data.results || []);
+//     } catch (error) {
+//       console.error('Error fetching offers:', error);
+//       setOffers([]);
+//     }
+//   };
+
+//   // ─── Product field handlers ───────────────────────────────────────────────────
+//   const handleProductChange = (e) => {
+//     const { name, value, type, checked } = e.target;
+//     if (name === 'business') {
+//       setProductData(prev => ({ ...prev, business: value, category: '' }));
+//     } else {
+//       setProductData(prev => ({
+//         ...prev,
+//         [name]: type === 'checkbox' ? checked : value
+//       }));
+//     }
+//     if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
+//   };
+
+//   // ─── Number input handlers to prevent arrows and handle decimal properly ──────
+//   const handleNumberInput = (e, vi, fieldName) => {
+//     let value = e.target.value;
+    
+//     // For integer fields (stock, max_order_quantity, return_days)
+//     if (['stock', 'max_order_quantity', 'return_days'].includes(fieldName)) {
+//       // Allow empty string
+//       if (value === '') {
+//         setVariants(prev => {
+//           const updated = [...prev];
+//           updated[vi] = { ...updated[vi], [fieldName]: value };
+//           return updated;
+//         });
+//         return;
+//       }
+      
+//       // Only allow positive integers
+//       const intValue = parseInt(value);
+//       if (!isNaN(intValue) && intValue >= 0 && value.match(/^\d+$/)) {
+//         setVariants(prev => {
+//           const updated = [...prev];
+//           updated[vi] = { ...updated[vi], [fieldName]: intValue };
+//           return updated;
+//         });
+//       }
+//       return;
+//     }
+    
+//     // For decimal fields
+//     if (value === '' || value === '-') {
+//       setVariants(prev => {
+//         const updated = [...prev];
+//         updated[vi] = { ...updated[vi], [fieldName]: value };
+//         return updated;
+//       });
+//       return;
+//     }
+    
+//     // Check if the value is a valid number (allowing decimal)
+//     const regex = /^-?\d*\.?\d*$/;
+//     if (regex.test(value)) {
+//       setVariants(prev => {
+//         const updated = [...prev];
+//         updated[vi] = { ...updated[vi], [fieldName]: value };
+//         return updated;
+//       });
+//     }
+//   };
+
+//   const handleNumberBlur = (vi, fieldName) => {
+//     setVariants(prev => {
+//       const updated = [...prev];
+//       let value = updated[vi][fieldName];
+      
+//       // For integer fields
+//       if (['stock', 'max_order_quantity', 'return_days'].includes(fieldName)) {
+//         if (value === '' || value === null || value === undefined) {
+//           updated[vi][fieldName] = 0;
+//         } else {
+//           const intValue = parseInt(value);
+//           if (!isNaN(intValue) && intValue >= 0) {
+//             updated[vi][fieldName] = intValue;
+//           } else {
+//             updated[vi][fieldName] = 0;
+//           }
+//         }
+//         return updated;
+//       }
+      
+//       // For decimal fields
+//       if (value === '' || value === '-') {
+//         updated[vi][fieldName] = 0;
+//       } else {
+//         const numValue = parseFloat(value);
+//         if (!isNaN(numValue)) {
+//           updated[vi][fieldName] = numValue;
+//         } else {
+//           updated[vi][fieldName] = 0;
+//         }
+//       }
+//       return updated;
+//     });
+//   };
+
+//   // ─── Variant field handlers ───────────────────────────────────────────────────
+//   const handleVariantChange = (index, e) => {
+//     const { name, value, type, checked } = e.target;
+//     let processedValue = value;
+
+//     // For number fields, handle specially to prevent arrows
+//     if (['mrp', 'selling_price', 'cgst_percent', 'sgst_percent', 'tax_percent',
+//          'weight_kg', 'length_cm', 'width_cm', 'height_cm', 'product_commission'].includes(name)) {
+//       // Don't process here, let the number input handlers handle it
+//       return;
+//     } else if (['stock', 'max_order_quantity', 'return_days'].includes(name)) {
+//       processedValue = value === '' ? '' : parseInt(value) || 0;
+//     } else if (type === 'checkbox') {
+//       processedValue = checked;
+//     }
+
+//     setVariants(prev => {
+//       const updated = [...prev];
+//       updated[index] = { ...updated[index], [name]: processedValue };
+//       return updated;
+//     });
+//   };
+
+//   // ─── Product Attribute handlers ───────────────────────────────────────────────
+//   const handleProductAttributeChange = (index, e) => {
+//     const { name, value } = e.target;
+//     setProductAttributes(prev => {
+//       const updated = [...prev];
+//       updated[index] = { ...updated[index], [name]: value };
+//       return updated;
+//     });
+//   };
+
+//   const addProductAttribute = () => setProductAttributes(prev => [...prev, { key: '', value: '' }]);
+
+//   const removeProductAttribute = (index) => {
+//     if (productAttributes.length > 1) {
+//       setProductAttributes(prev => prev.filter((_, i) => i !== index));
+//     }
+//   };
+
+//   // ─── Variant Attribute handlers ───────────────────────────────────────────────
+//   const handleVariantAttributeChange = (vi, ai, e) => {
+//     const { name, value } = e.target;
+//     setVariantAttributes(prev => {
+//       const updated = prev.map(a => [...a]);
+//       if (!updated[vi]) updated[vi] = [{ key: '', value: '' }];
+//       updated[vi][ai] = { ...updated[vi][ai], [name]: value };
+//       return updated;
+//     });
+//   };
+
+//   const addVariantAttribute = (vi) => {
+//     setVariantAttributes(prev => {
+//       const updated = prev.map(a => [...a]);
+//       if (!updated[vi]) updated[vi] = [];
+//       updated[vi] = [...updated[vi], { key: '', value: '' }];
+//       return updated;
+//     });
+//   };
+
+//   const removeVariantAttribute = (vi, ai) => {
+//     setVariantAttributes(prev => {
+//       const updated = prev.map(a => [...a]);
+//       if (updated[vi] && updated[vi].length > 1) {
+//         updated[vi] = updated[vi].filter((_, i) => i !== ai);
+//       }
+//       return updated;
+//     });
+//   };
+
+//   // ─── Media handlers ───────────────────────────────────────────────────────────
+//   const handleMediaFileChange = (vi, mi, e) => {
+//     const file = e.target.files?.[0];
+//     if (!file) return;
+
+//     const fileType = file.type.startsWith('video/') ? 'video' : 'image';
+
+//     // Update file list
+//     setVariantMediaFiles(prev => {
+//       const updated = prev.map(v => [...v]);
+//       if (!updated[vi]) updated[vi] = [];
+//       updated[vi][mi] = file;
+//       return updated;
+//     });
+
+//     // Update media type in variant
+//     setVariants(prev => {
+//       const updated = [...prev];
+//       const media = [...(updated[vi].media || [])];
+//       media[mi] = { ...media[mi], media_type: fileType };
+//       updated[vi] = { ...updated[vi], media };
+//       return updated;
+//     });
+
+//     // Clear media error
+//     if (errors[`variant_${vi}_media`]) {
+//       setErrors(prev => {
+//         const newErr = { ...prev };
+//         delete newErr[`variant_${vi}_media`];
+//         return newErr;
+//       });
+//     }
+//   };
+
+//   const handleMediaTypeChange = (vi, mi, e) => {
+//     const { value } = e.target;
+//     setVariants(prev => {
+//       const updated = [...prev];
+//       const media = [...(updated[vi].media || [])];
+//       media[mi] = { ...media[mi], media_type: value };
+//       updated[vi] = { ...updated[vi], media };
+//       return updated;
+//     });
+//   };
+
+//   const handlePrimaryChange = (vi, mi, e) => {
+//     const { checked } = e.target;
+//     setVariants(prev => {
+//       const updated = [...prev];
+//       const media = updated[vi].media.map((m, idx) => ({
+//         ...m,
+//         is_primary: idx === mi ? checked : false
+//       }));
+//       updated[vi] = { ...updated[vi], media };
+//       return updated;
+//     });
+//   };
+
+//   const addMediaToVariant = (vi) => {
+//     setVariants(prev => {
+//       const updated = [...prev];
+//       const media = [...(updated[vi].media || [])];
+//       media.push({ media_type: 'image', sort_order: media.length, is_primary: false });
+//       updated[vi] = { ...updated[vi], media };
+//       return updated;
+//     });
+//     setVariantMediaFiles(prev => {
+//       const updated = prev.map(v => [...v]);
+//       if (!updated[vi]) updated[vi] = [];
+//       updated[vi] = [...updated[vi], null];
+//       return updated;
+//     });
+//   };
+
+//   const removeMediaFromVariant = (vi, mi) => {
+//     if (mi === 0 && variants[vi].media.length === 1) return; // keep at least one
+
+//     setVariants(prev => {
+//       const updated = [...prev];
+//       const media = updated[vi].media
+//         .filter((_, idx) => idx !== mi)
+//         .map((m, idx) => ({ ...m, sort_order: idx }));
+//       updated[vi] = { ...updated[vi], media };
+//       return updated;
+//     });
+//     setVariantMediaFiles(prev => {
+//       const updated = prev.map(v => [...v]);
+//       if (updated[vi]) updated[vi] = updated[vi].filter((_, idx) => idx !== mi);
+//       return updated;
+//     });
+//   };
+
+//   // ─── Add / remove variants ────────────────────────────────────────────────────
+//   const addVariant = () => {
+//     setVariants(prev => [...prev, {
+//       sku: '', mrp: '', selling_price: '', stock: '', max_order_quantity: '', // Added field
+//       attributes: {},
+//       cgst_percent: 0, sgst_percent: 0, tax_percent: 0, hsn_code: '',
+//       weight_kg: '', length_cm: '', width_cm: '', height_cm: '',
+//       manufacture_date: '', expiry_date: '', is_returnable: true, return_days: 7,
+//       product_commission: '', offer_id: '',
+//       media: [{ media_type: 'image', sort_order: 0, is_primary: true }]
+//     }]);
+//     setVariantMediaFiles(prev => [...prev, []]);
+//     setVariantAttributes(prev => [...prev, [{ key: '', value: '' }]]);
+//   };
+
+//   const removeVariant = (index) => {
+//     if (variants.length > 1) {
+//       setVariants(prev => prev.filter((_, i) => i !== index));
+//       setVariantMediaFiles(prev => prev.filter((_, i) => i !== index));
+//       setVariantAttributes(prev => prev.filter((_, i) => i !== index));
+//     }
+//   };
+
+//   // ─── Offer display helper ─────────────────────────────────────────────────────
+//   const getOfferDisplayText = (offer) => {
+//     if (!offer) return '';
+//     let text = '';
+//     if (offer.offer_type === 'discount_percent') text = `${offer.value}% off`;
+//     else if (offer.offer_type === 'discount_flat') text = `₹${offer.value} off`;
+//     else if (offer.offer_type === 'buy_x_get_y') text = `Buy ${offer.x_quantity} Get ${offer.y_quantity}`;
+//     else if (offer.offer_type === 'free_gift') text = 'Free Gift';
+//     else text = offer.description || 'Special Offer';
+//     if (offer.start_date && offer.end_date) text += ` (${offer.start_date} – ${offer.end_date})`;
+//     return text;
+//   };
+
+//   // ─── Validation ───────────────────────────────────────────────────────────────
+//   const validateForm = () => {
+//     const newErrors = {};
+
+//     if (!productData.product_name.trim()) newErrors.product_name = 'Product name is required';
+//     if (!productData.category) newErrors.category = 'Category is required';
+//     if (!productData.business) newErrors.business = 'Business is required';
+
+//     variants.forEach((variant, vi) => {
+//       if (!variant.mrp || parseFloat(variant.mrp) <= 0) newErrors[`variant_${vi}_mrp`] = 'Valid MRP is required';
+//       if (variant.stock !== '' && parseInt(variant.stock) < 0) newErrors[`variant_${vi}_stock`] = 'Stock cannot be negative';
+//       if (variant.max_order_quantity !== '' && parseInt(variant.max_order_quantity) < 0) {
+//         newErrors[`variant_${vi}_max_order_quantity`] = 'Max order quantity cannot be negative';
+//       }
+
+//       // Check at least one actual file is uploaded for this variant
+//       const files = variantMediaFiles[vi] || [];
+//       const hasFile = files.some(f => f instanceof File);
+//       if (!hasFile) newErrors[`variant_${vi}_media`] = 'At least one product image or video is required';
+//     });
+
+//     setErrors(newErrors);
+
+//     if (Object.keys(newErrors).length > 0) {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Form Validation Error',
+//         text: 'Please fill in all required fields correctly',
+//         confirmButtonColor: '#273c75',
+//         confirmButtonText: 'OK'
+//       });
+//       return false;
+//     }
+//     return true;
+//   };
+
+//   // ─── Submit ───────────────────────────────────────────────────────────────────
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     if (!userId) {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Authentication Error',
+//         text: 'User ID is required. Please login again.',
+//         confirmButtonColor: '#273c75',
+//         confirmButtonText: 'OK'
+//       });
+//       return;
+//     }
+
+//     if (!validateForm()) return;
+
+//     setLoading(true);
+
+//     try {
+//       const formDataToSend = new FormData();
+
+//       // ── Product JSON ──────────────────────────────────────────────────────────
+//       const cleanProduct = {
+//         business: parseInt(productData.business),
+//         product_name: productData.product_name,
+//         description: productData.description || '',
+//         brand: productData.brand || '',
+//         model_no: productData.model_no || '',
+//         category: parseInt(productData.category),
+//         attributes: productData.attributes,
+//         has_variants: variants.length > 1 || productData.has_variants,
+//         // Remove verification_status entirely - let backend handle it
+//         // DO NOT include verification_status here
+//         user_id: userId,
+//         created_by: userId
+//       };
+
+//       // Remove any undefined or null values
+//       Object.keys(cleanProduct).forEach(key => {
+//         if (cleanProduct[key] === undefined || cleanProduct[key] === null) {
+//           delete cleanProduct[key];
+//         }
+//       });
+
+//       // ── Variants JSON (no file blobs, only metadata) ──────────────────────────
+//       const cleanVariants = variants.map((variant) => {
+//         // Build media metadata array in order
+//         const mediaArray = (variant.media || []).map((m, mi) => ({
+//           media_type: m.media_type || 'image',
+//           sort_order: mi,
+//           is_primary: m.is_primary || mi === 0
+//         }));
+
+//         const variantObj = {
+//           sku: variant.sku || undefined,
+//           mrp: variant.mrp === '' ? 0 : parseFloat(variant.mrp) || 0,
+//           selling_price: variant.selling_price === '' || variant.selling_price === null
+//             ? null
+//             : parseFloat(variant.selling_price),
+//           stock: variant.stock === '' ? 0 : parseInt(variant.stock) || 0,
+//           max_order_quantity: variant.max_order_quantity === '' ? null : parseInt(variant.max_order_quantity) || null, // Added field
+//           attributes: variant.attributes,
+//           cgst_percent: parseFloat(variant.cgst_percent) || 0,
+//           sgst_percent: parseFloat(variant.sgst_percent) || 0,
+//           tax_percent: parseFloat(variant.tax_percent) || 0,
+//           hsn_code: variant.hsn_code || '',
+//           weight_kg: variant.weight_kg === '' ? null : parseFloat(variant.weight_kg) || null,
+//           length_cm: variant.length_cm === '' ? null : parseFloat(variant.length_cm) || null,
+//           width_cm: variant.width_cm === '' ? null : parseFloat(variant.width_cm) || null,
+//           height_cm: variant.height_cm === '' ? null : parseFloat(variant.height_cm) || null,
+//           manufacture_date: variant.manufacture_date || null,
+//           expiry_date: variant.expiry_date || null,
+//           is_returnable: variant.is_returnable || false,
+//           return_days: variant.return_days === '' ? 7 : parseInt(variant.return_days) || 7,
+//           product_commission: variant.product_commission === ''
+//             ? '0.00'
+//             : parseFloat(variant.product_commission).toFixed(2),
+//           media: mediaArray
+//         };
+
+//         // Remove undefined values
+//         Object.keys(variantObj).forEach(key => {
+//           if (variantObj[key] === undefined) {
+//             delete variantObj[key];
+//           }
+//         });
+
+//         if (variant.offer_id && variant.offer_id !== '') {
+//           variantObj.offer_id = parseInt(variant.offer_id);
+//         }
+
+//         return variantObj;
+//       });
+
+//       formDataToSend.append('product', JSON.stringify(cleanProduct));
+//       formDataToSend.append('variants', JSON.stringify(cleanVariants));
+
+//       // ── IMPORTANT: Append files as 'media_files' (plural) ────────────────────
+//       variantMediaFiles.forEach((filesForVariant) => {
+//         (filesForVariant || []).forEach((file) => {
+//           if (file instanceof File) {
+//             formDataToSend.append('media_files', file);
+//           }
+//         });
+//       });
+
+//       // Debug log - check what's being sent
+//       console.log('Product being sent (without verification_status):', cleanProduct);
+//       console.log('Variants being sent:', cleanVariants);
+//       console.log('Files being sent:');
+//       for (let pair of formDataToSend.entries()) {
+//         console.log(pair[0], ':', pair[1] instanceof File ? pair[1].name : pair[1]);
+//       }
+
+//       const response = await axios.post(`${baseurl}/products/`, formDataToSend, {
+//         headers: { 'Content-Type': 'multipart/form-data' }
+//       });
+
+//       console.log('Response:', response.data);
+
+//       await Swal.fire({
+//         icon: 'success',
+//         title: 'Product Added Successfully!',
+//         text: 'Your product has been added and is pending verification.',
+//         confirmButtonColor: '#273c75',
+//         confirmButtonText: 'OK'
+//       });
+
+//       if (onSuccess) onSuccess(response.data);
+//       navigate('/agent-my-business');
+//       // Reset form
+//       setProductData({ business: '', product_name: '', description: '', brand: '', model_no: '', category: '', attributes: {}, has_variants: false });
+//       setVariants([{ sku: '', mrp: '', selling_price: '', stock: '', max_order_quantity: '', attributes: {}, cgst_percent: 0, sgst_percent: 0, tax_percent: 0, hsn_code: '', weight_kg: '', length_cm: '', width_cm: '', height_cm: '', manufacture_date: '', expiry_date: '', is_returnable: true, return_days: 7, product_commission: '', offer_id: '', media: [{ media_type: 'image', sort_order: 0, is_primary: true }] }]);
+//       setProductAttributes([{ key: '', value: '' }]);
+//       setVariantAttributes([[{ key: '', value: '' }]]);
+//       setVariantMediaFiles([[]]);
+//       setCategories([]);
+
+//     } catch (error) {
+//       console.error('Error creating product:', error);
+//       console.error('Error response:', error.response?.data);
+//       console.error('Error response status:', error.response?.status);
+//       console.error('Error response headers:', error.response?.headers);
+
+//       let errorMessage = 'An error occurred while creating the product';
+      
+//       // Better error handling
+//       if (error.response?.data) {
+//         const errorData = error.response.data;
+        
+//         // Handle different error formats
+//         if (typeof errorData === 'string') {
+//           errorMessage = errorData;
+//         } else if (errorData.error) {
+//           errorMessage = typeof errorData.error === 'string' ? errorData.error : JSON.stringify(errorData.error);
+//         } else if (errorData.detail) {
+//           errorMessage = errorData.detail;
+//         } else if (errorData.message) {
+//           errorMessage = errorData.message;
+//         } else {
+//           errorMessage = JSON.stringify(errorData, null, 2);
+//         }
+        
+//         // Check for specific verification_status error
+//         if (errorMessage.includes('verification_status')) {
+//           errorMessage = 'The product was created successfully but there was an issue with the verification status. Please check with your administrator.';
+//         }
+//       } else if (error.message) {
+//         errorMessage = error.message;
+//       }
+
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error Creating Product',
+//         text: errorMessage,
+//         confirmButtonColor: '#273c75',
+//         confirmButtonText: 'OK'
+//       });
+//       setErrors({ api: errorMessage });
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const handleCancel = () => {
+//     if (onCancel) {
+//       onCancel();
+//     } else {
+//       navigate(-1);
+//     }
+//   };
+
+//   // ─── Loading state ────────────────────────────────────────────────────────────
+//   if (!userId && userDataLoaded === false) {
+//     return (
+//       <>
+//         <AgentNavbar />
+//         <div className="product-form-container">
+//           <div className="text-center py-5">
+//             <div className="spinner-border text-primary" role="status">
+//               <span className="visually-hidden">Loading...</span>
+//             </div>
+//             <p className="mt-3">Loading user data...</p>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   // ─── Render ───────────────────────────────────────────────────────────────────
+//   return (
+//     <>
+//       <AgentNavbar />
+//       <div className="product-form-container">
+//         <div className="product-form-header">
+//           <h2>Add New Product</h2>
+//           <div className="user-info-badge">
+//             <small>User ID: {userId}</small>
+//           </div>
+//         </div>
+
+//         <form onSubmit={handleSubmit} className="product-form">
+//           {errors.api && (
+//             <div className="alert alert-danger" role="alert">{errors.api}</div>
+//           )}
+
+//           {/* ── Product Information ───────────────────────────────────────────── */}
+//           <div className="form-section">
+//             <div className="row">
+//               <div className="col-md-6">
+//                 <div className="mb-3">
+//                   <label className="agent-form-label">Business <span className="text-danger">*</span></label>
+//                   <select
+//                     className={`form-select ${errors.business ? 'is-invalid' : ''}`}
+//                     name="business"
+//                     value={productData.business}
+//                     onChange={handleProductChange}
+//                   >
+//                     <option value="">Select Business</option>
+//                     {businesses.map(b => (
+//                       <option key={b.business_id} value={b.business_id}>{b.business_name}</option>
+//                     ))}
+//                   </select>
+//                   {errors.business && <div className="invalid-feedback">{errors.business}</div>}
+//                 </div>
+//               </div>
+
+//               <div className="col-md-6">
+//                 <div className="mb-3">
+//                   <label className="agent-form-label">Product Name <span className="text-danger">*</span></label>
+//                   <input
+//                     type="text"
+//                     className={`form-control ${errors.product_name ? 'is-invalid' : ''}`}
+//                     name="product_name"
+//                     value={productData.product_name}
+//                     onChange={handleProductChange}
+//                     placeholder="Enter product name"
+//                   />
+//                   {errors.product_name && <div className="invalid-feedback">{errors.product_name}</div>}
+//                 </div>
+//               </div>
+//             </div>
+//             <div className="row">
+//               <div className="col-md-6">
+//                 <div className="mb-3">
+//                   <label className="agent-form-label">Category <span className="text-danger">*</span></label>
+//                   <select
+//                     className={`form-select ${errors.category ? 'is-invalid' : ''}`}
+//                     name="category"
+//                     value={productData.category}
+//                     onChange={handleProductChange}
+//                     disabled={!productData.business || categories.length === 0}
+//                   >
+//                     <option value="">
+//                       {!productData.business ? 'Select a business first' : categories.length === 0 ? 'No categories available' : 'Select Category'}
+//                     </option>
+//                     {categories.map(c => (
+//                       <option key={c.category_id} value={c.category_id}>{c.name}</option>
+//                     ))}
+//                   </select>
+//                   {errors.category && <div className="invalid-feedback">{errors.category}</div>}
+//                 </div>
+//               </div>
+//               <div className="col-md-6">
+//                 <div className="mb-3">
+//                   <div className="form-check" style={{ paddingTop: '2rem' }}>
+//                     <input className="form-check-input" type="checkbox" id="has_variants" name="has_variants" checked={productData.has_variants} onChange={handleProductChange} />
+//                     <label className="form-check-label" htmlFor="has_variants">This product has variants</label>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+
+//             <div className="mb-3">
+//               <label className="agent-form-label">Description</label>
+//               <textarea className="form-control" name="description" value={productData.description} onChange={handleProductChange} rows="3" placeholder="Enter product description" style={{ height: 'auto' }} />
+//             </div>
+
+//             {/* Product Attributes */}
+//             <div className="mb-3">
+//               <label className="agent-form-label">Product Attributes</label>
+//               <div className="attributes-section">
+//                 {productAttributes.map((attr, ai) => (
+//                   <div key={ai} className="row g-2 mb-2 align-items-center">
+//                     <div className="col-md-5">
+//                       <input type="text" className="form-control" placeholder="Attribute name (e.g., type, origin)" name="key" value={attr.key} onChange={(e) => handleProductAttributeChange(ai, e)} />
+//                     </div>
+//                     <div className="col-md-5">
+//                       <input type="text" className="form-control" placeholder="Attribute value (e.g., Besan Laddu, India)" name="value" value={attr.value} onChange={(e) => handleProductAttributeChange(ai, e)} />
+//                     </div>
+//                     <div className="col-md-2">
+//                       {productAttributes.length > 1 && (
+//                         <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => removeProductAttribute(ai)} title="Remove attribute">
+//                           <FaTrash />
+//                         </button>
+//                       )}
+//                     </div>
+//                   </div>
+//                 ))}
+//                 <button type="button" className="btn btn-sm btn-outline-primary mt-2" onClick={addProductAttribute}>
+//                   <FaPlusCircle /> Add Attribute
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* ── Variants ──────────────────────────────────────────────────────── */}
+//           <div className="form-section">
+//             <h4 className="section-title">Product Variants</h4>
+
+//             {variants.map((variant, vi) => (
+//               <div key={vi} className="variant-card">
+//                 <div className="variant-header">
+//                   <h5>Variant {vi + 1}</h5>
+//                   {variants.length > 1 && (
+//                     <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => removeVariant(vi)}>
+//                       <FaTrash /> Remove Variant
+//                     </button>
+//                   )}
+//                 </div>
+
+//                 {/* Row: SKU + MRP */}
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     <div className="mb-3">
+//                       <label className="agent-form-label">SKU </label>
+//                       <input
+//                         type="text"
+//                         className={`form-control ${errors[`variant_${vi}_sku`] ? 'is-invalid' : ''}`}
+//                         name="sku" value={variant.sku} onChange={(e) => handleVariantChange(vi, e)}
+//                         placeholder="e.g., LADDU-BESAN-250G"
+//                       />
+//                       {errors[`variant_${vi}_sku`] && <div className="invalid-feedback">{errors[`variant_${vi}_sku`]}</div>}
+//                     </div>
+//                   </div>
+//                   <div className="col-md-6">
+//                     <div className="mb-3">
+//                       <label className="agent-form-label">MRP <span className="text-danger">*</span></label>
+//                       <div className="input-group">
+//                         <span className="input-group-text">₹</span>
+//                         <input
+//                           type="text"
+//                           inputMode="decimal"
+//                           className={`form-control ${errors[`variant_${vi}_mrp`] ? 'is-invalid' : ''}`}
+//                           style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+//                           value={variant.mrp}
+//                           onChange={(e) => handleNumberInput(e, vi, 'mrp')}
+//                           onBlur={() => handleNumberBlur(vi, 'mrp')}
+//                           placeholder="0.00"
+//                         />
+//                       </div>
+//                       {errors[`variant_${vi}_mrp`] && <div className="invalid-feedback">{errors[`variant_${vi}_mrp`]}</div>}
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {/* Row: Stock Quantity + Max Order Quantity */}
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     <div className="mb-3">
+//                       <label className="agent-form-label">Stock Quantity</label>
+//                       <input
+//                         type="number"
+//                         className={`form-control ${errors[`variant_${vi}_stock`] ? 'is-invalid' : ''}`}
+//                         style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+//                         name="stock" value={variant.stock} onChange={(e) => handleVariantChange(vi, e)} min="0"
+//                       />
+//                       {errors[`variant_${vi}_stock`] && <div className="invalid-feedback">{errors[`variant_${vi}_stock`]}</div>}
+//                     </div>
+//                   </div>
+//                   <div className="col-md-6">
+//                     <div className="mb-3">
+//                       <label className="agent-form-label">Max Order Quantity</label>
+//                       <input
+//                         type="number"
+//                         className={`form-control ${errors[`variant_${vi}_max_order_quantity`] ? 'is-invalid' : ''}`}
+//                         style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+//                         name="max_order_quantity" 
+//                         value={variant.max_order_quantity} 
+//                         onChange={(e) => handleVariantChange(vi, e)} 
+//                         min="0"
+//                         placeholder="Leave empty for no limit"
+//                       />
+//                       {errors[`variant_${vi}_max_order_quantity`] && <div className="invalid-feedback">{errors[`variant_${vi}_max_order_quantity`]}</div>}
+//                       <small className="form-text text-muted">Maximum quantity that can be ordered per transaction</small>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {/* Row: Tax + Commission */}
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     <div className="mb-3">
+//                       <label className="agent-form-label">Tax Percent (%)</label>
+//                       <div className="input-group">
+//                         <span className="input-group-text">%</span>
+//                         <input
+//                           type="text"
+//                           inputMode="decimal"
+//                           className="form-control"
+//                           style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+//                           value={variant.tax_percent || ''}
+//                           onChange={(e) => handleNumberInput(e, vi, 'tax_percent')}
+//                           onBlur={() => handleNumberBlur(vi, 'tax_percent')}
+//                           placeholder="0.00"
+//                         />
+//                       </div>
+//                     </div>
+//                   </div>
+//                   <div className="col-md-6">
+//                     <div className="mb-3">
+//                       <label className="agent-form-label">Product Commission (₹)</label>
+//                       <div className="input-group">
+//                         <span className="input-group-text">₹</span>
+//                         <input
+//                           type="text"
+//                           inputMode="decimal"
+//                           className="form-control"
+//                           style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+//                           value={variant.product_commission}
+//                           onChange={(e) => handleNumberInput(e, vi, 'product_commission')}
+//                           onBlur={() => handleNumberBlur(vi, 'product_commission')}
+//                           placeholder="0.00"
+//                         />
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {/* Row: HSN Code + Offer */}
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     <div className="mb-3">
+//                       <label className="agent-form-label">HSN Code</label>
+//                       <input type="text" className="form-control" name="hsn_code" value={variant.hsn_code} onChange={(e) => handleVariantChange(vi, e)} placeholder="Enter HSN code" />
+//                     </div>
+//                   </div>
+//                   <div className="col-md-6">
+//                     <div className="mb-3">
+//                       <label className="agent-form-label">Apply Offer</label>
+//                       <select className="form-select" name="offer_id" value={variant.offer_id || ''} onChange={(e) => handleVariantChange(vi, e)}>
+//                         <option value="">Select Offer (Optional)</option>
+//                         {offers.map(o => (
+//                           <option key={o.id} value={o.id}>{getOfferDisplayText(o)}</option>
+//                         ))}
+//                       </select>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {/* Variant Attributes */}
+//                 <div className="mb-3">
+//                   <label className="agent-form-label">Variant Attributes</label>
+//                   <div className="attributes-section">
+//                     {(variantAttributes[vi] || []).map((attr, ai) => (
+//                       <div key={ai} className="row g-2 mb-2 align-items-center">
+//                         <div className="col-md-5">
+//                           <input type="text" className="form-control" placeholder="e.g., unit, value, display" name="key" value={attr.key} onChange={(e) => handleVariantAttributeChange(vi, ai, e)} />
+//                         </div>
+//                         <div className="col-md-5">
+//                           <input type="text" className="form-control" placeholder="e.g., g, 250, 250g" name="value" value={attr.value} onChange={(e) => handleVariantAttributeChange(vi, ai, e)} />
+//                         </div>
+//                         <div className="col-md-2">
+//                           {(variantAttributes[vi] || []).length > 1 && (
+//                             <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => removeVariantAttribute(vi, ai)}>
+//                               <FaTrash />
+//                             </button>
+//                           )}
+//                         </div>
+//                       </div>
+//                     ))}
+//                     <button type="button" className="btn btn-sm btn-outline-primary mt-2" onClick={() => addVariantAttribute(vi)}>
+//                       <FaPlusCircle /> Add Attribute
+//                     </button>
+//                   </div>
+//                 </div>
+
+//                 {/* ── Media Upload ──────────────────────────────────────────────── */}
+//                 <div className="media-upload-section">
+//                   <label className="agent-form-label">
+//                     Product Media (Images &amp; Videos) <span className="text-danger">*</span>
+//                   </label>
+
+//                   {errors[`variant_${vi}_media`] && (
+//                     <div className="alert alert-danger py-2" role="alert">
+//                       <small><FaExclamationTriangle className="me-1" />{errors[`variant_${vi}_media`]}</small>
+//                     </div>
+//                   )}
+
+//                   {(variant.media || []).map((media, mi) => (
+//                     <div key={mi} className="media-item-card mb-3 p-3 border rounded">
+//                       <div className="row align-items-center">
+//                         <div className="col-md-5">
+//                           <label className="agent-form-label small">
+//                             {mi === 0 ? 'Primary Media (Required)' : `Media ${mi + 1}`}
+//                           </label>
+//                           <input
+//                             type="file"
+//                             className={`form-control form-control-sm ${mi === 0 && errors[`variant_${vi}_media`] && !variantMediaFiles[vi]?.[0] ? 'is-invalid' : ''}`}
+//                             accept="image/*,video/*"
+//                             onChange={(e) => handleMediaFileChange(vi, mi, e)}
+//                           />
+//                           {variantMediaFiles[vi]?.[mi] instanceof File && (
+//                             <div className="form-text text-success">
+//                               ✓ {variantMediaFiles[vi][mi].name}
+//                             </div>
+//                           )}
+//                         </div>
+
+//                         <div className="col-md-3">
+//                           <label className="agent-form-label small">Media Type</label>
+//                           <select
+//                             className="form-select form-select-sm"
+//                             value={media.media_type || 'image'}
+//                             onChange={(e) => handleMediaTypeChange(vi, mi, e)}
+//                           >
+//                             <option value="image">Image</option>
+//                             <option value="video">Video</option>
+//                           </select>
+//                         </div>
+
+//                         <div className="col-md-2">
+//                           {(variant.media || []).length > 1 && (
+//                             <button
+//                               type="button"
+//                               className="btn btn-sm btn-outline-danger"
+//                               onClick={() => removeMediaFromVariant(vi, mi)}
+//                               disabled={mi === 0}
+//                               title={mi === 0 ? 'Cannot remove primary media' : 'Remove this media'}
+//                             >
+//                               <FaTrash />
+//                             </button>
+//                           )}
+//                         </div>
+//                       </div>
+//                     </div>
+//                   ))}
+
+//                   <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => addMediaToVariant(vi)}>
+//                     <FaPlusCircle /> Add More Media
+//                   </button>
+//                 </div>
+//               </div>
+//             ))}
+
+//             <button type="button" className="btn btn-outline-primary mt-3" onClick={addVariant}>
+//               <FaPlusCircle /> Add Another Variant
+//             </button>
+//           </div>
+
+//           {/* Form Actions */}
+//           <div className="form-actions">
+//             <button type="button" className="btn btn-secondary" onClick={handleCancel} disabled={loading}>
+//               Cancel
+//             </button>
+//             <button
+//               type="submit"
+//               className="btn"
+//               style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: 'white' }}
+//               disabled={loading || !productData.business || categories.length === 0}
+//             >
+//               {loading ? (
+//                 <>
+//                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+//                   Saving...
+//                 </>
+//               ) : (
+//                 <><FaPlusCircle className="me-2" />Save Product</>
+//               )}
+//             </button>
+//           </div>
+//         </form>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default AddProductForm;
+
+
+
+
+//========================================================
+
+
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import './AddProductForm.css';
 import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import { baseurl } from '../../BaseURL/BaseURL';
-import { FaTrash, FaPlusCircle, FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
+import { FaTrash, FaPlusCircle, FaExclamationTriangle, FaInfoCircle, FaPlus } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 
 const AddProductForm = ({ onSuccess, onCancel }) => {
@@ -7861,7 +8979,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
     mrp: '',
     selling_price: '',
     stock: '',
-    max_order_quantity: '', // Added field
+    max_order_quantity: '',
     attributes: {},
     cgst_percent: 0,
     sgst_percent: 0,
@@ -7887,9 +9005,25 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [variantMediaFiles, setVariantMediaFiles] = useState([[]]); // variantMediaFiles[variantIndex][mediaIndex] = File
+  const [variantMediaFiles, setVariantMediaFiles] = useState([[]]);
   const [userId, setUserId] = useState(null);
   const [userDataLoaded, setUserDataLoaded] = useState(false);
+  
+  // Category modal state
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [categoryLoading, setCategoryLoading] = useState(false);
+  const [categoryFormData, setCategoryFormData] = useState({
+    name: "",
+    slug: "",
+    description: "",
+    level: "product",
+    parent: "",
+    display_order: "",
+    is_active: true,
+    icon: null
+  });
+  const [allCategories, setAllCategories] = useState([]);
+  const [iconPreview, setIconPreview] = useState(null);
 
   // ─── Get user ID from localStorage ───────────────────────────────────────────
   useEffect(() => {
@@ -7934,6 +9068,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
     if (userId && userDataLoaded) {
       fetchBusinesses();
       fetchOffers();
+      fetchAllCategories();
     }
   }, [userId, userDataLoaded]);
 
@@ -8011,6 +9146,174 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
     }
   };
 
+  const fetchAllCategories = async () => {
+    try {
+      const res = await axios.get(`${baseurl}/categories/`);
+      const categoriesList = Array.isArray(res.data) ? res.data : res.data.results || [];
+      setAllCategories(categoriesList);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  // ─── Category Modal Handlers ──────────────────────────────────────────────
+  const handleCategoryChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setCategoryFormData({
+      ...categoryFormData,
+      [name]: type === 'checkbox' ? checked : value
+    });
+    
+    // Auto-generate slug from name
+    if (name === 'name') {
+      const slugValue = value.toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/--+/g, '-');
+      setCategoryFormData(prev => ({ ...prev, slug: slugValue }));
+    }
+  };
+
+  const handleCategoryFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        Swal.fire({
+          icon: "error",
+          title: "File too large",
+          text: "Please select an image smaller than 2MB",
+          confirmButtonColor: "#273c75",
+        });
+        return;
+      }
+
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!validTypes.includes(file.type)) {
+        Swal.fire({
+          icon: "error",
+          title: "Invalid file type",
+          text: "Please select a valid image (JPEG, PNG, GIF, WebP)",
+          confirmButtonColor: "#273c75",
+        });
+        return;
+      }
+
+      setCategoryFormData({ ...categoryFormData, icon: file });
+      
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setIconPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCreateCategory = async (e) => {
+    e.preventDefault();
+
+    if (!categoryFormData.name.trim()) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Please enter category name",
+        confirmButtonColor: "#273c75",
+      });
+      return;
+    }
+
+    if (!categoryFormData.slug.trim()) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Please enter slug",
+        confirmButtonColor: "#273c75",
+      });
+      return;
+    }
+
+    setCategoryLoading(true);
+
+    try {
+      const formDataObj = new FormData();
+      formDataObj.append('name', categoryFormData.name.trim());
+      formDataObj.append('slug', categoryFormData.slug.trim());
+      if (categoryFormData.description) {
+        formDataObj.append('description', categoryFormData.description.trim());
+      }
+      formDataObj.append('level', 'product'); // Always product level for this context
+      if (categoryFormData.parent) {
+        formDataObj.append('parent', categoryFormData.parent);
+      }
+      if (categoryFormData.display_order) {
+        formDataObj.append('display_order', categoryFormData.display_order);
+      }
+      formDataObj.append('is_active', categoryFormData.is_active);
+      if (categoryFormData.icon) {
+        formDataObj.append('icon', categoryFormData.icon);
+      }
+
+      await axios.post(`${baseurl}/categories/`, formDataObj, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Category created successfully",
+        confirmButtonColor: "#273c75",
+        confirmButtonText: "OK",
+      });
+
+      // Close modal and reset form
+      setShowCategoryModal(false);
+      resetCategoryForm();
+      
+      // Refresh categories
+      if (productData.business) {
+        await fetchCategories(productData.business);
+      }
+      await fetchAllCategories();
+      
+    } catch (err) {
+      console.error("Error creating category:", err);
+      
+      let errorMessage = "Failed to create category";
+      if (err.response?.data) {
+        if (typeof err.response.data === 'object') {
+          const errors = Object.values(err.response.data).flat().join(', ');
+          errorMessage = errors;
+        } else {
+          errorMessage = err.response.data.detail || errorMessage;
+        }
+      }
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: errorMessage,
+        confirmButtonColor: "#273c75",
+      });
+    } finally {
+      setCategoryLoading(false);
+    }
+  };
+
+  const resetCategoryForm = () => {
+    setCategoryFormData({
+      name: "",
+      slug: "",
+      description: "",
+      level: "product",
+      parent: "",
+      display_order: "",
+      is_active: true,
+      icon: null
+    });
+    setIconPreview(null);
+  };
+
   // ─── Product field handlers ───────────────────────────────────────────────────
   const handleProductChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -8029,9 +9332,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
   const handleNumberInput = (e, vi, fieldName) => {
     let value = e.target.value;
     
-    // For integer fields (stock, max_order_quantity, return_days)
     if (['stock', 'max_order_quantity', 'return_days'].includes(fieldName)) {
-      // Allow empty string
       if (value === '') {
         setVariants(prev => {
           const updated = [...prev];
@@ -8041,7 +9342,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
         return;
       }
       
-      // Only allow positive integers
       const intValue = parseInt(value);
       if (!isNaN(intValue) && intValue >= 0 && value.match(/^\d+$/)) {
         setVariants(prev => {
@@ -8053,7 +9353,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
       return;
     }
     
-    // For decimal fields
     if (value === '' || value === '-') {
       setVariants(prev => {
         const updated = [...prev];
@@ -8063,7 +9362,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
       return;
     }
     
-    // Check if the value is a valid number (allowing decimal)
     const regex = /^-?\d*\.?\d*$/;
     if (regex.test(value)) {
       setVariants(prev => {
@@ -8079,7 +9377,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
       const updated = [...prev];
       let value = updated[vi][fieldName];
       
-      // For integer fields
       if (['stock', 'max_order_quantity', 'return_days'].includes(fieldName)) {
         if (value === '' || value === null || value === undefined) {
           updated[vi][fieldName] = 0;
@@ -8094,7 +9391,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
         return updated;
       }
       
-      // For decimal fields
       if (value === '' || value === '-') {
         updated[vi][fieldName] = 0;
       } else {
@@ -8114,10 +9410,8 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
     const { name, value, type, checked } = e.target;
     let processedValue = value;
 
-    // For number fields, handle specially to prevent arrows
     if (['mrp', 'selling_price', 'cgst_percent', 'sgst_percent', 'tax_percent',
          'weight_kg', 'length_cm', 'width_cm', 'height_cm', 'product_commission'].includes(name)) {
-      // Don't process here, let the number input handlers handle it
       return;
     } else if (['stock', 'max_order_quantity', 'return_days'].includes(name)) {
       processedValue = value === '' ? '' : parseInt(value) || 0;
@@ -8187,7 +9481,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
 
     const fileType = file.type.startsWith('video/') ? 'video' : 'image';
 
-    // Update file list
     setVariantMediaFiles(prev => {
       const updated = prev.map(v => [...v]);
       if (!updated[vi]) updated[vi] = [];
@@ -8195,7 +9488,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
       return updated;
     });
 
-    // Update media type in variant
     setVariants(prev => {
       const updated = [...prev];
       const media = [...(updated[vi].media || [])];
@@ -8204,7 +9496,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
       return updated;
     });
 
-    // Clear media error
     if (errors[`variant_${vi}_media`]) {
       setErrors(prev => {
         const newErr = { ...prev };
@@ -8255,7 +9546,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
   };
 
   const removeMediaFromVariant = (vi, mi) => {
-    if (mi === 0 && variants[vi].media.length === 1) return; // keep at least one
+    if (mi === 0 && variants[vi].media.length === 1) return;
 
     setVariants(prev => {
       const updated = [...prev];
@@ -8275,7 +9566,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
   // ─── Add / remove variants ────────────────────────────────────────────────────
   const addVariant = () => {
     setVariants(prev => [...prev, {
-      sku: '', mrp: '', selling_price: '', stock: '', max_order_quantity: '', // Added field
+      sku: '', mrp: '', selling_price: '', stock: '', max_order_quantity: '',
       attributes: {},
       cgst_percent: 0, sgst_percent: 0, tax_percent: 0, hsn_code: '',
       weight_kg: '', length_cm: '', width_cm: '', height_cm: '',
@@ -8323,7 +9614,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
         newErrors[`variant_${vi}_max_order_quantity`] = 'Max order quantity cannot be negative';
       }
 
-      // Check at least one actual file is uploaded for this variant
       const files = variantMediaFiles[vi] || [];
       const hasFile = files.some(f => f instanceof File);
       if (!hasFile) newErrors[`variant_${vi}_media`] = 'At least one product image or video is required';
@@ -8366,7 +9656,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
     try {
       const formDataToSend = new FormData();
 
-      // ── Product JSON ──────────────────────────────────────────────────────────
       const cleanProduct = {
         business: parseInt(productData.business),
         product_name: productData.product_name,
@@ -8376,22 +9665,17 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
         category: parseInt(productData.category),
         attributes: productData.attributes,
         has_variants: variants.length > 1 || productData.has_variants,
-        // Remove verification_status entirely - let backend handle it
-        // DO NOT include verification_status here
         user_id: userId,
         created_by: userId
       };
 
-      // Remove any undefined or null values
       Object.keys(cleanProduct).forEach(key => {
         if (cleanProduct[key] === undefined || cleanProduct[key] === null) {
           delete cleanProduct[key];
         }
       });
 
-      // ── Variants JSON (no file blobs, only metadata) ──────────────────────────
       const cleanVariants = variants.map((variant) => {
-        // Build media metadata array in order
         const mediaArray = (variant.media || []).map((m, mi) => ({
           media_type: m.media_type || 'image',
           sort_order: mi,
@@ -8405,7 +9689,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
             ? null
             : parseFloat(variant.selling_price),
           stock: variant.stock === '' ? 0 : parseInt(variant.stock) || 0,
-          max_order_quantity: variant.max_order_quantity === '' ? null : parseInt(variant.max_order_quantity) || null, // Added field
+          max_order_quantity: variant.max_order_quantity === '' ? null : parseInt(variant.max_order_quantity) || null,
           attributes: variant.attributes,
           cgst_percent: parseFloat(variant.cgst_percent) || 0,
           sgst_percent: parseFloat(variant.sgst_percent) || 0,
@@ -8425,7 +9709,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
           media: mediaArray
         };
 
-        // Remove undefined values
         Object.keys(variantObj).forEach(key => {
           if (variantObj[key] === undefined) {
             delete variantObj[key];
@@ -8442,7 +9725,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
       formDataToSend.append('product', JSON.stringify(cleanProduct));
       formDataToSend.append('variants', JSON.stringify(cleanVariants));
 
-      // ── IMPORTANT: Append files as 'media_files' (plural) ────────────────────
       variantMediaFiles.forEach((filesForVariant) => {
         (filesForVariant || []).forEach((file) => {
           if (file instanceof File) {
@@ -8451,19 +9733,9 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
         });
       });
 
-      // Debug log - check what's being sent
-      console.log('Product being sent (without verification_status):', cleanProduct);
-      console.log('Variants being sent:', cleanVariants);
-      console.log('Files being sent:');
-      for (let pair of formDataToSend.entries()) {
-        console.log(pair[0], ':', pair[1] instanceof File ? pair[1].name : pair[1]);
-      }
-
       const response = await axios.post(`${baseurl}/products/`, formDataToSend, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-
-      console.log('Response:', response.data);
 
       await Swal.fire({
         icon: 'success',
@@ -8475,27 +9747,15 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
 
       if (onSuccess) onSuccess(response.data);
       navigate('/agent-my-business');
-      // Reset form
-      setProductData({ business: '', product_name: '', description: '', brand: '', model_no: '', category: '', attributes: {}, has_variants: false });
-      setVariants([{ sku: '', mrp: '', selling_price: '', stock: '', max_order_quantity: '', attributes: {}, cgst_percent: 0, sgst_percent: 0, tax_percent: 0, hsn_code: '', weight_kg: '', length_cm: '', width_cm: '', height_cm: '', manufacture_date: '', expiry_date: '', is_returnable: true, return_days: 7, product_commission: '', offer_id: '', media: [{ media_type: 'image', sort_order: 0, is_primary: true }] }]);
-      setProductAttributes([{ key: '', value: '' }]);
-      setVariantAttributes([[{ key: '', value: '' }]]);
-      setVariantMediaFiles([[]]);
-      setCategories([]);
-
+      
     } catch (error) {
       console.error('Error creating product:', error);
-      console.error('Error response:', error.response?.data);
-      console.error('Error response status:', error.response?.status);
-      console.error('Error response headers:', error.response?.headers);
 
       let errorMessage = 'An error occurred while creating the product';
       
-      // Better error handling
       if (error.response?.data) {
         const errorData = error.response.data;
         
-        // Handle different error formats
         if (typeof errorData === 'string') {
           errorMessage = errorData;
         } else if (errorData.error) {
@@ -8508,7 +9768,6 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
           errorMessage = JSON.stringify(errorData, null, 2);
         }
         
-        // Check for specific verification_status error
         if (errorMessage.includes('verification_status')) {
           errorMessage = 'The product was created successfully but there was an issue with the verification status. Please check with your administrator.';
         }
@@ -8553,6 +9812,9 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
       </>
     );
   }
+
+  // Filter parents for category modal
+  const filteredParents = allCategories.filter(cat => cat.level === 'business');
 
   // ─── Render ───────────────────────────────────────────────────────────────────
   return (
@@ -8607,25 +9869,40 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
                 </div>
               </div>
             </div>
+            
             <div className="row">
               <div className="col-md-6">
                 <div className="mb-3">
                   <label className="agent-form-label">Category <span className="text-danger">*</span></label>
-                  <select
-                    className={`form-select ${errors.category ? 'is-invalid' : ''}`}
-                    name="category"
-                    value={productData.category}
-                    onChange={handleProductChange}
-                    disabled={!productData.business || categories.length === 0}
-                  >
-                    <option value="">
-                      {!productData.business ? 'Select a business first' : categories.length === 0 ? 'No categories available' : 'Select Category'}
-                    </option>
-                    {categories.map(c => (
-                      <option key={c.category_id} value={c.category_id}>{c.name}</option>
-                    ))}
-                  </select>
+                  <div className="input-group">
+                    <select
+                      className={`form-select ${errors.category ? 'is-invalid' : ''}`}
+                      name="category"
+                      value={productData.category}
+                      onChange={handleProductChange}
+                      disabled={!productData.business || categories.length === 0}
+                    >
+                      <option value="">
+                        {!productData.business ? 'Select a business first' : categories.length === 0 ? 'No categories available' : 'Select Category'}
+                      </option>
+                      {categories.map(c => (
+                        <option key={c.category_id} value={c.category_id}>{c.name}</option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary"
+                      onClick={() => setShowCategoryModal(true)}
+                      title="Add New Category"
+                      style={{ borderLeft: 'none' }}
+                    >
+                      <FaPlus />
+                    </button>
+                  </div>
                   {errors.category && <div className="invalid-feedback">{errors.category}</div>}
+                  <small className="form-text text-muted">
+                    Can't find the right category? Click the + button to add a new one.
+                  </small>
                 </div>
               </div>
               <div className="col-md-6">
@@ -8938,6 +10215,197 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
           </div>
         </form>
       </div>
+
+      {/* Category Creation Modal */}
+      {showCategoryModal && (
+        <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Create New Category</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => {
+                    setShowCategoryModal(false);
+                    resetCategoryForm();
+                  }}
+                ></button>
+              </div>
+              <form onSubmit={handleCreateCategory}>
+                <div className="modal-body">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Category Name <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          value={categoryFormData.name}
+                          onChange={handleCategoryChange}
+                          className="form-control"
+                          placeholder="Enter category name"
+                          required
+                          disabled={categoryLoading}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          Slug <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="slug"
+                          value={categoryFormData.slug}
+                          onChange={handleCategoryChange}
+                          className="form-control"
+                          placeholder="Enter slug"
+                          required
+                          disabled={categoryLoading}
+                        />
+                        <small className="text-muted">
+                          URL-friendly version of the name
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Description</label>
+                    <textarea
+                      name="description"
+                      value={categoryFormData.description}
+                      onChange={handleCategoryChange}
+                      className="form-control"
+                      placeholder="Enter category description (optional)"
+                      rows="2"
+                      disabled={categoryLoading}
+                    />
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">Parent Category</label>
+                        <select
+                          name="parent"
+                          value={categoryFormData.parent}
+                          onChange={handleCategoryChange}
+                          className="form-control"
+                          disabled={categoryLoading || filteredParents.length === 0}
+                        >
+                          <option value="">None (Top Level)</option>
+                          {filteredParents.map((cat) => (
+                            <option key={cat.category_id} value={cat.category_id}>
+                              {cat.name} ({cat.level})
+                            </option>
+                          ))}
+                        </select>
+                        {filteredParents.length === 0 && (
+                          <small className="text-muted">
+                            No valid parent categories available
+                          </small>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">Display Order</label>
+                        <input
+                          type="number"
+                          name="display_order"
+                          value={categoryFormData.display_order}
+                          onChange={handleCategoryChange}
+                          className="form-control"
+                          placeholder="Optional"
+                          min="0"
+                          disabled={categoryLoading}
+                        />
+                        <small className="text-muted">Lower numbers display first</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <label className="form-label">Category Icon</label>
+                        <input
+                          type="file"
+                          name="icon"
+                          onChange={handleCategoryFileChange}
+                          className="form-control"
+                          accept="image/*"
+                          disabled={categoryLoading}
+                        />
+                        <small className="text-muted">
+                          Optional. Max 2MB. Supported: JPEG, PNG, GIF, WebP
+                        </small>
+                      </div>
+                    </div>
+                    
+                    {iconPreview && (
+                      <div className="col-md-6">
+                        <label className="form-label">Preview</label>
+                        <div>
+                          <img 
+                            src={iconPreview} 
+                            alt="Preview" 
+                            className="img-thumbnail"
+                            style={{ maxWidth: '100px', maxHeight: '100px' }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="form-check">
+                    <input
+                      type="checkbox"
+                      name="is_active"
+                      checked={categoryFormData.is_active}
+                      onChange={handleCategoryChange}
+                      className="form-check-input"
+                      id="categoryIsActive"
+                      disabled={categoryLoading}
+                    />
+                    <label className="form-check-label" htmlFor="categoryIsActive">
+                      Active Category
+                    </label>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setShowCategoryModal(false);
+                      resetCategoryForm();
+                    }}
+                    disabled={categoryLoading}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn"
+                    style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: 'white' }}
+                    disabled={categoryLoading}
+                  >
+                    {categoryLoading ? "Creating..." : "Create Category"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

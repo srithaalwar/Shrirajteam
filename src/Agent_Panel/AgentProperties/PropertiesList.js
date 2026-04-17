@@ -9892,7 +9892,7 @@ const [statusFilter, setStatusFilter] = useState("");
   const fetchCommissionData = useCallback(async () => {
     try {
       setLoadingCommissions(true);
-      const response = await fetch(`${baseurl}/commissions-master/`);
+      const response = await fetch(`${baseurl}/commissions-master/?commission_type=property_commission`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
