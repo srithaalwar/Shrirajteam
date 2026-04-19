@@ -825,9 +825,9 @@ function MyTeam() {
               </div>
               <small className="text-muted">{member.referral_id}</small>
               {/* Optional: Show child's team counts on hover or as tooltip */}
-              {/* <div className="small text-primary mt-1">
-                <small>D: {member.direct_team || 0} | T: {member.total_team || 0}</small>
-              </div> */}
+              <div className="small text-primary mt-1">
+                <small>DT: {member.direct_team || 0} | TT: {member.total_team || 0}</small>
+              </div>
             </div>
           ))}
         </div>
