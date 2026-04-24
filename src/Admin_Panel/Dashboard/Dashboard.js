@@ -1714,6 +1714,709 @@
 
 // Added referral code 
 
+// import React, { useEffect, useState, useRef } from "react";
+// import axios from "axios";
+// import { Bar } from "react-chartjs-2";
+// import {
+//   Chart as ChartJS,
+//   CategoryScale,
+//   LinearScale,
+//   BarElement,
+//   Title,
+//   Tooltip,
+//   Legend,
+// } from "chart.js";
+// import { useNavigate } from "react-router-dom";
+// import { baseurl } from "../../BaseURL/BaseURL";
+// import WebsiteNavbar from "../Admin_Navbar/Admin_Navbar";
+// import "./Dashboard.css";
+
+// // Font Awesome Icons
+// import {
+//   faCheckCircle,
+//   faCalendarCheck,
+//   faBuilding,
+//   faHourglassHalf,
+//   faUserCheck,
+//   faTimesCircle,
+//   faUniversity,
+//   faMoneyCheckAlt,
+//   faBusinessTime,
+//   faUsers,
+//   faHome,
+//   faUserSlash,
+//   faHomeAlt,
+//   faCheck,
+//   faBan,
+//   faCreditCard,
+//   faReceipt,
+//   faUserTag,
+//   faUserTie,
+//   faUser,
+//   faIndianRupeeSign,
+//   faShareAlt,
+//   faClock,
+//   faMoneyBillWave
+// } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+// // Register Chart.js components
+// ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+// // Card background colors - more professional
+// const cardColors = [
+//   "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+//   "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+//   "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+//   "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+//   "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+//   "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
+//   "linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)",
+//   "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)",
+//   "linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)",
+//   "linear-gradient(135deg, #f6d365 0%, #fda085 100%)",
+//   "linear-gradient(135deg, #a3bded 0%, #6991c7 100%)",
+//   "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
+//   "linear-gradient(135deg, #c2e9fb 0%, #a1c4fd 100%)",
+//   "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)",
+//   "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)"
+// ];
+
+// // Icon mapping to Font Awesome
+// const iconMap = {
+//   "Total Properties": faBusinessTime,
+//   "Active Users": faUsers,
+//   "Inactive Users": faUserSlash,
+//   "New Properties": faHomeAlt,
+//   "Sold Properties": faCheckCircle,
+//   "Booked Properties": faCalendarCheck,
+//   "Available Properties": faBuilding,
+//   "Pending Properties": faHourglassHalf,
+//   "Approved Properties": faCheck,
+//   "Rejected Properties": faBan,
+//   "Company Payout": faUniversity,
+//   "Agent Payout": faMoneyCheckAlt,
+//   "Verified Properties": faCheckCircle,
+//   "Total Transactions": faCreditCard,
+//   "Successful Transactions": faCheckCircle,
+//   "Failed Transactions": faTimesCircle,
+//   "Refunded Transactions": faReceipt,
+//   "Total Revenue": faIndianRupeeSign,
+//   "Total Users": faUsers,
+//   "Admin Users": faUserTie,
+//   "Agent Users": faUserTag,
+//   "Client Users": faUser,
+//   "Total Subscriptions": faCalendarCheck,
+//   "Active Subscriptions": faCheckCircle,
+//   "Expired Subscriptions": faTimesCircle,
+//   "Subscription Revenue": faIndianRupeeSign,
+// };
+
+// const AdminDashboard = () => {
+//   const [summary, setSummary] = useState(null);
+//   const [chartData, setChartData] = useState(null);
+//   const [filter, setFilter] = useState("all");
+//   const [loading, setLoading] = useState(true);
+//   const [chartLoading, setChartLoading] = useState(false);
+//   const navigate = useNavigate();
+//   const chartRef = useRef(null);
+
+//   // Fetch admin summary
+//   useEffect(() => {
+//     setLoading(true);
+//     setChartLoading(true);
+    
+//     // Use the correct API endpoint - adjust if needed
+//     const apiEndpoint = `${baseurl}/admin-summary/`;
+    
+//     axios.get(apiEndpoint)
+//       .then(res => {
+//         console.log("API Response:", res.data); // Debug log
+        
+//         // Check if response has the expected structure
+//         if (res.data) {
+//           setSummary(res.data);
+//           prepareChartData(res.data);
+//         } else {
+//           throw new Error("Invalid API response structure");
+//         }
+//       })
+//       .catch(err => {
+//         console.error("Error fetching admin summary:", err);
+//         // Fallback to mock data structure based on your API response
+//         const fallbackData = {
+//           filters_applied: {
+//             user_id: null,
+//             role: null,
+//             start_date: null,
+//             end_date: null
+//           },
+//           property_summary: {
+//             total_properties: 0,
+//             pending: 0,
+//             verified: 0,
+//             available: 0,
+//             booked: 0,
+//             sold: 0,
+//             rejected: 0,
+//             role_wise: []
+//           },
+//           transaction_summary: {
+//             total_transactions: 0,
+//             success: 0,
+//             failed: 0,
+//             refunded: 0,
+//             total_revenue: 0,
+//             role_wise: []
+//           },
+//           order_summary: {
+//             total_orders: 0,
+//             paid: 0,
+//             pending: 0,
+//             cancelled: 0,
+//             refunded: 0,
+//             role_wise: []
+//           },
+//           subscription_summary: {
+//             total_subscriptions: 0,
+//             active: 0,
+//             expired: 0,
+//             subscription_revenue: 0,
+//             role_wise: []
+//           },
+//           referral_summary: {
+//             total_referrals: 0,
+//             total_pending_referral_amount: 0,
+//             total_paid_referral_amount: 0
+//           },
+//           user_summary: {
+//             total_users: 0,
+//             active: 0,
+//             inactive: 0,
+//             role_wise: []
+//           }
+//         };
+//         setSummary(fallbackData);
+//         prepareChartData(fallbackData);
+//       })
+//       .finally(() => {
+//         setLoading(false);
+//         setChartLoading(false);
+//       });
+//   }, []);
+
+//   // Prepare chart data from summary
+//   const prepareChartData = (summaryData) => {
+//     if (!summaryData) {
+//       console.log("No summary data available");
+//       return;
+//     }
+    
+//     const { property_summary } = summaryData;
+//     console.log("Property Summary for Chart:", property_summary); // Debug log
+    
+//     // For the chart, we'll use property status data
+//     const labels = ["Property Status"];
+    
+//     // Extract data for each status - using the correct property names from your API
+//     const available = [property_summary.available || 0];
+//     const sold = [property_summary.sold || 0];
+//     const pending = [property_summary.pending || 0];
+//     const verified = [property_summary.verified || 0];
+//     const booked = [property_summary.booked || 0];
+//     const rejected = [property_summary.rejected || 0];
+
+//     console.log("Chart Data:", {
+//       labels,
+//       available,
+//       sold,
+//       pending,
+//       verified,
+//       booked,
+//       rejected
+//     }); // Debug log
+
+//     // Solid colors instead of gradients for simplicity
+//     const colors = {
+//       Available: "#4caf50", 
+//       Sold: "#e53935",    
+//       Pending: "#ffeb3b",   
+//       Verified: "#2196f3",
+//       Booked: "#ff9800",
+//       Rejected: "#9e9e9e"
+//     };
+
+//     // Create datasets array
+//     const datasets = [
+//       { 
+//         label: "Available", 
+//         data: available, 
+//         backgroundColor: colors.Available,
+//         borderColor: colors.Available,
+//         borderWidth: 1
+//       },
+//       { 
+//         label: "Sold", 
+//         data: sold, 
+//         backgroundColor: colors.Sold,
+//         borderColor: colors.Sold,
+//         borderWidth: 1
+//       },
+//       { 
+//         label: "Pending", 
+//         data: pending, 
+//         backgroundColor: colors.Pending,
+//         borderColor: colors.Pending,
+//         borderWidth: 1
+//       },
+//       { 
+//         label: "Verified", 
+//         data: verified, 
+//         backgroundColor: colors.Verified,
+//         borderColor: colors.Verified,
+//         borderWidth: 1
+//       },
+//       { 
+//         label: "Booked", 
+//         data: booked, 
+//         backgroundColor: colors.Booked,
+//         borderColor: colors.Booked,
+//         borderWidth: 1
+//       },
+//       { 
+//         label: "Rejected", 
+//         data: rejected, 
+//         backgroundColor: colors.Rejected,
+//         borderColor: colors.Rejected,
+//         borderWidth: 1
+//       },
+//     ];
+
+//     const chartDataConfig = {
+//       labels,
+//       datasets
+//     };
+
+//     console.log("Final Chart Config:", chartDataConfig); // Debug log
+//     setChartData(chartDataConfig);
+//   };
+
+//   // Prepare metrics from summary data
+//   const prepareMetrics = () => {
+//     if (!summary) {
+//       console.log("No summary available for metrics");
+//       return [];
+//     }
+    
+//     const { 
+//       property_summary, 
+//       transaction_summary, 
+//       subscription_summary, 
+//       user_summary,
+//       order_summary,
+//       referral_summary // Added referral_summary
+//     } = summary;
+
+//     console.log("Preparing metrics from:", {
+//       property_summary,
+//       user_summary,
+//       transaction_summary,
+//       subscription_summary,
+//       referral_summary
+//     }); // Debug log
+
+//     // Get role-wise counts from user_summary
+//     const getRoleCount = (roleName) => {
+//       if (!user_summary.role_wise) return 0;
+//       const roleData = user_summary.role_wise.find(r => r.role === roleName);
+//       return roleData ? roleData.count : 0;
+//     };
+
+//     // Prepare metrics array
+//     const metrics = [];
+    
+//     // Property Metrics
+//     metrics.push(
+//       { 
+//         label: "Total Properties", 
+//         value: property_summary.total_properties || 0, 
+//         icon: iconMap["Total Properties"], 
+//         path: "/admin-properties" 
+//       },
+//       { 
+//         label: "Available Properties", 
+//         value: property_summary.available || 0, 
+//         icon: iconMap["Available Properties"], 
+//         path: "/admin-properties" 
+//       },
+//       { 
+//         label: "Sold Properties", 
+//         value: property_summary.sold || 0, 
+//         icon: iconMap["Sold Properties"], 
+//         // path: "/admin-properties" 
+//       },
+//       { 
+//         label: "Booked Properties", 
+//         value: property_summary.booked || 0, 
+//         icon: iconMap["Booked Properties"], 
+//         // path: "/admin-properties" 
+//       },
+//       { 
+//         label: "Pending Properties", 
+//         value: property_summary.pending || 0, 
+//         icon: iconMap["Pending Properties"], 
+//         // path: "/admin-properties" 
+//       },
+//       { 
+//         label: "Verified Properties", 
+//         value: property_summary.verified || 0, 
+//         icon: iconMap["Verified Properties"], 
+//         // path: "/admin-properties" 
+//       },
+//       { 
+//         label: "Rejected Properties", 
+//         value: property_summary.rejected || 0, 
+//         icon: iconMap["Rejected Properties"], 
+//         // path: "/admin-properties" 
+//       }
+//     );
+
+//     // Transaction Metrics (if available)
+//     if (transaction_summary) {
+//       metrics.push(
+//         { 
+//           label: "Total Transactions", 
+//           value: transaction_summary.total_transactions || 0, 
+//           icon: iconMap["Total Transactions"], 
+//           // path: "/admin-transactions" 
+//         },
+//         { 
+//           label: "Successful Transactions", 
+//           value: transaction_summary.success || 0, 
+//           icon: iconMap["Successful Transactions"], 
+//           // path: "/admin-transactions" 
+//         },
+//         { 
+//           label: "Total Revenue", 
+//           value: `₹${(transaction_summary.total_revenue || 0).toLocaleString()}`, 
+//           icon: iconMap["Total Revenue"], 
+//           // path: "/admin-transactions" 
+//         }
+//       );
+//     }
+
+//     // Order Metrics (if available)
+//     if (order_summary) {
+//       metrics.push(
+//         { 
+//           label: "Total Orders", 
+//           value: order_summary.total_orders || 0, 
+//           icon: faReceipt, 
+//           // path: "/admin-orders" 
+//         }
+//       );
+//     }
+
+//     // Subscription Metrics (if available)
+//     if (subscription_summary) {
+//       metrics.push(
+//         { 
+//           label: "Total Subscriptions", 
+//           value: subscription_summary.total_subscriptions || 0, 
+//           icon: iconMap["Total Subscriptions"], 
+//           // path: "/users-subscriptions" 
+//         },
+//         { 
+//           label: "Active Subscriptions", 
+//           value: subscription_summary.active || 0, 
+//           icon: iconMap["Active Subscriptions"], 
+//           // path: "/users-subscriptions" 
+//         },
+//         { 
+//           label: "Subscription Revenue", 
+//           value: `₹${(subscription_summary.subscription_revenue || 0).toLocaleString()}`, 
+//           icon: iconMap["Subscription Revenue"], 
+//           // path: "/users-subscriptions" 
+//         }
+//       );
+//     }
+
+//     // Referral Metrics (if available)
+//     if (referral_summary) {
+//       metrics.push(
+//         { 
+//           label: "Total Referrals", 
+//           value: referral_summary.total_referrals || 0, 
+//           icon: faShareAlt, 
+//           // path: "/referral-reports" 
+//         },
+//         { 
+//           label: "Referral Amount/Wallet Amount", 
+//           value: `₹${(referral_summary.total_referral_amount_or_wallet_amount || 0).toLocaleString()}`, 
+//           icon: faClock, 
+//           // path: "/referral-reports" 
+//         },
+//         { 
+//           label: "Referral Amount/Wallet Amount Paid", 
+//           value: `₹${(referral_summary.total_referral_amount_or_wallet_amount_paid || 0).toLocaleString()}`, 
+//           icon: faMoneyBillWave, 
+//           // path: "/referral-reports" 
+//         }
+//       );
+//     }
+
+//     // User Metrics
+//     metrics.push(
+//       { 
+//         label: "Total Users", 
+//         value: user_summary.total_users || 0, 
+//         icon: iconMap["Total Users"], 
+//         path: "/admin-users" 
+//       },
+//       { 
+//         label: "Active Users", 
+//         value: user_summary.active || 0, 
+//         icon: iconMap["Active Users"], 
+//         path: "/admin-users" 
+//       },
+//       { 
+//         label: "Inactive Users", 
+//         value: user_summary.inactive || 0, 
+//         icon: iconMap["Inactive Users"], 
+//         path: "/admin-users" 
+//       }
+//     );
+
+//     // Role-wise user metrics
+//     const adminCount = getRoleCount("Admin");
+//     const agentCount = getRoleCount("Agent");
+//     const clientCount = getRoleCount("Client");
+
+//     if (adminCount > 0) {
+//       metrics.push(
+//         { 
+//           label: "Admin Users", 
+//           value: adminCount, 
+//           icon: iconMap["Admin Users"], 
+//           path: "/admin-users" 
+//         }
+//       );
+//     }
+
+//     if (agentCount > 0) {
+//       metrics.push(
+//         { 
+//           label: "Team Users", 
+//           value: agentCount, 
+//           icon: iconMap["Agent Users"], 
+//           path: "/admin-users" 
+//         }
+//       );
+//     }
+
+//     if (clientCount > 0) {
+//       metrics.push(
+//         { 
+//           label: "Client Users", 
+//           value: clientCount, 
+//           icon: iconMap["Client Users"], 
+//           path: "/admin-users" 
+//         }
+//       );
+//     }
+
+//     return metrics;
+//   };
+
+//   const options = { 
+//     responsive: true, 
+//     plugins: { 
+//       legend: { 
+//         position: "bottom",
+//         labels: {
+//           font: {
+//             size: 12
+//           },
+//           padding: 20
+//         }
+//       },
+//       title: {
+//         display: true,
+//         text: 'Properties Status Overview',
+//         font: {
+//           size: 16,
+//           weight: 'bold'
+//         },
+//         padding: {
+//           top: 10,
+//           bottom: 30
+//         }
+//       }
+//     }, 
+//     scales: { 
+//       y: { 
+//         beginAtZero: true,
+//         grid: {
+//           color: 'rgba(0,0,0,0.1)'
+//         },
+//         ticks: {
+//           font: {
+//             size: 12
+//           }
+//         },
+//         title: {
+//           display: true,
+//           text: 'Number of Properties',
+//           font: {
+//             size: 14,
+//             weight: 'bold'
+//           }
+//         }
+//       },
+//       x: {
+//         grid: {
+//           display: false
+//         },
+//         ticks: {
+//           font: {
+//             size: 12
+//           }
+//         }
+//       }
+//     }, 
+//     maintainAspectRatio: false,
+//     barPercentage: 0.8,
+//     categoryPercentage: 0.9
+//   };
+
+//   const getFilteredChart = () => {
+//     if (!chartData) {
+//       console.log("No chart data available for filtering");
+//       return null;
+//     }
+    
+//     if (filter === "all") {
+//       console.log("Showing all chart data");
+//       return chartData;
+//     }
+    
+//     console.log("Filtering chart for:", filter);
+//     const filteredData = { 
+//       labels: chartData.labels, 
+//       datasets: chartData.datasets.filter(d => d.label === filter) 
+//     };
+//     console.log("Filtered chart data:", filteredData);
+//     return filteredData;
+//   };
+
+//   const metrics = prepareMetrics();
+
+//   return (
+//     <>
+//       <WebsiteNavbar />
+//       <div className="dashboard-container">
+//         <div className="dashboard-content">
+//           {loading ? (
+//             <div className="loading-container">
+//               <div className="spinner-border text-primary" role="status">
+//                 <span className="visually-hidden">Loading...</span>
+//               </div>
+//               <p className="mt-2">Loading dashboard data...</p>
+//             </div>
+//           ) : (
+//             <>
+//               {/* Section 1: Statistics Cards */}
+//               <div className="dashboard-section statistics-section">
+//                 <h2 className="section-title">Dashboard Overview</h2>
+//                 <div className="statistics-grid">
+//                   {metrics.map((metric, index) => (
+//                     <div 
+//                       key={`${metric.label}-${index}`}
+//                       className="stat-card"
+//                       style={{ 
+//                         background: cardColors[index % cardColors.length],
+//                       }}
+//                       onClick={() => metric.path && navigate(metric.path)}
+//                     >
+//                       <div className="stat-icon">
+//                         <FontAwesomeIcon icon={metric.icon} />
+//                       </div>
+//                       <div className="stat-info">
+//                         <h3 className="stat-value">{metric.value}</h3>
+//                         <p className="stat-label" style={{ color: 'black' }}>{metric.label}</p>
+//                       </div>
+//                     </div>
+//                   ))}
+//                 </div>
+//               </div>
+
+//               {/* Section 2: Chart/Graph */}
+//               <div className="dashboard-section chart-section">
+//                 <div className="chart-header">
+//                   <h2 className="section-title">Properties Status Analysis</h2>
+//                   <div className="chart-controls">
+//                     <div className="filter-control">
+//                       <label className="filter-label">Filter by Status:</label>
+//                       <select 
+//                         className="form-select form-select-dashboard"
+//                         value={filter}
+//                         onChange={(e) => {
+//                           console.log("Filter changed to:", e.target.value);
+//                           setFilter(e.target.value);
+//                         }}
+//                       >
+//                         <option value="all">All Status</option>
+//                         <option value="Available">Available</option>
+//                         <option value="Sold">Sold</option>
+//                         <option value="Pending">Pending</option>
+//                         <option value="Verified">Verified</option>
+//                         <option value="Booked">Booked</option>
+//                         <option value="Rejected">Rejected</option>
+//                       </select>
+//                     </div>
+//                   </div>
+//                 </div>
+//                 <div className="chart-container" style={{ position: 'relative', height: '400px' }}>
+//                   {chartLoading ? (
+//                     <div className="text-center py-5">
+//                       <div className="spinner-border text-primary" role="status">
+//                         <span className="visually-hidden">Loading chart...</span>
+//                       </div>
+//                       <p className="mt-2">Loading chart data...</p>
+//                     </div>
+//                   ) : chartData ? (
+//                     <>
+//                       <Bar 
+//                         key={filter} // Add key to force re-render on filter change
+//                         ref={chartRef} 
+//                         data={getFilteredChart()} 
+//                         options={options} 
+//                       />
+//                       {getFilteredChart()?.datasets?.length === 0 && (
+//                         <div className="text-center py-5">
+//                           <p>No data available for the selected filter</p>
+//                         </div>
+//                       )}
+//                     </>
+//                   ) : (
+//                     <div className="text-center py-5">
+//                       <p>No chart data available</p>
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             </>
+//           )}
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default AdminDashboard;
+
+
+
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
@@ -1756,7 +2459,11 @@ import {
   faIndianRupeeSign,
   faShareAlt,
   faClock,
-  faMoneyBillWave
+  faMoneyBillWave,
+  faShoppingCart,
+  faFileContract,
+  faExchangeAlt,
+  faChartLine
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -1782,36 +2489,6 @@ const cardColors = [
   "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)"
 ];
 
-// Icon mapping to Font Awesome
-const iconMap = {
-  "Total Properties": faBusinessTime,
-  "Active Users": faUsers,
-  "Inactive Users": faUserSlash,
-  "New Properties": faHomeAlt,
-  "Sold Properties": faCheckCircle,
-  "Booked Properties": faCalendarCheck,
-  "Available Properties": faBuilding,
-  "Pending Properties": faHourglassHalf,
-  "Approved Properties": faCheck,
-  "Rejected Properties": faBan,
-  "Company Payout": faUniversity,
-  "Agent Payout": faMoneyCheckAlt,
-  "Verified Properties": faCheckCircle,
-  "Total Transactions": faCreditCard,
-  "Successful Transactions": faCheckCircle,
-  "Failed Transactions": faTimesCircle,
-  "Refunded Transactions": faReceipt,
-  "Total Revenue": faIndianRupeeSign,
-  "Total Users": faUsers,
-  "Admin Users": faUserTie,
-  "Agent Users": faUserTag,
-  "Client Users": faUser,
-  "Total Subscriptions": faCalendarCheck,
-  "Active Subscriptions": faCheckCircle,
-  "Expired Subscriptions": faTimesCircle,
-  "Subscription Revenue": faIndianRupeeSign,
-};
-
 const AdminDashboard = () => {
   const [summary, setSummary] = useState(null);
   const [chartData, setChartData] = useState(null);
@@ -1826,14 +2503,12 @@ const AdminDashboard = () => {
     setLoading(true);
     setChartLoading(true);
     
-    // Use the correct API endpoint - adjust if needed
-    const apiEndpoint = `${baseurl}/admin-summary/`;
+    const apiEndpoint = `${baseurl}/summary/`;
     
     axios.get(apiEndpoint)
       .then(res => {
-        console.log("API Response:", res.data); // Debug log
+        console.log("API Response:", res.data);
         
-        // Check if response has the expected structure
         if (res.data) {
           setSummary(res.data);
           prepareChartData(res.data);
@@ -1843,57 +2518,69 @@ const AdminDashboard = () => {
       })
       .catch(err => {
         console.error("Error fetching admin summary:", err);
-        // Fallback to mock data structure based on your API response
         const fallbackData = {
-          filters_applied: {
-            user_id: null,
-            role: null,
-            start_date: null,
-            end_date: null
+          orders: {
+            as_buyers: {
+              total_orders: 0,
+              paid: 0,
+              pending: 0,
+              cancelled: 0,
+              refunded: 0
+            },
+            as_sellers: {
+              total_orders: 0,
+              paid: 0,
+              pending: 0,
+              cancelled: 0,
+              refunded: 0
+            }
           },
-          property_summary: {
-            total_properties: 0,
+          transactions: {
+            as_buyers: {
+              total_transactions: 0,
+              success: 0,
+              failed: 0,
+              refunded: 0
+            },
+            as_sellers: {
+              total_transactions: 0,
+              success: 0,
+              failed: 0,
+              refunded: 0
+            }
+          },
+          properties: {
+            as_buyers: {
+              total: 0,
+              booked: 0,
+              purchased: 0
+            },
+            as_sellers: {
+              total_added: 0,
+              available: 0,
+              booked: 0,
+              sold: 0,
+              pending: 0,
+              verified: 0,
+              rejected: 0
+            }
+          },
+          commission: {
+            total: 0,
+            level_wise: [],
+            type_wise: []
+          },
+          products: {
+            total: 0,
             pending: 0,
             verified: 0,
-            available: 0,
-            booked: 0,
-            sold: 0,
-            rejected: 0,
-            role_wise: []
+            rejected: 0
           },
-          transaction_summary: {
-            total_transactions: 0,
-            success: 0,
-            failed: 0,
-            refunded: 0,
-            total_revenue: 0,
-            role_wise: []
+          referrals: {
+            total_referrals: 0
           },
-          order_summary: {
-            total_orders: 0,
-            paid: 0,
-            pending: 0,
-            cancelled: 0,
-            refunded: 0,
-            role_wise: []
-          },
-          subscription_summary: {
-            total_subscriptions: 0,
-            active: 0,
-            expired: 0,
-            subscription_revenue: 0,
-            role_wise: []
-          },
-          referral_summary: {
-            total_referrals: 0,
-            total_pending_referral_amount: 0,
-            total_paid_referral_amount: 0
-          },
-          user_summary: {
-            total_users: 0,
-            active: 0,
-            inactive: 0,
-            role_wise: []
+          users: {
+            total_users: 0
           }
         };
         setSummary(fallbackData);
@@ -1907,88 +2594,79 @@ const AdminDashboard = () => {
 
   // Prepare chart data from summary
   const prepareChartData = (summaryData) => {
-    if (!summaryData) {
-      console.log("No summary data available");
+    if (!summaryData || !summaryData.properties || !summaryData.properties.as_sellers) {
+      console.log("No property summary data available");
       return;
     }
     
-    const { property_summary } = summaryData;
-    console.log("Property Summary for Chart:", property_summary); // Debug log
+    const { as_sellers } = summaryData.properties;
     
-    // For the chart, we'll use property status data
-    const labels = ["Property Status"];
+    const labels = ["Properties Status"];
     
-    // Extract data for each status - using the correct property names from your API
-    const available = [property_summary.available || 0];
-    const sold = [property_summary.sold || 0];
-    const pending = [property_summary.pending || 0];
-    const verified = [property_summary.verified || 0];
-    const booked = [property_summary.booked || 0];
-    const rejected = [property_summary.rejected || 0];
+    const available = [as_sellers.available || 0];
+    const sold = [as_sellers.sold || 0];
+    const pending = [as_sellers.pending || 0];
+    const verified = [as_sellers.verified || 0];
+    const booked = [as_sellers.booked || 0];
+    const rejected = [as_sellers.rejected || 0];
 
-    console.log("Chart Data:", {
-      labels,
-      available,
-      sold,
-      pending,
-      verified,
-      booked,
-      rejected
-    }); // Debug log
-
-    // Solid colors instead of gradients for simplicity
     const colors = {
       Available: "#4caf50", 
       Sold: "#e53935",    
-      Pending: "#ffeb3b",   
+      Pending: "#ff9800",   
       Verified: "#2196f3",
       Booked: "#ff9800",
       Rejected: "#9e9e9e"
     };
 
-    // Create datasets array
     const datasets = [
       { 
         label: "Available", 
         data: available, 
         backgroundColor: colors.Available,
         borderColor: colors.Available,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 8
       },
       { 
         label: "Sold", 
         data: sold, 
         backgroundColor: colors.Sold,
         borderColor: colors.Sold,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 8
       },
       { 
         label: "Pending", 
         data: pending, 
         backgroundColor: colors.Pending,
         borderColor: colors.Pending,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 8
       },
       { 
         label: "Verified", 
         data: verified, 
         backgroundColor: colors.Verified,
         borderColor: colors.Verified,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 8
       },
       { 
         label: "Booked", 
         data: booked, 
         backgroundColor: colors.Booked,
         borderColor: colors.Booked,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 8
       },
       { 
         label: "Rejected", 
         data: rejected, 
         backgroundColor: colors.Rejected,
         borderColor: colors.Rejected,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 8
       },
     ];
 
@@ -1997,230 +2675,143 @@ const AdminDashboard = () => {
       datasets
     };
 
-    console.log("Final Chart Config:", chartDataConfig); // Debug log
     setChartData(chartDataConfig);
   };
 
   // Prepare metrics from summary data
   const prepareMetrics = () => {
     if (!summary) {
-      console.log("No summary available for metrics");
       return [];
     }
     
     const { 
-      property_summary, 
-      transaction_summary, 
-      subscription_summary, 
-      user_summary,
-      order_summary,
-      referral_summary // Added referral_summary
+      properties,
+      commission,
+      products,
+      orders,
+      referrals,
+      users,
+      transactions
     } = summary;
 
-    console.log("Preparing metrics from:", {
-      property_summary,
-      user_summary,
-      transaction_summary,
-      subscription_summary,
-      referral_summary
-    }); // Debug log
-
-    // Get role-wise counts from user_summary
-    const getRoleCount = (roleName) => {
-      if (!user_summary.role_wise) return 0;
-      const roleData = user_summary.role_wise.find(r => r.role === roleName);
-      return roleData ? roleData.count : 0;
-    };
-
-    // Prepare metrics array
     const metrics = [];
     
-    // Property Metrics
-    metrics.push(
-      { 
-        label: "Total Properties", 
-        value: property_summary.total_properties || 0, 
-        icon: iconMap["Total Properties"], 
-        path: "/admin-properties" 
-      },
-      { 
-        label: "Available Properties", 
-        value: property_summary.available || 0, 
-        icon: iconMap["Available Properties"], 
-        path: "/admin-properties" 
-      },
-      { 
-        label: "Sold Properties", 
-        value: property_summary.sold || 0, 
-        icon: iconMap["Sold Properties"], 
-        // path: "/admin-properties" 
-      },
-      { 
-        label: "Booked Properties", 
-        value: property_summary.booked || 0, 
-        icon: iconMap["Booked Properties"], 
-        // path: "/admin-properties" 
-      },
-      { 
-        label: "Pending Properties", 
-        value: property_summary.pending || 0, 
-        icon: iconMap["Pending Properties"], 
-        // path: "/admin-properties" 
-      },
-      { 
-        label: "Verified Properties", 
-        value: property_summary.verified || 0, 
-        icon: iconMap["Verified Properties"], 
-        // path: "/admin-properties" 
-      },
-      { 
-        label: "Rejected Properties", 
-        value: property_summary.rejected || 0, 
-        icon: iconMap["Rejected Properties"], 
-        // path: "/admin-properties" 
-      }
-    );
-
-    // Transaction Metrics (if available)
-    if (transaction_summary) {
+    // 1. Users Card
+    if (users) {
       metrics.push(
         { 
-          label: "Total Transactions", 
-          value: transaction_summary.total_transactions || 0, 
-          icon: iconMap["Total Transactions"], 
-          // path: "/admin-transactions" 
-        },
-        { 
-          label: "Successful Transactions", 
-          value: transaction_summary.success || 0, 
-          icon: iconMap["Successful Transactions"], 
-          // path: "/admin-transactions" 
-        },
-        { 
-          label: "Total Revenue", 
-          value: `₹${(transaction_summary.total_revenue || 0).toLocaleString()}`, 
-          icon: iconMap["Total Revenue"], 
-          // path: "/admin-transactions" 
+          label: "Total Users", 
+          value: users.total_users || 0, 
+          icon: faUsers, 
+          path: "/admin-users" 
         }
       );
     }
-
-    // Order Metrics (if available)
-    if (order_summary) {
-      metrics.push(
-        { 
-          label: "Total Orders", 
-          value: order_summary.total_orders || 0, 
-          icon: faReceipt, 
-          // path: "/admin-orders" 
-        }
-      );
-    }
-
-    // Subscription Metrics (if available)
-    if (subscription_summary) {
-      metrics.push(
-        { 
-          label: "Total Subscriptions", 
-          value: subscription_summary.total_subscriptions || 0, 
-          icon: iconMap["Total Subscriptions"], 
-          // path: "/users-subscriptions" 
-        },
-        { 
-          label: "Active Subscriptions", 
-          value: subscription_summary.active || 0, 
-          icon: iconMap["Active Subscriptions"], 
-          // path: "/users-subscriptions" 
-        },
-        { 
-          label: "Subscription Revenue", 
-          value: `₹${(subscription_summary.subscription_revenue || 0).toLocaleString()}`, 
-          icon: iconMap["Subscription Revenue"], 
-          // path: "/users-subscriptions" 
-        }
-      );
-    }
-
-    // Referral Metrics (if available)
-    if (referral_summary) {
+    
+    // 2. Referrals Card
+    if (referrals) {
       metrics.push(
         { 
           label: "Total Referrals", 
-          value: referral_summary.total_referrals || 0, 
+          value: referrals.total_referrals || 0, 
           icon: faShareAlt, 
-          // path: "/referral-reports" 
-        },
+          path: "/referral-reports" 
+        }
+      );
+    }
+    
+    // 3. Products Card
+    if (products) {
+      metrics.push(
         { 
-          label: "Referral Amount/Wallet Amount", 
-          value: `₹${(referral_summary.total_referral_amount_or_wallet_amount || 0).toLocaleString()}`, 
-          icon: faClock, 
-          // path: "/referral-reports" 
-        },
+          label: "Total Products", 
+          value: products.total || 0, 
+          icon: faShoppingCart, 
+          path: "/admin-business" 
+        }
+      );
+    }
+    
+    // 4. Commission Card
+    if (commission) {
+      metrics.push(
         { 
-          label: "Referral Amount/Wallet Amount Paid", 
-          value: `₹${(referral_summary.total_referral_amount_or_wallet_amount_paid || 0).toLocaleString()}`, 
+          label: "Total Commission", 
+          value: `₹${(commission.total || 0).toLocaleString()}`, 
           icon: faMoneyBillWave, 
-          // path: "/referral-reports" 
+          path: "/admin-commission" 
         }
       );
     }
-
-    // User Metrics
-    metrics.push(
-      { 
-        label: "Total Users", 
-        value: user_summary.total_users || 0, 
-        icon: iconMap["Total Users"], 
-        path: "/admin-users" 
-      },
-      { 
-        label: "Active Users", 
-        value: user_summary.active || 0, 
-        icon: iconMap["Active Users"], 
-        path: "/admin-users" 
-      },
-      { 
-        label: "Inactive Users", 
-        value: user_summary.inactive || 0, 
-        icon: iconMap["Inactive Users"], 
-        path: "/admin-users" 
-      }
-    );
-
-    // Role-wise user metrics
-    const adminCount = getRoleCount("Admin");
-    const agentCount = getRoleCount("Agent");
-    const clientCount = getRoleCount("Client");
-
-    if (adminCount > 0) {
+    
+    // 5. Properties as Buyers Card
+    if (properties && properties.as_buyers) {
       metrics.push(
         { 
-          label: "Admin Users", 
-          value: adminCount, 
-          icon: iconMap["Admin Users"], 
-          path: "/admin-users" 
+          label: "Properties (as Buyers)", 
+          value: properties.as_buyers.total || 0, 
+          icon: faBuilding, 
+          path: "/admin-properties" 
         }
       );
     }
-
-    if (agentCount > 0) {
+    
+    // 6. Properties as Sellers Card
+    if (properties && properties.as_sellers) {
       metrics.push(
         { 
-          label: "Team Users", 
-          value: agentCount, 
-          icon: iconMap["Agent Users"], 
-          path: "/admin-users" 
+          label: "Properties (as Sellers)", 
+          value: properties.as_sellers.total_added || 0, 
+          icon: faHome, 
+          path: "/admin-properties" 
         }
       );
     }
-
-    if (clientCount > 0) {
+    
+    // 7. Transactions as Buyers Card
+    if (transactions && transactions.as_buyers) {
       metrics.push(
         { 
-          label: "Client Users", 
-          value: clientCount, 
-          icon: iconMap["Client Users"], 
-          path: "/admin-users" 
+          label: "Transactions (as Buyers)", 
+          value: transactions.as_buyers.total_transactions || 0, 
+          icon: faCreditCard, 
+          path: "/admin-transactions" 
+        }
+      );
+    }
+    
+    // 8. Transactions as Sellers Card
+    if (transactions && transactions.as_sellers) {
+      metrics.push(
+        { 
+          label: "Transactions (as Sellers)", 
+          value: transactions.as_sellers.total_transactions || 0, 
+          icon: faExchangeAlt, 
+          path: "/admin-transactions" 
+        }
+      );
+    }
+    
+    // 9. Orders as Buyers Card
+    if (orders && orders.as_buyers) {
+      metrics.push(
+        { 
+          label: "Orders (as Buyers)", 
+          value: orders.as_buyers.total_orders || 0, 
+          icon: faFileContract, 
+          path: "/admin-orders" 
+        }
+      );
+    }
+    
+    // 10. Orders as Sellers Card
+    if (orders && orders.as_sellers) {
+      metrics.push(
+        { 
+          label: "Orders (as Sellers)", 
+          value: orders.as_sellers.total_orders || 0, 
+          icon: faReceipt, 
+          path: "/admin-orders" 
         }
       );
     }
@@ -2230,26 +2821,45 @@ const AdminDashboard = () => {
 
   const options = { 
     responsive: true, 
+    maintainAspectRatio: false,
     plugins: { 
       legend: { 
         position: "bottom",
         labels: {
           font: {
-            size: 12
+            size: 12,
+            weight: '500'
           },
-          padding: 20
+          padding: 20,
+          usePointStyle: true,
+          boxWidth: 10
         }
       },
       title: {
         display: true,
-        text: 'Properties Status Overview',
+        text: 'Property Status Distribution',
         font: {
-          size: 16,
-          weight: 'bold'
+          size: 18,
+          weight: 'bold',
+          family: "'Poppins', sans-serif"
         },
         padding: {
           top: 10,
           bottom: 30
+        },
+        color: '#2c3e50'
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        borderColor: '#667eea',
+        borderWidth: 2,
+        cornerRadius: 8,
+        callbacks: {
+          label: function(context) {
+            return `${context.dataset.label}: ${context.raw} properties`;
+          }
         }
       }
     }, 
@@ -2257,12 +2867,24 @@ const AdminDashboard = () => {
       y: { 
         beginAtZero: true,
         grid: {
-          color: 'rgba(0,0,0,0.1)'
+          color: 'rgba(0,0,0,0.05)',
+          drawBorder: true,
+          borderDash: [5, 5]
         },
         ticks: {
           font: {
-            size: 12
-          }
+            size: 12,
+            weight: '500'
+          },
+          stepSize: 1,
+          callback: function(value) {
+            if (Math.floor(value) === value) {
+              return value;
+            }
+            return null;
+          },
+          autoSkip: true,
+          maxTicksLimit: 8
         },
         title: {
           display: true,
@@ -2270,8 +2892,22 @@ const AdminDashboard = () => {
           font: {
             size: 14,
             weight: 'bold'
+          },
+          color: '#2c3e50'
+        },
+        min: 0,
+        max: (() => {
+          if (!chartData) return 100;
+          let maxVal = 0;
+          chartData.datasets.forEach(dataset => {
+            const datasetMax = Math.max(...dataset.data);
+            if (datasetMax > maxVal) maxVal = datasetMax;
+          });
+          if (maxVal > 20) {
+            return Math.ceil(maxVal / 10) * 10;
           }
-        }
+          return maxVal + 2;
+        })()
       },
       x: {
         grid: {
@@ -2279,33 +2915,47 @@ const AdminDashboard = () => {
         },
         ticks: {
           font: {
-            size: 12
+            size: 13,
+            weight: '600'
           }
+        },
+        title: {
+          display: true,
+          text: 'Property Categories',
+          font: {
+            size: 14,
+            weight: 'bold'
+          },
+          color: '#2c3e50',
+          padding: { top: 20 }
         }
       }
     }, 
-    maintainAspectRatio: false,
-    barPercentage: 0.8,
-    categoryPercentage: 0.9
+    barPercentage: 0.7,
+    categoryPercentage: 0.85,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 20,
+        bottom: 10
+      }
+    }
   };
 
   const getFilteredChart = () => {
     if (!chartData) {
-      console.log("No chart data available for filtering");
       return null;
     }
     
     if (filter === "all") {
-      console.log("Showing all chart data");
       return chartData;
     }
     
-    console.log("Filtering chart for:", filter);
     const filteredData = { 
       labels: chartData.labels, 
       datasets: chartData.datasets.filter(d => d.label === filter) 
     };
-    console.log("Filtered chart data:", filteredData);
     return filteredData;
   };
 
@@ -2343,7 +2993,7 @@ const AdminDashboard = () => {
                       </div>
                       <div className="stat-info">
                         <h3 className="stat-value">{metric.value}</h3>
-                        <p className="stat-label" style={{ color: 'black' }}>{metric.label}</p>
+                        <p className="stat-label" style={{ color: 'white' }}>{metric.label}</p>
                       </div>
                     </div>
                   ))}
@@ -2361,7 +3011,6 @@ const AdminDashboard = () => {
                         className="form-select form-select-dashboard"
                         value={filter}
                         onChange={(e) => {
-                          console.log("Filter changed to:", e.target.value);
                           setFilter(e.target.value);
                         }}
                       >
@@ -2376,7 +3025,7 @@ const AdminDashboard = () => {
                     </div>
                   </div>
                 </div>
-                <div className="chart-container" style={{ position: 'relative', height: '400px' }}>
+                <div className="chart-container" style={{ position: 'relative', height: '450px' }}>
                   {chartLoading ? (
                     <div className="text-center py-5">
                       <div className="spinner-border text-primary" role="status">
@@ -2387,7 +3036,7 @@ const AdminDashboard = () => {
                   ) : chartData ? (
                     <>
                       <Bar 
-                        key={filter} // Add key to force re-render on filter change
+                        key={filter}
                         ref={chartRef} 
                         data={getFilteredChart()} 
                         options={options} 

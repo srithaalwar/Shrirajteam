@@ -15591,8 +15591,8 @@ const AgentNavbar = () => {
 
       ],
     },
-    { path: "/agent-my-orders", name: "My Orders", icon: <FaTag /> },
-    { path: "/agent-orders", name: "Orders", icon: <FaTag /> },
+    { path: "/agent-my-orders", name: "My Orders/As Buyer", icon: <FaTag /> },
+    { path: "/agent-orders", name: "Orders/As Seller", icon: <FaTag /> },
     { path: "/a-service-providers", name: "Service Providers", icon: <FaUserTie /> },
     { path: "/p-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/agent-profile", name: "Profile", icon: <FaUserCircle /> },
@@ -15749,7 +15749,7 @@ const AgentNavbar = () => {
                   onClick={() => setOpenOperationsDropdown(false)}
                 >
                   <span className="wn-dropdown-icon"><FaTag /></span>
-                  <span className="wn-dropdown-text">My Orders</span>
+                  <span className="wn-dropdown-text">My Orders/As Buyer</span>
                 </Link>
                 <Link
                   to="/agent-orders"
@@ -15757,7 +15757,7 @@ const AgentNavbar = () => {
                   onClick={() => setOpenOperationsDropdown(false)}
                 >
                   <span className="wn-dropdown-icon"><FaClipboardList /></span>
-                  <span className="wn-dropdown-text">Orders</span>
+                  <span className="wn-dropdown-text">Orders/As Seller</span>
                 </Link>
               </div>
             )}

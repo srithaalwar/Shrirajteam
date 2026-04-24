@@ -4578,13 +4578,7 @@ const fetchProducts = useCallback(async () => {
       {/* ======= MOBILE ======= */}
       {isMobile && (
         <div className="abpc-mobile">
-          <div className="abpc-mobile-topbar">
-            <button className="abpc-back" onClick={() => navigate(-1)}><ArrowLeft size={20} /></button>
-            <h1 className="abpc-mobile-title">Categories</h1>
-            <div style={{ width: 36 }} />
-          </div>
-
-          <div className="abpc-toolbar">
+               <div className="abpc-toolbar">
             <button className="abpc-toolbar-btn" onClick={() => setShowSortSheet(true)}>
               <span>{sortLabel}</span><ChevronDown size={14} />
             </button>
@@ -4594,6 +4588,13 @@ const fetchProducts = useCallback(async () => {
               {activeFilterCount > 0 && <span className="abpc-toolbar-badge">{activeFilterCount}</span>}
             </button>
           </div>
+          <div className="abpc-mobile-topbar">
+            <button className="abpc-back" onClick={() => navigate(-1)}><ArrowLeft size={20} /></button>
+            <h1 className="abpc-mobile-title">Categories</h1>
+            <div style={{ width: 36 }} />
+          </div>
+
+     
 
           {activeFilterCount > 0 && (
             <ActiveChips

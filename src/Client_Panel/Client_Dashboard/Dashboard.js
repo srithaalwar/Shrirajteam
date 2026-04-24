@@ -593,55 +593,7 @@ const ClientDashboard = () => {
     });
 
     const metrics = [];
-    
-    // Property Metrics from my_properties
-    if (property_summary.my_properties) {
-      const myProps = property_summary.my_properties;
-      metrics.push(
-        { 
-          label: " Properties", 
-          value: myProps.total_added || 0, 
-          icon: iconMap["Total Properties"], 
-          path: "/client-properties" 
-        },
-        // { 
-        //   label: "Available Properties", 
-        //   value: myProps.available || 0, 
-        //   icon: iconMap["Available Properties"], 
-        //   path: "/client-properties?status=available" 
-        // },
-        // { 
-        //   label: "Sold Properties", 
-        //   value: myProps.sold || 0, 
-        //   icon: iconMap["Sold Properties"], 
-        //   path: "/client-properties?status=sold" 
-        // },
-        // { 
-        //   label: "Booked Properties", 
-        //   value: myProps.booked || 0, 
-        //   icon: iconMap["Booked Properties"], 
-        //   path: "/client-properties?status=booked" 
-        // },
-        // { 
-        //   label: "Pending Properties", 
-        //   value: myProps.pending || 0, 
-        //   icon: iconMap["Pending Properties"], 
-        //   path: "/client-properties?status=pending" 
-        // },
-        // { 
-        //   label: "Verified Properties", 
-        //   value: myProps.verified || 0, 
-        //   icon: iconMap["Verified Properties"], 
-        //   path: "/client-properties?status=verified" 
-        // },
-        // { 
-        //   label: "Rejected Properties", 
-        //   value: myProps.rejected || 0, 
-        //   icon: iconMap["Rejected Properties"], 
-        //   path: "/client-properties?status=rejected" 
-        // }
-      );
-    }
+  
 
     // Transaction Metrics
     if (transaction_summary) {
@@ -705,6 +657,56 @@ const ClientDashboard = () => {
         //   value: `₹${subscription_summary.subscription_revenue || 0}`, 
         //   icon: iconMap["Subscription Revenue"], 
         //   path: "/client-my-plans" 
+        // }
+      );
+    }
+
+      
+    // Property Metrics from my_properties
+    if (property_summary.my_properties) {
+      const myProps = property_summary.my_properties;
+      metrics.push(
+        { 
+          label: " Properties", 
+          value: myProps.total_added || 0, 
+          icon: iconMap["Total Properties"], 
+          path: "/client-properties" 
+        },
+        // { 
+        //   label: "Available Properties", 
+        //   value: myProps.available || 0, 
+        //   icon: iconMap["Available Properties"], 
+        //   path: "/client-properties?status=available" 
+        // },
+        // { 
+        //   label: "Sold Properties", 
+        //   value: myProps.sold || 0, 
+        //   icon: iconMap["Sold Properties"], 
+        //   path: "/client-properties?status=sold" 
+        // },
+        // { 
+        //   label: "Booked Properties", 
+        //   value: myProps.booked || 0, 
+        //   icon: iconMap["Booked Properties"], 
+        //   path: "/client-properties?status=booked" 
+        // },
+        // { 
+        //   label: "Pending Properties", 
+        //   value: myProps.pending || 0, 
+        //   icon: iconMap["Pending Properties"], 
+        //   path: "/client-properties?status=pending" 
+        // },
+        // { 
+        //   label: "Verified Properties", 
+        //   value: myProps.verified || 0, 
+        //   icon: iconMap["Verified Properties"], 
+        //   path: "/client-properties?status=verified" 
+        // },
+        // { 
+        //   label: "Rejected Properties", 
+        //   value: myProps.rejected || 0, 
+        //   icon: iconMap["Rejected Properties"], 
+        //   path: "/client-properties?status=rejected" 
         // }
       );
     }

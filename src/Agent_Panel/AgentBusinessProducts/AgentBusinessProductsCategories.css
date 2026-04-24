@@ -624,3 +624,26 @@
 .abpc-desktop-header {
   display: none; /* Hide the old header */
 }
+
+
+@media (max-width: 767px) {
+
+.abpc-mobile-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--abpc-primary);
+    padding: 14px 14px 10px;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+}
+.abpc-toolbar {
+    display: flex;
+    background: var(--abpc-white);
+    border-bottom: 1px solid var(--abpc-border);
+    position: sticky;
+    top: 1px;
+    z-index: 88;
+}
+}

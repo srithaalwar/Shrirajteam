@@ -5,9 +5,9 @@
 
 .mani-as-cat-section {
   width: 100%;
-  background: #fffcdd;
+  /* background: #fffcdd; */
   border-bottom: 1px solid #ececec;
-  padding: 12px 0 8px;
+  padding: 1px 0 1px;
 }
 
 /* ── Scrollable row ── */
@@ -59,6 +59,7 @@
   object-fit: contain;
   object-position: center;
   display: block;
+   transition: transform 0.25s ease;
 }
 
 /* ── Fallback MUI icon ── */
@@ -83,6 +84,20 @@
   word-break: break-word;
 }
 
+.mani-as-cat-item:hover .mani-as-cat-icon-img {
+  transform: scale(1.15); /* 👈 zoom in */
+}
+
+/* Optional: for MUI fallback icon */
+.mani-as-cat-icon-svg {
+  color: #555555 !important;
+  font-size: 28px !important;
+  transition: transform 0.25s ease;
+}
+
+.mani-as-cat-item:hover .mani-as-cat-icon-svg {
+  transform: scale(1.15);
+}
 /* ── Entry animation ── */
 @keyframes mani-as-cat-rise {
   from { opacity: 0; transform: translateY(8px); }
@@ -94,8 +109,8 @@
 /* ================================================ */
 
 @media (max-width: 768px) {
-  .mani-as-cat-section    { padding: 10px 0 6px; }
-  .mani-as-cat-scroll-row { padding: 4px 10px 6px; }
+  .mani-as-cat-section    { padding: 0px 0 6px; }
+  .mani-as-cat-scroll-row { padding: 2px 10px 0px; }
   .mani-as-cat-item       { width: 68px; }
   .mani-as-cat-icon-img   { width: 42px; height: 42px; }
   .mani-as-cat-name       { font-size: 10.5px; }
