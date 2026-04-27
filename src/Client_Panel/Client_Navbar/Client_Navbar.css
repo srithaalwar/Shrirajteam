@@ -501,10 +501,10 @@
   }
   
   /* Hide text on mobile for icons, show only icons */
-  .wn-notification span:not(.wn-notification-badge),
+  /* .wn-notification span:not(.wn-notification-badge),
   .wn-wishlist span:not(.wn-wishlist-count) {
     display: none;
-  }
+  } */
   
   .wn-cart span:not(.wn-cart-count) {
     font-size: 12px;
@@ -754,10 +754,10 @@
   }
   
   /* Hide text on mobile for icons, show only icons */
-  .wn-notification span:not(.wn-notification-badge),
+  /* .wn-notification span:not(.wn-notification-badge),
   .wn-wishlist span:not(.wn-wishlist-count) {
     display: none;
-  }
+  } */
   
   .wn-cart span:not(.wn-cart-count) {
     font-size: 12px;

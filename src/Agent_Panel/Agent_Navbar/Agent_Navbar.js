@@ -15675,8 +15675,31 @@ const AgentNavbar = () => {
 </div>
 
         </div>
-          <AgentSearchBar placeholder="Search products..." />
+          {/* <AgentSearchBar placeholder="Search products..." /> */}
 
+ {/* Desktop Search - Shows only on desktop */}
+  <div className="wn-desktop-search">
+    <AgentSearchBar placeholder="Search products..." />
+  </div>
+  
+  {/* Mobile Search Toggle Button - Shows only on mobile */}
+  <div className="wn-mobile-search-toggle">
+    <button 
+      className="wn-mobile-search-btn"
+      onClick={() => {
+        const searchContainer = document.querySelector('.wn-search-container');
+        if (searchContainer) {
+          searchContainer.classList.toggle('expanded');
+          searchContainer.classList.toggle('collapsed');
+          if (searchContainer.classList.contains('expanded')) {
+            searchContainer.querySelector('.wn-search-input')?.focus();
+          }
+        }
+      }}
+    >
+      <FaSearch />
+    </button>
+  </div>
         
         {/* Header Dropdown Menus - Desktop */}
         <div className="wn-header-dropdowns">
@@ -15904,7 +15927,10 @@ const AgentNavbar = () => {
 </div>
         </div>
       </header>
-
+{/* Mobile Search Bar (separate row for mobile) */}
+<div className="wn-mobile-search-row">
+  <AgentSearchBar placeholder="Search products..." />
+</div>
       {/* Mobile Logout Button - Fixed at bottom of sidebar only (removed from navbar) */}
       {/* The logout button in sidebar will serve as the mobile logout option */}
 

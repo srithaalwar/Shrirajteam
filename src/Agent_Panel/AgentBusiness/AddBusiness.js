@@ -5003,7 +5003,7 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
         break;
 
       case 'contact-info':
-        if (!formData.support_email?.trim()) newErrors.support_email = 'Support Email is required';
+        // if (!formData.support_email?.trim()) newErrors.support_email = 'Support Email is required';
         if (!formData.support_phone?.trim()) newErrors.support_phone = 'Support Phone is required';
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -5387,8 +5387,8 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
                   {renderField({
                     type: 'email',
                     name: 'support_email',
-                    label: 'Support Email',
-                    required: true
+                    label: 'Support Email(optional)',
+                    required: false
                   })}
                 </div>
                 <div className="col-md-6">

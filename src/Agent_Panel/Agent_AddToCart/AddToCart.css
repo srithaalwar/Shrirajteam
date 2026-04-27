@@ -1229,3 +1229,446 @@
     margin: 20px;
   }
 }
+
+
+
+
+/* Add these styles to fix mobile view issues */
+
+/* Mobile-specific fixes for cart items */
+@media (max-width: 768px) {
+  /* Fix for cart item cards */
+  .cart-item-card.compact {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .cart-item-card.compact .cart-item-image {
+    width: 100%;
+    height: 160px;
+    margin: 0 auto;
+  }
+
+  .cart-item-image {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 160px;
+  }
+
+  .cart-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: #f8f9fa;
+  }
+
+  .cart-item-details {
+    width: 100%;
+    padding: 0 8px;
+  }
+
+  /* Fix for item header */
+  .item-header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .item-title {
+    font-size: 1rem;
+    line-height: 1.3;
+    flex: 1;
+    white-space: normal !important;
+    word-wrap: break-word;
+    overflow: visible !important;
+  }
+
+  /* Fix for attributes */
+  .item-attributes {
+    font-size: 0.75rem;
+    margin: 4px 0;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+
+  /* Fix for pricing section */
+  .item-pricing {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .price-display {
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .current-price {
+    font-size: 1rem;
+  }
+
+  .original-price {
+    font-size: 0.8rem;
+  }
+
+  .discount-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+  }
+
+  /* Fix for stock badge */
+  .item-stock {
+    width: 100%;
+  }
+
+  .stock-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+  }
+
+  /* Fix for quantity section */
+  .item-quantity {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .quantity-controls {
+    gap: 8px;
+  }
+
+  .quantity-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+  }
+
+  .quantity-display {
+    min-width: 32px;
+    font-size: 1rem;
+  }
+
+  .item-subtotal {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .subtotal-label {
+    font-size: 0.75rem;
+  }
+
+  .subtotal-amount {
+    font-size: 1rem;
+  }
+}
+
+/* Extra small devices (phones, 576px and down) */
+@media (max-width: 576px) {
+  .agent-cart-container {
+    padding: 10px;
+  }
+
+  /* Fix for cart items column height */
+  .cart-items-column {
+    height: auto;
+    max-height: 450px;
+  }
+
+  .cart-items-list.scrollable-list {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  /* Even more compact cart items */
+  .cart-item-card.compact {
+    padding: 10px;
+  }
+
+  .cart-item-card.compact .cart-item-image {
+    height: 140px;
+  }
+
+  .item-title {
+    font-size: 0.9rem;
+  }
+
+  .item-attributes {
+    font-size: 0.7rem;
+  }
+
+  .current-price {
+    font-size: 0.9rem;
+  }
+
+  /* Fix for remove button */
+  .remove-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .remove-btn svg {
+    font-size: 12px;
+  }
+
+  /* Fix for quantity buttons on very small screens */
+  .quantity-btn {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+  }
+
+  .quantity-display {
+    min-width: 28px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Landscape mode on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .agent-cart-content.split-layout {
+    height: auto;
+  }
+
+  .cart-items-column {
+    height: 350px;
+  }
+
+  .cart-item-card.compact .cart-item-image {
+    height: 120px;
+  }
+}
+
+/* Fix for very small devices (400px and below) */
+@media (max-width: 400px) {
+  .cart-item-card.compact .cart-item-image {
+    height: 120px;
+  }
+
+  .item-quantity {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .quantity-controls {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .item-subtotal {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* Ensure images don't overflow */
+.cart-item-image {
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-item-image img {
+  transition: transform 0.2s ease;
+}
+
+.cart-item-image img:hover {
+  transform: scale(1.05);
+}
+
+/* Improve text readability on mobile */
+@media (max-width: 768px) {
+  .cart-item-details {
+    font-size: 0.85rem;
+  }
+
+  .item-header .item-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .item-attributes {
+    color: #6c757d;
+    margin: 4px 0;
+    line-height: 1.3;
+  }
+}
+
+/* Fix for order summary on mobile */
+@media (max-width: 768px) {
+  .order-summary-column {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .order-summary-card.compact {
+    padding: 16px;
+  }
+
+  .summary-title {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+
+  .summary-row {
+    font-size: 0.9rem;
+    padding: 4px 0;
+  }
+
+  .total-amount {
+    font-size: 1.2rem;
+  }
+
+  /* Fix for payment method options */
+  .payment-method-option.compact {
+    padding: 10px;
+  }
+
+  .payment-method-option.compact .payment-method-name {
+    font-size: 0.85rem;
+  }
+
+  /* Fix for address form on mobile */
+  .address-form-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .form-group {
+    margin-bottom: 8px;
+  }
+
+  .form-label {
+    font-size: 0.8rem;
+  }
+
+  .form-control {
+    font-size: 0.85rem;
+    padding: 8px 10px;
+  }
+}
+
+/* Improve touch targets on mobile */
+@media (max-width: 768px) {
+  .quantity-btn,
+  .remove-btn,
+  .checkout-btn,
+  .continue-shopping-btn,
+  .payment-method-option,
+  .btn {
+    min-height: 44px; /* Better touch target size */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .quantity-btn {
+    min-height: 36px;
+  }
+
+  .remove-btn {
+    min-height: 32px;
+  }
+
+  /* Improve spacing for touch */
+  .cart-item-card.compact {
+    margin-bottom: 8px;
+  }
+
+  .summary-details.compact .summary-row {
+    margin: 8px 0;
+  }
+
+  .payment-method-option.compact {
+    margin-bottom: 8px;
+  }
+}
+
+/* Fix for snackbar on mobile */
+@media (max-width: 768px) {
+  .agent-cart-snackbar-center {
+    width: 90%;
+    left: 5%;
+    transform: translate(0, -50%);
+  }
+
+  .snackbar-content {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 12px 16px;
+  }
+}
+
+/* Fix for payment success dialog on mobile */
+@media (max-width: 768px) {
+  .payment-success-alert-center {
+    width: 95%;
+    max-height: 85vh;
+  }
+
+  .payment-success-header {
+    padding: 16px;
+    flex-wrap: wrap;
+  }
+
+  .payment-success-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .payment-success-body {
+    padding: 20px 16px;
+  }
+
+  .success-icon-circle {
+    width: 60px;
+    height: 60px;
+  }
+
+  .success-icon-circle svg {
+    font-size: 32px !important;
+  }
+
+  .payment-details-card {
+    padding: 16px;
+  }
+
+  .payment-detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .payment-success-footer {
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .payment-success-footer .btn {
+    width: 100%;
+  }
+}
+
+/* Ensure proper spacing for agent navbar on mobile */
+@media (max-width: 768px) {
+  .agent-cart-container {
+    margin-top: 0;
+    padding-top: 10px;
+  }
+
+  .agent-cart-header {
+    margin-bottom: 15px;
+  }
+
+  .agent-cart-title {
+    font-size: 1.2rem;
+  }
+}

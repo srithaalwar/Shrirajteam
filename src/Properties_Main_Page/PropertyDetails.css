@@ -477,7 +477,7 @@
 
 /* ADDITIONAL SECTIONS */
 .additional-sections {
-  width: calc(100% - 320px);
+  /* width: calc(100% - 320px); */
   background: #ffffff;
   border-radius: 12px;
   padding: 0;

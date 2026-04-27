@@ -690,13 +690,13 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 // Card background colors - professional gradients
 const cardColors = [
-  "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-  "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-  "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-  "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
-  "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-  "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-  "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)",
+  "linear-gradient(135deg, #203cb5 0%, #764ba2 100%)",
+  "linear-gradient(135deg, #c926db 0%, #f5576c 100%)",
+  "linear-gradient(135deg, #0971cc 0%, #06a3ab 100%)",
+  "linear-gradient(135deg, #09a13c 0%, #0cb092 100%)",
+  "linear-gradient(135deg, #aa0b3b 0%, #c6aa0b 100%)",
+  "linear-gradient(135deg, #0c8f88 0%, #8e0832 100%)",
+  "linear-gradient(135deg, #76060a 0%, #a00b71 100%)",
 ];
 
 const AgentDashboard = () => {

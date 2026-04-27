@@ -227,3 +227,302 @@
     display: none !important;
   }
 }
+
+
+
+/* AgentSearchBar.css - Updated for mobile */
+
+.wn-search-container {
+  position: relative;
+  flex: 1;
+  max-width: 600px;
+  margin: 0 20px;
+}
+
+/* Remove the hide on mobile CSS - DELETE THIS BLOCK */
+/* @media (max-width: 768px) {
+  .wn-search-container {
+    display: none !important;
+  }
+} */
+
+/* Instead, add these responsive styles */
+
+/* Tablet and Desktop (default) */
+.wn-search-form {
+  display: flex;
+  align-items: center;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.wn-search-form:focus-within {
+  border-color: #febd69;
+  box-shadow: 0 0 0 3px rgba(254, 189, 105, 0.2);
+}
+
+/* Search Input */
+.wn-search-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: white;
+}
+
+.wn-search-input::placeholder {
+  color: #999;
+}
+
+.wn-search-btn {
+  padding: 10px 20px;
+  background: #febd69;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.wn-search-btn:hover {
+  background: #f3a847;
+}
+
+.wn-search-btn svg {
+  color: #333;
+  font-size: 16px;
+}
+
+/* Search Results Dropdown */
+.wn-search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 4px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  animation: slideDown 0.2s ease;
+}
+
+/* ============= MOBILE RESPONSIVE STYLES ============= */
+@media (max-width: 768px) {
+  .wn-search-container {
+    position: static;
+    margin: 0;
+    width: auto;
+    max-width: none;
+  }
+
+  /* Mobile: Make search bar take available space */
+  .wn-search-form {
+    border: 1px solid #e0e0e0;
+    border-radius: 30px;
+    background: #f8f9fa;
+  }
+
+  .wn-search-input {
+    padding: 8px 12px;
+    font-size: 13px;
+    background: #f8f9fa;
+  }
+
+  .wn-search-btn {
+    padding: 8px 16px;
+    background: transparent;
+  }
+
+  .wn-search-btn svg {
+    color: #666;
+    font-size: 14px;
+  }
+
+  /* Mobile: Make search results full width */
+  .wn-search-results {
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 70vh;
+    margin: 0;
+    border-radius: 20px 20px 0 0;
+    border-bottom: none;
+    z-index: 2000;
+    animation: slideUp 0.3s ease;
+  }
+
+  /* Mobile result items - larger touch targets */
+  .wn-search-result-item {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .wn-result-icon {
+    width: 55px;
+    height: 55px;
+  }
+
+  .wn-result-title {
+    font-size: 15px;
+    white-space: normal;
+    line-height: 1.3;
+  }
+
+  .wn-result-type {
+    font-size: 11px;
+  }
+
+  .wn-result-price {
+    font-size: 14px;
+  }
+
+  /* Mobile loading state */
+  .wn-search-loading {
+    padding: 30px;
+    font-size: 14px;
+  }
+}
+
+/* Extra small devices (phones under 480px) */
+@media (max-width: 480px) {
+  .wn-search-input {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  .wn-search-btn {
+    padding: 7px 12px;
+  }
+
+  .wn-result-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .wn-result-title {
+    font-size: 14px;
+  }
+}
+
+/* Collapsible Search Bar for Mobile (Optional - Toggle feature) */
+@media (max-width: 768px) {
+  .wn-search-container.collapsed .wn-search-form {
+    width: 40px;
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .wn-search-container.collapsed .wn-search-input {
+    display: none;
+  }
+
+  .wn-search-container.collapsed .wn-search-btn {
+    background: #f8f9fa;
+    border-radius: 50%;
+    padding: 10px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .wn-search-container.collapsed .wn-search-btn svg {
+    margin: 0;
+  }
+
+  .wn-search-container.expanded .wn-search-form {
+    width: auto;
+    background: #f8f9fa;
+  }
+}
+
+/* Loading State */
+.wn-search-loading {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.wn-loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #febd69;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* No Results State */
+.wn-search-no-results {
+  padding: 30px 20px;
+  text-align: center;
+  color: #666;
+}
+
+.wn-no-results-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.wn-no-results-suggestion {
+  font-size: 12px;
+  color: #999;
+  margin-top: 8px;
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Desktop Styles */
+@media (min-width: 769px) {
+  .wn-search-container {
+    max-width: 500px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .wn-search-container {
+    max-width: 600px;
+  }
+}

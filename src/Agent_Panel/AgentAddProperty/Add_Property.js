@@ -2653,7 +2653,7 @@ useEffect(() => {
           <div className="col-md-6">
             {renderField({
               name: 'pinCode',
-              label: 'Pin Code',
+              label: 'Pin Code(optional)',
               required: false
             })}
           </div>
@@ -3220,7 +3220,7 @@ useEffect(() => {
 
         {/* Text Areas - OPTIONAL */}
         <div className="row">
-          <div className="col-6">
+          {/* <div className="col-6">
             {renderField({
               type: 'textarea',
               name: 'otherFeatures',
@@ -3228,8 +3228,8 @@ useEffect(() => {
               rows: 3,
               required: false
             })}
-          </div>
-          <div className="col-6">
+          </div> */}
+          <div className="col-12">
             {renderField({
               type: 'textarea',
               name: 'locationAdvantages',
@@ -3372,7 +3372,7 @@ useEffect(() => {
                 </div>
               </div>
 
-              <div className="row">
+              {/* <div className="row">
                 <div className="col-md-6">
                   {renderField({
                     type: 'email',
@@ -3381,7 +3381,7 @@ useEffect(() => {
                     required: false
                   })}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         );

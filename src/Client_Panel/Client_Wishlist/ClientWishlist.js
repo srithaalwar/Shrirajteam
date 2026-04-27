@@ -465,13 +465,13 @@ function ClientWishlist() {
                             )}
                           </button>
                           
-                          <span className="added-date">
+                          {/* <span className="added-date">
                             Added on: {new Date(item.created_at).toLocaleDateString('en-US', {
                               year: 'numeric',
                               month: 'short',
                               day: 'numeric'
                             })}
-                          </span>
+                          </span> */}
                         </div>
                       </div>
                     </div>
@@ -481,7 +481,7 @@ function ClientWishlist() {
             </div>
             
             {/* Wishlist Summary */}
-            <div className="wishlist-summary">
+            {/* <div className="wishlist-summary">
               <div className="wishlist-summary-card">
                 <h3 className="summary-title">Wishlist Summary</h3>
                 
@@ -539,7 +539,7 @@ function ClientWishlist() {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         )}
       </div>

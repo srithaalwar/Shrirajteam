@@ -499,10 +499,10 @@
   }
   
   /* Hide text on mobile for icons, show only icons */
-  .wn-notification span:not(.wn-notification-badge),
+  /* .wn-notification span:not(.wn-notification-badge),
   .wn-wishlist span:not(.wn-wishlist-count) {
     display: none;
-  }
+  } */
   
   .wn-cart span:not(.wn-cart-count) {
     font-size: 12px;
@@ -1613,4 +1613,85 @@
 /* Make the user panel indicator have relative positioning for tooltip */
 .wn-user-panel-indicator {
   position: relative;
+}
+
+
+
+/* ===================== MOBILE SEARCH STYLES ===================== */
+
+/* Desktop search - hidden on mobile */
+@media (max-width: 768px) {
+  .wn-desktop-search {
+    display: none;
+  }
+}
+
+/* Desktop search - visible on desktop */
+@media (min-width: 769px) {
+  .wn-desktop-search {
+    display: block;
+    flex: 1;
+    max-width: 500px;
+  }
+  
+  .wn-mobile-search-toggle,
+  .wn-mobile-search-row {
+    display: none;
+  }
+}
+
+/* Mobile search toggle button */
+.wn-mobile-search-toggle {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .wn-mobile-search-toggle {
+    display: block;
+    margin-left: auto;
+    margin-right: 8px;
+  }
+  
+  .wn-mobile-search-btn {
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 18px;
+  }
+  
+  .wn-mobile-search-btn:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Mobile search row - appears below navbar */
+.wn-mobile-search-row {
+  display: none;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e9ecef;
+  position: sticky;
+  top: 60px;
+  z-index: 999;
+}
+
+@media (max-width: 768px) {
+  .wn-mobile-search-row {
+    display: block;
+  }
+  
+  /* Hide the search container margin adjustments on mobile */
+  .wn-mobile-search-row .wn-search-container {
+    margin: 0;
+  }
+  
+  .wn-mobile-search-row .wn-search-form {
+    border-radius: 30px;
+    background: #f5f5f5;
+  }
 }

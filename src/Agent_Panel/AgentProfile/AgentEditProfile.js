@@ -2135,7 +2135,7 @@ import Swal from "sweetalert2";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./AgentEditProfile.css";
 
-const AgentEditProfile = () => {
+const TeamEditProfile = () => {
   const navigate = useNavigate();
   const userId = Number(localStorage.getItem("user_id"));
   
@@ -2856,4 +2856,4 @@ const AgentEditProfile = () => {
   );
 };
 
-export default AgentEditProfile;
+export default TeamEditProfile;

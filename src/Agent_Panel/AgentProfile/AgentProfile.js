@@ -271,7 +271,7 @@ import { baseurl } from "../../BaseURL/BaseURL";
 import WebsiteNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import "./AgentProfile.css";
 
-const PartnerProfile = () => {
+const TeamProfile = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -544,4 +544,4 @@ const PartnerProfile = () => {
   );
 };
 
-export default PartnerProfile;
+export default TeamProfile;

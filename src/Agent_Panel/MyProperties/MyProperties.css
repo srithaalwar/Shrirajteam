@@ -2,6 +2,10 @@
 /* Custom Styles for the E-commerce Product Page */
 
 /* Line clamp for text truncation */
+
+.container{
+ max-width: 100% !important;
+}
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;

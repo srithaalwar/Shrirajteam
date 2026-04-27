@@ -10225,7 +10225,8 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
                 <h5 className="modal-title">Create New Category</h5>
                 <button
                   type="button"
-                  className="btn-close"
+                  className="btn-close btn-close-white"
+                 
                   onClick={() => {
                     setShowCategoryModal(false);
                     resetCategoryForm();
@@ -10275,7 +10276,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
                     </div>
                   </div>
 
-                  <div className="mb-3">
+                  {/* <div className="mb-3">
                     <label className="form-label">Description</label>
                     <textarea
                       name="description"
@@ -10286,7 +10287,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
                       rows="2"
                       disabled={categoryLoading}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="row">
                     <div className="col-md-6">
@@ -10332,7 +10333,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
                     </div>
                   </div>
 
-                  <div className="row">
+                  {/* <div className="row">
                     <div className="col-md-6">
                       <div className="mb-3">
                         <label className="form-label">Category Icon</label>
@@ -10363,7 +10364,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
                         </div>
                       </div>
                     )}
-                  </div>
+                  </div> */}
 
                   <div className="form-check">
                     <input
