@@ -17,7 +17,9 @@
 
 /* Card hover effects */
 .card {
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 }
 
 .card:hover {
@@ -86,36 +88,104 @@
   .card-body {
     padding: 1rem !important;
   }
-  
+
   .btn-group .btn {
     padding: 0.25rem 0.5rem !important;
     font-size: 0.875rem;
   }
-  
+
   .list-group-item .row > div {
     margin-bottom: 1rem;
   }
 }
 
 @media (max-width: 576px) {
-  .input-group {
+  .properties-mobile-head {
+    display: block !important;
+    margin-bottom: 18px !important;
+  }
+
+  .properties-title-row {
+    display: none !important;
+  }
+
+  .properties-action-row {
     width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
   }
-  
-  .form-select {
+
+  .properties-search-mobile {
     width: 100% !important;
-    margin-top: 0.5rem;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    height: 46px !important;
+    border: 1.5px solid #0a8f62 !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    background: #fff !important;
   }
-  
-  .sticky-top {
-    position: static !important;
+
+  .properties-search-mobile .input-group-text {
+    width: 46px !important;
+    min-width: 46px !important;
+    height: 46px !important;
+    border: 0 !important;
+    background: #fff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
   }
-.btn-group {
-  display: none;
 
-}
+  .properties-search-mobile .form-control {
+    flex: 1 !important;
+    min-width: 0 !important;
+    height: 46px !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    font-size: 14px !important;
+    padding-left: 0 !important;
+    background: #fff !important;
+  }
 
+  .properties-search-mobile .btn {
+    border: 0 !important;
+    background: transparent !important;
+  }
 
+  .properties-action-row > .properties-view-mobile,
+  .properties-action-row > .properties-filter-mobile {
+    align-self: flex-start !important;
+  }
+
+  .properties-view-mobile {
+    display: inline-flex !important;
+    width: fit-content !important;
+    gap: 4px !important;
+  }
+
+  .properties-view-mobile .btn {
+    width: 40px !important;
+    height: 40px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .properties-filter-mobile {
+    display: inline-flex !important;
+    width: 126px !important;
+    height: 40px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background-color: #268dca !important;
+    border-color: #268dca !important;
+  }
 }
 
 /* Price range slider (if you want to add later) */
@@ -153,8 +223,6 @@
   animation: fadeIn 0.3s ease-out;
 }
 
-
-
 /* Verification Status Badges */
 .badge.bg-success {
   background-color: #198754 !important;
@@ -182,9 +250,6 @@
   opacity: 0.7;
 }
 
-
-
-
 /* Commission Tooltip Styles */
 .commission-tooltip {
   position: absolute;
@@ -206,7 +271,7 @@
 }
 
 .commission-tooltip-content::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 50%;
@@ -217,7 +282,7 @@
 }
 
 .commission-tooltip-content::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 50%;
@@ -266,27 +331,25 @@
   display: block;
 }
 
-
-
 /* Mobile Filter Modal Styles */
 @media (max-width: 991.98px) {
   .modal-dialog {
     margin: 0;
     max-width: 100%;
   }
-  
+
   .modal-content {
     border-radius: 0;
     min-height: 100vh;
   }
-  
+
   .modal-body {
     padding-bottom: 80px; /* Space for footer */
   }
-  
+
   .modal-footer {
     padding: 1rem;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -295,7 +358,7 @@
   .card-title {
     font-size: 0.8rem;
   }
-  
+
   .btn {
     padding: 0.375rem 0.5rem;
     font-size: 0.875rem;

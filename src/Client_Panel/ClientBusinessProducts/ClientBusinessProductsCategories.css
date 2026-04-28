@@ -675,3 +675,40 @@
   color: var(--msub-muted, #888);
   font-weight: 500;
 }
+
+/* ===== MOBILE FIXED HEADER / FILTER / SEARCH ===== */
+@media (max-width: 767px) {
+  .cbpc-mobile-topbar {
+    position: fixed !important;
+    top: 50px;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+
+  .cbpc-mobile-search-wrap {
+    position: fixed !important;
+    top: 10px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+  }
+
+  .cbpc-toolbar {
+    position: fixed !important;
+    top: 108px;
+    left: 0;
+    right: 0;
+    z-index: 998;
+  }
+
+  .cbpc-mobile {
+    padding-top: 100px;
+  }
+
+  .cbpc-chips {
+    position: sticky;
+    top: 158px;
+    z-index: 50;
+  }
+}
