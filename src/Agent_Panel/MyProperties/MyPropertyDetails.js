@@ -1438,6 +1438,1605 @@
 //============================================================
 // Date - 09-03-2026  updated code 
 
+// import React, { useState, useEffect } from "react";
+// import { useParams, useNavigate } from "react-router-dom";
+// import WebsiteNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// // import "./PropertyDetails.css";
+// import { baseurl } from "../../BaseURL/BaseURL";
+// import {
+//   Bed,
+//   Bath,
+//   Car,
+//   ArrowLeft,
+//   Maximize2,
+//   MapPin,
+//   Calendar,
+//   User,
+//   Phone,
+//   Mail,
+//   Heart,
+//   Share2,
+//   ChevronLeft,
+//   ChevronRight,
+//   Star,
+//   Building,
+//   Layers,
+//   Home,
+//   Key,
+//   CheckCircle,
+//   PhoneCall,
+//   MessageCircle
+// } from "lucide-react";
+
+// const AgentMyPropertyDetails = () => {
+//   const { propertyId } = useParams();
+//   const navigate = useNavigate();
+//   const [property, setProperty] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [selectedImage, setSelectedImage] = useState("");
+//   const [openAbout, setOpenAbout] = useState(true);
+//   const [openDetails, setOpenDetails] = useState(false);
+//   const [openContact, setOpenContact] = useState(false);
+//   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+//   const [isFavorite, setIsFavorite] = useState(false);
+//   const [propertyCategories, setPropertyCategories] = useState([]);
+//   const [propertyTypes, setPropertyTypes] = useState([]);
+//   const [categoriesLoading, setCategoriesLoading] = useState(true);
+//   const [typesLoading, setTypesLoading] = useState(true);
+
+//   // Format price in lakhs/crores
+//   const formatPrice = (price) => {
+//     if (!price) return "₹0";
+//     const priceNum = parseFloat(price);
+//     if (priceNum >= 10000000) {
+//       return `₹${(priceNum / 10000000).toFixed(2)} Cr`;
+//     } else if (priceNum >= 100000) {
+//       return `₹${(priceNum / 100000).toFixed(2)} L`;
+//     }
+//     return `₹${priceNum.toLocaleString()}`;
+//   };
+
+//   // Format currency
+//   const formatCurrency = (amount) => {
+//     if (!amount) return "₹0";
+//     return `₹${parseFloat(amount).toLocaleString()}`;
+//   };
+
+//   // Fetch property categories
+//   const fetchPropertyCategories = async () => {
+//     try {
+//       setCategoriesLoading(true);
+//       const response = await fetch(`${baseurl}/property-categories/`);
+//       if (!response.ok) {
+//         throw new Error(`Failed to fetch categories: ${response.status}`);
+//       }
+//       const data = await response.json();
+//       setPropertyCategories(data.results || []);
+//     } catch (err) {
+//       console.error("Error fetching property categories:", err);
+//       setPropertyCategories([]);
+//     } finally {
+//       setCategoriesLoading(false);
+//     }
+//   };
+
+//   // Fetch property types
+//   const fetchPropertyTypes = async () => {
+//     try {
+//       setTypesLoading(true);
+//       const response = await fetch(`${baseurl}/property-types/`);
+//       if (!response.ok) {
+//         throw new Error(`Failed to fetch property types: ${response.status}`);
+//       }
+//       const data = await response.json();
+//       setPropertyTypes(data.results || []);
+//     } catch (err) {
+//       console.error("Error fetching property types:", err);
+//       setPropertyTypes([]);
+//     } finally {
+//       setTypesLoading(false);
+//     }
+//   };
+
+//   // Get property category name dynamically
+//   const getCategoryName = (categoryId) => {
+//     if (categoriesLoading) return "Loading...";
+//     if (!categoryId) return "Not specified";
+    
+//     const category = propertyCategories.find(
+//       cat => cat.property_category_id === categoryId
+//     );
+//     return category ? category.name : "Unknown Category";
+//   };
+
+//   // Get property type name dynamically
+//   const getPropertyTypeName = (typeId) => {
+//     if (typesLoading) return "Loading...";
+//     if (!typeId) return "Not specified";
+    
+//     const propertyType = propertyTypes.find(
+//       type => type.property_type_id === typeId
+//     );
+//     return propertyType ? propertyType.name : "Unknown Type";
+//   };
+
+//   // Get property images
+//   const getImages = () => {
+//     if (property?.images && property.images.length > 0) {
+//       return property.images.map(img => ({
+//         image: img.image.startsWith('/media/') ? `${baseurl}${img.image}` : img.image
+//       }));
+//     }
+//     return [
+//       { image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994" },
+//       { image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811" },
+//       { image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2" }
+//     ];
+//   };
+
+//   // Fetch property details
+//   useEffect(() => {
+//     const fetchPropertyDetails = async () => {
+//       try {
+//         setLoading(true);
+//         const response = await fetch(`${baseurl}/properties/${propertyId}/`);
+        
+//         if (!response.ok) {
+//           throw new Error(`HTTP error! status: ${response.status}`);
+//         }
+        
+//         const data = await response.json();
+//         setProperty(data);
+        
+//         // Set initial selected image
+//         if (data.images && data.images.length > 0) {
+//           const firstImage = data.images[0].image;
+//           setSelectedImage(firstImage.startsWith('/media/') ? 
+//             `${baseurl}${firstImage}` : firstImage);
+//         }
+//       } catch (err) {
+//         setError(err.message);
+//         console.error("Error fetching property details:", err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     // Fetch all required data
+//     fetchPropertyDetails();
+//     fetchPropertyCategories();
+//     fetchPropertyTypes();
+//   }, [propertyId]);
+
+//   // Navigate images
+//   const nextImage = () => {
+//     const images = getImages();
+//     setCurrentImageIndex((prev) => (prev + 1) % images.length);
+//     setSelectedImage(images[(currentImageIndex + 1) % images.length].image);
+//   };
+
+//   const prevImage = () => {
+//     const images = getImages();
+//     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+//     setSelectedImage(images[(currentImageIndex - 1 + images.length) % images.length].image);
+//   };
+
+//   if (loading || categoriesLoading || typesLoading) {
+//     return (
+//       <>
+//         <WebsiteNavbar />
+//         <div className="product-wrapper">
+//           <div className="container py-5">
+//             <div className="text-center py-5">
+//               <div className="spinner-border text-primary" role="status">
+//                 <span className="visually-hidden">Loading...</span>
+//               </div>
+//               <p className="mt-3">Loading property details...</p>
+//             </div>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   if (error || !property) {
+//     return (
+//       <>
+//         <WebsiteNavbar />
+//         <div className="product-wrapper">
+//           <div className="container py-5">
+//             <div className="alert alert-danger" role="alert">
+//               Error loading property details: {error || "Property not found"}
+//             </div>
+//             <button 
+//               className="btn btn-primary mt-3"
+//               onClick={() => navigate(-1)}
+//             >
+//               Go Back
+//             </button>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   const images = getImages();
+//   const isForSale = property.looking_to === "sell";
+//   const price = isForSale ? 
+//     formatPrice(property.total_property_value || property.property_value) :
+//     `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`;
+
+//   const depositText = property.deposit_amount ? 
+//     ` | Deposit: ${formatCurrency(property.deposit_amount)}` : '';
+
+//   // Get facing direction
+//   const getFacingDirection = (facing) => {
+//     const directions = {
+//       "north": "North",
+//       "south": "South", 
+//       "east": "East",
+//       "west": "West",
+//       "north-east": "North East",
+//       "north-west": "North West",
+//       "south-east": "South East",
+//       "south-west": "South West"
+//     };
+//     return directions[facing?.toLowerCase()] || facing;
+//   };
+
+//   // Get furnishing status
+//   const getFurnishingStatus = (status) => {
+//     const statusMap = {
+//       "Fully-Furnished": "Fully Furnished",
+//       "Semi-Furnished": "Semi Furnished",
+//       "Unfurnished": "Unfurnished"
+//     };
+//     return statusMap[status] || status;
+//   };
+
+//   // Get ownership type
+//   const getOwnershipType = (type) => {
+//     const types = {
+//       "Freehold": "Freehold",
+//       "Leasehold": "Leasehold"
+//     };
+//     return types[type] || type;
+//   };
+
+//   return (
+//     <>
+//       <WebsiteNavbar />
+
+//       <div className="product-wrapper">
+//         <button
+//           className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
+//           onClick={() => navigate(-1)}
+//         >
+//           <ArrowLeft size={16} /> Back
+//         </button>
+
+//         <div className="product-layout">
+//           {/* LEFT – IMAGE SECTION */}
+//           <div className="image-section">
+//             {/* Thumbnails */}
+//             <div className="thumbnail-list">
+//               {images.map((img, index) => (
+//                 <div
+//                   key={index}
+//                   className={`thumb-box ${
+//                     selectedImage === img.image ? "active" : ""
+//                   }`}
+//                   onClick={() => {
+//                     setSelectedImage(img.image);
+//                     setCurrentImageIndex(index);
+//                   }}
+//                 >
+//                   <img src={img.image} alt={`thumbnail ${index + 1}`} />
+//                 </div>
+//               ))}
+//             </div>
+
+//             {/* Main Image */}
+//             <div className="main-image-box">
+//               <div className="image-navigation">
+//                 <button className="nav-btn prev" onClick={prevImage}>
+//                   <ChevronLeft size={24} />
+//                 </button>
+//                 <img src={selectedImage} alt={property.property_title} />
+//                 <button className="nav-btn next" onClick={nextImage}>
+//                   <ChevronRight size={24} />
+//                 </button>
+//               </div>
+
+//               <div className="floating-icons">
+//                 <div 
+//                   className="icon-circle"
+//                   onClick={() => setIsFavorite(!isFavorite)}
+//                   style={{ color: isFavorite ? '#ff2e93' : '#666' }}
+//                 >
+//                   <Heart size={20} fill={isFavorite ? '#ff2e93' : 'none'} />
+//                 </div>
+//                 <div className="icon-circle">
+//                   <Share2 size={20} />
+//                 </div>
+//               </div>
+              
+//               {/* Image counter */}
+//               <div className="image-counter">
+//                 {currentImageIndex + 1} / {images.length}
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* MIDDLE – DETAILS */}
+//           <div className="details-section">
+//             <div className="property-status">
+//               <span className={`status-badge ${isForSale ? 'sale' : 'rent'}`}>
+//                 {isForSale ? "FOR SALE" : "FOR RENT"}
+//               </span>
+//               {property.status && (
+//                 <span className="featured-badge">
+//                   {property.status.toUpperCase()}
+//                 </span>
+//               )}
+//             </div>
+
+//             <h1>{property.property_title}</h1>
+            
+//             <div className="location-info">
+//               <MapPin size={16} />
+//               <span>
+//                 {property.address}, {property.city}, {property.state}, {property.country} - {property.pin_code}
+//               </span>
+//             </div>
+
+//             {/* Property Highlights */}
+//             <div className="property-highlights">
+//               {property.number_of_bedrooms && (
+//                 <div className="highlight">
+//                   <Bed size={18} />
+//                   <span>{property.number_of_bedrooms} Beds</span>
+//                 </div>
+//               )}
+//               {property.number_of_bathrooms && (
+//                 <div className="highlight">
+//                   <Bath size={18} />
+//                   <span>{property.number_of_bathrooms} Baths</span>
+//                 </div>
+//               )}
+//               <div className="highlight">
+//                 <Maximize2 size={18} />
+//                 <span>{property.area} {property.area_unit}</span>
+//               </div>
+//               {property.number_of_floors && (
+//                 <div className="highlight">
+//                   <Layers size={18} />
+//                   <span>{property.number_of_floors} Floors</span>
+//                 </div>
+//               )}
+//               {property.facing && (
+//                 <div className="highlight">
+//                   <Home size={18} />
+//                   <span>{getFacingDirection(property.facing)} Facing</span>
+//                 </div>
+//               )}
+//             </div>
+
+//             <h3>Key Attributes</h3>
+
+//             <div className="attributes">
+//               <div>
+//                 <span>Property Type</span>
+//                 <span>{getPropertyTypeName(property.property_type)}</span>
+//               </div>
+//               <div>
+//                 <span>Category</span>
+//                 <span>{getCategoryName(property.category)}</span>
+//               </div>
+//               <div>
+//                 <span>Ownership</span>
+//                 <span>{getOwnershipType(property.ownership_type)}</span>
+//               </div>
+//               <div>
+//                 <span>Furnishing</span>
+//                 <span>{getFurnishingStatus(property.furnishing_status)}</span>
+//               </div>
+//               <div>
+//                 <span>Available From</span>
+//                 <span>{property.available_from || "Immediate"}</span>
+//               </div>
+//               <div>
+//                 <span>Listed On</span>
+//                 <span>{property.created_at}</span>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* RIGHT – BUY/INQUIRY BOX */}
+//           <div className="buy-box">
+//             <div className="price-section">
+//               <div className="price-row">
+//                 <span className="price">{price}</span>
+//                 {isForSale && property.price_per_unit && (
+//                   <span className="unit-price">
+//                     ₹{property.price_per_unit} per {property.area_unit}
+//                   </span>
+//                 )}
+//               </div>
+//               {!isForSale && depositText && (
+//                 <p className="deposit-info">
+//                   Deposit: {formatCurrency(property.deposit_amount)}
+//                 </p>
+//               )}
+//             </div>
+
+//             {/* Contact Owner Button */}
+//             <button 
+//               className="contact-btn"
+//               onClick={() => setOpenContact(!openContact)}
+//             >
+//               <PhoneCall size={18} />
+//               {isForSale ? "CONTACT SELLER" : "CONTACT OWNER"}
+//             </button>
+
+//             {/* Contact Information */}
+//             {openContact && (
+//               <div className="contact-info">
+//                 <div className="owner-details">
+//                   <div className="owner-header">
+//                     <User size={16} />
+//                     <strong>{property.owner_name}</strong>
+//                   </div>
+//                   <div className="contact-methods">
+//                     <a href={`tel:${property.owner_contact}`} className="contact-method">
+//                       <Phone size={16} />
+//                       <span>{property.owner_contact}</span>
+//                     </a>
+//                     <a href={`mailto:${property.owner_email}`} className="contact-method">
+//                       <Mail size={16} />
+//                       <span>{property.owner_email}</span>
+//                     </a>
+//                   </div>
+//                 </div>
+//               </div>
+//             )}
+
+//             {/* Property Facts */}
+//             <div className="property-facts">
+//               <div className="fact">
+//                 <CheckCircle size={16} color="#28a745" />
+//                 <span>Verified Property</span>
+//               </div>
+//               <div className="fact">
+//                 <Building size={16} color="#007bff" />
+//                 <span>Free Legal Verification</span>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* ADDITIONAL INFORMATION SECTIONS */}
+//         <div className="additional-sections">
+//           {/* About Property Section */}
+//           <div className="info-accordion">
+//             <div
+//               className="info-header"
+//               onClick={() => setOpenAbout(!openAbout)}
+//             >
+//               <h3>About This Property</h3>
+//               <span className={`arrow ${openAbout ? "open" : ""}`}>⌃</span>
+//             </div>
+
+//             {openAbout && (
+//               <div className="info-body">
+//                 {/* Description */}
+//                 <div className="property-description-section">
+//                   <h4>Description</h4>
+//                   <p className="desc">
+//                     {property.description || "No description available."}
+//                     {property.description && property.description.length > 150 && (
+//                       <span className="read-more"> Read More</span>
+//                     )}
+//                   </p>
+//                 </div>
+
+//                 {/* Property Specifications */}
+//                 <div className="property-specifications-section">
+//                   <h4>Property Specifications</h4>
+                  
+//                   <div className="property-details-grid">
+//                     <div className="detail-column">
+//                       <table className="specs-table">
+//                         <tbody>
+//                           <tr>
+//                             <td>Plot Area</td>
+//                             <td>{property.area} {property.area_unit}</td>
+//                           </tr>
+//                           {property.builtup_area && (
+//                             <tr>
+//                               <td>Built-up Area</td>
+//                               <td>{property.builtup_area} {property.area_unit}</td>
+//                             </tr>
+//                           )}
+//                           {property.length_ft && (
+//                             <tr>
+//                               <td>Length</td>
+//                               <td>{property.length_ft} ft</td>
+//                             </tr>
+//                           )}
+//                           {property.breadth_ft && (
+//                             <tr>
+//                               <td>Breadth</td>
+//                               <td>{property.breadth_ft} ft</td>
+//                             </tr>
+//                           )}
+//                           <tr>
+//                             <td>Floor Number</td>
+//                             <td>{property.floor || "Ground Floor"}</td>
+//                           </tr>
+//                           <tr>
+//                             <td>Total Floors</td>
+//                             <td>{property.number_of_floors}</td>
+//                           </tr>
+//                         </tbody>
+//                       </table>
+//                     </div>
+
+//                     <div className="detail-column">
+//                       <h4>Location Advantages</h4>
+//                       <p>{property.location_advantages || "Prime location with excellent connectivity."}</p>
+                      
+//                       <h4>Property Uniqueness</h4>
+//                       <p>{property.property_uniqueness || "Well-maintained property with modern amenities."}</p>
+                      
+//                       {/* <h4>Other Features</h4>
+//                       <p>{property.other_features || "Spacious and well-ventilated."}</p> */}
+//                     </div>
+//                   </div>
+
+//                   {/* Complete Property Details Table */}
+//                   <div className="complete-details-section">
+//                     <h4>Complete Property Details</h4>
+//                     <table className="product-details-table">
+//                       <tbody>
+//                         <tr>
+//                           <td>Property ID</td>
+//                           <td>{property.property_id}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Property Type</td>
+//                           <td>{getPropertyTypeName(property.property_type)}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Category</td>
+//                           <td>{getCategoryName(property.category)}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Transaction Type</td>
+//                           <td>{isForSale ? "Sale" : "Rent"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Price</td>
+//                           <td>{price}{depositText}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Price per Unit</td>
+//                           <td>₹{property.price_per_unit || "0"} per {property.area_unit}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Total Value</td>
+//                           <td>{formatCurrency(property.total_property_value)}</td>
+//                         </tr>
+//                         {!isForSale && (
+//                           <>
+//                             <tr>
+//                               <td>Monthly Rent</td>
+//                               <td>{formatCurrency(property.rent_amount)}</td>
+//                             </tr>
+//                             <tr>
+//                               <td>Security Deposit</td>
+//                               <td>{formatCurrency(property.deposit_amount)}</td>
+//                             </tr>
+//                           </>
+//                         )}
+//                         <tr>
+//                           <td>Booking Amount</td>
+//                           <td>{formatCurrency(property.booking_amount)}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Area</td>
+//                           <td>{property.area} {property.area_unit}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Built-up Area</td>
+//                           <td>{property.builtup_area || "N/A"} {property.area_unit}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Facing Direction</td>
+//                           <td>{getFacingDirection(property.facing)}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Ownership Type</td>
+//                           <td>{getOwnershipType(property.ownership_type)}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Furnishing Status</td>
+//                           <td>{getFurnishingStatus(property.furnishing_status)}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Number of Bedrooms</td>
+//                           <td>{property.number_of_bedrooms || "N/A"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Number of Bathrooms</td>
+//                           <td>{property.number_of_bathrooms || "N/A"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Number of Balconies</td>
+//                           <td>{property.number_of_balconies || "N/A"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Floor Number</td>
+//                           <td>{property.floor || "Ground Floor"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Total Floors</td>
+//                           <td>{property.number_of_floors}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Number of Open Sides</td>
+//                           <td>{property.number_of_open_sides || "N/A"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Road Width</td>
+//                           <td>{property.road_width_1_ft || "N/A"} ft</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Preferred Tenants</td>
+//                           <td>{property.preferred_tenants || "All"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Available From</td>
+//                           <td>{property.available_from || "Immediate"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Property Status</td>
+//                           <td>{property.status}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Approval Status</td>
+//                           <td>{property.approval_status}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Listed On</td>
+//                           <td>{property.created_at}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Owner Name</td>
+//                           <td>{property.owner_name}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Owner Contact</td>
+//                           <td>{property.owner_contact}</td>
+//                         </tr>
+//                         {/* <tr>
+//                           <td>Owner Email</td>
+//                           <td>{property.owner_email}</td>
+//                         </tr> */}
+//                         <tr>
+//                           <td>Latitude</td>
+//                           <td>{property.latitude}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Longitude</td>
+//                           <td>{property.longitude}</td>
+//                         </tr>
+//                       </tbody>
+//                     </table>
+//                   </div>
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default AgentMyPropertyDetails;
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { useParams, useNavigate } from "react-router-dom";
+// import WebsiteNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// // import "./PropertyDetails.css";
+// import { baseurl } from "../../BaseURL/BaseURL";
+// import {
+//   Bed,
+//   Bath,
+//   Car,
+//   ArrowLeft,
+//   Maximize2,
+//   MapPin,
+//   Calendar,
+//   User,
+//   Phone,
+//   Mail,
+//   Heart,
+//   Share2,
+//   ChevronLeft,
+//   ChevronRight,
+//   Star,
+//   Building,
+//   Layers,
+//   Home,
+//   Key,
+//   CheckCircle,
+//   PhoneCall,
+//   MessageCircle,
+//   Video,
+//   Image as ImageIcon
+// } from "lucide-react";
+
+// const AgentMyPropertyDetails = () => {
+//   const { propertyId } = useParams();
+//   const navigate = useNavigate();
+//   const [property, setProperty] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [selectedMedia, setSelectedMedia] = useState(null);
+//   const [selectedMediaType, setSelectedMediaType] = useState("image");
+//   const [openAbout, setOpenAbout] = useState(true);
+//   const [openDetails, setOpenDetails] = useState(false);
+//   const [openContact, setOpenContact] = useState(false);
+//   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+//   const [isFavorite, setIsFavorite] = useState(false);
+//   const [propertyCategories, setPropertyCategories] = useState([]);
+//   const [propertyTypes, setPropertyTypes] = useState([]);
+//   const [categoriesLoading, setCategoriesLoading] = useState(true);
+//   const [typesLoading, setTypesLoading] = useState(true);
+
+//   // Format price in lakhs/crores
+//   const formatPrice = (price) => {
+//     if (!price) return "₹0";
+//     const priceNum = parseFloat(price);
+//     if (priceNum >= 10000000) {
+//       return `₹${(priceNum / 10000000).toFixed(2)} Cr`;
+//     } else if (priceNum >= 100000) {
+//       return `₹${(priceNum / 100000).toFixed(2)} L`;
+//     }
+//     return `₹${priceNum.toLocaleString()}`;
+//   };
+
+//   // Format currency
+//   const formatCurrency = (amount) => {
+//     if (!amount) return "₹0";
+//     return `₹${parseFloat(amount).toLocaleString()}`;
+//   };
+
+//   // Fetch property categories
+//   const fetchPropertyCategories = async () => {
+//     try {
+//       setCategoriesLoading(true);
+//       const response = await fetch(`${baseurl}/property-categories/`);
+//       if (!response.ok) {
+//         throw new Error(`Failed to fetch categories: ${response.status}`);
+//       }
+//       const data = await response.json();
+//       setPropertyCategories(data.results || []);
+//     } catch (err) {
+//       console.error("Error fetching property categories:", err);
+//       setPropertyCategories([]);
+//     } finally {
+//       setCategoriesLoading(false);
+//     }
+//   };
+
+//   // Fetch property types
+//   const fetchPropertyTypes = async () => {
+//     try {
+//       setTypesLoading(true);
+//       const response = await fetch(`${baseurl}/property-types/`);
+//       if (!response.ok) {
+//         throw new Error(`Failed to fetch property types: ${response.status}`);
+//       }
+//       const data = await response.json();
+//       setPropertyTypes(data.results || []);
+//     } finally {
+//       setTypesLoading(false);
+//     }
+//   };
+
+//   // Get property category name dynamically
+//   const getCategoryName = (categoryId) => {
+//     if (categoriesLoading) return "Loading...";
+//     if (!categoryId) return "Not specified";
+    
+//     const category = propertyCategories.find(
+//       cat => cat.property_category_id === categoryId
+//     );
+//     return category ? category.name : "Unknown Category";
+//   };
+
+//   // Get property type name dynamically
+//   const getPropertyTypeName = (typeId) => {
+//     if (typesLoading) return "Loading...";
+//     if (!typeId) return "Not specified";
+    
+//     const propertyType = propertyTypes.find(
+//       type => type.property_type_id === typeId
+//     );
+//     return propertyType ? propertyType.name : "Unknown Type";
+//   };
+
+//   // Get all media items (images and videos combined)
+//   const getAllMedia = () => {
+//     const mediaItems = [];
+    
+//     // Add images
+//     if (property?.images && property.images.length > 0) {
+//       property.images.forEach(img => {
+//         mediaItems.push({
+//           type: "image",
+//           url: img.image.startsWith('/media/') ? `${baseurl}${img.image}` : img.image,
+//           id: img.id
+//         });
+//       });
+//     }
+    
+//     // Add videos
+//     if (property?.videos && property.videos.length > 0) {
+//       property.videos.forEach(video => {
+//         mediaItems.push({
+//           type: "video",
+//           url: video.video.startsWith('/media/') ? `${baseurl}${video.video}` : video.video,
+//           id: video.id
+//         });
+//       });
+//     }
+    
+//     // If no media items, add placeholder images
+//     if (mediaItems.length === 0) {
+//       mediaItems.push({
+//         type: "image",
+//         url: "https://images.unsplash.com/photo-1568605114967-8130f3a36994",
+//         id: "placeholder1"
+//       });
+//       mediaItems.push({
+//         type: "image",
+//         url: "https://images.unsplash.com/photo-1613490493576-7fde63acd811",
+//         id: "placeholder2"
+//       });
+//       mediaItems.push({
+//         type: "image",
+//         url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2",
+//         id: "placeholder3"
+//       });
+//     }
+    
+//     return mediaItems;
+//   };
+
+//   // Fetch property details
+//   useEffect(() => {
+//     const fetchPropertyDetails = async () => {
+//       try {
+//         setLoading(true);
+//         const response = await fetch(`${baseurl}/properties/${propertyId}/`);
+        
+//         if (!response.ok) {
+//           throw new Error(`HTTP error! status: ${response.status}`);
+//         }
+        
+//         const data = await response.json();
+//         setProperty(data);
+        
+//         // Set initial selected media
+//         const mediaItems = [];
+        
+//         if (data.images && data.images.length > 0) {
+//           data.images.forEach(img => {
+//             mediaItems.push({
+//               type: "image",
+//               url: img.image.startsWith('/media/') ? `${baseurl}${img.image}` : img.image,
+//               id: img.id
+//             });
+//           });
+//         }
+        
+//         if (data.videos && data.videos.length > 0) {
+//           data.videos.forEach(video => {
+//             mediaItems.push({
+//               type: "video",
+//               url: video.video.startsWith('/media/') ? `${baseurl}${video.video}` : video.video,
+//               id: video.id
+//             });
+//           });
+//         }
+        
+//         if (mediaItems.length > 0) {
+//           setSelectedMedia(mediaItems[0].url);
+//           setSelectedMediaType(mediaItems[0].type);
+//         }
+//       } catch (err) {
+//         setError(err.message);
+//         console.error("Error fetching property details:", err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     // Fetch all required data
+//     fetchPropertyDetails();
+//     fetchPropertyCategories();
+//     fetchPropertyTypes();
+//   }, [propertyId]);
+
+//   // Navigate media (images and videos)
+//   const nextMedia = () => {
+//     const mediaItems = getAllMedia();
+//     if (mediaItems.length === 0) return;
+//     const newIndex = (currentMediaIndex + 1) % mediaItems.length;
+//     setCurrentMediaIndex(newIndex);
+//     setSelectedMedia(mediaItems[newIndex].url);
+//     setSelectedMediaType(mediaItems[newIndex].type);
+//   };
+
+//   const prevMedia = () => {
+//     const mediaItems = getAllMedia();
+//     if (mediaItems.length === 0) return;
+//     const newIndex = (currentMediaIndex - 1 + mediaItems.length) % mediaItems.length;
+//     setCurrentMediaIndex(newIndex);
+//     setSelectedMedia(mediaItems[newIndex].url);
+//     setSelectedMediaType(mediaItems[newIndex].type);
+//   };
+
+//   if (loading || categoriesLoading || typesLoading) {
+//     return (
+//       <>
+//         <WebsiteNavbar />
+//         <div className="product-wrapper">
+//           <div className="container py-5">
+//             <div className="text-center py-5">
+//               <div className="spinner-border text-primary" role="status">
+//                 <span className="visually-hidden">Loading...</span>
+//               </div>
+//               <p className="mt-3">Loading property details...</p>
+//             </div>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   if (error || !property) {
+//     return (
+//       <>
+//         <WebsiteNavbar />
+//         <div className="product-wrapper">
+//           <div className="container py-5">
+//             <div className="alert alert-danger" role="alert">
+//               Error loading property details: {error || "Property not found"}
+//             </div>
+//             <button 
+//               className="btn btn-primary mt-3"
+//               onClick={() => navigate(-1)}
+//             >
+//               Go Back
+//             </button>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   const mediaItems = getAllMedia();
+//   const isForSale = property.looking_to === "sell";
+//   const price = isForSale ? 
+//     formatPrice(property.total_property_value || property.property_value) :
+//     `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`;
+
+//   const depositText = property.deposit_amount ? 
+//     ` | Deposit: ${formatCurrency(property.deposit_amount)}` : '';
+
+//   // Get facing direction
+//   const getFacingDirection = (facing) => {
+//     const directions = {
+//       "north": "North",
+//       "south": "South", 
+//       "east": "East",
+//       "west": "West",
+//       "north-east": "North East",
+//       "north-west": "North West",
+//       "south-east": "South East",
+//       "south-west": "South West"
+//     };
+//     return directions[facing?.toLowerCase()] || facing;
+//   };
+
+//   // Get furnishing status
+//   const getFurnishingStatus = (status) => {
+//     const statusMap = {
+//       "Fully-Furnished": "Fully Furnished",
+//       "Semi-Furnished": "Semi Furnished",
+//       "Unfurnished": "Unfurnished"
+//     };
+//     return statusMap[status] || status;
+//   };
+
+//   // Get ownership type
+//   const getOwnershipType = (type) => {
+//     const types = {
+//       "Freehold": "Freehold",
+//       "Leasehold": "Leasehold"
+//     };
+//     return types[type] || type;
+//   };
+
+//   // Get media type icon
+//   const getMediaTypeIcon = (type) => {
+//     return type === "video" ? <Video size={14} /> : <ImageIcon size={14} />;
+//   };
+
+//   return (
+//     <>
+//       <WebsiteNavbar />
+
+//       <div className="product-wrapper">
+//         <button
+//           className="btn btn-outline-secondary mb-3 d-flex align-items-center gap-2"
+//           onClick={() => navigate(-1)}
+//         >
+//           <ArrowLeft size={16} /> Back
+//         </button>
+
+//         <div className="product-layout">
+//           {/* LEFT – MEDIA SECTION (Images & Videos) */}
+//           <div className="image-section">
+//             {/* Thumbnails */}
+//             <div className="thumbnail-list">
+//               {mediaItems.map((media, index) => (
+//                 <div
+//                   key={media.id || index}
+//                   className={`thumb-box ${
+//                     selectedMedia === media.url ? "active" : ""
+//                   }`}
+//                   onClick={() => {
+//                     setSelectedMedia(media.url);
+//                     setSelectedMediaType(media.type);
+//                     setCurrentMediaIndex(index);
+//                   }}
+//                 >
+//                   {media.type === "video" ? (
+//                     <div className="video-thumbnail">
+//                       <video 
+//                         src={media.url} 
+//                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+//                         preload="metadata"
+//                       />
+//                       <div className="video-play-icon">
+//                         <Video size={20} />
+//                       </div>
+//                     </div>
+//                   ) : (
+//                     <img src={media.url} alt={`thumbnail ${index + 1}`} />
+//                   )}
+//                   <div className="media-type-badge">
+//                     {getMediaTypeIcon(media.type)}
+//                   </div>
+//                 </div>
+//               ))}
+//             </div>
+
+//             {/* Main Media Display */}
+//             <div className="main-image-box">
+//               <div className="image-navigation">
+//                 <button className="nav-btn prev" onClick={prevMedia}>
+//                   <ChevronLeft size={24} />
+//                 </button>
+                
+//                 {selectedMediaType === "video" ? (
+//                   <div className="video-container">
+//                     <video 
+//                       key={selectedMedia}
+//                       src={selectedMedia}
+//                       controls
+//                       autoPlay={false}
+//                       style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+//                       controlsList="nodownload"
+//                     >
+//                       Your browser does not support the video tag.
+//                     </video>
+//                   </div>
+//                 ) : (
+//                   <img src={selectedMedia} alt={property.property_title} />
+//                 )}
+                
+//                 <button className="nav-btn next" onClick={nextMedia}>
+//                   <ChevronRight size={24} />
+//                 </button>
+//               </div>
+
+//               <div className="floating-icons">
+//                 <div 
+//                   className="icon-circle"
+//                   onClick={() => setIsFavorite(!isFavorite)}
+//                   style={{ color: isFavorite ? '#ff2e93' : '#666' }}
+//                 >
+//                   <Heart size={20} fill={isFavorite ? '#ff2e93' : 'none'} />
+//                 </div>
+//                 <div className="icon-circle">
+//                   <Share2 size={20} />
+//                 </div>
+//               </div>
+              
+//               {/* Media counter with type indicator */}
+//               <div className="image-counter">
+//                 {currentMediaIndex + 1} / {mediaItems.length}
+//                 <span className="media-type-indicator">
+//                   {selectedMediaType === "video" ? " 📹 Video" : " 🖼️ Image"}
+//                 </span>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* MIDDLE – DETAILS */}
+//           <div className="details-section">
+//             <div className="property-status">
+//               <span className={`status-badge ${isForSale ? 'sale' : 'rent'}`}>
+//                 {isForSale ? "FOR SALE" : "FOR RENT"}
+//               </span>
+//               {property.status && (
+//                 <span className="featured-badge">
+//                   {property.status.toUpperCase()}
+//                 </span>
+//               )}
+//             </div>
+
+//             <h1>{property.property_title}</h1>
+            
+//             <div className="location-info">
+//               <MapPin size={16} />
+//               <span>
+//                 {property.address}, {property.city}, {property.state}, {property.country} - {property.pin_code}
+//               </span>
+//             </div>
+
+//             {/* Property Highlights */}
+//             <div className="property-highlights">
+//               {property.number_of_bedrooms && (
+//                 <div className="highlight">
+//                   <Bed size={18} />
+//                   <span>{property.number_of_bedrooms} Beds</span>
+//                 </div>
+//               )}
+//               {property.number_of_bathrooms && (
+//                 <div className="highlight">
+//                   <Bath size={18} />
+//                   <span>{property.number_of_bathrooms} Baths</span>
+//                 </div>
+//               )}
+//               <div className="highlight">
+//                 <Maximize2 size={18} />
+//                 <span>{property.area} {property.area_unit}</span>
+//               </div>
+//               {property.number_of_floors && (
+//                 <div className="highlight">
+//                   <Layers size={18} />
+//                   <span>{property.number_of_floors} Floors</span>
+//                 </div>
+//               )}
+//               {property.facing && (
+//                 <div className="highlight">
+//                   <Home size={18} />
+//                   <span>{getFacingDirection(property.facing)} Facing</span>
+//                 </div>
+//               )}
+//             </div>
+
+//             {/* Media Stats */}
+//             <div className="media-stats" style={{ 
+//               marginTop: '15px', 
+//               marginBottom: '15px', 
+//               fontSize: '13px', 
+//               color: '#666',
+//               display: 'flex',
+//               gap: '15px',
+//               borderTop: '1px solid #eee',
+//               paddingTop: '15px'
+//             }}>
+//               <span>📷 {property.images?.length || 0} Images</span>
+//               <span>🎥 {property.videos?.length || 0} Videos</span>
+//             </div>
+
+//             <h3>Key Attributes</h3>
+
+//             <div className="attributes">
+//               <div>
+//                 <span>Property Type</span>
+//                 <span>{getPropertyTypeName(property.property_type)}</span>
+//               </div>
+//               <div>
+//                 <span>Category</span>
+//                 <span>{getCategoryName(property.category)}</span>
+//               </div>
+//               <div>
+//                 <span>Ownership</span>
+//                 <span>{getOwnershipType(property.ownership_type)}</span>
+//               </div>
+//               <div>
+//                 <span>Furnishing</span>
+//                 <span>{getFurnishingStatus(property.furnishing_status)}</span>
+//               </div>
+//               <div>
+//                 <span>Available From</span>
+//                 <span>{property.available_from || "Immediate"}</span>
+//               </div>
+//               <div>
+//                 <span>Listed On</span>
+//                 <span>{property.created_at}</span>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* RIGHT – BUY/INQUIRY BOX */}
+//           <div className="buy-box">
+//             <div className="price-section">
+//               <div className="price-row">
+//                 <span className="price">{price}</span>
+//                 {isForSale && property.price_per_unit && (
+//                   <span className="unit-price">
+//                     ₹{property.price_per_unit} per {property.area_unit}
+//                   </span>
+//                 )}
+//               </div>
+//               {!isForSale && depositText && (
+//                 <p className="deposit-info">
+//                   Deposit: {formatCurrency(property.deposit_amount)}
+//                 </p>
+//               )}
+//             </div>
+
+//             {/* Contact Owner Button */}
+//             <button 
+//               className="contact-btn"
+//               onClick={() => setOpenContact(!openContact)}
+//             >
+//               <PhoneCall size={18} />
+//               {isForSale ? "CONTACT SELLER" : "CONTACT OWNER"}
+//             </button>
+
+//             {/* Contact Information */}
+//             {openContact && (
+//               <div className="contact-info">
+//                 <div className="owner-details">
+//                   <div className="owner-header">
+//                     <User size={16} />
+//                     <strong>{property.owner_name}</strong>
+//                   </div>
+//                   <div className="contact-methods">
+//                     <a href={`tel:${property.owner_contact}`} className="contact-method">
+//                       <Phone size={16} />
+//                       <span>{property.owner_contact}</span>
+//                     </a>
+//                     <a href={`mailto:${property.owner_email}`} className="contact-method">
+//                       <Mail size={16} />
+//                       <span>{property.owner_email}</span>
+//                     </a>
+//                   </div>
+//                 </div>
+//               </div>
+//             )}
+
+//             {/* Property Facts */}
+//             <div className="property-facts">
+//               <div className="fact">
+//                 <CheckCircle size={16} color="#28a745" />
+//                 <span>Verified Property</span>
+//               </div>
+//               <div className="fact">
+//                 <Building size={16} color="#007bff" />
+//                 <span>Free Legal Verification</span>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* ADDITIONAL INFORMATION SECTIONS */}
+//         <div className="additional-sections">
+//           {/* About Property Section */}
+//           <div className="info-accordion">
+//             <div
+//               className="info-header"
+//               onClick={() => setOpenAbout(!openAbout)}
+//             >
+//               <h3>About This Property</h3>
+//               <span className={`arrow ${openAbout ? "open" : ""}`}>⌃</span>
+//             </div>
+
+//             {openAbout && (
+//               <div className="info-body">
+//                 {/* Description */}
+//                 <div className="property-description-section">
+//                   <h4>Description</h4>
+//                   <p className="desc">
+//                     {property.description || "No description available."}
+//                     {property.description && property.description.length > 150 && (
+//                       <span className="read-more"> Read More</span>
+//                     )}
+//                   </p>
+//                 </div>
+
+//                 {/* Property Specifications */}
+//                 <div className="property-specifications-section">
+//                   <h4>Property Specifications</h4>
+                  
+//                   <div className="property-details-grid">
+//                     <div className="detail-column">
+//                       <table className="specs-table">
+//                         <tbody>
+//                           <tr>
+//                             <td>Plot Area</td>
+//                             <td>{property.area} {property.area_unit}</td>
+//                           </tr>
+//                           {property.builtup_area && (
+//                             <tr>
+//                               <td>Built-up Area</td>
+//                               <td>{property.builtup_area} {property.area_unit}</td>
+//                             </tr>
+//                           )}
+//                           {property.length_ft && (
+//                             <tr>
+//                               <td>Length</td>
+//                               <td>{property.length_ft} ft</td>
+//                             </tr>
+//                           )}
+//                           {property.breadth_ft && (
+//                             <tr>
+//                               <td>Breadth</td>
+//                               <td>{property.breadth_ft} ft</td>
+//                             </tr>
+//                           )}
+//                           <tr>
+//                             <td>Floor Number</td>
+//                             <td>{property.floor || "Ground Floor"}</td>
+//                           </tr>
+//                           <tr>
+//                             <td>Total Floors</td>
+//                             <td>{property.number_of_floors}</td>
+//                           </tr>
+//                         </tbody>
+//                       </table>
+//                     </div>
+
+//                     <div className="detail-column">
+//                       <h4>Location Advantages</h4>
+//                       <p>{property.location_advantages || "Prime location with excellent connectivity."}</p>
+                      
+//                       <h4>Property Uniqueness</h4>
+//                       <p>{property.property_uniqueness || "Well-maintained property with modern amenities."}</p>
+//                     </div>
+//                   </div>
+
+//                   {/* Complete Property Details Table */}
+//                   <div className="complete-details-section">
+//                     <h4>Complete Property Details</h4>
+//                     <table className="product-details-table">
+//                       <tbody>
+//                         <tr>
+//                           <td>Property ID</td>
+//                           <td>{property.property_id}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Property Type</td>
+//                           <td>{getPropertyTypeName(property.property_type)}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Category</td>
+//                           <td>{getCategoryName(property.category)}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Transaction Type</td>
+//                           <td>{isForSale ? "Sale" : "Rent"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Price</td>
+//                           <td>{price}{depositText}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Price per Unit</td>
+//                           <td>₹{property.price_per_unit || "0"} per {property.area_unit}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Total Value</td>
+//                           <td>{formatCurrency(property.total_property_value)}</td>
+//                         </tr>
+//                         {!isForSale && (
+//                           <>
+//                             <tr>
+//                               <td>Monthly Rent</td>
+//                               <td>{formatCurrency(property.rent_amount)}</td>
+//                             </tr>
+//                             <tr>
+//                               <td>Security Deposit</td>
+//                               <td>{formatCurrency(property.deposit_amount)}</td>
+//                             </tr>
+//                           </>
+//                         )}
+//                         <tr>
+//                           <td>Booking Amount</td>
+//                           <td>{formatCurrency(property.booking_amount)}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Area</td>
+//                           <td>{property.area} {property.area_unit}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Built-up Area</td>
+//                           <td>{property.builtup_area || "N/A"} {property.area_unit}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Facing Direction</td>
+//                           <td>{getFacingDirection(property.facing)}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Ownership Type</td>
+//                           <td>{getOwnershipType(property.ownership_type)}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Furnishing Status</td>
+//                           <td>{getFurnishingStatus(property.furnishing_status)}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Number of Bedrooms</td>
+//                           <td>{property.number_of_bedrooms || "N/A"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Number of Bathrooms</td>
+//                           <td>{property.number_of_bathrooms || "N/A"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Number of Balconies</td>
+//                           <td>{property.number_of_balconies || "N/A"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Floor Number</td>
+//                           <td>{property.floor || "Ground Floor"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Total Floors</td>
+//                           <td>{property.number_of_floors}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Number of Open Sides</td>
+//                           <td>{property.number_of_open_sides || "N/A"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Road Width</td>
+//                           <td>{property.road_width_1_ft || "N/A"} ft</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Preferred Tenants</td>
+//                           <td>{property.preferred_tenants || "All"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Available From</td>
+//                           <td>{property.available_from || "Immediate"}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Property Status</td>
+//                           <td>{property.status}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Approval Status</td>
+//                           <td>{property.approval_status}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Listed On</td>
+//                           <td>{property.created_at}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Owner Name</td>
+//                           <td>{property.owner_name}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Owner Contact</td>
+//                           <td>{property.owner_contact}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Latitude</td>
+//                           <td>{property.latitude}</td>
+//                         </tr>
+//                         <tr>
+//                           <td>Longitude</td>
+//                           <td>{property.longitude}</td>
+//                         </tr>
+//                       </tbody>
+//                     </table>
+//                   </div>
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Styles for video components */}
+//       <style jsx="true">{`
+//         .video-container {
+//           width: 100%;
+//           height: 100%;
+//           background: #000;
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//         }
+//         .video-container video {
+//           width: 100%;
+//           height: 100%;
+//           max-height: 500px;
+//           object-fit: contain;
+//         }
+//         .video-thumbnail {
+//           position: relative;
+//           width: 100%;
+//           height: 100%;
+//           overflow: hidden;
+//           background: #000;
+//         }
+//         .video-thumbnail video {
+//           width: 100%;
+//           height: 100%;
+//           object-fit: cover;
+//           opacity: 0.7;
+//         }
+//         .video-play-icon {
+//           position: absolute;
+//           top: 50%;
+//           left: 50%;
+//           transform: translate(-50%, -50%);
+//           background: rgba(0,0,0,0.6);
+//           border-radius: 50%;
+//           width: 30px;
+//           height: 30px;
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//           color: white;
+//         }
+//         .media-type-badge {
+//           position: absolute;
+//           bottom: 4px;
+//           right: 4px;
+//           background: rgba(0,0,0,0.6);
+//           border-radius: 4px;
+//           padding: 2px 4px;
+//           color: white;
+//           font-size: 10px;
+//           display: flex;
+//           align-items: center;
+//           gap: 2px;
+//         }
+//         .media-type-indicator {
+//           margin-left: 8px;
+//           font-size: 11px;
+//         }
+//         .thumb-box {
+//           position: relative;
+//           cursor: pointer;
+//         }
+//       `}</style>
+//     </>
+//   );
+// };
+
+// export default AgentMyPropertyDetails;
+
+
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import WebsiteNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
@@ -1465,7 +3064,9 @@ import {
   Key,
   CheckCircle,
   PhoneCall,
-  MessageCircle
+  MessageCircle,
+  Video,
+  Image as ImageIcon
 } from "lucide-react";
 
 const AgentMyPropertyDetails = () => {
@@ -1474,16 +3075,22 @@ const AgentMyPropertyDetails = () => {
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  const [selectedMediaType, setSelectedMediaType] = useState("image");
   const [openAbout, setOpenAbout] = useState(true);
   const [openDetails, setOpenDetails] = useState(false);
   const [openContact, setOpenContact] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [propertyCategories, setPropertyCategories] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [typesLoading, setTypesLoading] = useState(true);
+  
+  // State for read more/less in location advantages
+  const [showFullLocationAdvantages, setShowFullLocationAdvantages] = useState(false);
+  // State for read more/less in property description
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
   // Format price in lakhs/crores
   const formatPrice = (price) => {
@@ -1531,9 +3138,6 @@ const AgentMyPropertyDetails = () => {
       }
       const data = await response.json();
       setPropertyTypes(data.results || []);
-    } catch (err) {
-      console.error("Error fetching property types:", err);
-      setPropertyTypes([]);
     } finally {
       setTypesLoading(false);
     }
@@ -1561,18 +3165,52 @@ const AgentMyPropertyDetails = () => {
     return propertyType ? propertyType.name : "Unknown Type";
   };
 
-  // Get property images
-  const getImages = () => {
+  // Get all media items (images and videos combined)
+  const getAllMedia = () => {
+    const mediaItems = [];
+    
+    // Add images
     if (property?.images && property.images.length > 0) {
-      return property.images.map(img => ({
-        image: img.image.startsWith('/media/') ? `${baseurl}${img.image}` : img.image
-      }));
+      property.images.forEach(img => {
+        mediaItems.push({
+          type: "image",
+          url: img.image.startsWith('/media/') ? `${baseurl}${img.image}` : img.image,
+          id: img.id
+        });
+      });
     }
-    return [
-      { image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994" },
-      { image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811" },
-      { image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2" }
-    ];
+    
+    // Add videos
+    if (property?.videos && property.videos.length > 0) {
+      property.videos.forEach(video => {
+        mediaItems.push({
+          type: "video",
+          url: video.video.startsWith('/media/') ? `${baseurl}${video.video}` : video.video,
+          id: video.id
+        });
+      });
+    }
+    
+    // If no media items, add placeholder images
+    if (mediaItems.length === 0) {
+      mediaItems.push({
+        type: "image",
+        url: "https://images.unsplash.com/photo-1568605114967-8130f3a36994",
+        id: "placeholder1"
+      });
+      mediaItems.push({
+        type: "image",
+        url: "https://images.unsplash.com/photo-1613490493576-7fde63acd811",
+        id: "placeholder2"
+      });
+      mediaItems.push({
+        type: "image",
+        url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2",
+        id: "placeholder3"
+      });
+    }
+    
+    return mediaItems;
   };
 
   // Fetch property details
@@ -1589,11 +3227,32 @@ const AgentMyPropertyDetails = () => {
         const data = await response.json();
         setProperty(data);
         
-        // Set initial selected image
+        // Set initial selected media
+        const mediaItems = [];
+        
         if (data.images && data.images.length > 0) {
-          const firstImage = data.images[0].image;
-          setSelectedImage(firstImage.startsWith('/media/') ? 
-            `${baseurl}${firstImage}` : firstImage);
+          data.images.forEach(img => {
+            mediaItems.push({
+              type: "image",
+              url: img.image.startsWith('/media/') ? `${baseurl}${img.image}` : img.image,
+              id: img.id
+            });
+          });
+        }
+        
+        if (data.videos && data.videos.length > 0) {
+          data.videos.forEach(video => {
+            mediaItems.push({
+              type: "video",
+              url: video.video.startsWith('/media/') ? `${baseurl}${video.video}` : video.video,
+              id: video.id
+            });
+          });
+        }
+        
+        if (mediaItems.length > 0) {
+          setSelectedMedia(mediaItems[0].url);
+          setSelectedMediaType(mediaItems[0].type);
         }
       } catch (err) {
         setError(err.message);
@@ -1609,17 +3268,30 @@ const AgentMyPropertyDetails = () => {
     fetchPropertyTypes();
   }, [propertyId]);
 
-  // Navigate images
-  const nextImage = () => {
-    const images = getImages();
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    setSelectedImage(images[(currentImageIndex + 1) % images.length].image);
+  // Navigate media (images and videos)
+  const nextMedia = () => {
+    const mediaItems = getAllMedia();
+    if (mediaItems.length === 0) return;
+    const newIndex = (currentMediaIndex + 1) % mediaItems.length;
+    setCurrentMediaIndex(newIndex);
+    setSelectedMedia(mediaItems[newIndex].url);
+    setSelectedMediaType(mediaItems[newIndex].type);
   };
 
-  const prevImage = () => {
-    const images = getImages();
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-    setSelectedImage(images[(currentImageIndex - 1 + images.length) % images.length].image);
+  const prevMedia = () => {
+    const mediaItems = getAllMedia();
+    if (mediaItems.length === 0) return;
+    const newIndex = (currentMediaIndex - 1 + mediaItems.length) % mediaItems.length;
+    setCurrentMediaIndex(newIndex);
+    setSelectedMedia(mediaItems[newIndex].url);
+    setSelectedMediaType(mediaItems[newIndex].type);
+  };
+
+  // Helper function to truncate text
+  const truncateText = (text, maxLength = 50) => {
+    if (!text) return "";
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
   };
 
   if (loading || categoriesLoading || typesLoading) {
@@ -1661,7 +3333,7 @@ const AgentMyPropertyDetails = () => {
     );
   }
 
-  const images = getImages();
+  const mediaItems = getAllMedia();
   const isForSale = property.looking_to === "sell";
   const price = isForSale ? 
     formatPrice(property.total_property_value || property.property_value) :
@@ -1704,6 +3376,11 @@ const AgentMyPropertyDetails = () => {
     return types[type] || type;
   };
 
+  // Get media type icon
+  const getMediaTypeIcon = (type) => {
+    return type === "video" ? <Video size={14} /> : <ImageIcon size={14} />;
+  };
+
   return (
     <>
       <WebsiteNavbar />
@@ -1717,34 +3394,68 @@ const AgentMyPropertyDetails = () => {
         </button>
 
         <div className="product-layout">
-          {/* LEFT – IMAGE SECTION */}
+          {/* LEFT – MEDIA SECTION (Images & Videos) */}
           <div className="image-section">
             {/* Thumbnails */}
             <div className="thumbnail-list">
-              {images.map((img, index) => (
+              {mediaItems.map((media, index) => (
                 <div
-                  key={index}
+                  key={media.id || index}
                   className={`thumb-box ${
-                    selectedImage === img.image ? "active" : ""
+                    selectedMedia === media.url ? "active" : ""
                   }`}
                   onClick={() => {
-                    setSelectedImage(img.image);
-                    setCurrentImageIndex(index);
+                    setSelectedMedia(media.url);
+                    setSelectedMediaType(media.type);
+                    setCurrentMediaIndex(index);
                   }}
                 >
-                  <img src={img.image} alt={`thumbnail ${index + 1}`} />
+                  {media.type === "video" ? (
+                    <div className="video-thumbnail">
+                      <video 
+                        src={media.url} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        preload="metadata"
+                      />
+                      <div className="video-play-icon">
+                        <Video size={20} />
+                      </div>
+                    </div>
+                  ) : (
+                    <img src={media.url} alt={`thumbnail ${index + 1}`} />
+                  )}
+                  <div className="media-type-badge">
+                    {getMediaTypeIcon(media.type)}
+                  </div>
                 </div>
               ))}
             </div>
 
-            {/* Main Image */}
+            {/* Main Media Display */}
             <div className="main-image-box">
               <div className="image-navigation">
-                <button className="nav-btn prev" onClick={prevImage}>
+                <button className="nav-btn prev" onClick={prevMedia}>
                   <ChevronLeft size={24} />
                 </button>
-                <img src={selectedImage} alt={property.property_title} />
-                <button className="nav-btn next" onClick={nextImage}>
+                
+                {selectedMediaType === "video" ? (
+                  <div className="video-container">
+                    <video 
+                      key={selectedMedia}
+                      src={selectedMedia}
+                      controls
+                      autoPlay={false}
+                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      controlsList="nodownload"
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                ) : (
+                  <img src={selectedMedia} alt={property.property_title} />
+                )}
+                
+                <button className="nav-btn next" onClick={nextMedia}>
                   <ChevronRight size={24} />
                 </button>
               </div>
@@ -1762,9 +3473,12 @@ const AgentMyPropertyDetails = () => {
                 </div>
               </div>
               
-              {/* Image counter */}
+              {/* Media counter with type indicator */}
               <div className="image-counter">
-                {currentImageIndex + 1} / {images.length}
+                {currentMediaIndex + 1} / {mediaItems.length}
+                <span className="media-type-indicator">
+                  {selectedMediaType === "video" ? " 📹 Video" : " 🖼️ Image"}
+                </span>
               </div>
             </div>
           </div>
@@ -1821,6 +3535,21 @@ const AgentMyPropertyDetails = () => {
                   <span>{getFacingDirection(property.facing)} Facing</span>
                 </div>
               )}
+            </div>
+
+            {/* Media Stats */}
+            <div className="media-stats" style={{ 
+              marginTop: '15px', 
+              marginBottom: '15px', 
+              fontSize: '13px', 
+              color: '#666',
+              display: 'flex',
+              gap: '15px',
+              borderTop: '1px solid #eee',
+              paddingTop: '15px'
+            }}>
+              <span>📷 {property.images?.length || 0} Images</span>
+              <span>🎥 {property.videos?.length || 0} Videos</span>
             </div>
 
             <h3>Key Attributes</h3>
@@ -1934,9 +3663,23 @@ const AgentMyPropertyDetails = () => {
                 <div className="property-description-section">
                   <h4>Description</h4>
                   <p className="desc">
-                    {property.description || "No description available."}
-                    {property.description && property.description.length > 150 && (
-                      <span className="read-more"> Read More</span>
+                    {showFullDescription 
+                      ? property.description || "No description available."
+                      : truncateText(property.description || "No description available.", 100)
+                    }
+                    {property.description && property.description.length > 100 && (
+                      <span 
+                        className="read-more-toggle"
+                        onClick={() => setShowFullDescription(!showFullDescription)}
+                        style={{
+                          color: '#007bff',
+                          cursor: 'pointer',
+                          marginLeft: '5px',
+                          fontWeight: '500'
+                        }}
+                      >
+                        {showFullDescription ? ' Read Less' : ' Read More'}
+                      </span>
                     )}
                   </p>
                 </div>
@@ -1985,13 +3728,29 @@ const AgentMyPropertyDetails = () => {
 
                     <div className="detail-column">
                       <h4>Location Advantages</h4>
-                      <p>{property.location_advantages || "Prime location with excellent connectivity."}</p>
+                      <p>
+                        {showFullLocationAdvantages 
+                          ? property.location_advantages || "Prime location with excellent connectivity."
+                          : truncateText(property.location_advantages || "Prime location with excellent connectivity.", 50)
+                        }
+                        {property.location_advantages && property.location_advantages.length > 50 && (
+                          <span 
+                            className="read-more-toggle"
+                            onClick={() => setShowFullLocationAdvantages(!showFullLocationAdvantages)}
+                            style={{
+                              color: '#007bff',
+                              cursor: 'pointer',
+                              marginLeft: '5px',
+                              fontWeight: '500'
+                            }}
+                          >
+                            {showFullLocationAdvantages ? ' Read Less' : ' Read More'}
+                          </span>
+                        )}
+                      </p>
                       
                       <h4>Property Uniqueness</h4>
                       <p>{property.property_uniqueness || "Well-maintained property with modern amenities."}</p>
-                      
-                      <h4>Other Features</h4>
-                      <p>{property.other_features || "Spacious and well-ventilated."}</p>
                     </div>
                   </div>
 
@@ -2121,10 +3880,6 @@ const AgentMyPropertyDetails = () => {
                           <td>{property.owner_contact}</td>
                         </tr>
                         <tr>
-                          <td>Owner Email</td>
-                          <td>{property.owner_email}</td>
-                        </tr>
-                        <tr>
                           <td>Latitude</td>
                           <td>{property.latitude}</td>
                         </tr>
@@ -2141,6 +3896,81 @@ const AgentMyPropertyDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* Styles for video components and read more/less */}
+      <style jsx="true">{`
+        .video-container {
+          width: 100%;
+          height: 100%;
+          background: #000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .video-container video {
+          width: 100%;
+          height: 100%;
+          max-height: 500px;
+          object-fit: contain;
+        }
+        .video-thumbnail {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          background: #000;
+        }
+        .video-thumbnail video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          opacity: 0.7;
+        }
+        .video-play-icon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: rgba(0,0,0,0.6);
+          border-radius: 50%;
+          width: 30px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+        }
+        .media-type-badge {
+          position: absolute;
+          bottom: 4px;
+          right: 4px;
+          background: rgba(0,0,0,0.6);
+          border-radius: 4px;
+          padding: 2px 4px;
+          color: white;
+          font-size: 10px;
+          display: flex;
+          align-items: center;
+          gap: 2px;
+        }
+        .media-type-indicator {
+          margin-left: 8px;
+          font-size: 11px;
+        }
+        .thumb-box {
+          position: relative;
+          cursor: pointer;
+        }
+        .read-more-toggle {
+          color: #007bff;
+          cursor: pointer;
+          margin-left: 5px;
+          font-weight: 500;
+        }
+        .read-more-toggle:hover {
+          text-decoration: underline;
+        }
+      `}</style>
     </>
   );
 };

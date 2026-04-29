@@ -542,8 +542,8 @@ const PropertyDetails = () => {
                     <h4>Property Uniqueness</h4>
                     <p>{property.property_uniqueness || "Well-maintained property with modern amenities."}</p>
                     
-                    <h4>Other Features</h4>
-                    <p>{property.other_features || "Spacious and well-ventilated."}</p>
+                    {/* <h4>Other Features</h4>
+                    <p>{property.other_features || "Spacious and well-ventilated."}</p> */}
                   </div>
                 </div>
               </div>
@@ -684,10 +684,10 @@ const PropertyDetails = () => {
                       <td>Owner Contact</td>
                       <td>{property.owner_contact}</td>
                     </tr>
-                    <tr>
+                    {/* <tr>
                       <td>Owner Email</td>
                       <td>{property.owner_email}</td>
-                    </tr>
+                    </tr> */}
                     <tr>
                       <td>Latitude</td>
                       <td>{property.latitude}</td>
