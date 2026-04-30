@@ -284,6 +284,498 @@
 
 
 
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import { useNavigate } from "react-router-dom";
+// import { baseurl } from "../../BaseURL/BaseURL";
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import Swal from "sweetalert2";
+// import "./Site_Visits.css";
+
+// const Sitevisit = () => {
+//   const [siteVisits, setSiteVisits] = useState([]);
+//   const [filteredVisits, setFilteredVisits] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [page, setPage] = useState(1);
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [imageDialogOpen, setImageDialogOpen] = useState(false);
+//   const [selectedImage, setSelectedImage] = useState(null);
+//   const navigate = useNavigate();
+//   const userId = localStorage.getItem("user_id");
+
+//   const rowsPerPage = 5;
+
+//   const fetchSiteVisits = async () => {
+//     setLoading(true);
+//     try {
+//       const response = await axios.get(`${baseurl}/site-visits/user-id/${userId}/`);
+      
+//       const visits = Array.isArray(response.data)
+//         ? response.data
+//         : response.data.visits || response.data.results || [];
+
+//       // Transform data to match table structure
+//       const transformedVisits = visits.map((visit, index) => ({
+//         id: visit.id || index,
+//         date: visit.date || "",
+//         time: visit.time || "",
+//         site_name: visit.site_name || "",
+//         site_owner_name: visit.site_owner_name || "",
+//         site_owner_mobile: visit.site_owner_mobile_number || "",
+//         site_owner_email: visit.site_owner_email || "",
+//         site_location: visit.site_location || "",
+//         customer_name: visit.customer_name || "",
+//          sales_executive_name: visit.sales_executive_name || "",
+//         customer_mobile: visit.customer_mobile_number || "",
+//         remarks: visit.remarks || "",
+//         photo: visit.site_photo || "",
+//         displayDate: visit.date ? formatDateForDisplay(visit.date) : "",
+//         searchDate: visit.date ? formatDateForSearch(visit.date) : "",
+//         fullData: visit
+//       }));
+
+//       setSiteVisits(transformedVisits);
+//       setFilteredVisits(transformedVisits);
+//     } catch (error) {
+//       console.error("Error fetching site visits:", error);
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: "Failed to load site visits data",
+//         confirmButtonColor: "#6C63FF",
+//       });
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // ✅ Format date for display (dd/mm/yyyy)
+//   const formatDateForDisplay = (dateString) => {
+//     if (!dateString) return "";
+//     try {
+//       const datePart = dateString.split(" ")[0];
+//       const [day, month, year] = datePart.split("-");
+//       return `${day}/${month}/${year}`;
+//     } catch (error) {
+//       console.error("Error formatting date:", error);
+//       return dateString;
+//     }
+//   };
+
+//   // ✅ Format date for search (convert to dd-mm-yyyy for searching)
+//   const formatDateForSearch = (dateString) => {
+//     if (!dateString) return "";
+//     try {
+//       const datePart = dateString.split(" ")[0];
+//       const [day, month, year] = datePart.split("-");
+//       return `${day}-${month}-${year}`;
+//     } catch (error) {
+//       console.error("Error formatting date for search:", error);
+//       return dateString;
+//     }
+//   };
+
+//   // ✅ Normalize search query to handle different date formats
+//   const normalizeSearchQuery = (query) => {
+//     if (!query) return "";
+    
+//     // Convert dd/mm/yyyy to dd-mm-yyyy for searching
+//     const datePattern1 = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+//     const datePattern2 = /^(\d{1,2})-(\d{1,2})-(\d{4})$/;
+    
+//     if (datePattern1.test(query)) {
+//       return query.replace(/\//g, '-');
+//     } else if (datePattern2.test(query)) {
+//       return query;
+//     }
+    
+//     return query;
+//   };
+
+//   useEffect(() => {
+//     fetchSiteVisits();
+//   }, []);
+
+//   // Apply search filter
+//   useEffect(() => {
+//     if (!searchQuery.trim()) {
+//       setFilteredVisits([...siteVisits]);
+//       return;
+//     }
+
+//     const normalizedQuery = normalizeSearchQuery(searchQuery.toLowerCase());
+    
+//     const filtered = siteVisits.filter((visit) => {
+//       const searchableFields = [
+//         visit.id?.toString() || "",
+//         visit.date?.toLowerCase() || "",
+//         visit.time?.toLowerCase() || "",
+//         visit.site_name?.toLowerCase() || "",
+//         visit.site_owner_name?.toLowerCase() || "",
+//         visit.site_owner_mobile?.toLowerCase() || "",
+//         visit.site_owner_email?.toLowerCase() || "",
+//         visit.site_location?.toLowerCase() || "",
+//         visit.customer_name?.toLowerCase() || "",
+//        visit.sales_executive_name?.toLowerCase() || "",
+//         visit.customer_mobile?.toLowerCase() || "",
+//         visit.remarks?.toLowerCase() || "",
+//         visit.displayDate?.toLowerCase() || "",
+//         visit.searchDate?.toLowerCase() || ""
+//       ];
+      
+//       const searchableText = searchableFields.join(" ");
+//       return searchableText.includes(normalizedQuery);
+//     });
+
+//     // Sort by ID (newest first)
+//     const sorted = filtered.sort((a, b) => b.id - a.id);
+//     setFilteredVisits(sorted);
+//     setPage(1);
+//   }, [siteVisits, searchQuery]);
+
+//   const paginatedData = filteredVisits.slice(
+//     (page - 1) * rowsPerPage,
+//     page * rowsPerPage
+//   );
+
+//   const pageCount = Math.ceil(filteredVisits.length / rowsPerPage);
+
+//   const getSerialNumber = (index) => (page - 1) * rowsPerPage + index + 1;
+
+//   const handleImageClick = (imgUrl) => {
+//     const fullUrl = imgUrl.startsWith("http") ? imgUrl : `${baseurl}/${imgUrl}`;
+//     setSelectedImage(fullUrl);
+//     setImageDialogOpen(true);
+//   };
+
+//   const handleCloseDialog = () => {
+//     setImageDialogOpen(false);
+//     setSelectedImage(null);
+//   };
+
+//   const handleEdit = (visit) => {
+//     navigate(`/agent-editsitevisit/${visit.id}`, { state: { visit: visit.fullData } });
+//   };
+
+//   const handleDelete = async (id) => {
+//     Swal.fire({
+//       title: "Are you sure?",
+//       text: "Do you really want to delete this site visit?",
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonColor: "#d33",
+//       cancelButtonColor: "#3085d6",
+//       confirmButtonText: "Yes, delete it!"
+//     }).then(async (result) => {
+//       if (result.isConfirmed) {
+//         try {
+//           await axios.delete(`${baseurl}/site-visits/${id}/`);
+          
+//           // Update local state
+//           setSiteVisits(prev => prev.filter(visit => visit.id !== id));
+//           setFilteredVisits(prev => prev.filter(visit => visit.id !== id));
+          
+//           Swal.fire({
+//             icon: "success",
+//             title: "Deleted!",
+//             text: "Site visit has been deleted.",
+//             timer: 2000,
+//             showConfirmButton: false
+//           });
+//         } catch (error) {
+//           console.error("Delete failed:", error);
+//           Swal.fire({
+//             icon: "error",
+//             title: "Error",
+//             text: "Failed to delete site visit. Please try again."
+//           });
+//         }
+//       }
+//     });
+//   };
+
+//   const handleAddNew = () => {
+//     navigate("/agent-addsitevisit");
+//   };
+
+//   const exportToExcel = () => {
+//     if (filteredVisits.length === 0) {
+//       Swal.fire({
+//         icon: "warning",
+//         title: "No Data",
+//         text: "There is no data to export.",
+//       });
+//       return;
+//     }
+
+//     const headers = [
+//       "S.No",
+//       "Date",
+//       "Time",
+//       "Site Name",
+//       "Owner Name",
+//       "Owner Mobile",
+//       "Owner Email",
+//       "Location",
+//       "Customer Name",
+//       "Sales Executive Name",
+//       "Customer Mobile",
+//       "Remarks"
+//     ];
+
+//     const csvContent = [
+//       headers.join(","),
+//       ...filteredVisits.map((visit, index) =>
+//         [
+//           index + 1,
+//           `"${visit.date}"`,
+//           `"${visit.time}"`,
+//           `"${visit.site_name}"`,
+//           `"${visit.site_owner_name}"`,
+//           `"${visit.site_owner_mobile}"`,
+//           `"${visit.site_owner_email}"`,
+//           `"${visit.site_location}"`,
+//           `"${visit.customer_name}"`,
+//           `"${visit.sales_executive_name}"`,
+//           `"${visit.customer_mobile}"`,
+//           `"${visit.remarks}"`
+//         ].join(",")
+//       )
+//     ].join("\n");
+
+//     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+//     const link = document.createElement("a");
+//     const url = URL.createObjectURL(blob);
+//     const timestamp = new Date().toISOString().split("T")[0];
+
+//     link.setAttribute("href", url);
+//     link.setAttribute("download", `site_visits_${timestamp}.csv`);
+//     link.style.visibility = "hidden";
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+
+//     Swal.fire({
+//       icon: "success",
+//       title: "Export Successful",
+//       text: `Exported ${filteredVisits.length} site visits to CSV file.`,
+//       timer: 2000,
+//       showConfirmButton: false
+//     });
+//   };
+
+//   return (
+//     <>
+//       <AgentNavbar />
+
+//       <div className="staff-page">
+//         {/* Header */}
+//         <div className="staff-header">
+//           <h2>Site Visits</h2>
+//         </div>
+
+//         {/* Toolbar - Fixed layout: left=search/filter, right=buttons */}
+//         <div className="staff-toolbar">
+//           {/* Left Side: Search */}
+//           <div className="toolbar-left">
+//             {/* Search Box */}
+//             <div className="search-box">
+//               <input
+//                 type="text"
+//                 placeholder="Search site visits by name, mobile, location, date..."
+//                 value={searchQuery}
+//                 onChange={(e) => setSearchQuery(e.target.value)}
+//               />
+//               {/* <span className="search-icon">🔍</span> */}
+//             </div>
+//           </div>
+
+//           {/* Right Side: Buttons */}
+//           <div className="toolbar-right">
+//             {/* <button 
+//               className="export-btn"
+//               onClick={exportToExcel}
+//             >
+//               Export Excel
+//             </button> */}
+//             <button 
+//               className="add-btn"
+//               style={{
+//     backgroundColor: '#273c75',
+//     borderColor: '#273c75',
+//     color: 'white'
+//   }}
+//               onClick={handleAddNew}
+//             >
+//               Add Site Visit
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* Table */}
+//         <div className="staff-table-wrapper">
+//           <table className="staff-table">
+//             <thead>
+//               <tr>
+//                 <th>S.No.</th>
+//                 <th>DATE</th>
+//                 <th>TIME</th>
+//                 <th>SITE NAME</th>
+//                 <th>OWNER NAME</th>
+//                 <th>OWNER MOBILE</th>
+//                 {/* <th>OWNER EMAIL</th> */}
+//                 <th>LOCATION</th>
+//                 <th>CUSTOMER NAME</th>
+//                 <th>SALES EXECUTIVE NAME</th>
+//                 <th>CUSTOMER MOBILE</th>
+//                 <th>REMARKS</th>
+//                 <th>PHOTO</th>
+//                 <th>ACTIONS</th>
+//               </tr>
+//             </thead>
+
+//             <tbody>
+//               {loading ? (
+//                 <tr>
+//                   <td colSpan="13" className="no-data">
+//                     Loading...
+//                   </td>
+//                 </tr>
+//               ) : paginatedData.length > 0 ? (
+//                 paginatedData.map((visit, index) => (
+//                   <tr key={visit.id}>
+//                     <td>{getSerialNumber(index)}</td>
+//                     <td>{visit.date}</td>
+//                     <td>{visit.time}</td>
+//                     <td className="name-cell">{visit.site_name}</td>
+//                     <td>{visit.site_owner_name}</td>
+//                     <td>{visit.site_owner_mobile}</td>
+//                     {/* <td className="email-cell">{visit.site_owner_email}</td> */}
+//                     <td>{visit.site_location}</td>
+//                     <td>{visit.customer_name}</td>
+//                     <td>{visit.sales_executive_name}</td>
+//                     <td>{visit.customer_mobile}</td>
+//                     <td className="remarks-cell" title={visit.remarks}>
+//                       {visit.remarks.length > 50 ? `${visit.remarks.substring(0, 50)}...` : visit.remarks}
+//                     </td>
+//                     <td>
+//                       {visit.photo ? (
+//                         <img
+//                           src={visit.photo.startsWith("http") ? visit.photo : `${baseurl}/${visit.photo}`}
+//                           alt="Site"
+//                           className="site-photo-thumbnail"
+//                           onClick={() => handleImageClick(visit.photo)}
+//                         />
+//                       ) : (
+//                         <span className="no-image-text">No Image</span>
+//                       )}
+//                     </td>
+//                     <td className="actions">
+
+//                    <div style={{ display: 'flex', gap: '8px' }}>
+
+//                       <button 
+//                         className="edit-btn action-btn"
+//                         onClick={() => handleEdit(visit)}
+//                         title="Edit"
+//                       >
+//                         ✏️
+//                       </button>
+//                       <button 
+//                         className="delete-btn action-btn"
+//                         onClick={() => handleDelete(visit.id)}
+//                         title="Delete"
+//                       >
+//                         🗑️
+//                       </button>
+//                          </div>
+//                     </td>
+//                   </tr>
+//                 ))
+//               ) : (
+//                 <tr>
+//                   <td colSpan="13" className="no-data">
+//                     No site visits found
+//                   </td>
+//                 </tr>
+//               )}
+//             </tbody>
+//           </table>
+//         </div>
+
+//         {/* Pagination */}
+//         {pageCount > 1 && (
+//           <div className="pagination-container">
+//             <button
+//               className="pagination-btn"
+//               disabled={page === 1}
+//               onClick={() => setPage(page - 1)}
+//             >
+//               ← Previous
+//             </button>
+            
+//             <div className="page-numbers">
+//               {[...Array(pageCount)].map((_, i) => {
+//                 const pageNum = i + 1;
+//                 if (pageNum === page || pageNum === page - 1 || pageNum === page + 1) {
+//                   return (
+//                     <button
+//                       key={pageNum}
+//                       className={`page-btn ${page === pageNum ? 'active' : ''}`}
+//                       onClick={() => setPage(pageNum)}
+//                     >
+//                       {pageNum}
+//                     </button>
+//                   );
+//                 }
+//                 return null;
+//               })}
+//             </div>
+            
+//             <button
+//               className="pagination-btn"
+//               disabled={page === pageCount}
+//               onClick={() => setPage(page + 1)}
+//             >
+//               Next →
+//             </button>
+//           </div>
+//         )}
+
+//         {/* Image Modal */}
+//         {imageDialogOpen && (
+//           <div className="image-modal-overlay" onClick={handleCloseDialog}>
+//             <div className="image-modal" onClick={(e) => e.stopPropagation()}>
+//               <div className="image-modal-header">
+//                 <h5>Site Photo</h5>
+//                 <button 
+//                   className="image-modal-close" 
+//                   onClick={handleCloseDialog}
+//                   aria-label="Close"
+//                 >
+//                   ×
+//                 </button>
+//               </div>
+//               <div className="image-modal-body">
+//                 {selectedImage && (
+//                   <img
+//                     src={selectedImage}
+//                     alt="Site Large"
+//                     className="image-modal-img"
+//                   />
+//                 )}
+//               </div>
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//     </>
+//   );
+// };
+
+// export default Sitevisit;
+
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -300,10 +792,40 @@ const Sitevisit = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [propertiesMap, setPropertiesMap] = useState({}); // Store property details by ID
   const navigate = useNavigate();
   const userId = localStorage.getItem("user_id");
 
   const rowsPerPage = 5;
+
+  // Fetch all properties to create a mapping
+  const fetchProperties = async () => {
+    try {
+      const response = await axios.get(`${baseurl}/properties/`);
+      let propertiesList = [];
+      
+      if (response.data && response.data.results) {
+        propertiesList = response.data.results;
+      } else if (Array.isArray(response.data)) {
+        propertiesList = response.data;
+      }
+      
+      // Create a map of property_id -> property details
+      const map = {};
+      propertiesList.forEach(property => {
+        map[property.property_id] = {
+          id: property.property_id,
+          title: property.property_title,
+          address: property.address,
+          city: property.city,
+          property_value: property.property_value
+        };
+      });
+      setPropertiesMap(map);
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+    }
+  };
 
   const fetchSiteVisits = async () => {
     setLoading(true);
@@ -325,10 +847,11 @@ const Sitevisit = () => {
         site_owner_email: visit.site_owner_email || "",
         site_location: visit.site_location || "",
         customer_name: visit.customer_name || "",
-         sales_executive_name: visit.sales_executive_name || "",
+        sales_executive_name: visit.sales_executive_name || "",
         customer_mobile: visit.customer_mobile_number || "",
         remarks: visit.remarks || "",
         photo: visit.site_photo || "",
+        property_id: visit.property || null, // Property ID from the site visit
         displayDate: visit.date ? formatDateForDisplay(visit.date) : "",
         searchDate: visit.date ? formatDateForSearch(visit.date) : "",
         fullData: visit
@@ -349,7 +872,7 @@ const Sitevisit = () => {
     }
   };
 
-  // ✅ Format date for display (dd/mm/yyyy)
+  // Format date for display (dd/mm/yyyy)
   const formatDateForDisplay = (dateString) => {
     if (!dateString) return "";
     try {
@@ -362,7 +885,7 @@ const Sitevisit = () => {
     }
   };
 
-  // ✅ Format date for search (convert to dd-mm-yyyy for searching)
+  // Format date for search (convert to dd-mm-yyyy for searching)
   const formatDateForSearch = (dateString) => {
     if (!dateString) return "";
     try {
@@ -375,11 +898,10 @@ const Sitevisit = () => {
     }
   };
 
-  // ✅ Normalize search query to handle different date formats
+  // Normalize search query to handle different date formats
   const normalizeSearchQuery = (query) => {
     if (!query) return "";
     
-    // Convert dd/mm/yyyy to dd-mm-yyyy for searching
     const datePattern1 = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
     const datePattern2 = /^(\d{1,2})-(\d{1,2})-(\d{4})$/;
     
@@ -392,8 +914,22 @@ const Sitevisit = () => {
     return query;
   };
 
+  // Get property display text
+  const getPropertyDisplay = (propertyId) => {
+    if (!propertyId) return "-";
+    const property = propertiesMap[propertyId];
+    if (property) {
+      return `${property.title} (ID: ${propertyId})`;
+    }
+    return `Property ID: ${propertyId}`;
+  };
+
   useEffect(() => {
-    fetchSiteVisits();
+    const loadData = async () => {
+      await fetchProperties(); // First fetch properties
+      await fetchSiteVisits(); // Then fetch site visits
+    };
+    loadData();
   }, []);
 
   // Apply search filter
@@ -406,6 +942,8 @@ const Sitevisit = () => {
     const normalizedQuery = normalizeSearchQuery(searchQuery.toLowerCase());
     
     const filtered = siteVisits.filter((visit) => {
+      const propertyDisplay = getPropertyDisplay(visit.property_id).toLowerCase();
+      
       const searchableFields = [
         visit.id?.toString() || "",
         visit.date?.toLowerCase() || "",
@@ -416,11 +954,12 @@ const Sitevisit = () => {
         visit.site_owner_email?.toLowerCase() || "",
         visit.site_location?.toLowerCase() || "",
         visit.customer_name?.toLowerCase() || "",
-       visit.sales_executive_name?.toLowerCase() || "",
+        visit.sales_executive_name?.toLowerCase() || "",
         visit.customer_mobile?.toLowerCase() || "",
         visit.remarks?.toLowerCase() || "",
         visit.displayDate?.toLowerCase() || "",
-        visit.searchDate?.toLowerCase() || ""
+        visit.searchDate?.toLowerCase() || "",
+        propertyDisplay
       ];
       
       const searchableText = searchableFields.join(" ");
@@ -431,7 +970,7 @@ const Sitevisit = () => {
     const sorted = filtered.sort((a, b) => b.id - a.id);
     setFilteredVisits(sorted);
     setPage(1);
-  }, [siteVisits, searchQuery]);
+  }, [siteVisits, searchQuery, propertiesMap]);
 
   const paginatedData = filteredVisits.slice(
     (page - 1) * rowsPerPage,
@@ -513,6 +1052,7 @@ const Sitevisit = () => {
       "Date",
       "Time",
       "Site Name",
+      "Property",
       "Owner Name",
       "Owner Mobile",
       "Owner Email",
@@ -531,6 +1071,7 @@ const Sitevisit = () => {
           `"${visit.date}"`,
           `"${visit.time}"`,
           `"${visit.site_name}"`,
+          `"${getPropertyDisplay(visit.property_id)}"`,
           `"${visit.site_owner_name}"`,
           `"${visit.site_owner_mobile}"`,
           `"${visit.site_owner_email}"`,
@@ -582,29 +1123,22 @@ const Sitevisit = () => {
             <div className="search-box">
               <input
                 type="text"
-                placeholder="Search site visits by name, mobile, location, date..."
+                placeholder="Search site visits by name, mobile, location, property, date..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              {/* <span className="search-icon">🔍</span> */}
             </div>
           </div>
 
           {/* Right Side: Buttons */}
           <div className="toolbar-right">
-            {/* <button 
-              className="export-btn"
-              onClick={exportToExcel}
-            >
-              Export Excel
-            </button> */}
             <button 
               className="add-btn"
               style={{
-    backgroundColor: '#273c75',
-    borderColor: '#273c75',
-    color: 'white'
-  }}
+                backgroundColor: '#273c75',
+                borderColor: '#273c75',
+                color: 'white'
+              }}
               onClick={handleAddNew}
             >
               Add Site Visit
@@ -621,9 +1155,9 @@ const Sitevisit = () => {
                 <th>DATE</th>
                 <th>TIME</th>
                 <th>SITE NAME</th>
+                <th>PROPERTY</th>
                 <th>OWNER NAME</th>
                 <th>OWNER MOBILE</th>
-                {/* <th>OWNER EMAIL</th> */}
                 <th>LOCATION</th>
                 <th>CUSTOMER NAME</th>
                 <th>SALES EXECUTIVE NAME</th>
@@ -637,7 +1171,7 @@ const Sitevisit = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="13" className="no-data">
+                  <td colSpan="14" className="no-data">
                     Loading...
                   </td>
                 </tr>
@@ -648,9 +1182,13 @@ const Sitevisit = () => {
                     <td>{visit.date}</td>
                     <td>{visit.time}</td>
                     <td className="name-cell">{visit.site_name}</td>
+                    <td>
+                      <span className="property-badge" title={getPropertyDisplay(visit.property_id)}>
+                        {getPropertyDisplay(visit.property_id)}
+                      </span>
+                    </td>
                     <td>{visit.site_owner_name}</td>
                     <td>{visit.site_owner_mobile}</td>
-                    {/* <td className="email-cell">{visit.site_owner_email}</td> */}
                     <td>{visit.site_location}</td>
                     <td>{visit.customer_name}</td>
                     <td>{visit.sales_executive_name}</td>
@@ -671,30 +1209,28 @@ const Sitevisit = () => {
                       )}
                     </td>
                     <td className="actions">
-
-                   <div style={{ display: 'flex', gap: '8px' }}>
-
-                      <button 
-                        className="edit-btn action-btn"
-                        onClick={() => handleEdit(visit)}
-                        title="Edit"
-                      >
-                        ✏️
-                      </button>
-                      <button 
-                        className="delete-btn action-btn"
-                        onClick={() => handleDelete(visit.id)}
-                        title="Delete"
-                      >
-                        🗑️
-                      </button>
-                         </div>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button 
+                          className="edit-btn action-btn"
+                          onClick={() => handleEdit(visit)}
+                          title="Edit"
+                        >
+                          ✏️
+                        </button>
+                        <button 
+                          className="delete-btn action-btn"
+                          onClick={() => handleDelete(visit.id)}
+                          title="Delete"
+                        >
+                          🗑️
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="13" className="no-data">
+                  <td colSpan="14" className="no-data">
                     No site visits found
                   </td>
                 </tr>

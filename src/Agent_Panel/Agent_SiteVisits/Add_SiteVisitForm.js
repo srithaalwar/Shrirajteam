@@ -368,6 +368,356 @@
 
 
 
+// import React, { useState, useEffect } from "react";
+// import axios from "axios";
+// import { useNavigate } from "react-router-dom";
+// import { baseurl } from "../../BaseURL/BaseURL";
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import "./Add_SiteVisitForm.css"; // Create this CSS file
+
+// function AddSitevisit() {
+//   const navigate = useNavigate();
+//   const agentId = localStorage.getItem("user_id");
+//   const referralId = localStorage.getItem('referral_id');
+
+//   const [formData, setFormData] = useState({
+//     date: "",
+//     time: "",
+//     agent_id: agentId, // Set agent_id from localStorage
+//     site_name: "",
+//     site_owner_name: "",
+//     site_owner_mobile_number: "",
+//     user_id: agentId,
+//     site_location: "",
+//     customer_name: "",
+//     sales_executive_name:"",
+//     customer_mobile_number: "",
+//     remarks: "",
+//     site_photo: null,
+//   });
+
+//   const [errors, setErrors] = useState({});
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+
+//   const validateForm = () => {
+//     const newErrors = {};
+    
+//     if (!formData.date) newErrors.date = "Date is required";
+//     if (!formData.time) newErrors.time = "Time is required";
+//     if (!formData.site_name) newErrors.site_name = "Site name is required";
+    
+//     setErrors(newErrors);
+//     return Object.keys(newErrors).length === 0;
+//   };
+
+//   const handleChange = (e) => {
+//     const { name, value, files } = e.target;
+//     if (files) {
+//       setFormData({ ...formData, [name]: files[0] });
+//     } else {
+//       setFormData({ ...formData, [name]: value });
+//     }
+    
+//     // Clear error when user starts typing
+//     if (errors[name]) {
+//       setErrors({ ...errors, [name]: "" });
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+    
+//     if (!validateForm()) {
+//       return;
+//     }
+
+//     setIsSubmitting(true);
+
+//     try {
+//       const payload = new FormData();
+      
+//       Object.entries(formData).forEach(([key, value]) => {
+//         if (value !== null && value !== "") {
+//           payload.append(key, value);
+//         }
+//       });
+
+//       await axios.post(`${baseurl}/site-visits/`, payload, {
+//         headers: { "Content-Type": "multipart/form-data" },
+//       });
+
+//       alert("Site Visit added successfully!");
+//       navigate("/agent-site-visits");
+//     } catch (error) {
+//       console.error("Error adding site visit:", error.response?.data || error);
+//       alert("Failed to add site visit. Please try again.");
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   return (
+//     <>
+//       <AgentNavbar />
+//       <div className="container mt-4">
+//         <div className="row justify-content-center">
+//           <div className="col-lg-12">
+//             <div className="card shadow">
+//               <div className="card-header ">
+//                 <h2 className="mb-0 text-center">Add Site Visit</h2>
+//               </div>
+              
+//               <div className="card-body p-4">
+//                 <form onSubmit={handleSubmit}>
+//                   <div className="row g-3">
+//                     {/* Date */}
+//                     <div className="col-md-4">
+//                       <label htmlFor="date" className="form-label fw-bold">
+//                         Date <span className="text-danger">*</span>
+//                       </label>
+//                       <input
+//                         type="date"
+//                         className={`form-control ${errors.date ? "is-invalid" : ""}`}
+//                         id="date"
+//                         name="date"
+//                         value={formData.date}
+//                         onChange={handleChange}
+//                         required
+//                       />
+//                       {errors.date && (
+//                         <div className="invalid-feedback">{errors.date}</div>
+//                       )}
+//                     </div>
+
+//                     {/* Time */}
+//                     <div className="col-md-4">
+//                       <label htmlFor="time" className="form-label fw-bold">
+//                         Time <span className="text-danger">*</span>
+//                       </label>
+//                       <input
+//                         type="time"
+//                         className={`form-control ${errors.time ? "is-invalid" : ""}`}
+//                         id="time"
+//                         name="time"
+//                         value={formData.time}
+//                         onChange={handleChange}
+//                         required
+//                       />
+//                       {errors.time && (
+//                         <div className="invalid-feedback">{errors.time}</div>
+//                       )}
+//                     </div>
+
+//                     {/* Agent ID - Now shown as display field instead of dropdown */}
+//                     <div className="col-md-4">
+//                       <label htmlFor="agent_id" className="form-label fw-bold">
+//                         Team ID <span className="text-danger">*</span>
+//                       </label>
+//                       <input
+//                         type="text"
+//                         className="form-control bg-light"
+//                         id="agent_id"
+//                         name="agent_id"
+//                         value={referralId || "No Referral ID found"}
+//                         readOnly
+//                         disabled
+//                       />
+//                       <small className="text-muted">
+//                         Your Referral ID (auto-filled)
+//                       </small>
+//                     </div>
+
+//                     {/* Site Name */}
+//                     <div className="col-md-4">
+//                       <label htmlFor="site_name" className="form-label fw-bold">
+//                         Site Name <span className="text-danger">*</span>
+//                       </label>
+//                       <input
+//                         type="text"
+//                         className={`form-control ${errors.site_name ? "is-invalid" : ""}`}
+//                         id="site_name"
+//                         name="site_name"
+//                         value={formData.site_name}
+//                         onChange={handleChange}
+//                         required
+//                       />
+//                       {errors.site_name && (
+//                         <div className="invalid-feedback">{errors.site_name}</div>
+//                       )}
+//                     </div>
+
+//                     {/* Site Owner Name */}
+//                     <div className="col-md-4">
+//                       <label htmlFor="site_owner_name" className="form-label fw-bold">
+//                          Owner Name
+//                       </label>
+//                       <input
+//                         type="text"
+//                         className="form-control"
+//                         id="site_owner_name"
+//                         name="site_owner_name"
+//                         value={formData.site_owner_name}
+//                         onChange={handleChange}
+//                       />
+//                     </div>
+
+//                     {/* Site Owner Mobile */}
+//                     <div className="col-md-4">
+//                       <label htmlFor="site_owner_mobile_number" className="form-label fw-bold">
+//                          Owner Mobile Number
+//                       </label>
+//                       <input
+//                         type="tel"
+//                         className="form-control"
+//                         id="site_owner_mobile_number"
+//                         name="site_owner_mobile_number"
+//                         value={formData.site_owner_mobile_number}
+//                         onChange={handleChange}
+//                       />
+//                     </div>
+
+//                     {/* Site Location */}
+//                     <div className="col-md-4">
+//                       <label htmlFor="site_location" className="form-label fw-bold">
+//                         Site Location
+//                       </label>
+//                       <input
+//                         type="text"
+//                         className="form-control"
+//                         id="site_location"
+//                         name="site_location"
+//                         value={formData.site_location}
+//                         onChange={handleChange}
+//                       />
+//                     </div>
+
+//                     {/* Customer Name */}
+//                     <div className="col-md-4">
+//                       <label htmlFor="customer_name" className="form-label fw-bold">
+//                         Customer Name
+//                       </label>
+//                       <input
+//                         type="text"
+//                         className="form-control"
+//                         id="customer_name"
+//                         name="customer_name"
+//                         value={formData.customer_name}
+//                         onChange={handleChange}
+//                       />
+//                     </div>
+
+//                     {/* Customer Mobile */}
+//                     <div className="col-md-4">
+//                       <label htmlFor="customer_mobile_number" className="form-label fw-bold">
+//                         Customer Mobile Number
+//                       </label>
+//                       <input
+//                         type="tel"
+//                         className="form-control"
+//                         id="customer_mobile_number"
+//                         name="customer_mobile_number"
+//                         value={formData.customer_mobile_number}
+//                         onChange={handleChange}
+//                       />
+//                     </div>
+
+//                     {/* Photo Upload */}
+//                     <div className="col-md-4">
+//                       <label htmlFor="site_photo" className="form-label fw-bold">
+//                         Site Photo
+//                       </label>
+//                       <input
+//                         type="file"
+//                         className="form-control"
+//                         id="site_photo"
+//                         name="site_photo"
+//                         onChange={handleChange}
+//                         accept="image/*"
+//                       />
+//                       {formData.site_photo && (
+//                         <small className="text-muted mt-1 d-block">
+//                           Selected: {formData.site_photo.name}
+//                         </small>
+//                       )}
+//                     </div>
+//                      <div className="col-md-4">
+//                        <label htmlFor="sales_executive_name" className="form-label fw-bold">
+//                         Sales Executive Name
+//                       </label>
+//                       <input
+//                         type="text"
+//                         className="form-control"
+//                         id="sales_executive_name"
+//                         name="sales_executive_name"
+//                         value={formData.sales_executive_name}
+//                         onChange={handleChange}
+//                       />
+                    
+//                     </div>
+
+//                     {/* Remarks */}
+//                     <div className="col-12">
+//                       <label htmlFor="remarks" className="form-label fw-bold">
+//                         Remarks
+//                       </label>
+//                       <textarea
+//                         className="form-control"
+//                         id="remarks"
+//                         name="remarks"
+//                         rows="3"
+//                         value={formData.remarks}
+//                         onChange={handleChange}
+//                       />
+//                     </div>
+//                   </div>
+
+//                   {/* Submit Button */}
+//                   <div className="text-center mt-4">
+//                    <button
+//   type="submit"
+//   className="btn px-5 py-2"
+//   disabled={isSubmitting}
+//   style={{
+//     backgroundColor: '#273c75',
+//     borderColor: '#273c75',
+//         color: 'white'
+
+//   }}
+// >
+//   {isSubmitting ? (
+//     <>
+//       <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+//       Submitting...
+//     </>
+//   ) : (
+//     "Submit"
+//   )}
+// </button>
+//                     <button
+//                       type="button"
+//                       className="btn btn-outline-secondary ms-3 px-5 py-2"
+//                       onClick={() => navigate("/agent-site-visits")}
+//                     >
+//                       Cancel
+//                     </button>
+//                   </div>
+//                 </form>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// }
+
+// export default AddSitevisit;
+
+
+
+//==================
+// after adding property id and title
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -383,21 +733,48 @@ function AddSitevisit() {
   const [formData, setFormData] = useState({
     date: "",
     time: "",
-    agent_id: agentId, // Set agent_id from localStorage
+    agent_id: agentId,
     site_name: "",
     site_owner_name: "",
     site_owner_mobile_number: "",
     user_id: agentId,
     site_location: "",
     customer_name: "",
-    sales_executive_name:"",
+    sales_executive_name: "",
     customer_mobile_number: "",
     remarks: "",
     site_photo: null,
+    property: "", // New field for property selection
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [properties, setProperties] = useState([]);
+  const [loadingProperties, setLoadingProperties] = useState(false);
+
+  // Fetch properties on component mount
+  useEffect(() => {
+    fetchProperties();
+  }, []);
+
+  const fetchProperties = async () => {
+    setLoadingProperties(true);
+    try {
+      const response = await axios.get(`${baseurl}/properties/`);
+      if (response.data && response.data.results) {
+        setProperties(response.data.results);
+      } else if (Array.isArray(response.data)) {
+        setProperties(response.data);
+      } else {
+        setProperties([]);
+      }
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+      setProperties([]);
+    } finally {
+      setLoadingProperties(false);
+    }
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -527,6 +904,38 @@ function AddSitevisit() {
                       </small>
                     </div>
 
+                    {/* Property Dropdown - NEW FIELD */}
+                    <div className="col-md-4">
+                      <label htmlFor="property" className="form-label fw-bold">
+                        Property
+                      </label>
+                      <select
+                        className="form-control"
+                        id="property"
+                        name="property"
+                        value={formData.property}
+                        onChange={handleChange}
+                        disabled={loadingProperties}
+                      >
+                        <option value="">-- Select Property --</option>
+                        {properties.map((property) => (
+                          <option key={property.property_id} value={property.property_id}>
+                            {property.property_title} (ID: {property.property_id})
+                          </option>
+                        ))}
+                      </select>
+                      {loadingProperties && (
+                        <small className="text-muted mt-1 d-block">
+                          Loading properties...
+                        </small>
+                      )}
+                      {properties.length === 0 && !loadingProperties && (
+                        <small className="text-muted mt-1 d-block">
+                          No properties available
+                        </small>
+                      )}
+                    </div>
+
                     {/* Site Name */}
                     <div className="col-md-4">
                       <label htmlFor="site_name" className="form-label fw-bold">
@@ -640,8 +1049,10 @@ function AddSitevisit() {
                         </small>
                       )}
                     </div>
-                     <div className="col-md-4">
-                       <label htmlFor="sales_executive_name" className="form-label fw-bold">
+
+                    {/* Sales Executive Name */}
+                    <div className="col-md-4">
+                      <label htmlFor="sales_executive_name" className="form-label fw-bold">
                         Sales Executive Name
                       </label>
                       <input
@@ -652,7 +1063,6 @@ function AddSitevisit() {
                         value={formData.sales_executive_name}
                         onChange={handleChange}
                       />
-                    
                     </div>
 
                     {/* Remarks */}
@@ -673,26 +1083,25 @@ function AddSitevisit() {
 
                   {/* Submit Button */}
                   <div className="text-center mt-4">
-                   <button
-  type="submit"
-  className="btn px-5 py-2"
-  disabled={isSubmitting}
-  style={{
-    backgroundColor: '#273c75',
-    borderColor: '#273c75',
-        color: 'white'
-
-  }}
->
-  {isSubmitting ? (
-    <>
-      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-      Submitting...
-    </>
-  ) : (
-    "Submit"
-  )}
-</button>
+                    <button
+                      type="submit"
+                      className="btn px-5 py-2"
+                      disabled={isSubmitting}
+                      style={{
+                        backgroundColor: '#273c75',
+                        borderColor: '#273c75',
+                        color: 'white'
+                      }}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                          Submitting...
+                        </>
+                      ) : (
+                        "Submit"
+                      )}
+                    </button>
                     <button
                       type="button"
                       className="btn btn-outline-secondary ms-3 px-5 py-2"
