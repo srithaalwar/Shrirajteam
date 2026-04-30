@@ -325,6 +325,7 @@ const Sitevisit = () => {
         site_owner_email: visit.site_owner_email || "",
         site_location: visit.site_location || "",
         customer_name: visit.customer_name || "",
+         sales_executive_name: visit.sales_executive_name || "",
         customer_mobile: visit.customer_mobile_number || "",
         remarks: visit.remarks || "",
         photo: visit.site_photo || "",
@@ -415,6 +416,7 @@ const Sitevisit = () => {
         visit.site_owner_email?.toLowerCase() || "",
         visit.site_location?.toLowerCase() || "",
         visit.customer_name?.toLowerCase() || "",
+       visit.sales_executive_name?.toLowerCase() || "",
         visit.customer_mobile?.toLowerCase() || "",
         visit.remarks?.toLowerCase() || "",
         visit.displayDate?.toLowerCase() || "",
@@ -516,6 +518,7 @@ const Sitevisit = () => {
       "Owner Email",
       "Location",
       "Customer Name",
+      "Sales Executive Name",
       "Customer Mobile",
       "Remarks"
     ];
@@ -533,6 +536,7 @@ const Sitevisit = () => {
           `"${visit.site_owner_email}"`,
           `"${visit.site_location}"`,
           `"${visit.customer_name}"`,
+          `"${visit.sales_executive_name}"`,
           `"${visit.customer_mobile}"`,
           `"${visit.remarks}"`
         ].join(",")
@@ -619,9 +623,10 @@ const Sitevisit = () => {
                 <th>SITE NAME</th>
                 <th>OWNER NAME</th>
                 <th>OWNER MOBILE</th>
-                <th>OWNER EMAIL</th>
+                {/* <th>OWNER EMAIL</th> */}
                 <th>LOCATION</th>
                 <th>CUSTOMER NAME</th>
+                <th>SALES EXECUTIVE NAME</th>
                 <th>CUSTOMER MOBILE</th>
                 <th>REMARKS</th>
                 <th>PHOTO</th>
@@ -645,9 +650,10 @@ const Sitevisit = () => {
                     <td className="name-cell">{visit.site_name}</td>
                     <td>{visit.site_owner_name}</td>
                     <td>{visit.site_owner_mobile}</td>
-                    <td className="email-cell">{visit.site_owner_email}</td>
+                    {/* <td className="email-cell">{visit.site_owner_email}</td> */}
                     <td>{visit.site_location}</td>
                     <td>{visit.customer_name}</td>
+                    <td>{visit.sales_executive_name}</td>
                     <td>{visit.customer_mobile}</td>
                     <td className="remarks-cell" title={visit.remarks}>
                       {visit.remarks.length > 50 ? `${visit.remarks.substring(0, 50)}...` : visit.remarks}

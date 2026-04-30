@@ -4610,6 +4610,17 @@ const PropertyCard = ({
         >
           {property.looking_to === "sell" ? "VIEW DETAILS" : "CONTACT OWNER"}
         </button>
+          <button
+         
+          className="btn w-100 fw-semibold py-2 mt-2"
+          style={{
+             backgroundColor: '#28a745', 
+      borderColor: '#28a745', 
+      color: '#fff',
+            cursor: "pointer",
+          }}
+        >   BOOK NOW
+        </button>
       </div>
     </div>
   );
@@ -5584,7 +5595,8 @@ const PropertyGrid = ({
                       />
                     </div> */}
 
-                    <button
+                   
+                      <button
                       onClick={handleViewDetails}
                       className="btn fw-semibold py-2"
                       style={{
@@ -5597,6 +5609,17 @@ const PropertyGrid = ({
                       {property.looking_to === "sell"
                         ? "VIEW DETAILS"
                         : "CONTACT OWNER"}
+                    </button>
+                     <button
+                      className="btn fw-semibold py-2"
+                      style={{
+                        backgroundColor: '#28a745', 
+      borderColor: '#28a745', 
+      color: '#fff',
+                        cursor: "pointer",
+                      }}
+                    >
+                     BOOK NOW
                     </button>
                   </div>
                 </div>

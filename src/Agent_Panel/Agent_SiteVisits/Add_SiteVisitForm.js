@@ -390,6 +390,7 @@ function AddSitevisit() {
     user_id: agentId,
     site_location: "",
     customer_name: "",
+    sales_executive_name:"",
     customer_mobile_number: "",
     remarks: "",
     site_photo: null,
@@ -548,7 +549,7 @@ function AddSitevisit() {
                     {/* Site Owner Name */}
                     <div className="col-md-4">
                       <label htmlFor="site_owner_name" className="form-label fw-bold">
-                        Site Owner Name
+                         Owner Name
                       </label>
                       <input
                         type="text"
@@ -563,7 +564,7 @@ function AddSitevisit() {
                     {/* Site Owner Mobile */}
                     <div className="col-md-4">
                       <label htmlFor="site_owner_mobile_number" className="form-label fw-bold">
-                        Site Owner Mobile Number
+                         Owner Mobile Number
                       </label>
                       <input
                         type="tel"
@@ -638,6 +639,20 @@ function AddSitevisit() {
                           Selected: {formData.site_photo.name}
                         </small>
                       )}
+                    </div>
+                     <div className="col-md-4">
+                       <label htmlFor="sales_executive_name" className="form-label fw-bold">
+                        Sales Executive Name
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="sales_executive_name"
+                        name="sales_executive_name"
+                        value={formData.sales_executive_name}
+                        onChange={handleChange}
+                      />
+                    
                     </div>
 
                     {/* Remarks */}

@@ -7321,6 +7321,7812 @@
 // added PP and terms and conditions in below code 
 
 
+// import React, { useState, useEffect } from 'react';
+// import "./Add_Property.css";
+// import axios from 'axios';
+// import { useParams, useNavigate } from "react-router-dom";
+// import Swal from 'sweetalert2';
+// import { baseurl } from '../../BaseURL/BaseURL';
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import { Country, State, City } from "country-state-city";
+
+// // Modal component for Privacy Policy and Terms & Conditions
+// const PolicyModal = ({ isOpen, onClose, title, content }) => {
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className="policy-modal-overlay" onClick={onClose}>
+//       <div className="policy-modal-container" onClick={(e) => e.stopPropagation()}>
+//         <div className="policy-modal-header">
+//           <h3>{title}</h3>
+//           <button className="policy-modal-close" onClick={onClose}>&times;</button>
+//         </div>
+//         <div className="policy-modal-body">
+//           {content.map((point, index) => (
+//             <div key={index} className="policy-point">
+//               <span className="policy-point-bullet">{index + 1}.</span>
+//               <p>{point}</p>
+//             </div>
+//           ))}
+//         </div>
+//         <div className="policy-modal-footer">
+//           <button className="btn btn-secondary" onClick={onClose}>Close</button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
+//   const { id } = useParams();
+//   const [activeTab, setActiveTab] = useState('basic-details');
+//   const [isEditing, setIsEditing] = useState(mode === 'edit');
+//   const [isViewing, setIsViewing] = useState(mode === 'view');
+//   const [loading, setLoading] = useState(mode !== 'add');
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const navigate = useNavigate();
+
+//   // New state for policy checkboxes
+//   const [privacyAccepted, setPrivacyAccepted] = useState(false);
+//   const [termsAccepted, setTermsAccepted] = useState(false);
+//   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+//   const [showTermsModal, setShowTermsModal] = useState(false);
+
+//   // Privacy Policy content - 4 random points
+//   const privacyPolicyContent = [
+//     "We collect and process your personal information only for property transactions and communication purposes.",
+//     "Your property details, images, and documents are stored securely and shared only with potential buyers/tenants.",
+//     "We do not sell or share your personal information with third parties without your explicit consent.",
+//     "You have the right to request deletion or modification of your property data at any time by contacting support."
+//   ];
+
+//   // Terms & Conditions content - 4 random points
+//   const termsAndConditionsContent = [
+//     "You must provide accurate and truthful information about the property being listed on our platform.",
+//     "We reserve the right to remove any property listing that violates our community guidelines or local laws.",
+//     "The agent commission is applicable only upon successful property sale or rental agreement completion.",
+//     "Any disputes arising from property transactions will be resolved through arbitration as per applicable laws."
+//   ];
+
+//   const referralId = localStorage.getItem('referral_id');
+//   const userId = localStorage.getItem('user_id');
+//   const role = localStorage.getItem('role');
+//   const username = localStorage.getItem('user_name');
+
+//   const [propertyCategories, setPropertyCategories] = useState([]);
+//   const [propertyTypes, setPropertyTypes] = useState([]);
+//   const [amenities, setAmenities] = useState([]);
+//   const [newAmenity, setNewAmenity] = useState('');
+//   const [showResidentialFields, setShowResidentialFields] = useState(false);
+//   const [showBuiltupArea, setShowBuiltupArea] = useState(true);
+
+//   const [isCollapsed, setIsCollapsed] = useState(false);
+//   const [isMobileOpen, setIsMobileOpen] = useState(false);
+//   const [receivables, setReceivables] = useState(0);
+//   const [payables, setPayables] = useState(0);
+//   const [error, setError] = useState(null);
+//   const [countries, setCountries] = useState([]);
+//   const [states, setStates] = useState([]);
+//   const [cities, setCities] = useState([]);
+
+//   const tabs = [
+//     { id: 'basic-details', label: 'Basic Details' },
+//     { id: 'location-details', label: 'Location Details' },
+//     { id: 'property-profile', label: 'Property Profile' },
+//     { id: 'media-upload', label: 'Media Upload' },
+//     { id: 'pricing-ownership', label: 'Pricing & Ownership' }
+//   ];
+
+//   const [errors, setErrors] = useState({});
+
+//   const [formData, setFormData] = useState({
+//     lookingTo: 'sell',
+//     category: '',
+//     propertyType: '',
+//     propertyTitle: '',
+//     description: '',
+//     address: '',
+//     city: '',
+//     state: '',
+//     country: 'IN',
+//     pinCode: '',
+//     latitude: '',
+//     longitude: '',
+//     plotArea: '',
+//     pricePerUnit: '',
+//     areaUnit: 'sq.ft.',
+//     length: '',
+//     breadth: '',
+//     numberOfFloors: 1,
+//     numberOfBedrooms: '',
+//     numberOfBalconies: '',
+//     floor: "",
+//     furnishing_status: "",
+//     openSides: 0,
+//     builtupArea: '',
+//     numberOfRoads: 0,
+//     roadWidth1: null,
+//     roadWidth2: null,
+//     facing: 'east',
+//     ownershipType: 'Freehold',
+//     price: '',
+//     maintenance: '',
+//     amenities: [],
+//     propertyUniqueness: '',
+//     locationAdvantages: '',
+//     otherFeatures: '',
+//     ownerName: '',
+//     ownerContact: '',
+//     ownerEmail: '',
+//     isFeatured: false,
+//     images: [],
+//     videos: [],
+//     userId: userId,
+//     added_by: userId,
+//     role: null,
+//     agent_commission: "",
+//     files: [],
+//     layout: null,
+//     preferred_tenants: '',
+//     rent_amount: '',
+//     deposit_amount: '',
+//     available_from: '',
+//     agreement_video: null,
+//     agreement_file: null,
+//   });
+
+//   // Reset checkboxes when tab changes or component mounts
+//   useEffect(() => {
+//     setPrivacyAccepted(false);
+//     setTermsAccepted(false);
+//   }, [activeTab]);
+
+//   const fetchAmenities = async () => {
+//     try {
+//       const response = await axios.get(`${baseurl}/amenities/`);
+//       let amenitiesData = response.data;
+
+//       if (response.data.results) {
+//         amenitiesData = response.data.results;
+//       }
+
+//       const formattedAmenities = Array.isArray(amenitiesData)
+//         ? amenitiesData.map(amenity => ({
+//           ...amenity,
+//           amenity_id: parseInt(amenity.amenity_id) || amenity.amenity_id
+//         }))
+//         : [];
+
+//       setAmenities(formattedAmenities);
+//     } catch (error) {
+//       console.error('Error fetching amenities:', error);
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: 'Failed to fetch amenities',
+//         confirmButtonColor: '#d33',
+//       });
+//     }
+//   };
+
+//   const handleAddAmenity = async () => {
+//     if (!newAmenity.trim()) {
+//       Swal.fire({
+//         icon: 'warning',
+//         title: 'Empty Field',
+//         text: 'Please enter an amenity name',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       return;
+//     }
+
+//     try {
+//       const response = await axios.post(`${baseurl}/amenities/`, {
+//         name: newAmenity.trim(),
+//       });
+
+//       if (response.data) {
+//         setNewAmenity('');
+
+//         Swal.fire({
+//           icon: 'success',
+//           title: 'Success',
+//           text: 'Amenity added successfully!',
+//           timer: 1500,
+//           showConfirmButton: false,
+//         });
+
+//         await fetchAmenities();
+//       }
+//     } catch (error) {
+//       console.error("Error adding amenity:", error);
+
+//       let errorMessage = 'Failed to add amenity';
+//       if (error.response?.data) {
+//         errorMessage = error.response.data.message || JSON.stringify(error.response.data);
+//       }
+
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: errorMessage,
+//         confirmButtonColor: '#d33',
+//       });
+//     }
+//   };
+
+//   useEffect(() => {
+//     const allCountries = Country.getAllCountries();
+//     setCountries(allCountries);
+//   }, []);
+
+//   useEffect(() => {
+//     if (formData.country) {
+//       const statesOfCountry = State.getStatesOfCountry(formData.country);
+//       setStates(statesOfCountry);
+
+//       if (!isViewing) {
+//         setFormData(prev => ({
+//           ...prev,
+//           state: '',
+//           city: ''
+//         }));
+//       }
+//     } else {
+//       setStates([]);
+//       setCities([]);
+//     }
+//   }, [formData.country, isViewing]);
+
+//   useEffect(() => {
+//     if (formData.country && formData.state) {
+//       const citiesOfState = City.getCitiesOfState(formData.country, formData.state);
+//       setCities(citiesOfState);
+
+//       if (!isViewing) {
+//         setFormData(prev => ({
+//           ...prev,
+//           city: ''
+//         }));
+//       }
+//     } else {
+//       setCities([]);
+//     }
+//   }, [formData.country, formData.state, isViewing]);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const [categoriesRes, amenitiesRes] = await Promise.all([
+//           axios.get(`${baseurl}/property-categories/`),
+//           axios.get(`${baseurl}/amenities/`)
+//         ]);
+
+//         setPropertyCategories(categoriesRes.data.results || categoriesRes.data || []);
+
+//         let amenitiesData = amenitiesRes.data;
+//         if (amenitiesRes.data.results) {
+//           amenitiesData = amenitiesRes.data.results;
+//         }
+
+//         const formattedAmenities = Array.isArray(amenitiesData)
+//           ? amenitiesData.map(amenity => ({
+//             ...amenity,
+//             amenity_id: parseInt(amenity.amenity_id) || amenity.amenity_id
+//           }))
+//           : [];
+//         setAmenities(formattedAmenities);
+
+//         if (id && mode !== 'add') {
+//           const response = await axios.get(`${baseurl}/property/${id}`);
+//           const propertyData = response.data;
+
+//           if (propertyData.amenities) {
+//             propertyData.amenities = propertyData.amenities.map(id => parseInt(id));
+//           }
+
+//           setFormData(propertyData);
+//           setIsEditing(mode === 'edit');
+//           setIsViewing(mode === 'view');
+//         }
+//       } catch (error) {
+//         console.error('Error fetching data:', error);
+//         Swal.fire({
+//           icon: 'error',
+//           title: 'Error',
+//           text: 'Failed to load data',
+//           confirmButtonColor: '#d33',
+//         });
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchData();
+//   }, [id, mode]);
+
+//   useEffect(() => {
+//     if (formData.category) {
+//       axios
+//         .get(`${baseurl}/property-types/category-id/${formData.category}/`)
+//         .then((response) => {
+//           const data = response.data.results || response.data;
+//           setPropertyTypes(Array.isArray(data) ? data : []);
+//         })
+//         .catch((error) => {
+//           console.error('Error fetching property types:', error);
+//           setPropertyTypes([]);
+//         });
+//     } else {
+//       setPropertyTypes([]);
+//     }
+//   }, [formData.category]);
+
+//   useEffect(() => {
+//     if (!formData.propertyType || !Array.isArray(propertyTypes)) return;
+
+//     const selectedType = propertyTypes.find(
+//       (type) => Number(type.property_type_id) === Number(formData.propertyType)
+//     );
+
+//     if (!selectedType) return;
+
+//     const typeName = selectedType.name.toLowerCase();
+
+//     const residentialTypes = [
+//       "flat",
+//       "house",
+//       "apartment",
+//       "villa"
+//     ];
+
+//     const isResidential = residentialTypes.some(type =>
+//       typeName.includes(type)
+//     );
+
+//     setShowResidentialFields(isResidential);
+//     setShowBuiltupArea(!typeName.includes("plot"));
+//   }, [formData.propertyType, propertyTypes]);
+
+//   useEffect(() => {
+//     if (formData.lookingTo === 'sell') {
+//       const price = parseFloat(formData.price) || 0;
+//       const commission = parseFloat(formData.agent_commission) || 0;
+//       const total = price + commission;
+//       setFormData(prev => ({
+//         ...prev,
+//         total_property_value: total
+//       }));
+//     }
+//   }, [formData.price, formData.agent_commission, formData.lookingTo]);
+
+//   const handleChange = (e) => {
+//     if (isViewing) return;
+
+//     const { name, value, type, checked } = e.target;
+//     const newValue = type === 'checkbox' ? checked : value;
+
+//     if (errors[name]) {
+//       setErrors(prev => ({
+//         ...prev,
+//         [name]: ''
+//       }));
+//     }
+
+//     setFormData((prev) => {
+//       const updated = { ...prev, [name]: newValue };
+
+//       if (name === "pricePerUnit" || name === "plotArea") {
+//         const pricePerUnit = parseFloat(updated.pricePerUnit) || 0;
+//         const plotArea = parseFloat(updated.plotArea) || 0;
+//         updated.price = pricePerUnit * plotArea;
+//       }
+
+//       if (formData.lookingTo === 'sell') {
+//         const price = parseFloat(updated.price) || 0;
+//         const commission = parseFloat(updated.agent_commission) || 0;
+//         updated.total_property_value = price + commission;
+//       }
+
+//       return updated;
+//     });
+//   };
+
+//   const handleTabClick = (tab) => {
+//     setActiveTab(tab);
+//   };
+
+//   const validateCurrentTab = () => {
+//     if (isViewing) return true;
+
+//     const newErrors = {};
+
+//     switch (activeTab) {
+//       case 'basic-details':
+//         if (!formData.propertyTitle?.trim()) newErrors.propertyTitle = 'Property Title is required';
+//         if (!formData.category) newErrors.category = 'Property Category is required';
+//         if (!formData.propertyType) newErrors.propertyType = 'Property Type is required';
+//         break;
+
+//       case 'location-details':
+//         if (!formData.address?.trim()) newErrors.address = 'Address is required';
+//         if (!formData.city?.trim()) newErrors.city = 'City is required';
+//         if (!formData.state?.trim()) newErrors.state = 'State is required';
+//         if (!formData.country?.trim()) newErrors.country = 'Country is required';
+//         break;
+
+//       case 'property-profile':
+//         if (!formData.areaUnit?.trim()) newErrors.areaUnit = 'Area Unit is required';
+//         if (!formData.plotArea || formData.plotArea <= 0) newErrors.plotArea = 'Valid Area is required';
+//         if (!formData.pricePerUnit || formData.pricePerUnit <= 0) newErrors.pricePerUnit = 'Valid Price Per Unit is required';
+//         break;
+
+//       case 'media-upload':
+//         if (formData.images.length === 0) {
+//           Swal.fire({
+//             icon: 'info',
+//             title: 'Required Field',
+//             text: 'Please upload at least one property image',
+//             confirmButtonColor: '#3085d6',
+//           });
+//           return false;
+//         }
+//         break;
+
+//       case 'pricing-ownership':
+//         if (formData.lookingTo === 'sell') {
+//           if (!formData.price || formData.price <= 0) newErrors.price = 'Property Value is required';
+//           if (!formData.total_property_value || formData.total_property_value <= 0) newErrors.total_property_value = 'Total Property Value is required';
+//         } else {
+//           if (!formData.rent_amount || formData.rent_amount <= 0) newErrors.rent_amount = 'Rent Amount is required';
+//         }
+//         // Validate checkboxes in the last tab
+//         if (!privacyAccepted) {
+//           Swal.fire({
+//             icon: 'warning',
+//             title: 'Privacy Policy Required',
+//             text: 'Please accept the Privacy Policy to continue',
+//             confirmButtonColor: '#3085d6',
+//           });
+//           return false;
+//         }
+//         if (!termsAccepted) {
+//           Swal.fire({
+//             icon: 'warning',
+//             title: 'Terms & Conditions Required',
+//             text: 'Please accept the Terms & Conditions to continue',
+//             confirmButtonColor: '#3085d6',
+//           });
+//           return false;
+//         }
+//         break;
+//     }
+
+//     setErrors(prev => ({ ...prev, ...newErrors }));
+//     return Object.keys(newErrors).length === 0;
+//   };
+
+//   const handleNext = () => {
+//     if (!validateCurrentTab()) {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Validation Error',
+//         text: 'Please fill all required fields correctly',
+//         confirmButtonColor: '#d33',
+//       });
+//       return;
+//     }
+
+//     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
+//     if (currentIndex < tabs.length - 1) {
+//       setActiveTab(tabs[currentIndex + 1].id);
+//     }
+//   };
+
+//   const handleBack = () => {
+//     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
+//     if (currentIndex > 0) {
+//       setActiveTab(tabs[currentIndex - 1].id);
+//     }
+//   };
+
+//   const handleFileUpload = async (e, type) => {
+//     if (isViewing) return;
+
+//     const files = Array.from(e.target.files);
+//     if (!files.length) return;
+
+//     // For single file upload fields (agreement_video, agreement_file, layout)
+//     if (type === 'agreement_video' || type === 'agreement_file' || type === 'layout') {
+//       const file = files[0];
+//       if (file) {
+//         setFormData(prev => ({
+//           ...prev,
+//           [type]: {
+//             name: file.name,
+//             type: file.type,
+//             size: file.size,
+//             file: file
+//           }
+//         }));
+//       }
+//       e.target.value = '';
+//       return;
+//     }
+
+//     // For multiple file upload fields
+//     const newFiles = files.map(file => ({
+//       name: file.name,
+//       type: file.type,
+//       size: file.size,
+//       file: file,
+//       preview: type === 'images' ? URL.createObjectURL(file) : null
+//     }));
+
+//     setFormData(prev => ({
+//       ...prev,
+//       [type]: [...prev[type], ...newFiles]
+//     }));
+
+//     e.target.value = '';
+//   };
+
+//   const removeFile = (index, type) => {
+//     if (isViewing) return;
+
+//     setFormData(prev => ({
+//       ...prev,
+//       [type]: prev[type].filter((_, i) => i !== index)
+//     }));
+//   };
+
+//   const removeSingleFile = (type) => {
+//     if (isViewing) return;
+
+//     setFormData(prev => ({
+//       ...prev,
+//       [type]: null
+//     }));
+//   };
+
+//   const handleAmenityChange = (amenityId) => {
+//     if (isViewing) return;
+
+//     setFormData(prev => {
+//       const numericId = parseInt(amenityId);
+//       const newAmenities = prev.amenities.includes(numericId)
+//         ? prev.amenities.filter(id => id !== numericId)
+//         : [...prev.amenities, numericId];
+//       return { ...prev, amenities: newAmenities };
+//     });
+//   };
+
+//   const renderError = (fieldName) => {
+//     return errors[fieldName] ? (
+//       <div className="invalid-feedback" style={{ display: 'block' }}>
+//         {errors[fieldName]}
+//       </div>
+//     ) : null;
+//   };
+
+//   const getInputClass = (fieldName) => {
+//     return `form-control customer-form-input ${errors[fieldName] ? 'is-invalid' : ''} ${isViewing ? 'view-mode' : ''}`;
+//   };
+
+//   const getSelectClass = (fieldName) => {
+//     return `form-select customer-form-input ${errors[fieldName] ? 'is-invalid' : ''} ${isViewing ? 'view-mode' : ''}`;
+//   };
+
+//   const getTextareaClass = (fieldName) => {
+//     return `form-control customer-form-input ${errors[fieldName] ? 'is-invalid' : ''} ${isViewing ? 'view-mode' : ''}`;
+//   };
+
+//   const renderField = (fieldConfig) => {
+//     const { type = 'text', name, label, required = true, options, multiline, rows, disabled = false, readOnly = false, ...props } = fieldConfig;
+
+//     if (isViewing) {
+//       const value = formData[name];
+//       const displayValue = Array.isArray(value)
+//         ? value.join(', ')
+//         : (value !== null && value !== undefined && value !== '' ? value.toString() : 'N/A');
+
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label view-mode-label">{label}</label>
+//           <div className="view-mode-value">{displayValue}</div>
+//         </div>
+//       );
+//     }
+
+//     if (type === 'select') {
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//           <select
+//             className={getSelectClass(name)}
+//             name={name}
+//             value={formData[name] || ''}
+//             onChange={handleChange}
+//             required={required}
+//             disabled={disabled || isViewing}
+//             {...props}
+//           >
+//             <option value="">Select</option>
+//             {options?.map(option => (
+//               <option key={option.value} value={option.value}>
+//                 {option.label}
+//               </option>
+//             ))}
+//           </select>
+//           {renderError(name)}
+//         </div>
+//       );
+//     }
+
+//     if (type === 'textarea') {
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//           <textarea
+//             name={name}
+//             value={formData[name] || ''}
+//             className={getTextareaClass(name)}
+//             onChange={handleChange}
+//             required={required}
+//             rows={rows || 3}
+//             disabled={disabled || isViewing}
+//             {...props}
+//           />
+//           {renderError(name)}
+//         </div>
+//       );
+//     }
+
+//     if (type === 'checkbox') {
+//       return (
+//         <div className="mb-3 form-check">
+//           <input
+//             type="checkbox"
+//             name={name}
+//             checked={formData[name] || false}
+//             className="form-check-input"
+//             onChange={handleChange}
+//             disabled={disabled || isViewing}
+//             {...props}
+//           />
+//           <label className="form-check-label">{label}{required && '*'}</label>
+//           {renderError(name)}
+//         </div>
+//       );
+//     }
+
+//     return (
+//       <div className="mb-3">
+//         <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//         <input
+//           type={type}
+//           name={name}
+//           value={formData[name] || ''}
+//           className={getInputClass(name)}
+//           onChange={handleChange}
+//           required={required}
+//           disabled={disabled || isViewing}
+//           readOnly={readOnly}
+//           {...props}
+//         />
+//         {renderError(name)}
+//       </div>
+//     );
+//   };
+
+//   const renderAmenitiesField = () => {
+//     if (isViewing) {
+//       const selectedAmenities = Array.isArray(amenities)
+//         ? amenities
+//           .filter(amenity => formData.amenities.includes(parseInt(amenity.amenity_id)))
+//           .map(amenity => amenity.name)
+//         : [];
+
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label view-mode-label">Amenities</label>
+//           <div className="view-mode-value">
+//             {selectedAmenities.length > 0 ? selectedAmenities.join(', ') : 'None'}
+//           </div>
+//         </div>
+//       );
+//     }
+
+//     return (
+//       <div className="mb-3">
+//         <label className="admin-customer-form-label">Amenities</label>
+
+//         <div className="row mb-3">
+//           <div className="col-md-8">
+//             <input
+//               type="text"
+//               className="form-control"
+//               placeholder="Enter new amenity name"
+//               value={newAmenity}
+//               onChange={(e) => setNewAmenity(e.target.value)}
+//               onKeyPress={(e) => {
+//                 if (e.key === 'Enter') {
+//                   e.preventDefault();
+//                   handleAddAmenity();
+//                 }
+//               }}
+//             />
+//           </div>
+//           <div className="col-md-4">
+//             <button
+//               type="button"
+//               className="btn"
+//               style={{
+//                 backgroundColor: '#273c75',
+//                 borderColor: '#273c75',
+//                 color: 'white',
+//                 width: '100%'
+//               }}
+//               onClick={handleAddAmenity}
+//               disabled={!newAmenity.trim()}
+//             >
+//               Add Amenity
+//             </button>
+//           </div>
+//         </div>
+
+//         <div className="amenities-checkbox-group" style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid #dee2e6', padding: '10px', borderRadius: '4px' }}>
+//           {Array.isArray(amenities) && amenities.length > 0 ? (
+//             amenities.map(amenity => (
+//               <div className="form-check form-check-inline" key={amenity.amenity_id} style={{ marginBottom: '8px', width: 'calc(33.33% - 10px)' }}>
+//                 <input
+//                   className="form-check-input"
+//                   type="checkbox"
+//                   id={`amenity-${amenity.amenity_id}`}
+//                   checked={formData.amenities.includes(parseInt(amenity.amenity_id))}
+//                   onChange={() => handleAmenityChange(amenity.amenity_id)}
+//                   disabled={isViewing}
+//                 />
+//                 <label className="form-check-label" htmlFor={`amenity-${amenity.amenity_id}`}>
+//                   {amenity.name}
+//                 </label>
+//               </div>
+//             ))
+//           ) : (
+//             <p className="text-muted text-center">No amenities available. Add one using the field above.</p>
+//           )}
+//         </div>
+
+//         {formData.amenities.length > 0 && (
+//           <div className="mt-2 text-primary">
+//             <small>{formData.amenities.length} amenit{formData.amenities.length === 1 ? 'y' : 'ies'} selected</small>
+//           </div>
+//         )}
+//       </div>
+//     );
+//   };
+
+//   const renderFileUploadField = (type, label, accept, required = false, isSingle = false) => {
+//     if (isViewing) {
+//       const file = formData[type];
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label view-mode-label">{label}</label>
+//           <div className="view-mode-value">
+//             {file ? file.name : 'No file uploaded'}
+//           </div>
+//         </div>
+//       );
+//     }
+
+//     if (isSingle) {
+//       const file = formData[type];
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//           <div className="file-upload-container">
+//             <div className="input-group">
+//               <input
+//                 id={`${type}-upload`}
+//                 type="file"
+//                 accept={accept}
+//                 className="form-control"
+//                 onChange={(e) => handleFileUpload(e, type)}
+//                 disabled={isViewing}
+//               />
+//               <button
+//                 type="button"
+//                 className="btn btn-outline-secondary media-upload-btn"
+//                 onClick={() => document.getElementById(`${type}-upload`).click()}
+//                 disabled={isViewing}
+//               >
+//                 <i className="bi bi-upload me-1"></i> Upload
+//               </button>
+//             </div>
+//             <div className="uploaded-files mt-2">
+//               {file && (
+//                 <div className="uploaded-file-item d-flex align-items-center justify-content-between">
+//                   <span className="file-name">{file.name}</span>
+//                   <button
+//                     type="button"
+//                     className="btn btn-sm btn-danger ms-2"
+//                     onClick={() => removeSingleFile(type)}
+//                     style={{ cursor: 'pointer' }}
+//                   >
+//                     ✕
+//                   </button>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       );
+//     }
+
+//     // For multiple file upload fields
+//     return (
+//       <div className="mb-3">
+//         <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//         <div className="file-upload-container">
+//           <div className="input-group">
+//             <input
+//               id={`${type}-upload`}
+//               type="file"
+//               accept={accept}
+//               multiple={true}
+//               className="form-control"
+//               onChange={(e) => handleFileUpload(e, type)}
+//               disabled={isViewing}
+//             />
+//             <button
+//               type="button"
+//               className="btn btn-outline-secondary media-upload-btn"
+//               onClick={() => document.getElementById(`${type}-upload`).click()}
+//               disabled={isViewing}
+//             >
+//               <i className="bi bi-upload me-1"></i> Upload
+//             </button>
+//           </div>
+//           <div className="uploaded-files mt-2">
+//             {formData[type] && formData[type].length > 0 ? (
+//               formData[type].map((file, index) => (
+//                 file && (
+//                   <div key={index} className="uploaded-file-item d-flex align-items-center justify-content-between">
+//                     <span className="file-name">{file.name}</span>
+//                     <button
+//                       type="button"
+//                       className="btn btn-sm btn-danger ms-2"
+//                       onClick={() => removeFile(index, type)}
+//                       style={{ cursor: 'pointer' }}
+//                     >
+//                       ✕
+//                     </button>
+//                   </div>
+//                 )
+//               ))
+//             ) : null}
+//           </div>
+//           {required && type === 'images' && formData.images.length === 0 && (
+//             <div className="invalid-feedback d-block">
+//               At least one image is required
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     );
+//   };
+
+//   const renderActiveTab = () => {
+//     if (loading) {
+//       return <div className="loading-spinner text-center py-5">Loading property data...</div>;
+//     }
+
+//     switch (activeTab) {
+//       case 'basic-details':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'lookingTo',
+//                     label: 'Looking To',
+//                     options: [
+//                       { value: 'sell', label: 'Sell' },
+//                       { value: 'rent', label: 'Rent' }
+//                     ]
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'category',
+//                     label: 'Property Category',
+//                     options: Array.isArray(propertyCategories)
+//                       ? propertyCategories.map(category => ({
+//                         value: category.property_category_id,
+//                         label: category.name
+//                       }))
+//                       : []
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'propertyType',
+//                     label: 'Property Type',
+//                     options: Array.isArray(propertyTypes)
+//                       ? propertyTypes.map(type => ({
+//                         value: type.property_type_id,
+//                         label: type.name
+//                       }))
+//                       : [],
+//                     disabled: !formData.category
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'propertyTitle',
+//                     label: 'Property Title'
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'description',
+//                     label: 'Description',
+//                     rows: 4,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         );
+
+//       case 'location-details':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   <div className="mb-3">
+//                     <label className="admin-customer-form-label">Country *</label>
+//                     {isViewing ? (
+//                       <div className="view-mode-value">
+//                         {countries.find(c => c.isoCode === formData.country)?.name || formData.country || 'N/A'}
+//                       </div>
+//                     ) : (
+//                       <>
+//                         <select
+//                           className={`form-select customer-form-input ${errors.country ? 'is-invalid' : ''}`}
+//                           name="country"
+//                           value={formData.country || ''}
+//                           onChange={(e) => {
+//                             const selectedCountry = e.target.value;
+//                             setFormData(prev => ({
+//                               ...prev,
+//                               country: selectedCountry,
+//                               state: '',
+//                               city: ''
+//                             }));
+//                             if (errors.country) {
+//                               setErrors(prev => ({ ...prev, country: '' }));
+//                             }
+//                           }}
+//                           required
+//                         >
+//                           <option value="">Select Country</option>
+//                           {countries.map(country => (
+//                             <option key={country.isoCode} value={country.isoCode}>
+//                               {country.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                         {renderError('country')}
+//                       </>
+//                     )}
+//                   </div>
+//                 </div>
+//                 <div className="col-md-6">
+//                   <div className="mb-3">
+//                     <label className="admin-customer-form-label">State *</label>
+//                     {isViewing ? (
+//                       <div className="view-mode-value">
+//                         {states.find(s => s.isoCode === formData.state)?.name || formData.state || 'N/A'}
+//                       </div>
+//                     ) : (
+//                       <>
+//                         <select
+//                           className={`form-select customer-form-input ${errors.state ? 'is-invalid' : ''}`}
+//                           name="state"
+//                           value={formData.state || ''}
+//                           onChange={(e) => {
+//                             const selectedState = e.target.value;
+//                             setFormData(prev => ({
+//                               ...prev,
+//                               state: selectedState,
+//                               city: ''
+//                             }));
+//                             if (errors.state) {
+//                               setErrors(prev => ({ ...prev, state: '' }));
+//                             }
+//                           }}
+//                           disabled={!formData.country}
+//                           required
+//                         >
+//                           <option value="">Select State</option>
+//                           {states.map(state => (
+//                             <option key={state.isoCode} value={state.isoCode}>
+//                               {state.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                         {renderError('state')}
+//                       </>
+//                     )}
+//                   </div>
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   <div className="mb-3">
+//                     <label className="admin-customer-form-label">City *</label>
+//                     {isViewing ? (
+//                       <div className="view-mode-value">
+//                         {formData.city || 'N/A'}
+//                       </div>
+//                     ) : (
+//                       <>
+//                         <select
+//                           className={`form-select customer-form-input ${errors.city ? 'is-invalid' : ''}`}
+//                           name="city"
+//                           value={formData.city || ''}
+//                           onChange={(e) => {
+//                             setFormData(prev => ({
+//                               ...prev,
+//                               city: e.target.value
+//                             }));
+//                             if (errors.city) {
+//                               setErrors(prev => ({ ...prev, city: '' }));
+//                             }
+//                           }}
+//                           disabled={!formData.state}
+//                           required
+//                         >
+//                           <option value="">Select City</option>
+//                           {cities.map(city => (
+//                             <option key={city.name} value={city.name}>
+//                               {city.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                         {renderError('city')}
+//                       </>
+//                     )}
+//                   </div>
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'pinCode',
+//                     label: 'Pin Code(optional)',
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'address',
+//                     label: 'Full Address',
+//                     rows: 3
+//                   })}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         );
+
+//       case 'property-profile':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               {showResidentialFields && (
+//                 <>
+//                   <div className="row">
+//                     <div className="col-md-3">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'numberOfBedrooms',
+//                         label: 'Bedrooms',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-3">
+//                       <div className="mb-3">
+//                         <label className="admin-customer-form-label">Bathrooms</label>
+//                         <input
+//                           type="number"
+//                           name="numberOfBathrooms"
+//                           value={formData.numberOfBathrooms || ''}
+//                           className={getInputClass('numberOfBathrooms')}
+//                           onChange={handleChange}
+//                           min="0"
+//                           disabled={isViewing}
+//                         />
+//                       </div>
+//                     </div>
+//                     <div className="col-md-3">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'numberOfBalconies',
+//                         label: 'Balconies',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-3">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'numberOfFloors',
+//                         label: 'Total Floors',
+//                         min: 1,
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'floor',
+//                         label: 'Floor Number',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'select',
+//                         name: 'furnishing_status',
+//                         label: 'Furnishing Status',
+//                         options: [
+//                           { value: 'Semi-Furnished', label: 'Semi-Furnished' },
+//                           { value: 'Fully-Furnished', label: 'Fully-Furnished' },
+//                           { value: 'Unfurnished', label: 'Unfurnished' }
+//                         ],
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+//                 </>
+//               )}
+
+//               <div className="row">
+//                 <div className="col-md-4">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'areaUnit',
+//                     label: 'Area Unit',
+//                     options: [
+//                       { value: 'sq.ft.', label: 'Square Feet' },
+//                       { value: 'sq.m.', label: 'Square Meters' },
+//                       { value: 'sq.yd.', label: 'Square Yards' },
+//                       { value: 'acres', label: 'Acres' },
+//                       { value: 'hectares', label: 'Hectares' },
+//                       { value: 'cents', label: 'Cents' }
+//                     ],
+//                     required: true
+//                   })}
+//                 </div>
+//                 <div className="col-md-4">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'plotArea',
+//                     label: 'Area',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: true
+//                   })}
+//                 </div>
+//                 <div className="col-md-4">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'pricePerUnit',
+//                     label: 'Price Per Unit',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: true
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'length',
+//                     label: 'Length (ft)',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: false
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'breadth',
+//                     label: 'Breadth (ft)',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               {showBuiltupArea && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'builtupArea',
+//                       label: 'Built-up Area',
+//                       step: '0.01',
+//                       min: 0,
+//                       required: false
+//                     })}
+//                   </div>
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'select',
+//                       name: 'facing',
+//                       label: 'Facing Direction',
+//                       options: [
+//                         { value: 'east', label: 'East' },
+//                         { value: 'west', label: 'West' },
+//                         { value: 'north', label: 'North' },
+//                         { value: 'south', label: 'South' },
+//                         { value: 'north_east', label: 'North-East' },
+//                         { value: 'north_west', label: 'North-West' },
+//                         { value: 'south_east', label: 'South-East' },
+//                         { value: 'south_west', label: 'South-West' }
+//                       ],
+//                       required: false
+//                     })}
+//                   </div>
+//                 </div>
+//               )}
+
+//               {!showBuiltupArea && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'select',
+//                       name: 'facing',
+//                       label: 'Facing Direction',
+//                       options: [
+//                         { value: 'east', label: 'East' },
+//                         { value: 'west', label: 'West' },
+//                         { value: 'north', label: 'North' },
+//                         { value: 'south', label: 'South' },
+//                         { value: 'north-east', label: 'North-East' },
+//                         { value: 'north-west', label: 'North-West' },
+//                         { value: 'south-east', label: 'South-East' },
+//                         { value: 'south-west', label: 'South-West' }
+//                       ],
+//                       required: false
+//                     })}
+//                   </div>
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'openSides',
+//                       label: 'Number of Open Sides',
+//                       min: 0,
+//                       max: 4,
+//                       required: false
+//                     })}
+//                   </div>
+//                 </div>
+//               )}
+
+//               {showBuiltupArea && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'openSides',
+//                       label: 'Number of Open Sides',
+//                       min: 0,
+//                       max: 4,
+//                       required: false
+//                     })}
+//                   </div>
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'numberOfRoads',
+//                       label: 'Number of Roads',
+//                       min: 0,
+//                       max: 2,
+//                       required: false
+//                     })}
+//                   </div>
+//                 </div>
+//               )}
+
+//               {formData.numberOfRoads >= 1 && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'roadWidth1',
+//                       label: 'Road 1 Width (ft)',
+//                       step: '0.01',
+//                       min: 0,
+//                       required: false
+//                     })}
+//                   </div>
+//                   {formData.numberOfRoads >= 2 && (
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'roadWidth2',
+//                         label: 'Road 2 Width (ft)',
+//                         step: '0.01',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                   )}
+//                 </div>
+//               )}
+//               <div className="row">
+//                 {/* <div className="col-6">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'otherFeatures',
+//                     label: 'Other Features',
+//                     rows: 3,
+//                     required: false
+//                   })}
+//                 </div> */}
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'locationAdvantages',
+//                     label: 'Location Advantages',
+//                     rows: 3,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               {/* <div className="row">
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'locationAdvantages',
+//                     label: 'Location Advantages',
+//                     rows: 3,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div> */}
+
+//               {renderAmenitiesField()}
+//             </div>
+//           </div>
+//         );
+
+//       case 'media-upload':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderFileUploadField('images', 'Property Images', 'image/*', true, false)}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderFileUploadField('videos', 'Property Videos', 'video/*', false, false)}
+//                 </div>
+
+//                 <div className="col-md-6">
+//                   {renderFileUploadField('files', 'Property Documents', '.pdf,.doc,.docx,.xls,.xlsx,.txt', false, false)}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderFileUploadField('layout', 'Layout', '.pdf,.jpg,.jpeg,.png,.dwg', false, true)}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {/* Empty column for alignment, or add another field here if needed */}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         );
+
+//       case 'pricing-ownership':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               {formData.lookingTo === 'sell' ? (
+//                 <>
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'price',
+//                         label: 'Property Value',
+//                         step: '0.01',
+//                         min: 0,
+//                         readOnly: true
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'agent_commission',
+//                         label: 'Team Payout',
+//                         step: '0.01',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+
+//                   <div className="row">
+//                     <div className="col-md-12">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'total_property_value',
+//                         label: 'Total Property Value',
+//                         step: '0.01',
+//                         min: 0,
+//                         readOnly: true
+//                       })}
+//                     </div>
+//                   </div>
+//                 </>
+//               ) : (
+//                 <>
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         name: 'preferred_tenants',
+//                         label: 'Preferred Tenants',
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'rent_amount',
+//                         label: 'Rent Amount',
+//                         step: '0.01',
+//                         min: 0
+//                       })}
+//                     </div>
+//                   </div>
+
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'deposit_amount',
+//                         label: 'Deposit Amount',
+//                         step: '0.01',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'date',
+//                         name: 'available_from',
+//                         label: 'Available From',
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+//                 </>
+//               )}
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'ownerName',
+//                     label: 'Owner Name',
+//                     required: false
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'ownerContact',
+//                     label: 'Owner Phone Number',
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               {/* Privacy Policy and Terms & Conditions Section */}
+//               {!isViewing && (
+//                 <div className="policy-section" style={{ borderTop: '1px solid #dee2e6' }}>
+//                   <div className="row">
+//                     <div className="col-12">
+//                       <h5 className="mb-3" style={{ color: '#273c75', fontWeight: '600' }}>
+//                         Legal Agreement
+//                       </h5>
+//                     </div>
+//                   </div>
+
+//                   {/* Privacy Policy Checkbox */}
+//                   <div className="row mb-3">
+//                     <div className="col-12">
+//                       <div className="form-check d-flex align-items-center justify-content-between" style={{ paddingLeft: '0' }}>
+//                         <div className="d-flex align-items-center">
+//                           <input
+//                             type="checkbox"
+//                             className="form-check-input me-2"
+//                             id="privacyPolicy"
+//                             checked={privacyAccepted}
+//                             onChange={(e) => setPrivacyAccepted(e.target.checked)}
+//                             style={{ cursor: 'pointer', transform: 'scale(1.1)' }}
+//                           />
+//                           <label className="form-check-label" htmlFor="privacyPolicy" style={{ fontWeight: '500' }}>
+//                             I agree to the Privacy Policy
+//                           </label>
+//                         </div>
+//                         <button
+//                           type="button"
+//                           className="btn btn-sm btn-outline-primary"
+//                           onClick={() => setShowPrivacyModal(true)}
+//                           style={{ fontSize: '0.875rem' }}
+//                         >
+//                           View Privacy Policy
+//                         </button>
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   {/* Terms & Conditions Checkbox */}
+//                   <div className="row mb-3">
+//                     <div className="col-12">
+//                       <div className="form-check d-flex align-items-center justify-content-between" style={{ paddingLeft: '0' }}>
+//                         <div className="d-flex align-items-center">
+//                           <input
+//                             type="checkbox"
+//                             className="form-check-input me-2"
+//                             id="termsConditions"
+//                             checked={termsAccepted}
+//                             onChange={(e) => setTermsAccepted(e.target.checked)}
+//                             style={{ cursor: 'pointer', transform: 'scale(1.1)' }}
+//                           />
+//                           <label className="form-check-label" htmlFor="termsConditions" style={{ fontWeight: '500' }}>
+//                             I agree to the Terms & Conditions
+//                           </label>
+//                         </div>
+//                         <button
+//                           type="button"
+//                           className="btn btn-sm btn-outline-primary"
+//                           onClick={() => setShowTermsModal(true)}
+//                           style={{ fontSize: '0.875rem' }}
+//                         >
+//                           View Terms & Conditions
+//                         </button>
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   {/* Validation Message */}
+//                   {activeTab === 'pricing-ownership' && (!privacyAccepted || !termsAccepted) && (
+//                     <div className="row">
+//                       <div className="col-12">
+//                         <div className="alert alert-warning" style={{ marginTop: '10px' }}>
+//                           <i className="bi bi-exclamation-triangle-fill me-2"></i>
+//                           Please accept both Privacy Policy and Terms & Conditions to submit the property.
+//                         </div>
+//                       </div>
+//                     </div>
+//                   )}
+//                 </div>
+//               )}
+
+//               {/* Show accepted agreements in view mode */}
+//               {isViewing && (
+//                 <div className="policy-section" style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #dee2e6' }}>
+//                   <div className="row">
+//                     <div className="col-12">
+//                       <h5 className="mb-3" style={{ color: '#273c75', fontWeight: '600' }}>
+//                         Legal Agreements
+//                       </h5>
+//                       <div className="view-mode-value">
+//                         ✓ Privacy Policy Accepted<br />
+//                         ✓ Terms & Conditions Accepted
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         );
+
+//       default:
+//         return null;
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     if (e) e.preventDefault();
+
+//     if (isViewing) {
+//       navigate('/a-dashboard');
+//       return;
+//     }
+
+//     // Validate checkboxes before submission
+//     if (!privacyAccepted) {
+//       Swal.fire({
+//         icon: 'warning',
+//         title: 'Privacy Policy Required',
+//         text: 'Please accept the Privacy Policy to submit the property',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       return;
+//     }
+
+//     if (!termsAccepted) {
+//       Swal.fire({
+//         icon: 'warning',
+//         title: 'Terms & Conditions Required',
+//         text: 'Please accept the Terms & Conditions to submit the property',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       return;
+//     }
+
+//     let isValid = true;
+//     for (const tab of tabs) {
+//       setActiveTab(tab.id);
+//       if (!validateCurrentTab()) {
+//         isValid = false;
+//         break;
+//       }
+//     }
+
+//     if (!isValid) {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Incomplete Form',
+//         text: 'Please complete all required fields in all steps',
+//         confirmButtonColor: '#d33',
+//       });
+//       return;
+//     }
+
+//     setIsSubmitting(true);
+
+//     try {
+//       const payload = new FormData();
+
+//       const formFields = {
+//         looking_to: formData.lookingTo,
+//         property_title: formData.propertyTitle,
+//         description: formData.description || '',
+//         address: formData.address,
+//         city: formData.city,
+//         state: formData.state,
+//         country: formData.country,
+//         pin_code: formData.pinCode,
+//         latitude: formData.latitude || '12.120000',
+//         longitude: formData.longitude || '12.120000',
+//         area: formData.plotArea,
+//         area_unit: formData.areaUnit,
+//         price_per_unit: formData.pricePerUnit || '0.00',
+//         builtup_area: formData.builtupArea || '0.00',
+//         length_ft: formData.length || '0.00',
+//         breadth_ft: formData.breadth || '0.00',
+//         number_of_floors: formData.numberOfFloors || 0,
+//         number_of_open_sides: formData.openSides || 0,
+//         number_of_roads: formData.numberOfRoads || 0,
+//         road_width_1_ft: formData.roadWidth1 || '0.00',
+//         road_width_2_ft: formData.roadWidth2 || '0.00',
+//         facing: formData.facing,
+//         ownership_type: formData.ownershipType,
+//         property_value: formData.price,
+//         property_uniqueness: formData.propertyUniqueness || '',
+//         location_advantages: formData.locationAdvantages || '',
+//         other_features: formData.otherFeatures || '',
+//         owner_name: formData.ownerName,
+//         owner_contact: formData.ownerContact,
+//         owner_email: formData.ownerEmail || '',
+//         is_featured: formData.isFeatured,
+//         category: formData.category,
+//         property_type: formData.propertyType,
+//         user_id: userId,
+//         referral_id: referralId,
+//         number_of_bedrooms: formData.numberOfBedrooms || 0,
+//         number_of_balconies: formData.numberOfBalconies || 0,
+//         number_of_bathrooms: formData.numberOfBathrooms || 0,
+//         floor: formData.floor || 0,
+//         furnishing_status: formData.furnishing_status || '',
+//         agent_commission: formData.agent_commission || '0.00',
+//         total_property_value: formData.total_property_value,
+//         username: username,
+//         preferred_tenants: formData.preferred_tenants || '',
+//         rent_amount: formData.rent_amount || '0.00',
+//         deposit_amount: formData.deposit_amount || '0.00',
+//         available_from: formData.available_from || '',
+//         privacy_accepted: privacyAccepted,
+//         terms_accepted: termsAccepted
+//       };
+
+//       Object.entries(formFields).forEach(([key, value]) => {
+//         if (value !== null && value !== undefined && value !== '') {
+//           payload.append(key, value);
+//         }
+//       });
+
+//       if (formData.amenities && formData.amenities.length > 0) {
+//         formData.amenities.forEach((id) => {
+//           payload.append("amenities", id.toString());
+//         });
+//       }
+
+//       formData.images.forEach((img) => {
+//         if (img.file) {
+//           payload.append('images', img.file, img.name);
+//         }
+//       });
+
+//       formData.videos.forEach((vid) => {
+//         if (vid.file) {
+//           payload.append('videos', vid.file, vid.name);
+//         }
+//       });
+
+//       formData.files.forEach((doc) => {
+//         if (doc.file) {
+//           payload.append('files', doc.file, doc.name);
+//         }
+//       });
+
+//       if (formData.layout?.file) {
+//         payload.append('layout', formData.layout.file, formData.layout.name);
+//       }
+
+//       if (formData.agreement_video?.file) {
+//         payload.append('agreement_video', formData.agreement_video.file, formData.agreement_video.name);
+//       }
+
+//       if (formData.agreement_file?.file) {
+//         payload.append('agreement_file', formData.agreement_file.file, formData.agreement_file.name);
+//       }
+
+//       const endpoint = isEditing ? `${baseurl}/property/${id}/` : `${baseurl}/property/`;
+//       const method = isEditing ? 'put' : 'post';
+
+//       await axios[method](endpoint, payload, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data'
+//         }
+//       });
+
+//       Swal.fire({
+//         icon: 'success',
+//         title: 'Success',
+//         text: isEditing ? 'Property Updated Successfully!' : 'Property Added Successfully!',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       navigate("/agent-my-properties");
+
+//     } catch (error) {
+//       console.error('Detailed submission error:', error);
+
+//       let errorMessage = isEditing ? 'Error updating property' : 'Error adding property';
+//       if (error.response?.data) {
+//         errorMessage += `: ${JSON.stringify(error.response.data)}`;
+//       }
+
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Submission Failed',
+//         text: errorMessage,
+//         confirmButtonColor: '#d33',
+//       });
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   const getTitle = () => {
+//     switch (mode) {
+//       case 'add': return "Add Property";
+//       case 'edit': return "Edit Property";
+//       case 'view': return "View Property";
+//       default: return "Property";
+//     }
+//   };
+
+//   return (
+//     <>
+//       <AgentNavbar />
+//       <div className="container-fluid admin-add-property-main-div">
+//         <div className="row">
+//           <div className="col-12">
+//             <div className="property-form-container">
+//               <div className="admin-form-header">
+//                 <h2 className="form-title">{getTitle()}</h2>
+//                 <div className="admin-form-actions">
+//                   {!isViewing && (
+//                     <>
+//                       <button
+//                         type="button"
+//                         className="btn btn-secondary me-2"
+//                         onClick={() => navigate(-1)}
+//                         disabled={isSubmitting}
+//                       >
+//                         Cancel
+//                       </button>
+//                       <button
+//                         type="button"
+//                         className="btn"
+//                         style={{
+//                           backgroundColor: '#273c75',
+//                           borderColor: '#273c75',
+//                           color: 'white',
+//                           whiteSpace: 'nowrap',
+//                           opacity: (privacyAccepted && termsAccepted) ? '1' : '0.6',
+//                           cursor: (privacyAccepted && termsAccepted) ? 'pointer' : 'not-allowed'
+//                         }}
+//                         onClick={handleSubmit}
+//                         disabled={isSubmitting || !privacyAccepted || !termsAccepted}
+//                       >
+//                         {isSubmitting ? 'Saving...' : (isEditing ? 'Update Property' : 'Add Property')}
+//                       </button>
+//                     </>
+//                   )}
+//                   {isViewing && (
+//                     <button
+//                       type="button"
+//                       className="btn btn-secondary"
+//                       onClick={() => navigate(-1)}
+//                     >
+//                       Back to List
+//                     </button>
+//                   )}
+//                 </div>
+//               </div>
+
+//               <div className="admin-form-tabs-container">
+//                 <ul className="nav nav-tabs admin-form-tabs">
+//                   {tabs.map((tab) => (
+//                     <li className="nav-item" key={tab.id}>
+//                       <button
+//                         className={`nav-link ${activeTab === tab.id ? 'active' : ''}`}
+//                         onClick={() => handleTabClick(tab.id)}
+//                         type="button"
+//                       >
+//                         {tab.label}
+//                       </button>
+//                     </li>
+//                   ))}
+//                 </ul>
+//               </div>
+
+//               <div className="admin-form-body">
+//                 <form onSubmit={handleSubmit}>
+//                   {renderActiveTab()}
+
+//                   {!isViewing && (
+//                     <div className="admin-form-navigation">
+//                       <div className="row">
+//                         <div className="col-md-6">
+//                           {activeTab !== 'basic-details' && (
+//                             <button
+//                               type="button"
+//                               className="btn btn-secondary"
+//                               onClick={handleBack}
+//                               disabled={isSubmitting}
+//                             >
+//                               <i className="bi bi-arrow-left me-1"></i> Back
+//                             </button>
+//                           )}
+//                         </div>
+//                         <div className="col-md-6 text-end">
+//                           {activeTab !== 'pricing-ownership' ? (
+//                             <button
+//                               type="button"
+//                               className="btn"
+//                               style={{
+//                                 backgroundColor: '#273c75',
+//                                 borderColor: '#273c75',
+//                                 color: 'white'
+//                               }}
+//                               onClick={handleNext}
+//                               disabled={isSubmitting}
+//                             >
+//                               Next <i className="bi bi-arrow-right ms-1"></i>
+//                             </button>
+//                           ) : (
+//                             <button
+//                               type="button"
+//                               className="btn"
+//                               style={{
+//                                 backgroundColor: '#273c75',
+//                                 borderColor: '#273c75',
+//                                 color: 'white',
+//                                 opacity: (privacyAccepted && termsAccepted) ? '1' : '0.6'
+//                               }}
+//                               onClick={handleSubmit}
+//                               disabled={isSubmitting || !privacyAccepted || !termsAccepted}
+//                             >
+//                               {isSubmitting ? (
+//                                 <>
+//                                   <span className="spinner-border spinner-border-sm me-1"></span>
+//                                   Saving...
+//                                 </>
+//                               ) : (
+//                                 <>
+//                                   {isEditing ? 'Update Property' : 'Add Property'}
+//                                   <i className="bi bi-check-circle ms-1"></i>
+//                                 </>
+//                               )}
+//                             </button>
+//                           )}
+//                         </div>
+//                       </div>
+//                     </div>
+//                   )}
+//                 </form>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Privacy Policy Modal */}
+//       <PolicyModal
+//         isOpen={showPrivacyModal}
+//         onClose={() => setShowPrivacyModal(false)}
+//         title="Privacy Policy"
+//         content={privacyPolicyContent}
+//       />
+
+//       {/* Terms & Conditions Modal */}
+//       <PolicyModal
+//         isOpen={showTermsModal}
+//         onClose={() => setShowTermsModal(false)}
+//         title="Terms & Conditions"
+//         content={termsAndConditionsContent}
+//       />
+//     </>
+//   );
+// };
+
+// export default AgentAddPropertyForm;
+
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import "./Add_Property.css";
+// import axios from 'axios';
+// import { useParams, useNavigate } from "react-router-dom";
+// import Swal from 'sweetalert2';
+// import { baseurl } from '../../BaseURL/BaseURL';
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import { Country, State, City } from "country-state-city";
+
+// // Modal component for combined Privacy Policy and Terms & Conditions
+// const PolicyModal = ({ isOpen, onClose, title, content }) => {
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className="policy-modal-overlay" onClick={onClose}>
+//       <div className="policy-modal-container" onClick={(e) => e.stopPropagation()}>
+//         <div className="policy-modal-header">
+//           <h3>{title}</h3>
+//           <button className="policy-modal-close" onClick={onClose}>&times;</button>
+//         </div>
+//         <div className="policy-modal-body">
+//           {/* Privacy Policy Section */}
+//           <div className="policy-section mb-4">
+//             <h4 className="policy-section-title">Privacy Policy</h4>
+//             {content.privacy.map((point, index) => (
+//               <div key={`privacy-${index}`} className="policy-point">
+//                 <span className="policy-point-bullet">{index + 1}.</span>
+//                 <p>{point}</p>
+//               </div>
+//             ))}
+//           </div>
+          
+//           {/* Terms & Conditions Section */}
+//           <div className="policy-section">
+//             <h4 className="policy-section-title">Terms & Conditions</h4>
+//             {content.terms.map((point, index) => (
+//               <div key={`terms-${index}`} className="policy-point">
+//                 <span className="policy-point-bullet">{index + 1}.</span>
+//                 <p>{point}</p>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//         <div className="policy-modal-footer">
+//           <button className="btn btn-secondary" onClick={onClose}>Close</button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
+//   const { id } = useParams();
+//   const [activeTab, setActiveTab] = useState('basic-details');
+//   const [isEditing, setIsEditing] = useState(mode === 'edit');
+//   const [isViewing, setIsViewing] = useState(mode === 'view');
+//   const [loading, setLoading] = useState(mode !== 'add');
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const navigate = useNavigate();
+
+//   // Single state for combined policy acceptance
+//   const [policyAccepted, setPolicyAccepted] = useState(false);
+//   const [showPolicyModal, setShowPolicyModal] = useState(false);
+
+//   // Combined content for Privacy Policy and Terms & Conditions
+//   const policyContent = {
+//     privacy: [
+//       "We collect and process your personal information only for property transactions and communication purposes.",
+//       "Your property details, images, and documents are stored securely and shared only with potential buyers/tenants.",
+//       "We do not sell or share your personal information with third parties without your explicit consent.",
+//       "You have the right to request deletion or modification of your property data at any time by contacting support."
+//     ],
+//     terms: [
+//       "You must provide accurate and truthful information about the property being listed on our platform.",
+//       "We reserve the right to remove any property listing that violates our community guidelines or local laws.",
+//       "The agent commission is applicable only upon successful property sale or rental agreement completion.",
+//       "Any disputes arising from property transactions will be resolved through arbitration as per applicable laws."
+//     ]
+//   };
+
+//   const referralId = localStorage.getItem('referral_id');
+//   const userId = localStorage.getItem('user_id');
+//   const role = localStorage.getItem('role');
+//   const username = localStorage.getItem('user_name');
+
+//   const [propertyCategories, setPropertyCategories] = useState([]);
+//   const [propertyTypes, setPropertyTypes] = useState([]);
+//   const [amenities, setAmenities] = useState([]);
+//   const [newAmenity, setNewAmenity] = useState('');
+//   const [showResidentialFields, setShowResidentialFields] = useState(false);
+//   const [showBuiltupArea, setShowBuiltupArea] = useState(true);
+
+//   const [isCollapsed, setIsCollapsed] = useState(false);
+//   const [isMobileOpen, setIsMobileOpen] = useState(false);
+//   const [receivables, setReceivables] = useState(0);
+//   const [payables, setPayables] = useState(0);
+//   const [error, setError] = useState(null);
+//   const [countries, setCountries] = useState([]);
+//   const [states, setStates] = useState([]);
+//   const [cities, setCities] = useState([]);
+
+//   const tabs = [
+//     { id: 'basic-details', label: 'Basic Details' },
+//     { id: 'location-details', label: 'Location Details' },
+//     { id: 'property-profile', label: 'Property Profile' },
+//     { id: 'media-upload', label: 'Media Upload' },
+//     { id: 'pricing-ownership', label: 'Pricing & Ownership' }
+//   ];
+
+//   const [errors, setErrors] = useState({});
+
+//   const [formData, setFormData] = useState({
+//     lookingTo: 'sell',
+//     category: '',
+//     propertyType: '',
+//     propertyTitle: '',
+//     description: '',
+//     address: '',
+//     city: '',
+//     state: '',
+//     country: 'IN',
+//     pinCode: '',
+//     latitude: '',
+//     longitude: '',
+//     plotArea: '',
+//     pricePerUnit: '',
+//     areaUnit: 'sq.ft.',
+//     length: '',
+//     breadth: '',
+//     numberOfFloors: 1,
+//     numberOfBedrooms: '',
+//     numberOfBalconies: '',
+//     floor: "",
+//     furnishing_status: "",
+//     openSides: 0,
+//     builtupArea: '',
+//     numberOfRoads: 0,
+//     roadWidth1: null,
+//     roadWidth2: null,
+//     facing: 'east',
+//     ownershipType: 'Freehold',
+//     price: '',
+//     maintenance: '',
+//     amenities: [],
+//     propertyUniqueness: '',
+//     locationAdvantages: '',
+//     otherFeatures: '',
+//     ownerName: '',
+//     ownerContact: '',
+//     ownerEmail: '',
+//     isFeatured: false,
+//     images: [],
+//     videos: [],
+//     userId: userId,
+//     added_by: userId,
+//     role: null,
+//     agent_commission: "",
+//     files: [],
+//     layout: null,
+//     preferred_tenants: '',
+//     rent_amount: '',
+//     deposit_amount: '',
+//     available_from: '',
+//     agreement_video: null,
+//     agreement_file: null,
+//   });
+
+//   // Reset policy acceptance when tab changes
+//   useEffect(() => {
+//     setPolicyAccepted(false);
+//   }, [activeTab]);
+
+//   const fetchAmenities = async () => {
+//     try {
+//       const response = await axios.get(`${baseurl}/amenities/`);
+//       let amenitiesData = response.data;
+
+//       if (response.data.results) {
+//         amenitiesData = response.data.results;
+//       }
+
+//       const formattedAmenities = Array.isArray(amenitiesData)
+//         ? amenitiesData.map(amenity => ({
+//           ...amenity,
+//           amenity_id: parseInt(amenity.amenity_id) || amenity.amenity_id
+//         }))
+//         : [];
+
+//       setAmenities(formattedAmenities);
+//     } catch (error) {
+//       console.error('Error fetching amenities:', error);
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: 'Failed to fetch amenities',
+//         confirmButtonColor: '#d33',
+//       });
+//     }
+//   };
+
+//   const handleAddAmenity = async () => {
+//     if (!newAmenity.trim()) {
+//       Swal.fire({
+//         icon: 'warning',
+//         title: 'Empty Field',
+//         text: 'Please enter an amenity name',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       return;
+//     }
+
+//     try {
+//       const response = await axios.post(`${baseurl}/amenities/`, {
+//         name: newAmenity.trim(),
+//       });
+
+//       if (response.data) {
+//         setNewAmenity('');
+
+//         Swal.fire({
+//           icon: 'success',
+//           title: 'Success',
+//           text: 'Amenity added successfully!',
+//           timer: 1500,
+//           showConfirmButton: false,
+//         });
+
+//         await fetchAmenities();
+//       }
+//     } catch (error) {
+//       console.error("Error adding amenity:", error);
+
+//       let errorMessage = 'Failed to add amenity';
+//       if (error.response?.data) {
+//         errorMessage = error.response.data.message || JSON.stringify(error.response.data);
+//       }
+
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: errorMessage,
+//         confirmButtonColor: '#d33',
+//       });
+//     }
+//   };
+
+//   useEffect(() => {
+//     const allCountries = Country.getAllCountries();
+//     setCountries(allCountries);
+//   }, []);
+
+//   useEffect(() => {
+//     if (formData.country) {
+//       const statesOfCountry = State.getStatesOfCountry(formData.country);
+//       setStates(statesOfCountry);
+
+//       if (!isViewing) {
+//         setFormData(prev => ({
+//           ...prev,
+//           state: '',
+//           city: ''
+//         }));
+//       }
+//     } else {
+//       setStates([]);
+//       setCities([]);
+//     }
+//   }, [formData.country, isViewing]);
+
+//   useEffect(() => {
+//     if (formData.country && formData.state) {
+//       const citiesOfState = City.getCitiesOfState(formData.country, formData.state);
+//       setCities(citiesOfState);
+
+//       if (!isViewing) {
+//         setFormData(prev => ({
+//           ...prev,
+//           city: ''
+//         }));
+//       }
+//     } else {
+//       setCities([]);
+//     }
+//   }, [formData.country, formData.state, isViewing]);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const [categoriesRes, amenitiesRes] = await Promise.all([
+//           axios.get(`${baseurl}/property-categories/`),
+//           axios.get(`${baseurl}/amenities/`)
+//         ]);
+
+//         setPropertyCategories(categoriesRes.data.results || categoriesRes.data || []);
+
+//         let amenitiesData = amenitiesRes.data;
+//         if (amenitiesRes.data.results) {
+//           amenitiesData = amenitiesRes.data.results;
+//         }
+
+//         const formattedAmenities = Array.isArray(amenitiesData)
+//           ? amenitiesData.map(amenity => ({
+//             ...amenity,
+//             amenity_id: parseInt(amenity.amenity_id) || amenity.amenity_id
+//           }))
+//           : [];
+//         setAmenities(formattedAmenities);
+
+//         if (id && mode !== 'add') {
+//           const response = await axios.get(`${baseurl}/property/${id}`);
+//           const propertyData = response.data;
+
+//           if (propertyData.amenities) {
+//             propertyData.amenities = propertyData.amenities.map(id => parseInt(id));
+//           }
+
+//           // If property has policy accepted status, set it
+//           if (propertyData.policy_accepted) {
+//             setPolicyAccepted(propertyData.policy_accepted);
+//           }
+
+//           setFormData(propertyData);
+//           setIsEditing(mode === 'edit');
+//           setIsViewing(mode === 'view');
+//         }
+//       } catch (error) {
+//         console.error('Error fetching data:', error);
+//         Swal.fire({
+//           icon: 'error',
+//           title: 'Error',
+//           text: 'Failed to load data',
+//           confirmButtonColor: '#d33',
+//         });
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchData();
+//   }, [id, mode]);
+
+//   useEffect(() => {
+//     if (formData.category) {
+//       axios
+//         .get(`${baseurl}/property-types/category-id/${formData.category}/`)
+//         .then((response) => {
+//           const data = response.data.results || response.data;
+//           setPropertyTypes(Array.isArray(data) ? data : []);
+//         })
+//         .catch((error) => {
+//           console.error('Error fetching property types:', error);
+//           setPropertyTypes([]);
+//         });
+//     } else {
+//       setPropertyTypes([]);
+//     }
+//   }, [formData.category]);
+
+//   useEffect(() => {
+//     if (!formData.propertyType || !Array.isArray(propertyTypes)) return;
+
+//     const selectedType = propertyTypes.find(
+//       (type) => Number(type.property_type_id) === Number(formData.propertyType)
+//     );
+
+//     if (!selectedType) return;
+
+//     const typeName = selectedType.name.toLowerCase();
+
+//     const residentialTypes = [
+//       "flat",
+//       "house",
+//       "apartment",
+//       "villa"
+//     ];
+
+//     const isResidential = residentialTypes.some(type =>
+//       typeName.includes(type)
+//     );
+
+//     setShowResidentialFields(isResidential);
+//     setShowBuiltupArea(!typeName.includes("plot"));
+//   }, [formData.propertyType, propertyTypes]);
+
+//   useEffect(() => {
+//     if (formData.lookingTo === 'sell') {
+//       const price = parseFloat(formData.price) || 0;
+//       const commission = parseFloat(formData.agent_commission) || 0;
+//       const total = price + commission;
+//       setFormData(prev => ({
+//         ...prev,
+//         total_property_value: total
+//       }));
+//     }
+//   }, [formData.price, formData.agent_commission, formData.lookingTo]);
+
+//   const handleChange = (e) => {
+//     if (isViewing) return;
+
+//     const { name, value, type, checked } = e.target;
+//     const newValue = type === 'checkbox' ? checked : value;
+
+//     if (errors[name]) {
+//       setErrors(prev => ({
+//         ...prev,
+//         [name]: ''
+//       }));
+//     }
+
+//     setFormData((prev) => {
+//       const updated = { ...prev, [name]: newValue };
+
+//       if (name === "pricePerUnit" || name === "plotArea") {
+//         const pricePerUnit = parseFloat(updated.pricePerUnit) || 0;
+//         const plotArea = parseFloat(updated.plotArea) || 0;
+//         updated.price = pricePerUnit * plotArea;
+//       }
+
+//       if (formData.lookingTo === 'sell') {
+//         const price = parseFloat(updated.price) || 0;
+//         const commission = parseFloat(updated.agent_commission) || 0;
+//         updated.total_property_value = price + commission;
+//       }
+
+//       return updated;
+//     });
+//   };
+
+//   const handleTabClick = (tab) => {
+//     setActiveTab(tab);
+//   };
+
+//   const validateCurrentTab = () => {
+//     if (isViewing) return true;
+
+//     const newErrors = {};
+
+//     switch (activeTab) {
+//       case 'basic-details':
+//         if (!formData.propertyTitle?.trim()) newErrors.propertyTitle = 'Property Title is required';
+//         if (!formData.category) newErrors.category = 'Property Category is required';
+//         if (!formData.propertyType) newErrors.propertyType = 'Property Type is required';
+//         break;
+
+//       case 'location-details':
+//         if (!formData.address?.trim()) newErrors.address = 'Address is required';
+//         if (!formData.city?.trim()) newErrors.city = 'City is required';
+//         if (!formData.state?.trim()) newErrors.state = 'State is required';
+//         if (!formData.country?.trim()) newErrors.country = 'Country is required';
+//         break;
+
+//       case 'property-profile':
+//         if (!formData.areaUnit?.trim()) newErrors.areaUnit = 'Area Unit is required';
+//         if (!formData.plotArea || formData.plotArea <= 0) newErrors.plotArea = 'Valid Area is required';
+//         if (!formData.pricePerUnit || formData.pricePerUnit <= 0) newErrors.pricePerUnit = 'Valid Price Per Unit is required';
+//         break;
+
+//       case 'media-upload':
+//         if (formData.images.length === 0) {
+//           Swal.fire({
+//             icon: 'info',
+//             title: 'Required Field',
+//             text: 'Please upload at least one property image',
+//             confirmButtonColor: '#3085d6',
+//           });
+//           return false;
+//         }
+//         break;
+
+//       case 'pricing-ownership':
+//         if (formData.lookingTo === 'sell') {
+//           if (!formData.price || formData.price <= 0) newErrors.price = 'Property Value is required';
+//           if (!formData.total_property_value || formData.total_property_value <= 0) newErrors.total_property_value = 'Total Property Value is required';
+//         } else {
+//           if (!formData.rent_amount || formData.rent_amount <= 0) newErrors.rent_amount = 'Rent Amount is required';
+//         }
+//         // Validate single combined checkbox
+//         if (!policyAccepted) {
+//           Swal.fire({
+//             icon: 'warning',
+//             title: 'Policy Acceptance Required',
+//             text: 'Please accept the Privacy Policy and Terms & Conditions to continue',
+//             confirmButtonColor: '#3085d6',
+//           });
+//           return false;
+//         }
+//         break;
+//     }
+
+//     setErrors(prev => ({ ...prev, ...newErrors }));
+//     return Object.keys(newErrors).length === 0;
+//   };
+
+//   const handleNext = () => {
+//     if (!validateCurrentTab()) {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Validation Error',
+//         text: 'Please fill all required fields correctly',
+//         confirmButtonColor: '#d33',
+//       });
+//       return;
+//     }
+
+//     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
+//     if (currentIndex < tabs.length - 1) {
+//       setActiveTab(tabs[currentIndex + 1].id);
+//     }
+//   };
+
+//   const handleBack = () => {
+//     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
+//     if (currentIndex > 0) {
+//       setActiveTab(tabs[currentIndex - 1].id);
+//     }
+//   };
+
+//   const handleFileUpload = async (e, type) => {
+//     if (isViewing) return;
+
+//     const files = Array.from(e.target.files);
+//     if (!files.length) return;
+
+//     // For single file upload fields (agreement_video, agreement_file, layout)
+//     if (type === 'agreement_video' || type === 'agreement_file' || type === 'layout') {
+//       const file = files[0];
+//       if (file) {
+//         setFormData(prev => ({
+//           ...prev,
+//           [type]: {
+//             name: file.name,
+//             type: file.type,
+//             size: file.size,
+//             file: file
+//           }
+//         }));
+//       }
+//       e.target.value = '';
+//       return;
+//     }
+
+//     // For multiple file upload fields
+//     const newFiles = files.map(file => ({
+//       name: file.name,
+//       type: file.type,
+//       size: file.size,
+//       file: file,
+//       preview: type === 'images' ? URL.createObjectURL(file) : null
+//     }));
+
+//     setFormData(prev => ({
+//       ...prev,
+//       [type]: [...prev[type], ...newFiles]
+//     }));
+
+//     e.target.value = '';
+//   };
+
+//   const removeFile = (index, type) => {
+//     if (isViewing) return;
+
+//     setFormData(prev => ({
+//       ...prev,
+//       [type]: prev[type].filter((_, i) => i !== index)
+//     }));
+//   };
+
+//   const removeSingleFile = (type) => {
+//     if (isViewing) return;
+
+//     setFormData(prev => ({
+//       ...prev,
+//       [type]: null
+//     }));
+//   };
+
+//   const handleAmenityChange = (amenityId) => {
+//     if (isViewing) return;
+
+//     setFormData(prev => {
+//       const numericId = parseInt(amenityId);
+//       const newAmenities = prev.amenities.includes(numericId)
+//         ? prev.amenities.filter(id => id !== numericId)
+//         : [...prev.amenities, numericId];
+//       return { ...prev, amenities: newAmenities };
+//     });
+//   };
+
+//   const renderError = (fieldName) => {
+//     return errors[fieldName] ? (
+//       <div className="invalid-feedback" style={{ display: 'block' }}>
+//         {errors[fieldName]}
+//       </div>
+//     ) : null;
+//   };
+
+//   const getInputClass = (fieldName) => {
+//     return `form-control customer-form-input ${errors[fieldName] ? 'is-invalid' : ''} ${isViewing ? 'view-mode' : ''}`;
+//   };
+
+//   const getSelectClass = (fieldName) => {
+//     return `form-select customer-form-input ${errors[fieldName] ? 'is-invalid' : ''} ${isViewing ? 'view-mode' : ''}`;
+//   };
+
+//   const getTextareaClass = (fieldName) => {
+//     return `form-control customer-form-input ${errors[fieldName] ? 'is-invalid' : ''} ${isViewing ? 'view-mode' : ''}`;
+//   };
+
+//   const renderField = (fieldConfig) => {
+//     const { type = 'text', name, label, required = true, options, multiline, rows, disabled = false, readOnly = false, ...props } = fieldConfig;
+
+//     if (isViewing) {
+//       const value = formData[name];
+//       const displayValue = Array.isArray(value)
+//         ? value.join(', ')
+//         : (value !== null && value !== undefined && value !== '' ? value.toString() : 'N/A');
+
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label view-mode-label">{label}</label>
+//           <div className="view-mode-value">{displayValue}</div>
+//         </div>
+//       );
+//     }
+
+//     if (type === 'select') {
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//           <select
+//             className={getSelectClass(name)}
+//             name={name}
+//             value={formData[name] || ''}
+//             onChange={handleChange}
+//             required={required}
+//             disabled={disabled || isViewing}
+//             {...props}
+//           >
+//             <option value="">Select</option>
+//             {options?.map(option => (
+//               <option key={option.value} value={option.value}>
+//                 {option.label}
+//               </option>
+//             ))}
+//           </select>
+//           {renderError(name)}
+//         </div>
+//       );
+//     }
+
+//     if (type === 'textarea') {
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//           <textarea
+//             name={name}
+//             value={formData[name] || ''}
+//             className={getTextareaClass(name)}
+//             onChange={handleChange}
+//             required={required}
+//             rows={rows || 3}
+//             disabled={disabled || isViewing}
+//             {...props}
+//           />
+//           {renderError(name)}
+//         </div>
+//       );
+//     }
+
+//     if (type === 'checkbox') {
+//       return (
+//         <div className="mb-3 form-check">
+//           <input
+//             type="checkbox"
+//             name={name}
+//             checked={formData[name] || false}
+//             className="form-check-input"
+//             onChange={handleChange}
+//             disabled={disabled || isViewing}
+//             {...props}
+//           />
+//           <label className="form-check-label">{label}{required && '*'}</label>
+//           {renderError(name)}
+//         </div>
+//       );
+//     }
+
+//     return (
+//       <div className="mb-3">
+//         <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//         <input
+//           type={type}
+//           name={name}
+//           value={formData[name] || ''}
+//           className={getInputClass(name)}
+//           onChange={handleChange}
+//           required={required}
+//           disabled={disabled || isViewing}
+//           readOnly={readOnly}
+//           {...props}
+//         />
+//         {renderError(name)}
+//       </div>
+//     );
+//   };
+
+//   const renderAmenitiesField = () => {
+//     if (isViewing) {
+//       const selectedAmenities = Array.isArray(amenities)
+//         ? amenities
+//           .filter(amenity => formData.amenities.includes(parseInt(amenity.amenity_id)))
+//           .map(amenity => amenity.name)
+//         : [];
+
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label view-mode-label">Amenities</label>
+//           <div className="view-mode-value">
+//             {selectedAmenities.length > 0 ? selectedAmenities.join(', ') : 'None'}
+//           </div>
+//         </div>
+//       );
+//     }
+
+//     return (
+//       <div className="mb-3">
+//         <label className="admin-customer-form-label">Amenities</label>
+
+//         <div className="row mb-3">
+//           <div className="col-md-8">
+//             <input
+//               type="text"
+//               className="form-control"
+//               placeholder="Enter new amenity name"
+//               value={newAmenity}
+//               onChange={(e) => setNewAmenity(e.target.value)}
+//               onKeyPress={(e) => {
+//                 if (e.key === 'Enter') {
+//                   e.preventDefault();
+//                   handleAddAmenity();
+//                 }
+//               }}
+//             />
+//           </div>
+//           <div className="col-md-4">
+//             <button
+//               type="button"
+//               className="btn"
+//               style={{
+//                 backgroundColor: '#273c75',
+//                 borderColor: '#273c75',
+//                 color: 'white',
+//                 width: '100%'
+//               }}
+//               onClick={handleAddAmenity}
+//               disabled={!newAmenity.trim()}
+//             >
+//               Add Amenity
+//             </button>
+//           </div>
+//         </div>
+
+//         <div className="amenities-checkbox-group" style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid #dee2e6', padding: '10px', borderRadius: '4px' }}>
+//           {Array.isArray(amenities) && amenities.length > 0 ? (
+//             amenities.map(amenity => (
+//               <div className="form-check form-check-inline" key={amenity.amenity_id} style={{ marginBottom: '8px', width: 'calc(33.33% - 10px)' }}>
+//                 <input
+//                   className="form-check-input"
+//                   type="checkbox"
+//                   id={`amenity-${amenity.amenity_id}`}
+//                   checked={formData.amenities.includes(parseInt(amenity.amenity_id))}
+//                   onChange={() => handleAmenityChange(amenity.amenity_id)}
+//                   disabled={isViewing}
+//                 />
+//                 <label className="form-check-label" htmlFor={`amenity-${amenity.amenity_id}`}>
+//                   {amenity.name}
+//                 </label>
+//               </div>
+//             ))
+//           ) : (
+//             <p className="text-muted text-center">No amenities available. Add one using the field above.</p>
+//           )}
+//         </div>
+
+//         {formData.amenities.length > 0 && (
+//           <div className="mt-2 text-primary">
+//             <small>{formData.amenities.length} amenit{formData.amenities.length === 1 ? 'y' : 'ies'} selected</small>
+//           </div>
+//         )}
+//       </div>
+//     );
+//   };
+
+//   const renderFileUploadField = (type, label, accept, required = false, isSingle = false) => {
+//     if (isViewing) {
+//       const file = formData[type];
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label view-mode-label">{label}</label>
+//           <div className="view-mode-value">
+//             {file ? file.name : 'No file uploaded'}
+//           </div>
+//         </div>
+//       );
+//     }
+
+//     if (isSingle) {
+//       const file = formData[type];
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//           <div className="file-upload-container">
+//             <div className="input-group">
+//               <input
+//                 id={`${type}-upload`}
+//                 type="file"
+//                 accept={accept}
+//                 className="form-control"
+//                 onChange={(e) => handleFileUpload(e, type)}
+//                 disabled={isViewing}
+//               />
+//               <button
+//                 type="button"
+//                 className="btn btn-outline-secondary media-upload-btn"
+//                 onClick={() => document.getElementById(`${type}-upload`).click()}
+//                 disabled={isViewing}
+//               >
+//                 <i className="bi bi-upload me-1"></i> Upload
+//               </button>
+//             </div>
+//             <div className="uploaded-files mt-2">
+//               {file && (
+//                 <div className="uploaded-file-item d-flex align-items-center justify-content-between">
+//                   <span className="file-name">{file.name}</span>
+//                   <button
+//                     type="button"
+//                     className="btn btn-sm btn-danger ms-2"
+//                     onClick={() => removeSingleFile(type)}
+//                     style={{ cursor: 'pointer' }}
+//                   >
+//                     ✕
+//                   </button>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       );
+//     }
+
+//     // For multiple file upload fields
+//     return (
+//       <div className="mb-3">
+//         <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//         <div className="file-upload-container">
+//           <div className="input-group">
+//             <input
+//               id={`${type}-upload`}
+//               type="file"
+//               accept={accept}
+//               multiple={true}
+//               className="form-control"
+//               onChange={(e) => handleFileUpload(e, type)}
+//               disabled={isViewing}
+//             />
+//             <button
+//               type="button"
+//               className="btn btn-outline-secondary media-upload-btn"
+//               onClick={() => document.getElementById(`${type}-upload`).click()}
+//               disabled={isViewing}
+//             >
+//               <i className="bi bi-upload me-1"></i> Upload
+//             </button>
+//           </div>
+//           <div className="uploaded-files mt-2">
+//             {formData[type] && formData[type].length > 0 ? (
+//               formData[type].map((file, index) => (
+//                 file && (
+//                   <div key={index} className="uploaded-file-item d-flex align-items-center justify-content-between">
+//                     <span className="file-name">{file.name}</span>
+//                     <button
+//                       type="button"
+//                       className="btn btn-sm btn-danger ms-2"
+//                       onClick={() => removeFile(index, type)}
+//                       style={{ cursor: 'pointer' }}
+//                     >
+//                       ✕
+//                     </button>
+//                   </div>
+//                 )
+//               ))
+//             ) : null}
+//           </div>
+//           {required && type === 'images' && formData.images.length === 0 && (
+//             <div className="invalid-feedback d-block">
+//               At least one image is required
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     );
+//   };
+
+//   const renderActiveTab = () => {
+//     if (loading) {
+//       return <div className="loading-spinner text-center py-5">Loading property data...</div>;
+//     }
+
+//     switch (activeTab) {
+//       case 'basic-details':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'lookingTo',
+//                     label: 'Looking To',
+//                     options: [
+//                       { value: 'sell', label: 'Sell' },
+//                       { value: 'rent', label: 'Rent' }
+//                     ]
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'category',
+//                     label: 'Property Category',
+//                     options: Array.isArray(propertyCategories)
+//                       ? propertyCategories.map(category => ({
+//                         value: category.property_category_id,
+//                         label: category.name
+//                       }))
+//                       : []
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'propertyType',
+//                     label: 'Property Type',
+//                     options: Array.isArray(propertyTypes)
+//                       ? propertyTypes.map(type => ({
+//                         value: type.property_type_id,
+//                         label: type.name
+//                       }))
+//                       : [],
+//                     disabled: !formData.category
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'propertyTitle',
+//                     label: 'Property Title'
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'description',
+//                     label: 'Description',
+//                     rows: 4,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         );
+
+//       case 'location-details':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   <div className="mb-3">
+//                     <label className="admin-customer-form-label">Country *</label>
+//                     {isViewing ? (
+//                       <div className="view-mode-value">
+//                         {countries.find(c => c.isoCode === formData.country)?.name || formData.country || 'N/A'}
+//                       </div>
+//                     ) : (
+//                       <>
+//                         <select
+//                           className={`form-select customer-form-input ${errors.country ? 'is-invalid' : ''}`}
+//                           name="country"
+//                           value={formData.country || ''}
+//                           onChange={(e) => {
+//                             const selectedCountry = e.target.value;
+//                             setFormData(prev => ({
+//                               ...prev,
+//                               country: selectedCountry,
+//                               state: '',
+//                               city: ''
+//                             }));
+//                             if (errors.country) {
+//                               setErrors(prev => ({ ...prev, country: '' }));
+//                             }
+//                           }}
+//                           required
+//                         >
+//                           <option value="">Select Country</option>
+//                           {countries.map(country => (
+//                             <option key={country.isoCode} value={country.isoCode}>
+//                               {country.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                         {renderError('country')}
+//                       </>
+//                     )}
+//                   </div>
+//                 </div>
+//                 <div className="col-md-6">
+//                   <div className="mb-3">
+//                     <label className="admin-customer-form-label">State *</label>
+//                     {isViewing ? (
+//                       <div className="view-mode-value">
+//                         {states.find(s => s.isoCode === formData.state)?.name || formData.state || 'N/A'}
+//                       </div>
+//                     ) : (
+//                       <>
+//                         <select
+//                           className={`form-select customer-form-input ${errors.state ? 'is-invalid' : ''}`}
+//                           name="state"
+//                           value={formData.state || ''}
+//                           onChange={(e) => {
+//                             const selectedState = e.target.value;
+//                             setFormData(prev => ({
+//                               ...prev,
+//                               state: selectedState,
+//                               city: ''
+//                             }));
+//                             if (errors.state) {
+//                               setErrors(prev => ({ ...prev, state: '' }));
+//                             }
+//                           }}
+//                           disabled={!formData.country}
+//                           required
+//                         >
+//                           <option value="">Select State</option>
+//                           {states.map(state => (
+//                             <option key={state.isoCode} value={state.isoCode}>
+//                               {state.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                         {renderError('state')}
+//                       </>
+//                     )}
+//                   </div>
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   <div className="mb-3">
+//                     <label className="admin-customer-form-label">City *</label>
+//                     {isViewing ? (
+//                       <div className="view-mode-value">
+//                         {formData.city || 'N/A'}
+//                       </div>
+//                     ) : (
+//                       <>
+//                         <select
+//                           className={`form-select customer-form-input ${errors.city ? 'is-invalid' : ''}`}
+//                           name="city"
+//                           value={formData.city || ''}
+//                           onChange={(e) => {
+//                             setFormData(prev => ({
+//                               ...prev,
+//                               city: e.target.value
+//                             }));
+//                             if (errors.city) {
+//                               setErrors(prev => ({ ...prev, city: '' }));
+//                             }
+//                           }}
+//                           disabled={!formData.state}
+//                           required
+//                         >
+//                           <option value="">Select City</option>
+//                           {cities.map(city => (
+//                             <option key={city.name} value={city.name}>
+//                               {city.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                         {renderError('city')}
+//                       </>
+//                     )}
+//                   </div>
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'pinCode',
+//                     label: 'Pin Code(optional)',
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'address',
+//                     label: 'Full Address',
+//                     rows: 3
+//                   })}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         );
+
+//       case 'property-profile':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               {showResidentialFields && (
+//                 <>
+//                   <div className="row">
+//                     <div className="col-md-3">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'numberOfBedrooms',
+//                         label: 'Bedrooms',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-3">
+//                       <div className="mb-3">
+//                         <label className="admin-customer-form-label">Bathrooms</label>
+//                         <input
+//                           type="number"
+//                           name="numberOfBathrooms"
+//                           value={formData.numberOfBathrooms || ''}
+//                           className={getInputClass('numberOfBathrooms')}
+//                           onChange={handleChange}
+//                           min="0"
+//                           disabled={isViewing}
+//                         />
+//                       </div>
+//                     </div>
+//                     <div className="col-md-3">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'numberOfBalconies',
+//                         label: 'Balconies',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-3">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'numberOfFloors',
+//                         label: 'Total Floors',
+//                         min: 1,
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'floor',
+//                         label: 'Floor Number',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'select',
+//                         name: 'furnishing_status',
+//                         label: 'Furnishing Status',
+//                         options: [
+//                           { value: 'Semi-Furnished', label: 'Semi-Furnished' },
+//                           { value: 'Fully-Furnished', label: 'Fully-Furnished' },
+//                           { value: 'Unfurnished', label: 'Unfurnished' }
+//                         ],
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+//                 </>
+//               )}
+
+//               <div className="row">
+//                 <div className="col-md-4">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'areaUnit',
+//                     label: 'Area Unit',
+//                     options: [
+//                       { value: 'sq.ft.', label: 'Square Feet' },
+//                       { value: 'sq.m.', label: 'Square Meters' },
+//                       { value: 'sq.yd.', label: 'Square Yards' },
+//                       { value: 'acres', label: 'Acres' },
+//                       { value: 'hectares', label: 'Hectares' },
+//                       { value: 'cents', label: 'Cents' }
+//                     ],
+//                     required: true
+//                   })}
+//                 </div>
+//                 <div className="col-md-4">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'plotArea',
+//                     label: 'Area',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: true
+//                   })}
+//                 </div>
+//                 <div className="col-md-4">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'pricePerUnit',
+//                     label: 'Price Per Unit',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: true
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'length',
+//                     label: 'Length (ft)',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: false
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'breadth',
+//                     label: 'Breadth (ft)',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               {showBuiltupArea && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'builtupArea',
+//                       label: 'Built-up Area',
+//                       step: '0.01',
+//                       min: 0,
+//                       required: false
+//                     })}
+//                   </div>
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'select',
+//                       name: 'facing',
+//                       label: 'Facing Direction',
+//                       options: [
+//                         { value: 'east', label: 'East' },
+//                         { value: 'west', label: 'West' },
+//                         { value: 'north', label: 'North' },
+//                         { value: 'south', label: 'South' },
+//                         { value: 'north_east', label: 'North-East' },
+//                         { value: 'north_west', label: 'North-West' },
+//                         { value: 'south_east', label: 'South-East' },
+//                         { value: 'south_west', label: 'South-West' }
+//                       ],
+//                       required: false
+//                     })}
+//                   </div>
+//                 </div>
+//               )}
+
+//               {!showBuiltupArea && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'select',
+//                       name: 'facing',
+//                       label: 'Facing Direction',
+//                       options: [
+//                         { value: 'east', label: 'East' },
+//                         { value: 'west', label: 'West' },
+//                         { value: 'north', label: 'North' },
+//                         { value: 'south', label: 'South' },
+//                         { value: 'north-east', label: 'North-East' },
+//                         { value: 'north-west', label: 'North-West' },
+//                         { value: 'south-east', label: 'South-East' },
+//                         { value: 'south-west', label: 'South-West' }
+//                       ],
+//                       required: false
+//                     })}
+//                   </div>
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'openSides',
+//                       label: 'Number of Open Sides',
+//                       min: 0,
+//                       max: 4,
+//                       required: false
+//                     })}
+//                   </div>
+//                 </div>
+//               )}
+
+//               {showBuiltupArea && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'openSides',
+//                       label: 'Number of Open Sides',
+//                       min: 0,
+//                       max: 4,
+//                       required: false
+//                     })}
+//                   </div>
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'numberOfRoads',
+//                       label: 'Number of Roads',
+//                       min: 0,
+//                       max: 2,
+//                       required: false
+//                     })}
+//                   </div>
+//                 </div>
+//               )}
+
+//               {formData.numberOfRoads >= 1 && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'roadWidth1',
+//                       label: 'Road 1 Width (ft)',
+//                       step: '0.01',
+//                       min: 0,
+//                       required: false
+//                     })}
+//                   </div>
+//                   {formData.numberOfRoads >= 2 && (
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'roadWidth2',
+//                         label: 'Road 2 Width (ft)',
+//                         step: '0.01',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                   )}
+//                 </div>
+//               )}
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'locationAdvantages',
+//                     label: 'Location Advantages',
+//                     rows: 3,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               {renderAmenitiesField()}
+//             </div>
+//           </div>
+//         );
+
+//       case 'media-upload':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderFileUploadField('images', 'Property Images', 'image/*', true, false)}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderFileUploadField('videos', 'Property Videos', 'video/*', false, false)}
+//                 </div>
+
+//                 <div className="col-md-6">
+//                   {renderFileUploadField('files', 'Property Documents', '.pdf,.doc,.docx,.xls,.xlsx,.txt', false, false)}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderFileUploadField('layout', 'Layout', '.pdf,.jpg,.jpeg,.png,.dwg', false, true)}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {/* Empty column for alignment, or add another field here if needed */}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         );
+
+//       case 'pricing-ownership':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               {formData.lookingTo === 'sell' ? (
+//                 <>
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'price',
+//                         label: 'Property Value',
+//                         step: '0.01',
+//                         min: 0,
+//                         readOnly: true
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'agent_commission',
+//                         label: 'Team Payout',
+//                         step: '0.01',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+
+//                   <div className="row">
+//                     <div className="col-md-12">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'total_property_value',
+//                         label: 'Total Property Value',
+//                         step: '0.01',
+//                         min: 0,
+//                         readOnly: true
+//                       })}
+//                     </div>
+//                   </div>
+//                 </>
+//               ) : (
+//                 <>
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         name: 'preferred_tenants',
+//                         label: 'Preferred Tenants',
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'rent_amount',
+//                         label: 'Rent Amount',
+//                         step: '0.01',
+//                         min: 0
+//                       })}
+//                     </div>
+//                   </div>
+
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'deposit_amount',
+//                         label: 'Deposit Amount',
+//                         step: '0.01',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'date',
+//                         name: 'available_from',
+//                         label: 'Available From',
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+//                 </>
+//               )}
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'ownerName',
+//                     label: 'Owner Name',
+//                     required: false
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'ownerContact',
+//                     label: 'Owner Phone Number',
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               {/* Single Privacy Policy and Terms & Conditions Section */}
+//               {!isViewing && (
+//                 <div className="policy-section" style={{ borderTop: '1px solid #dee2e6', marginTop: '20px', paddingTop: '20px' }}>
+//                   <div className="row">
+//                     <div className="col-12">
+//                       <h5 className="mb-3" style={{ color: '#273c75', fontWeight: '600' }}>
+//                         Legal Agreement
+//                       </h5>
+//                     </div>
+//                   </div>
+
+//                   {/* Single Combined Checkbox */}
+//                   <div className="row mb-3">
+//                     <div className="col-12">
+//                       <div className="form-check d-flex align-items-center justify-content-between" style={{ paddingLeft: '0' }}>
+//                         <div className="d-flex align-items-center">
+//                           <input
+//                             type="checkbox"
+//                             className="form-check-input me-2"
+//                             id="policyAcceptance"
+//                             checked={policyAccepted}
+//                             onChange={(e) => setPolicyAccepted(e.target.checked)}
+//                             style={{ cursor: 'pointer', transform: 'scale(1.1)' }}
+//                           />
+//                           <label className="form-check-label" htmlFor="policyAcceptance" style={{ fontWeight: '500' }}>
+//                             I agree to the <strong>Privacy Policy</strong> and <strong>Terms & Conditions</strong>
+//                           </label>
+//                         </div>
+//                         <button
+//                           type="button"
+//                           className="btn btn-sm btn-outline-primary"
+//                           onClick={() => setShowPolicyModal(true)}
+//                           style={{ fontSize: '0.875rem' }}
+//                         >
+//                           View Policies
+//                         </button>
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   {/* Validation Message */}
+//                   {activeTab === 'pricing-ownership' && !policyAccepted && (
+//                     <div className="row">
+//                       <div className="col-12">
+//                         <div className="alert alert-warning" style={{ marginTop: '10px' }}>
+//                           <i className="bi bi-exclamation-triangle-fill me-2"></i>
+//                           Please accept the Privacy Policy and Terms & Conditions to submit the property.
+//                         </div>
+//                       </div>
+//                     </div>
+//                   )}
+//                 </div>
+//               )}
+
+//               {/* Show accepted agreement in view mode */}
+//               {isViewing && (
+//                 <div className="policy-section" style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #dee2e6' }}>
+//                   <div className="row">
+//                     <div className="col-12">
+//                       <h5 className="mb-3" style={{ color: '#273c75', fontWeight: '600' }}>
+//                         Legal Agreements
+//                       </h5>
+//                       <div className="view-mode-value" style={{ backgroundColor: '#e8f5e9', padding: '12px', borderRadius: '8px' }}>
+//                         ✓ Privacy Policy and Terms & Conditions Accepted
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         );
+
+//       default:
+//         return null;
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     if (e) e.preventDefault();
+
+//     if (isViewing) {
+//       navigate('/a-dashboard');
+//       return;
+//     }
+
+//     // Validate single combined checkbox before submission
+//     if (!policyAccepted) {
+//       Swal.fire({
+//         icon: 'warning',
+//         title: 'Policy Acceptance Required',
+//         text: 'Please accept the Privacy Policy and Terms & Conditions to submit the property',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       return;
+//     }
+
+//     let isValid = true;
+//     for (const tab of tabs) {
+//       setActiveTab(tab.id);
+//       if (!validateCurrentTab()) {
+//         isValid = false;
+//         break;
+//       }
+//     }
+
+//     if (!isValid) {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Incomplete Form',
+//         text: 'Please complete all required fields in all steps',
+//         confirmButtonColor: '#d33',
+//       });
+//       return;
+//     }
+
+//     setIsSubmitting(true);
+
+//     try {
+//       const payload = new FormData();
+
+//       const formFields = {
+//         looking_to: formData.lookingTo,
+//         property_title: formData.propertyTitle,
+//         description: formData.description || '',
+//         address: formData.address,
+//         city: formData.city,
+//         state: formData.state,
+//         country: formData.country,
+//         pin_code: formData.pinCode,
+//         latitude: formData.latitude || '12.120000',
+//         longitude: formData.longitude || '12.120000',
+//         area: formData.plotArea,
+//         area_unit: formData.areaUnit,
+//         price_per_unit: formData.pricePerUnit || '0.00',
+//         builtup_area: formData.builtupArea || '0.00',
+//         length_ft: formData.length || '0.00',
+//         breadth_ft: formData.breadth || '0.00',
+//         number_of_floors: formData.numberOfFloors || 0,
+//         number_of_open_sides: formData.openSides || 0,
+//         number_of_roads: formData.numberOfRoads || 0,
+//         road_width_1_ft: formData.roadWidth1 || '0.00',
+//         road_width_2_ft: formData.roadWidth2 || '0.00',
+//         facing: formData.facing,
+//         ownership_type: formData.ownershipType,
+//         property_value: formData.price,
+//         property_uniqueness: formData.propertyUniqueness || '',
+//         location_advantages: formData.locationAdvantages || '',
+//         other_features: formData.otherFeatures || '',
+//         owner_name: formData.ownerName,
+//         owner_contact: formData.ownerContact,
+//         owner_email: formData.ownerEmail || '',
+//         is_featured: formData.isFeatured,
+//         category: formData.category,
+//         property_type: formData.propertyType,
+//         user_id: userId,
+//         referral_id: referralId,
+//         number_of_bedrooms: formData.numberOfBedrooms || 0,
+//         number_of_balconies: formData.numberOfBalconies || 0,
+//         number_of_bathrooms: formData.numberOfBathrooms || 0,
+//         floor: formData.floor || 0,
+//         furnishing_status: formData.furnishing_status || '',
+//         agent_commission: formData.agent_commission || '0.00',
+//         total_property_value: formData.total_property_value,
+//         username: username,
+//         preferred_tenants: formData.preferred_tenants || '',
+//         rent_amount: formData.rent_amount || '0.00',
+//         deposit_amount: formData.deposit_amount || '0.00',
+//         available_from: formData.available_from || '',
+//         policy_accepted: policyAccepted  // Single field for combined acceptance
+//       };
+
+//       Object.entries(formFields).forEach(([key, value]) => {
+//         if (value !== null && value !== undefined && value !== '') {
+//           payload.append(key, value);
+//         }
+//       });
+
+//       if (formData.amenities && formData.amenities.length > 0) {
+//         formData.amenities.forEach((id) => {
+//           payload.append("amenities", id.toString());
+//         });
+//       }
+
+//       formData.images.forEach((img) => {
+//         if (img.file) {
+//           payload.append('images', img.file, img.name);
+//         }
+//       });
+
+//       formData.videos.forEach((vid) => {
+//         if (vid.file) {
+//           payload.append('videos', vid.file, vid.name);
+//         }
+//       });
+
+//       formData.files.forEach((doc) => {
+//         if (doc.file) {
+//           payload.append('files', doc.file, doc.name);
+//         }
+//       });
+
+//       if (formData.layout?.file) {
+//         payload.append('layout', formData.layout.file, formData.layout.name);
+//       }
+
+//       if (formData.agreement_video?.file) {
+//         payload.append('agreement_video', formData.agreement_video.file, formData.agreement_video.name);
+//       }
+
+//       if (formData.agreement_file?.file) {
+//         payload.append('agreement_file', formData.agreement_file.file, formData.agreement_file.name);
+//       }
+
+//       const endpoint = isEditing ? `${baseurl}/property/${id}/` : `${baseurl}/property/`;
+//       const method = isEditing ? 'put' : 'post';
+
+//       await axios[method](endpoint, payload, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data'
+//         }
+//       });
+
+//       Swal.fire({
+//         icon: 'success',
+//         title: 'Success',
+//         text: isEditing ? 'Property Updated Successfully!' : 'Property Added Successfully!',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       navigate("/agent-my-properties");
+
+//     } catch (error) {
+//       console.error('Detailed submission error:', error);
+
+//       let errorMessage = isEditing ? 'Error updating property' : 'Error adding property';
+//       if (error.response?.data) {
+//         errorMessage += `: ${JSON.stringify(error.response.data)}`;
+//       }
+
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Submission Failed',
+//         text: errorMessage,
+//         confirmButtonColor: '#d33',
+//       });
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   const getTitle = () => {
+//     switch (mode) {
+//       case 'add': return "Add Property";
+//       case 'edit': return "Edit Property";
+//       case 'view': return "View Property";
+//       default: return "Property";
+//     }
+//   };
+
+//   return (
+//     <>
+//       <AgentNavbar />
+//       <div className="container-fluid admin-add-property-main-div">
+//         <div className="row">
+//           <div className="col-12">
+//             <div className="property-form-container">
+//               <div className="admin-form-header">
+//                 <h2 className="form-title">{getTitle()}</h2>
+//                 <div className="admin-form-actions">
+//                   {!isViewing && (
+//                     <>
+//                       <button
+//                         type="button"
+//                         className="btn btn-secondary me-2"
+//                         onClick={() => navigate(-1)}
+//                         disabled={isSubmitting}
+//                       >
+//                         Cancel
+//                       </button>
+//                       <button
+//                         type="button"
+//                         className="btn"
+//                         style={{
+//                           backgroundColor: '#273c75',
+//                           borderColor: '#273c75',
+//                           color: 'white',
+//                           whiteSpace: 'nowrap',
+//                           opacity: policyAccepted ? '1' : '0.6',
+//                           cursor: policyAccepted ? 'pointer' : 'not-allowed'
+//                         }}
+//                         onClick={handleSubmit}
+//                         disabled={isSubmitting || !policyAccepted}
+//                       >
+//                         {isSubmitting ? 'Saving...' : (isEditing ? 'Update Property' : 'Add Property')}
+//                       </button>
+//                     </>
+//                   )}
+//                   {isViewing && (
+//                     <button
+//                       type="button"
+//                       className="btn btn-secondary"
+//                       onClick={() => navigate(-1)}
+//                     >
+//                       Back to List
+//                     </button>
+//                   )}
+//                 </div>
+//               </div>
+
+//               <div className="admin-form-tabs-container">
+//                 <ul className="nav nav-tabs admin-form-tabs">
+//                   {tabs.map((tab) => (
+//                     <li className="nav-item" key={tab.id}>
+//                       <button
+//                         className={`nav-link ${activeTab === tab.id ? 'active' : ''}`}
+//                         onClick={() => handleTabClick(tab.id)}
+//                         type="button"
+//                       >
+//                         {tab.label}
+//                       </button>
+//                     </li>
+//                   ))}
+//                 </ul>
+//               </div>
+
+//               <div className="admin-form-body">
+//                 <form onSubmit={handleSubmit}>
+//                   {renderActiveTab()}
+
+//                   {!isViewing && (
+//                     <div className="admin-form-navigation">
+//                       <div className="row">
+//                         <div className="col-md-6">
+//                           {activeTab !== 'basic-details' && (
+//                             <button
+//                               type="button"
+//                               className="btn btn-secondary"
+//                               onClick={handleBack}
+//                               disabled={isSubmitting}
+//                             >
+//                               <i className="bi bi-arrow-left me-1"></i> Back
+//                             </button>
+//                           )}
+//                         </div>
+//                         <div className="col-md-6 text-end">
+//                           {activeTab !== 'pricing-ownership' ? (
+//                             <button
+//                               type="button"
+//                               className="btn"
+//                               style={{
+//                                 backgroundColor: '#273c75',
+//                                 borderColor: '#273c75',
+//                                 color: 'white'
+//                               }}
+//                               onClick={handleNext}
+//                               disabled={isSubmitting}
+//                             >
+//                               Next <i className="bi bi-arrow-right ms-1"></i>
+//                             </button>
+//                           ) : (
+//                             <button
+//                               type="button"
+//                               className="btn"
+//                               style={{
+//                                 backgroundColor: '#273c75',
+//                                 borderColor: '#273c75',
+//                                 color: 'white',
+//                                 opacity: policyAccepted ? '1' : '0.6'
+//                               }}
+//                               onClick={handleSubmit}
+//                               disabled={isSubmitting || !policyAccepted}
+//                             >
+//                               {isSubmitting ? (
+//                                 <>
+//                                   <span className="spinner-border spinner-border-sm me-1"></span>
+//                                   Saving...
+//                                 </>
+//                               ) : (
+//                                 <>
+//                                   {isEditing ? 'Update Property' : 'Add Property'}
+//                                   <i className="bi bi-check-circle ms-1"></i>
+//                                 </>
+//                               )}
+//                             </button>
+//                           )}
+//                         </div>
+//                       </div>
+//                     </div>
+//                   )}
+//                 </form>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Combined Policy Modal showing both Privacy Policy and Terms & Conditions */}
+//       <PolicyModal
+//         isOpen={showPolicyModal}
+//         onClose={() => setShowPolicyModal(false)}
+//         title="Privacy Policy & Terms & Conditions"
+//         content={policyContent}
+//       />
+//     </>
+//   );
+// };
+
+// export default AgentAddPropertyForm;
+
+
+// import React, { useState, useEffect } from 'react';
+// import "./Add_Property.css";
+// import axios from 'axios';
+// import { useParams, useNavigate } from "react-router-dom";
+// import Swal from 'sweetalert2';
+// import { baseurl } from '../../BaseURL/BaseURL';
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import { Country, State, City } from "country-state-city";
+
+// // Modal component for combined Privacy Policy and Terms & Conditions
+// const PolicyModal = ({ isOpen, onClose, title, content }) => {
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className="policy-modal-overlay" onClick={onClose}>
+//       <div className="policy-modal-container" onClick={(e) => e.stopPropagation()}>
+//         <div className="policy-modal-header">
+//           <h3>{title}</h3>
+//           <button className="policy-modal-close" onClick={onClose}>&times;</button>
+//         </div>
+//         <div className="policy-modal-body">
+//           {/* Privacy Policy Section */}
+//           <div className="policy-section mb-4">
+//             <h4 className="policy-section-title">Privacy Policy</h4>
+//             {content.privacy.map((point, index) => (
+//               <div key={`privacy-${index}`} className="policy-point">
+//                 <span className="policy-point-bullet">{index + 1}.</span>
+//                 <p>{point}</p>
+//               </div>
+//             ))}
+//           </div>
+          
+//           {/* Terms & Conditions Section */}
+//           <div className="policy-section">
+//             <h4 className="policy-section-title">Terms & Conditions</h4>
+//             {content.terms.map((point, index) => (
+//               <div key={`terms-${index}`} className="policy-point">
+//                 <span className="policy-point-bullet">{index + 1}.</span>
+//                 <p>{point}</p>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//         <div className="policy-modal-footer">
+//           <button className="btn btn-secondary" onClick={onClose}>Close</button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
+//   const { id } = useParams();
+//   const [activeTab, setActiveTab] = useState('basic-details');
+//   const [isEditing, setIsEditing] = useState(mode === 'edit');
+//   const [isViewing, setIsViewing] = useState(mode === 'view');
+//   const [loading, setLoading] = useState(mode !== 'add');
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const navigate = useNavigate();
+
+//   // Single state for combined policy acceptance
+//   const [policyAccepted, setPolicyAccepted] = useState(false);
+//   const [showPolicyModal, setShowPolicyModal] = useState(false);
+
+//   // Combined content for Privacy Policy and Terms & Conditions
+//   const policyContent = {
+//     privacy: [
+//       "We collect and process your personal information only for property transactions and communication purposes.",
+//       "Your property details, images, and documents are stored securely and shared only with potential buyers/tenants.",
+//       "We do not sell or share your personal information with third parties without your explicit consent.",
+//       "You have the right to request deletion or modification of your property data at any time by contacting support."
+//     ],
+//     terms: [
+//       "You must provide accurate and truthful information about the property being listed on our platform.",
+//       "We reserve the right to remove any property listing that violates our community guidelines or local laws.",
+//       "The agent commission is applicable only upon successful property sale or rental agreement completion.",
+//       "Any disputes arising from property transactions will be resolved through arbitration as per applicable laws."
+//     ]
+//   };
+
+//   const referralId = localStorage.getItem('referral_id');
+//   const userId = localStorage.getItem('user_id');
+//   const role = localStorage.getItem('role');
+//   const username = localStorage.getItem('user_name');
+
+//   const [propertyCategories, setPropertyCategories] = useState([]);
+//   const [propertyTypes, setPropertyTypes] = useState([]);
+//   const [amenities, setAmenities] = useState([]);
+//   const [newAmenity, setNewAmenity] = useState('');
+//   const [showResidentialFields, setShowResidentialFields] = useState(false);
+//   const [showBuiltupArea, setShowBuiltupArea] = useState(true);
+
+//   const [countries, setCountries] = useState([]);
+//   const [states, setStates] = useState([]);
+//   const [cities, setCities] = useState([]);
+
+//   // Updated tabs order: Basic Details, Location Details, Media Upload, Property Details (combined)
+//   const tabs = [
+//     { id: 'basic-details', label: 'Basic Details' },
+//     { id: 'location-details', label: 'Location Details' },
+//     { id: 'media-upload', label: 'Media Upload' },
+//     { id: 'property-details', label: 'Property Details' }
+//   ];
+
+//   const [errors, setErrors] = useState({});
+
+//   const [formData, setFormData] = useState({
+//     lookingTo: 'sell',
+//     category: '',
+//     propertyType: '',
+//     propertyTitle: '',
+//     description: '',
+//     address: '',
+//     city: '',
+//     state: '',
+//     country: 'IN',
+//     pinCode: '',
+//     latitude: '',
+//     longitude: '',
+//     plotArea: '',
+//     pricePerUnit: '',
+//     areaUnit: 'sq.ft.',
+//     length: '',
+//     breadth: '',
+//     numberOfFloors: 1,
+//     numberOfBedrooms: '',
+//     numberOfBalconies: '',
+//     numberOfBathrooms: '',
+//     floor: "",
+//     furnishing_status: "",
+//     openSides: 0,
+//     builtupArea: '',
+//     numberOfRoads: 0,
+//     roadWidth1: null,
+//     roadWidth2: null,
+//     facing: 'east',
+//     ownershipType: 'Freehold',
+//     price: '',
+//     maintenance: '',
+//     amenities: [],
+//     propertyUniqueness: '',
+//     locationAdvantages: '',
+//     otherFeatures: '',
+//     ownerName: '',
+//     ownerContact: '',
+//     ownerEmail: '',
+//     isFeatured: false,
+//     images: [],
+//     videos: [],
+//     userId: userId,
+//     added_by: userId,
+//     role: null,
+//     agent_commission: "",
+//     files: [],
+//     layout: null,
+//     preferred_tenants: '',
+//     rent_amount: '',
+//     deposit_amount: '',
+//     available_from: '',
+//     agreement_video: null,
+//     agreement_file: null,
+//   });
+
+//   // Reset policy acceptance when tab changes
+//   useEffect(() => {
+//     setPolicyAccepted(false);
+//   }, [activeTab]);
+
+//   const fetchAmenities = async () => {
+//     try {
+//       const response = await axios.get(`${baseurl}/amenities/`);
+//       let amenitiesData = response.data;
+
+//       if (response.data.results) {
+//         amenitiesData = response.data.results;
+//       }
+
+//       const formattedAmenities = Array.isArray(amenitiesData)
+//         ? amenitiesData.map(amenity => ({
+//           ...amenity,
+//           amenity_id: parseInt(amenity.amenity_id) || amenity.amenity_id
+//         }))
+//         : [];
+
+//       setAmenities(formattedAmenities);
+//     } catch (error) {
+//       console.error('Error fetching amenities:', error);
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: 'Failed to fetch amenities',
+//         confirmButtonColor: '#d33',
+//       });
+//     }
+//   };
+
+//   const handleAddAmenity = async () => {
+//     if (!newAmenity.trim()) {
+//       Swal.fire({
+//         icon: 'warning',
+//         title: 'Empty Field',
+//         text: 'Please enter an amenity name',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       return;
+//     }
+
+//     try {
+//       const response = await axios.post(`${baseurl}/amenities/`, {
+//         name: newAmenity.trim(),
+//       });
+
+//       if (response.data) {
+//         setNewAmenity('');
+
+//         Swal.fire({
+//           icon: 'success',
+//           title: 'Success',
+//           text: 'Amenity added successfully!',
+//           timer: 1500,
+//           showConfirmButton: false,
+//         });
+
+//         await fetchAmenities();
+//       }
+//     } catch (error) {
+//       console.error("Error adding amenity:", error);
+
+//       let errorMessage = 'Failed to add amenity';
+//       if (error.response?.data) {
+//         errorMessage = error.response.data.message || JSON.stringify(error.response.data);
+//       }
+
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: errorMessage,
+//         confirmButtonColor: '#d33',
+//       });
+//     }
+//   };
+
+//   useEffect(() => {
+//     const allCountries = Country.getAllCountries();
+//     setCountries(allCountries);
+//   }, []);
+
+//   useEffect(() => {
+//     if (formData.country) {
+//       const statesOfCountry = State.getStatesOfCountry(formData.country);
+//       setStates(statesOfCountry);
+
+//       if (!isViewing) {
+//         setFormData(prev => ({
+//           ...prev,
+//           state: '',
+//           city: ''
+//         }));
+//       }
+//     } else {
+//       setStates([]);
+//       setCities([]);
+//     }
+//   }, [formData.country, isViewing]);
+
+//   useEffect(() => {
+//     if (formData.country && formData.state) {
+//       const citiesOfState = City.getCitiesOfState(formData.country, formData.state);
+//       setCities(citiesOfState);
+
+//       if (!isViewing) {
+//         setFormData(prev => ({
+//           ...prev,
+//           city: ''
+//         }));
+//       }
+//     } else {
+//       setCities([]);
+//     }
+//   }, [formData.country, formData.state, isViewing]);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const [categoriesRes, amenitiesRes] = await Promise.all([
+//           axios.get(`${baseurl}/property-categories/`),
+//           axios.get(`${baseurl}/amenities/`)
+//         ]);
+
+//         setPropertyCategories(categoriesRes.data.results || categoriesRes.data || []);
+
+//         let amenitiesData = amenitiesRes.data;
+//         if (amenitiesRes.data.results) {
+//           amenitiesData = amenitiesRes.data.results;
+//         }
+
+//         const formattedAmenities = Array.isArray(amenitiesData)
+//           ? amenitiesData.map(amenity => ({
+//             ...amenity,
+//             amenity_id: parseInt(amenity.amenity_id) || amenity.amenity_id
+//           }))
+//           : [];
+//         setAmenities(formattedAmenities);
+
+//         if (id && mode !== 'add') {
+//           const response = await axios.get(`${baseurl}/property/${id}`);
+//           const propertyData = response.data;
+
+//           if (propertyData.amenities) {
+//             propertyData.amenities = propertyData.amenities.map(id => parseInt(id));
+//           }
+
+//           if (propertyData.policy_accepted) {
+//             setPolicyAccepted(propertyData.policy_accepted);
+//           }
+
+//           setFormData(propertyData);
+//           setIsEditing(mode === 'edit');
+//           setIsViewing(mode === 'view');
+//         }
+//       } catch (error) {
+//         console.error('Error fetching data:', error);
+//         Swal.fire({
+//           icon: 'error',
+//           title: 'Error',
+//           text: 'Failed to load data',
+//           confirmButtonColor: '#d33',
+//         });
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchData();
+//   }, [id, mode]);
+
+//   useEffect(() => {
+//     if (formData.category) {
+//       axios
+//         .get(`${baseurl}/property-types/category-id/${formData.category}/`)
+//         .then((response) => {
+//           const data = response.data.results || response.data;
+//           setPropertyTypes(Array.isArray(data) ? data : []);
+//         })
+//         .catch((error) => {
+//           console.error('Error fetching property types:', error);
+//           setPropertyTypes([]);
+//         });
+//     } else {
+//       setPropertyTypes([]);
+//     }
+//   }, [formData.category]);
+
+//   useEffect(() => {
+//     if (!formData.propertyType || !Array.isArray(propertyTypes)) return;
+
+//     const selectedType = propertyTypes.find(
+//       (type) => Number(type.property_type_id) === Number(formData.propertyType)
+//     );
+
+//     if (!selectedType) return;
+
+//     const typeName = selectedType.name.toLowerCase();
+
+//     const residentialTypes = [
+//       "flat",
+//       "house",
+//       "apartment",
+//       "villa"
+//     ];
+
+//     const isResidential = residentialTypes.some(type =>
+//       typeName.includes(type)
+//     );
+
+//     setShowResidentialFields(isResidential);
+//     setShowBuiltupArea(!typeName.includes("plot"));
+//   }, [formData.propertyType, propertyTypes]);
+
+//   useEffect(() => {
+//     if (formData.lookingTo === 'sell') {
+//       const price = parseFloat(formData.price) || 0;
+//       const commission = parseFloat(formData.agent_commission) || 0;
+//       const total = price + commission;
+//       setFormData(prev => ({
+//         ...prev,
+//         total_property_value: total
+//       }));
+//     }
+//   }, [formData.price, formData.agent_commission, formData.lookingTo]);
+
+//   const handleChange = (e) => {
+//     if (isViewing) return;
+
+//     const { name, value, type, checked } = e.target;
+//     const newValue = type === 'checkbox' ? checked : value;
+
+//     if (errors[name]) {
+//       setErrors(prev => ({
+//         ...prev,
+//         [name]: ''
+//       }));
+//     }
+
+//     setFormData((prev) => {
+//       const updated = { ...prev, [name]: newValue };
+
+//       if (name === "pricePerUnit" || name === "plotArea") {
+//         const pricePerUnit = parseFloat(updated.pricePerUnit) || 0;
+//         const plotArea = parseFloat(updated.plotArea) || 0;
+//         updated.price = pricePerUnit * plotArea;
+//       }
+
+//       if (formData.lookingTo === 'sell') {
+//         const price = parseFloat(updated.price) || 0;
+//         const commission = parseFloat(updated.agent_commission) || 0;
+//         updated.total_property_value = price + commission;
+//       }
+
+//       return updated;
+//     });
+//   };
+
+//   const handleTabClick = (tab) => {
+//     setActiveTab(tab);
+//   };
+
+//   const validateCurrentTab = () => {
+//     if (isViewing) return true;
+
+//     const newErrors = {};
+
+//     switch (activeTab) {
+//       case 'basic-details':
+//         if (!formData.propertyTitle?.trim()) newErrors.propertyTitle = 'Property Title is required';
+//         if (!formData.category) newErrors.category = 'Property Category is required';
+//         if (!formData.propertyType) newErrors.propertyType = 'Property Type is required';
+//         break;
+
+//       case 'location-details':
+//         if (!formData.address?.trim()) newErrors.address = 'Address is required';
+//         if (!formData.city?.trim()) newErrors.city = 'City is required';
+//         if (!formData.state?.trim()) newErrors.state = 'State is required';
+//         if (!formData.country?.trim()) newErrors.country = 'Country is required';
+//         break;
+
+//       case 'media-upload':
+//         if (formData.images.length === 0) {
+//           Swal.fire({
+//             icon: 'info',
+//             title: 'Required Field',
+//             text: 'Please upload at least one property image',
+//             confirmButtonColor: '#3085d6',
+//           });
+//           return false;
+//         }
+//         break;
+
+//       case 'property-details':
+//         // Property Profile validations
+//         if (!formData.areaUnit?.trim()) newErrors.areaUnit = 'Area Unit is required';
+//         if (!formData.plotArea || formData.plotArea <= 0) newErrors.plotArea = 'Valid Area is required';
+//         if (!formData.pricePerUnit || formData.pricePerUnit <= 0) newErrors.pricePerUnit = 'Valid Price Per Unit is required';
+        
+//         // Pricing validations
+//         if (formData.lookingTo === 'sell') {
+//           if (!formData.price || formData.price <= 0) newErrors.price = 'Property Value is required';
+//           if (!formData.total_property_value || formData.total_property_value <= 0) newErrors.total_property_value = 'Total Property Value is required';
+//         } else {
+//           if (!formData.rent_amount || formData.rent_amount <= 0) newErrors.rent_amount = 'Rent Amount is required';
+//         }
+        
+//         // Validate policy acceptance
+//         if (!policyAccepted) {
+//           Swal.fire({
+//             icon: 'warning',
+//             title: 'Policy Acceptance Required',
+//             text: 'Please accept the Privacy Policy and Terms & Conditions to continue',
+//             confirmButtonColor: '#3085d6',
+//           });
+//           return false;
+//         }
+//         break;
+//     }
+
+//     setErrors(prev => ({ ...prev, ...newErrors }));
+//     return Object.keys(newErrors).length === 0;
+//   };
+
+//   const handleNext = () => {
+//     if (!validateCurrentTab()) {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Validation Error',
+//         text: 'Please fill all required fields correctly',
+//         confirmButtonColor: '#d33',
+//       });
+//       return;
+//     }
+
+//     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
+//     if (currentIndex < tabs.length - 1) {
+//       setActiveTab(tabs[currentIndex + 1].id);
+//     }
+//   };
+
+//   const handleBack = () => {
+//     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
+//     if (currentIndex > 0) {
+//       setActiveTab(tabs[currentIndex - 1].id);
+//     }
+//   };
+
+//   const handleFileUpload = async (e, type) => {
+//     if (isViewing) return;
+
+//     const files = Array.from(e.target.files);
+//     if (!files.length) return;
+
+//     if (type === 'agreement_video' || type === 'agreement_file' || type === 'layout') {
+//       const file = files[0];
+//       if (file) {
+//         setFormData(prev => ({
+//           ...prev,
+//           [type]: {
+//             name: file.name,
+//             type: file.type,
+//             size: file.size,
+//             file: file
+//           }
+//         }));
+//       }
+//       e.target.value = '';
+//       return;
+//     }
+
+//     const newFiles = files.map(file => ({
+//       name: file.name,
+//       type: file.type,
+//       size: file.size,
+//       file: file,
+//       preview: type === 'images' ? URL.createObjectURL(file) : null
+//     }));
+
+//     setFormData(prev => ({
+//       ...prev,
+//       [type]: [...prev[type], ...newFiles]
+//     }));
+
+//     e.target.value = '';
+//   };
+
+//   const removeFile = (index, type) => {
+//     if (isViewing) return;
+
+//     setFormData(prev => ({
+//       ...prev,
+//       [type]: prev[type].filter((_, i) => i !== index)
+//     }));
+//   };
+
+//   const removeSingleFile = (type) => {
+//     if (isViewing) return;
+
+//     setFormData(prev => ({
+//       ...prev,
+//       [type]: null
+//     }));
+//   };
+
+//   const handleAmenityChange = (amenityId) => {
+//     if (isViewing) return;
+
+//     setFormData(prev => {
+//       const numericId = parseInt(amenityId);
+//       const newAmenities = prev.amenities.includes(numericId)
+//         ? prev.amenities.filter(id => id !== numericId)
+//         : [...prev.amenities, numericId];
+//       return { ...prev, amenities: newAmenities };
+//     });
+//   };
+
+//   const renderError = (fieldName) => {
+//     return errors[fieldName] ? (
+//       <div className="invalid-feedback" style={{ display: 'block' }}>
+//         {errors[fieldName]}
+//       </div>
+//     ) : null;
+//   };
+
+//   const getInputClass = (fieldName) => {
+//     return `form-control customer-form-input ${errors[fieldName] ? 'is-invalid' : ''} ${isViewing ? 'view-mode' : ''}`;
+//   };
+
+//   const getSelectClass = (fieldName) => {
+//     return `form-select customer-form-input ${errors[fieldName] ? 'is-invalid' : ''} ${isViewing ? 'view-mode' : ''}`;
+//   };
+
+//   const getTextareaClass = (fieldName) => {
+//     return `form-control customer-form-input ${errors[fieldName] ? 'is-invalid' : ''} ${isViewing ? 'view-mode' : ''}`;
+//   };
+
+//   const renderField = (fieldConfig) => {
+//     const { type = 'text', name, label, required = true, options, rows, disabled = false, readOnly = false, ...props } = fieldConfig;
+
+//     if (isViewing) {
+//       const value = formData[name];
+//       const displayValue = Array.isArray(value)
+//         ? value.join(', ')
+//         : (value !== null && value !== undefined && value !== '' ? value.toString() : 'N/A');
+
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label view-mode-label">{label}</label>
+//           <div className="view-mode-value">{displayValue}</div>
+//         </div>
+//       );
+//     }
+
+//     if (type === 'select') {
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//           <select
+//             className={getSelectClass(name)}
+//             name={name}
+//             value={formData[name] || ''}
+//             onChange={handleChange}
+//             required={required}
+//             disabled={disabled || isViewing}
+//             {...props}
+//           >
+//             <option value="">Select</option>
+//             {options?.map(option => (
+//               <option key={option.value} value={option.value}>
+//                 {option.label}
+//               </option>
+//             ))}
+//           </select>
+//           {renderError(name)}
+//         </div>
+//       );
+//     }
+
+//     if (type === 'textarea') {
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//           <textarea
+//             name={name}
+//             value={formData[name] || ''}
+//             className={getTextareaClass(name)}
+//             onChange={handleChange}
+//             required={required}
+//             rows={rows || 3}
+//             disabled={disabled || isViewing}
+//             {...props}
+//           />
+//           {renderError(name)}
+//         </div>
+//       );
+//     }
+
+//     if (type === 'checkbox') {
+//       return (
+//         <div className="mb-3 form-check">
+//           <input
+//             type="checkbox"
+//             name={name}
+//             checked={formData[name] || false}
+//             className="form-check-input"
+//             onChange={handleChange}
+//             disabled={disabled || isViewing}
+//             {...props}
+//           />
+//           <label className="form-check-label">{label}{required && '*'}</label>
+//           {renderError(name)}
+//         </div>
+//       );
+//     }
+
+//     return (
+//       <div className="mb-3">
+//         <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//         <input
+//           type={type}
+//           name={name}
+//           value={formData[name] || ''}
+//           className={getInputClass(name)}
+//           onChange={handleChange}
+//           required={required}
+//           disabled={disabled || isViewing}
+//           readOnly={readOnly}
+//           {...props}
+//         />
+//         {renderError(name)}
+//       </div>
+//     );
+//   };
+
+//   const renderAmenitiesField = () => {
+//     if (isViewing) {
+//       const selectedAmenities = Array.isArray(amenities)
+//         ? amenities
+//           .filter(amenity => formData.amenities.includes(parseInt(amenity.amenity_id)))
+//           .map(amenity => amenity.name)
+//         : [];
+
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label view-mode-label">Amenities</label>
+//           <div className="view-mode-value">
+//             {selectedAmenities.length > 0 ? selectedAmenities.join(', ') : 'None'}
+//           </div>
+//         </div>
+//       );
+//     }
+
+//     return (
+//       <div className="mb-3">
+//         <label className="admin-customer-form-label">Amenities</label>
+
+//         <div className="row mb-3">
+//           <div className="col-md-8">
+//             <input
+//               type="text"
+//               className="form-control"
+//               placeholder="Enter new amenity name"
+//               value={newAmenity}
+//               onChange={(e) => setNewAmenity(e.target.value)}
+//               onKeyPress={(e) => {
+//                 if (e.key === 'Enter') {
+//                   e.preventDefault();
+//                   handleAddAmenity();
+//                 }
+//               }}
+//             />
+//           </div>
+//           <div className="col-md-4">
+//             <button
+//               type="button"
+//               className="btn"
+//               style={{
+//                 backgroundColor: '#273c75',
+//                 borderColor: '#273c75',
+//                 color: 'white',
+//                 width: '100%'
+//               }}
+//               onClick={handleAddAmenity}
+//               disabled={!newAmenity.trim()}
+//             >
+//               Add Amenity
+//             </button>
+//           </div>
+//         </div>
+
+//         <div className="amenities-checkbox-group" style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid #dee2e6', padding: '10px', borderRadius: '4px' }}>
+//           {Array.isArray(amenities) && amenities.length > 0 ? (
+//             amenities.map(amenity => (
+//               <div className="form-check form-check-inline" key={amenity.amenity_id} style={{ marginBottom: '8px', width: 'calc(33.33% - 10px)' }}>
+//                 <input
+//                   className="form-check-input"
+//                   type="checkbox"
+//                   id={`amenity-${amenity.amenity_id}`}
+//                   checked={formData.amenities.includes(parseInt(amenity.amenity_id))}
+//                   onChange={() => handleAmenityChange(amenity.amenity_id)}
+//                   disabled={isViewing}
+//                 />
+//                 <label className="form-check-label" htmlFor={`amenity-${amenity.amenity_id}`}>
+//                   {amenity.name}
+//                 </label>
+//               </div>
+//             ))
+//           ) : (
+//             <p className="text-muted text-center">No amenities available. Add one using the field above.</p>
+//           )}
+//         </div>
+
+//         {formData.amenities.length > 0 && (
+//           <div className="mt-2 text-primary">
+//             <small>{formData.amenities.length} amenit{formData.amenities.length === 1 ? 'y' : 'ies'} selected</small>
+//           </div>
+//         )}
+//       </div>
+//     );
+//   };
+
+//   const renderFileUploadField = (type, label, accept, required = false, isSingle = false) => {
+//     if (isViewing) {
+//       const file = formData[type];
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label view-mode-label">{label}</label>
+//           <div className="view-mode-value">
+//             {file ? (Array.isArray(file) ? file.map(f => f.name).join(', ') : file.name) : 'No file uploaded'}
+//           </div>
+//         </div>
+//       );
+//     }
+
+//     if (isSingle) {
+//       const file = formData[type];
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//           <div className="file-upload-container">
+//             <div className="input-group">
+//               <input
+//                 id={`${type}-upload`}
+//                 type="file"
+//                 accept={accept}
+//                 className="form-control"
+//                 onChange={(e) => handleFileUpload(e, type)}
+//                 disabled={isViewing}
+//               />
+//               <button
+//                 type="button"
+//                 className="btn btn-outline-secondary media-upload-btn"
+//                 onClick={() => document.getElementById(`${type}-upload`).click()}
+//                 disabled={isViewing}
+//               >
+//                 <i className="bi bi-upload me-1"></i> Upload
+//               </button>
+//             </div>
+//             <div className="uploaded-files mt-2">
+//               {file && (
+//                 <div className="uploaded-file-item d-flex align-items-center justify-content-between">
+//                   <span className="file-name">{file.name}</span>
+//                   <button
+//                     type="button"
+//                     className="btn btn-sm btn-danger ms-2"
+//                     onClick={() => removeSingleFile(type)}
+//                     style={{ cursor: 'pointer' }}
+//                   >
+//                     ✕
+//                   </button>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       );
+//     }
+
+//     return (
+//       <div className="mb-3">
+//         <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//         <div className="file-upload-container">
+//           <div className="input-group">
+//             <input
+//               id={`${type}-upload`}
+//               type="file"
+//               accept={accept}
+//               multiple={true}
+//               className="form-control"
+//               onChange={(e) => handleFileUpload(e, type)}
+//               disabled={isViewing}
+//             />
+//             <button
+//               type="button"
+//               className="btn btn-outline-secondary media-upload-btn"
+//               onClick={() => document.getElementById(`${type}-upload`).click()}
+//               disabled={isViewing}
+//             >
+//               <i className="bi bi-upload me-1"></i> Upload
+//             </button>
+//           </div>
+//           <div className="uploaded-files mt-2">
+//             {formData[type] && formData[type].length > 0 ? (
+//               formData[type].map((file, index) => (
+//                 file && (
+//                   <div key={index} className="uploaded-file-item d-flex align-items-center justify-content-between">
+//                     <span className="file-name">{file.name}</span>
+//                     <button
+//                       type="button"
+//                       className="btn btn-sm btn-danger ms-2"
+//                       onClick={() => removeFile(index, type)}
+//                       style={{ cursor: 'pointer' }}
+//                     >
+//                       ✕
+//                     </button>
+//                   </div>
+//                 )
+//               ))
+//             ) : null}
+//           </div>
+//           {required && type === 'images' && formData.images.length === 0 && (
+//             <div className="invalid-feedback d-block">
+//               At least one image is required
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     );
+//   };
+
+//   const renderActiveTab = () => {
+//     if (loading) {
+//       return <div className="loading-spinner text-center py-5">Loading property data...</div>;
+//     }
+
+//     switch (activeTab) {
+//       case 'basic-details':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'lookingTo',
+//                     label: 'Looking To',
+//                     options: [
+//                       { value: 'sell', label: 'Sell' },
+//                       { value: 'rent', label: 'Rent' }
+//                     ]
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'category',
+//                     label: 'Property Category',
+//                     options: Array.isArray(propertyCategories)
+//                       ? propertyCategories.map(category => ({
+//                         value: category.property_category_id,
+//                         label: category.name
+//                       }))
+//                       : []
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'propertyType',
+//                     label: 'Property Type',
+//                     options: Array.isArray(propertyTypes)
+//                       ? propertyTypes.map(type => ({
+//                         value: type.property_type_id,
+//                         label: type.name
+//                       }))
+//                       : [],
+//                     disabled: !formData.category
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'propertyTitle',
+//                     label: 'Property Title'
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'description',
+//                     label: 'Description',
+//                     rows: 4,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         );
+
+//       case 'location-details':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   <div className="mb-3">
+//                     <label className="admin-customer-form-label">Country *</label>
+//                     {isViewing ? (
+//                       <div className="view-mode-value">
+//                         {countries.find(c => c.isoCode === formData.country)?.name || formData.country || 'N/A'}
+//                       </div>
+//                     ) : (
+//                       <>
+//                         <select
+//                           className={`form-select customer-form-input ${errors.country ? 'is-invalid' : ''}`}
+//                           name="country"
+//                           value={formData.country || ''}
+//                           onChange={(e) => {
+//                             const selectedCountry = e.target.value;
+//                             setFormData(prev => ({
+//                               ...prev,
+//                               country: selectedCountry,
+//                               state: '',
+//                               city: ''
+//                             }));
+//                             if (errors.country) {
+//                               setErrors(prev => ({ ...prev, country: '' }));
+//                             }
+//                           }}
+//                           required
+//                         >
+//                           <option value="">Select Country</option>
+//                           {countries.map(country => (
+//                             <option key={country.isoCode} value={country.isoCode}>
+//                               {country.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                         {renderError('country')}
+//                       </>
+//                     )}
+//                   </div>
+//                 </div>
+//                 <div className="col-md-6">
+//                   <div className="mb-3">
+//                     <label className="admin-customer-form-label">State *</label>
+//                     {isViewing ? (
+//                       <div className="view-mode-value">
+//                         {states.find(s => s.isoCode === formData.state)?.name || formData.state || 'N/A'}
+//                       </div>
+//                     ) : (
+//                       <>
+//                         <select
+//                           className={`form-select customer-form-input ${errors.state ? 'is-invalid' : ''}`}
+//                           name="state"
+//                           value={formData.state || ''}
+//                           onChange={(e) => {
+//                             const selectedState = e.target.value;
+//                             setFormData(prev => ({
+//                               ...prev,
+//                               state: selectedState,
+//                               city: ''
+//                             }));
+//                             if (errors.state) {
+//                               setErrors(prev => ({ ...prev, state: '' }));
+//                             }
+//                           }}
+//                           disabled={!formData.country}
+//                           required
+//                         >
+//                           <option value="">Select State</option>
+//                           {states.map(state => (
+//                             <option key={state.isoCode} value={state.isoCode}>
+//                               {state.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                         {renderError('state')}
+//                       </>
+//                     )}
+//                   </div>
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   <div className="mb-3">
+//                     <label className="admin-customer-form-label">City *</label>
+//                     {isViewing ? (
+//                       <div className="view-mode-value">
+//                         {formData.city || 'N/A'}
+//                       </div>
+//                     ) : (
+//                       <>
+//                         <select
+//                           className={`form-select customer-form-input ${errors.city ? 'is-invalid' : ''}`}
+//                           name="city"
+//                           value={formData.city || ''}
+//                           onChange={(e) => {
+//                             setFormData(prev => ({
+//                               ...prev,
+//                               city: e.target.value
+//                             }));
+//                             if (errors.city) {
+//                               setErrors(prev => ({ ...prev, city: '' }));
+//                             }
+//                           }}
+//                           disabled={!formData.state}
+//                           required
+//                         >
+//                           <option value="">Select City</option>
+//                           {cities.map(city => (
+//                             <option key={city.name} value={city.name}>
+//                               {city.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                         {renderError('city')}
+//                       </>
+//                     )}
+//                   </div>
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'pinCode',
+//                     label: 'Pin Code(optional)',
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'address',
+//                     label: 'Full Address',
+//                     rows: 3
+//                   })}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         );
+
+//       case 'media-upload':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderFileUploadField('images', 'Property Images', 'image/*', true, false)}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderFileUploadField('videos', 'Property Videos', 'video/*', false, false)}
+//                 </div>
+
+//                 <div className="col-md-6">
+//                   {renderFileUploadField('files', 'Property Documents', '.pdf,.doc,.docx,.xls,.xlsx,.txt', false, false)}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderFileUploadField('layout', 'Layout', '.pdf,.jpg,.jpeg,.png,.dwg', false, true)}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {/* Empty column for alignment */}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         );
+
+//       case 'property-details':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               {/* Property Profile Section */}
+//               {/* <div className="section-divider">
+//                 <h4 className="section-title">Property Profile</h4>
+//               </div> */}
+
+//               {showResidentialFields && (
+//                 <>
+//                   <div className="row">
+//                     <div className="col-md-3">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'numberOfBedrooms',
+//                         label: 'Bedrooms',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-3">
+//                       <div className="mb-3">
+//                         <label className="admin-customer-form-label">Bathrooms</label>
+//                         <input
+//                           type="number"
+//                           name="numberOfBathrooms"
+//                           value={formData.numberOfBathrooms || ''}
+//                           className={getInputClass('numberOfBathrooms')}
+//                           onChange={handleChange}
+//                           min="0"
+//                           disabled={isViewing}
+//                         />
+//                       </div>
+//                     </div>
+//                     <div className="col-md-3">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'numberOfBalconies',
+//                         label: 'Balconies',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-3">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'numberOfFloors',
+//                         label: 'Total Floors',
+//                         min: 1,
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'floor',
+//                         label: 'Floor Number',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'select',
+//                         name: 'furnishing_status',
+//                         label: 'Furnishing Status',
+//                         options: [
+//                           { value: 'Semi-Furnished', label: 'Semi-Furnished' },
+//                           { value: 'Fully-Furnished', label: 'Fully-Furnished' },
+//                           { value: 'Unfurnished', label: 'Unfurnished' }
+//                         ],
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+//                 </>
+//               )}
+
+//               <div className="row">
+//                 <div className="col-md-4">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'areaUnit',
+//                     label: 'Area Unit',
+//                     options: [
+//                       { value: 'sq.ft.', label: 'Square Feet' },
+//                       { value: 'sq.m.', label: 'Square Meters' },
+//                       { value: 'sq.yd.', label: 'Square Yards' },
+//                       { value: 'acres', label: 'Acres' },
+//                       { value: 'hectares', label: 'Hectares' },
+//                       { value: 'cents', label: 'Cents' }
+//                     ],
+//                     required: true
+//                   })}
+//                 </div>
+//                 <div className="col-md-4">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'plotArea',
+//                     label: 'Area',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: true
+//                   })}
+//                 </div>
+//                 <div className="col-md-4">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'pricePerUnit',
+//                     label: 'Price Per Unit',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: true
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'length',
+//                     label: 'Length (ft)',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: false
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'breadth',
+//                     label: 'Breadth (ft)',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               {showBuiltupArea && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'builtupArea',
+//                       label: 'Built-up Area',
+//                       step: '0.01',
+//                       min: 0,
+//                       required: false
+//                     })}
+//                   </div>
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'select',
+//                       name: 'facing',
+//                       label: 'Facing Direction',
+//                       options: [
+//                         { value: 'east', label: 'East' },
+//                         { value: 'west', label: 'West' },
+//                         { value: 'north', label: 'North' },
+//                         { value: 'south', label: 'South' },
+//                         { value: 'north_east', label: 'North-East' },
+//                         { value: 'north_west', label: 'North-West' },
+//                         { value: 'south_east', label: 'South-East' },
+//                         { value: 'south_west', label: 'South-West' }
+//                       ],
+//                       required: false
+//                     })}
+//                   </div>
+//                 </div>
+//               )}
+
+//               {!showBuiltupArea && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'select',
+//                       name: 'facing',
+//                       label: 'Facing Direction',
+//                       options: [
+//                         { value: 'east', label: 'East' },
+//                         { value: 'west', label: 'West' },
+//                         { value: 'north', label: 'North' },
+//                         { value: 'south', label: 'South' },
+//                         { value: 'north-east', label: 'North-East' },
+//                         { value: 'north-west', label: 'North-West' },
+//                         { value: 'south-east', label: 'South-East' },
+//                         { value: 'south-west', label: 'South-West' }
+//                       ],
+//                       required: false
+//                     })}
+//                   </div>
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'openSides',
+//                       label: 'Number of Open Sides',
+//                       min: 0,
+//                       max: 4,
+//                       required: false
+//                     })}
+//                   </div>
+//                 </div>
+//               )}
+
+//               {showBuiltupArea && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'openSides',
+//                       label: 'Number of Open Sides',
+//                       min: 0,
+//                       max: 4,
+//                       required: false
+//                     })}
+//                   </div>
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'numberOfRoads',
+//                       label: 'Number of Roads',
+//                       min: 0,
+//                       max: 2,
+//                       required: false
+//                     })}
+//                   </div>
+//                 </div>
+//               )}
+
+//               {formData.numberOfRoads >= 1 && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'roadWidth1',
+//                       label: 'Road 1 Width (ft)',
+//                       step: '0.01',
+//                       min: 0,
+//                       required: false
+//                     })}
+//                   </div>
+//                   {formData.numberOfRoads >= 2 && (
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'roadWidth2',
+//                         label: 'Road 2 Width (ft)',
+//                         step: '0.01',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                   )}
+//                 </div>
+//               )}
+
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'locationAdvantages',
+//                     label: 'Location Advantages',
+//                     rows: 3,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               {renderAmenitiesField()}
+
+//               {/* Pricing & Ownership Section */}
+//               {/* <div className="section-divider mt-4">
+//                 <h4 className="section-title">Pricing & Ownership</h4>
+//               </div> */}
+
+//               {formData.lookingTo === 'sell' ? (
+//                 <>
+//                   <div className="row">
+//                     <div className="col-md-4">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'price',
+//                         label: 'Property Value',
+//                         step: '0.01',
+//                         min: 0,
+//                         readOnly: true
+//                       })}
+//                     </div>
+//                     <div className="col-md-4">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'agent_commission',
+//                         label: 'Team Payout',
+//                         step: '0.01',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                       <div className="col-md-4">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'total_property_value',
+//                         label: 'Total Property Value',
+//                         step: '0.01',
+//                         min: 0,
+//                         readOnly: true
+//                       })}
+//                     </div>
+//                   </div>
+
+                
+//                 </>
+//               ) : (
+//                 <>
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         name: 'preferred_tenants',
+//                         label: 'Preferred Tenants',
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'rent_amount',
+//                         label: 'Rent Amount',
+//                         step: '0.01',
+//                         min: 0
+//                       })}
+//                     </div>
+//                   </div>
+
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'deposit_amount',
+//                         label: 'Deposit Amount',
+//                         step: '0.01',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'date',
+//                         name: 'available_from',
+//                         label: 'Available From',
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+//                 </>
+//               )}
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'ownerName',
+//                     label: 'Owner Name',
+//                     required: false
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'ownerContact',
+//                     label: 'Owner Phone Number',
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               {/* Legal Agreement Section */}
+//               {!isViewing && (
+//                 <div className="policy-section" style={{ borderTop: '1px solid #dee2e6', marginTop: '20px', paddingTop: '20px' }}>
+//                   <div className="row">
+//                     <div className="col-12">
+//                       <h5 className="mb-3" style={{ color: '#273c75', fontWeight: '600' }}>
+//                         Legal Agreement
+//                       </h5>
+//                     </div>
+//                   </div>
+
+//                   <div className="row mb-3">
+//                     <div className="col-12">
+//                       <div className="form-check d-flex align-items-center justify-content-between" style={{ paddingLeft: '0' }}>
+//                         <div className="d-flex align-items-center">
+//                           <input
+//                             type="checkbox"
+//                             className="form-check-input me-2"
+//                             id="policyAcceptance"
+//                             checked={policyAccepted}
+//                             onChange={(e) => setPolicyAccepted(e.target.checked)}
+//                             style={{ cursor: 'pointer', transform: 'scale(1.1)' }}
+//                           />
+//                           <label className="form-check-label" htmlFor="policyAcceptance" style={{ fontWeight: '500' }}>
+//                             I agree to the <strong>Privacy Policy</strong> and <strong>Terms & Conditions</strong>
+//                           </label>
+//                         </div>
+//                         <button
+//                           type="button"
+//                           className="btn btn-sm btn-outline-primary"
+//                           onClick={() => setShowPolicyModal(true)}
+//                           style={{ fontSize: '0.875rem' }}
+//                         >
+//                           View Policies
+//                         </button>
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   {!policyAccepted && (
+//                     <div className="row">
+//                       <div className="col-12">
+//                         <div className="alert alert-warning" style={{ marginTop: '10px' }}>
+//                           <i className="bi bi-exclamation-triangle-fill me-2"></i>
+//                           Please accept the Privacy Policy and Terms & Conditions to submit the property.
+//                         </div>
+//                       </div>
+//                     </div>
+//                   )}
+//                 </div>
+//               )}
+
+//               {isViewing && (
+//                 <div className="policy-section" style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #dee2e6' }}>
+//                   <div className="row">
+//                     <div className="col-12">
+//                       <h5 className="mb-3" style={{ color: '#273c75', fontWeight: '600' }}>
+//                         Legal Agreements
+//                       </h5>
+//                       <div className="view-mode-value" style={{ backgroundColor: '#e8f5e9', padding: '12px', borderRadius: '8px' }}>
+//                         ✓ Privacy Policy and Terms & Conditions Accepted
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         );
+
+//       default:
+//         return null;
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     if (e) e.preventDefault();
+
+//     if (isViewing) {
+//       navigate('/a-dashboard');
+//       return;
+//     }
+
+//     if (!policyAccepted) {
+//       Swal.fire({
+//         icon: 'warning',
+//         title: 'Policy Acceptance Required',
+//         text: 'Please accept the Privacy Policy and Terms & Conditions to submit the property',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       return;
+//     }
+
+//     let isValid = true;
+//     for (const tab of tabs) {
+//       setActiveTab(tab.id);
+//       if (!validateCurrentTab()) {
+//         isValid = false;
+//         break;
+//       }
+//     }
+
+//     if (!isValid) {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Incomplete Form',
+//         text: 'Please complete all required fields in all steps',
+//         confirmButtonColor: '#d33',
+//       });
+//       return;
+//     }
+
+//     setIsSubmitting(true);
+
+//     try {
+//       const payload = new FormData();
+
+//       const formFields = {
+//         looking_to: formData.lookingTo,
+//         property_title: formData.propertyTitle,
+//         description: formData.description || '',
+//         address: formData.address,
+//         city: formData.city,
+//         state: formData.state,
+//         country: formData.country,
+//         pin_code: formData.pinCode,
+//         latitude: formData.latitude || '12.120000',
+//         longitude: formData.longitude || '12.120000',
+//         area: formData.plotArea,
+//         area_unit: formData.areaUnit,
+//         price_per_unit: formData.pricePerUnit || '0.00',
+//         builtup_area: formData.builtupArea || '0.00',
+//         length_ft: formData.length || '0.00',
+//         breadth_ft: formData.breadth || '0.00',
+//         number_of_floors: formData.numberOfFloors || 0,
+//         number_of_open_sides: formData.openSides || 0,
+//         number_of_roads: formData.numberOfRoads || 0,
+//         road_width_1_ft: formData.roadWidth1 || '0.00',
+//         road_width_2_ft: formData.roadWidth2 || '0.00',
+//         facing: formData.facing,
+//         ownership_type: formData.ownershipType,
+//         property_value: formData.price,
+//         property_uniqueness: formData.propertyUniqueness || '',
+//         location_advantages: formData.locationAdvantages || '',
+//         other_features: formData.otherFeatures || '',
+//         owner_name: formData.ownerName,
+//         owner_contact: formData.ownerContact,
+//         owner_email: formData.ownerEmail || '',
+//         is_featured: formData.isFeatured,
+//         category: formData.category,
+//         property_type: formData.propertyType,
+//         user_id: userId,
+//         referral_id: referralId,
+//         number_of_bedrooms: formData.numberOfBedrooms || 0,
+//         number_of_balconies: formData.numberOfBalconies || 0,
+//         number_of_bathrooms: formData.numberOfBathrooms || 0,
+//         floor: formData.floor || 0,
+//         furnishing_status: formData.furnishing_status || '',
+//         agent_commission: formData.agent_commission || '0.00',
+//         total_property_value: formData.total_property_value,
+//         username: username,
+//         preferred_tenants: formData.preferred_tenants || '',
+//         rent_amount: formData.rent_amount || '0.00',
+//         deposit_amount: formData.deposit_amount || '0.00',
+//         available_from: formData.available_from || '',
+//         policy_accepted: policyAccepted
+//       };
+
+//       Object.entries(formFields).forEach(([key, value]) => {
+//         if (value !== null && value !== undefined && value !== '') {
+//           payload.append(key, value);
+//         }
+//       });
+
+//       if (formData.amenities && formData.amenities.length > 0) {
+//         formData.amenities.forEach((id) => {
+//           payload.append("amenities", id.toString());
+//         });
+//       }
+
+//       formData.images.forEach((img) => {
+//         if (img.file) {
+//           payload.append('images', img.file, img.name);
+//         }
+//       });
+
+//       formData.videos.forEach((vid) => {
+//         if (vid.file) {
+//           payload.append('videos', vid.file, vid.name);
+//         }
+//       });
+
+//       formData.files.forEach((doc) => {
+//         if (doc.file) {
+//           payload.append('files', doc.file, doc.name);
+//         }
+//       });
+
+//       if (formData.layout?.file) {
+//         payload.append('layout', formData.layout.file, formData.layout.name);
+//       }
+
+//       if (formData.agreement_video?.file) {
+//         payload.append('agreement_video', formData.agreement_video.file, formData.agreement_video.name);
+//       }
+
+//       if (formData.agreement_file?.file) {
+//         payload.append('agreement_file', formData.agreement_file.file, formData.agreement_file.name);
+//       }
+
+//       const endpoint = isEditing ? `${baseurl}/property/${id}/` : `${baseurl}/property/`;
+//       const method = isEditing ? 'put' : 'post';
+
+//       await axios[method](endpoint, payload, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data'
+//         }
+//       });
+
+//       Swal.fire({
+//         icon: 'success',
+//         title: 'Success',
+//         text: isEditing ? 'Property Updated Successfully!' : 'Property Added Successfully!',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       navigate("/agent-my-properties");
+
+//     } catch (error) {
+//       console.error('Detailed submission error:', error);
+
+//       let errorMessage = isEditing ? 'Error updating property' : 'Error adding property';
+//       if (error.response?.data) {
+//         errorMessage += `: ${JSON.stringify(error.response.data)}`;
+//       }
+
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Submission Failed',
+//         text: errorMessage,
+//         confirmButtonColor: '#d33',
+//       });
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   const getTitle = () => {
+//     switch (mode) {
+//       case 'add': return "Add Property";
+//       case 'edit': return "Edit Property";
+//       case 'view': return "View Property";
+//       default: return "Property";
+//     }
+//   };
+
+//   return (
+//     <>
+//       <AgentNavbar />
+//       <div className="container-fluid admin-add-property-main-div">
+//         <div className="row">
+//           <div className="col-12">
+//             <div className="property-form-container">
+//               <div className="admin-form-header">
+//                 <h2 className="form-title">{getTitle()}</h2>
+//                 <div className="admin-form-actions">
+//                   {!isViewing && (
+//                     <>
+//                       <button
+//                         type="button"
+//                         className="btn btn-secondary me-2"
+//                         onClick={() => navigate(-1)}
+//                         disabled={isSubmitting}
+//                       >
+//                         Cancel
+//                       </button>
+//                       <button
+//                         type="button"
+//                         className="btn"
+//                         style={{
+//                           backgroundColor: '#273c75',
+//                           borderColor: '#273c75',
+//                           color: 'white',
+//                           whiteSpace: 'nowrap',
+//                           opacity: policyAccepted ? '1' : '0.6',
+//                           cursor: policyAccepted ? 'pointer' : 'not-allowed'
+//                         }}
+//                         onClick={handleSubmit}
+//                         disabled={isSubmitting || !policyAccepted}
+//                       >
+//                         {isSubmitting ? 'Saving...' : (isEditing ? 'Update Property' : 'Add Property')}
+//                       </button>
+//                     </>
+//                   )}
+//                   {isViewing && (
+//                     <button
+//                       type="button"
+//                       className="btn btn-secondary"
+//                       onClick={() => navigate(-1)}
+//                     >
+//                       Back to List
+//                     </button>
+//                   )}
+//                 </div>
+//               </div>
+
+//               <div className="admin-form-tabs-container">
+//                 <ul className="nav nav-tabs admin-form-tabs">
+//                   {tabs.map((tab) => (
+//                     <li className="nav-item" key={tab.id}>
+//                       <button
+//                         className={`nav-link ${activeTab === tab.id ? 'active' : ''}`}
+//                         onClick={() => handleTabClick(tab.id)}
+//                         type="button"
+//                       >
+//                         {tab.label}
+//                       </button>
+//                     </li>
+//                   ))}
+//                 </ul>
+//               </div>
+
+//               <div className="admin-form-body">
+//                 <form onSubmit={handleSubmit}>
+//                   {renderActiveTab()}
+
+//                   {!isViewing && (
+//                     <div className="admin-form-navigation">
+//                       <div className="row">
+//                         <div className="col-md-6">
+//                           {activeTab !== 'basic-details' && (
+//                             <button
+//                               type="button"
+//                               className="btn btn-secondary"
+//                               onClick={handleBack}
+//                               disabled={isSubmitting}
+//                             >
+//                               <i className="bi bi-arrow-left me-1"></i> Back
+//                             </button>
+//                           )}
+//                         </div>
+//                         <div className="col-md-6 text-end">
+//                           {activeTab !== 'property-details' ? (
+//                             <button
+//                               type="button"
+//                               className="btn"
+//                               style={{
+//                                 backgroundColor: '#273c75',
+//                                 borderColor: '#273c75',
+//                                 color: 'white'
+//                               }}
+//                               onClick={handleNext}
+//                               disabled={isSubmitting}
+//                             >
+//                               Next <i className="bi bi-arrow-right ms-1"></i>
+//                             </button>
+//                           ) : (
+//                             <button
+//                               type="button"
+//                               className="btn"
+//                               style={{
+//                                 backgroundColor: '#273c75',
+//                                 borderColor: '#273c75',
+//                                 color: 'white',
+//                                 opacity: policyAccepted ? '1' : '0.6'
+//                               }}
+//                               onClick={handleSubmit}
+//                               disabled={isSubmitting || !policyAccepted}
+//                             >
+//                               {isSubmitting ? (
+//                                 <>
+//                                   <span className="spinner-border spinner-border-sm me-1"></span>
+//                                   Saving...
+//                                 </>
+//                               ) : (
+//                                 <>
+//                                   {isEditing ? 'Update Property' : 'Add Property'}
+//                                   <i className="bi bi-check-circle ms-1"></i>
+//                                 </>
+//                               )}
+//                             </button>
+//                           )}
+//                         </div>
+//                       </div>
+//                     </div>
+//                   )}
+//                 </form>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       <PolicyModal
+//         isOpen={showPolicyModal}
+//         onClose={() => setShowPolicyModal(false)}
+//         title="Privacy Policy & Terms & Conditions"
+//         content={policyContent}
+//       />
+//     </>
+//   );
+// };
+
+// export default AgentAddPropertyForm;
+
+
+// import React, { useState, useEffect } from 'react';
+// import "./Add_Property.css";
+// import axios from 'axios';
+// import { useParams, useNavigate } from "react-router-dom";
+// import Swal from 'sweetalert2';
+// import { baseurl } from '../../BaseURL/BaseURL';
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import { Country, State, City } from "country-state-city";
+
+// // Modal component for combined Privacy Policy and Terms & Conditions
+// const PolicyModal = ({ isOpen, onClose, title, content }) => {
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className="policy-modal-overlay" onClick={onClose}>
+//       <div className="policy-modal-container" onClick={(e) => e.stopPropagation()}>
+//         <div className="policy-modal-header">
+//           <h3>{title}</h3>
+//           <button className="policy-modal-close" onClick={onClose}>&times;</button>
+//         </div>
+//         <div className="policy-modal-body">
+//           {/* Privacy Policy Section */}
+//           <div className="policy-section mb-4">
+//             <h4 className="policy-section-title">Privacy Policy</h4>
+//             {content.privacy.map((point, index) => (
+//               <div key={`privacy-${index}`} className="policy-point">
+//                 <span className="policy-point-bullet">{index + 1}.</span>
+//                 <p>{point}</p>
+//               </div>
+//             ))}
+//           </div>
+          
+//           {/* Terms & Conditions Section */}
+//           <div className="policy-section">
+//             <h4 className="policy-section-title">Terms & Conditions</h4>
+//             {content.terms.map((point, index) => (
+//               <div key={`terms-${index}`} className="policy-point">
+//                 <span className="policy-point-bullet">{index + 1}.</span>
+//                 <p>{point}</p>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//         <div className="policy-modal-footer">
+//           <button className="btn btn-secondary" onClick={onClose}>Close</button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
+//   const { id } = useParams();
+//   const [activeTab, setActiveTab] = useState('basic-details');
+//   const [isEditing, setIsEditing] = useState(mode === 'edit');
+//   const [isViewing, setIsViewing] = useState(mode === 'view');
+//   const [loading, setLoading] = useState(mode !== 'add');
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const navigate = useNavigate();
+
+//   // Single state for combined policy acceptance
+//   const [policyAccepted, setPolicyAccepted] = useState(false);
+//   const [showPolicyModal, setShowPolicyModal] = useState(false);
+
+//   // Combined content for Privacy Policy and Terms & Conditions
+//   const policyContent = {
+//     privacy: [
+//       "We collect and process your personal information only for property transactions and communication purposes.",
+//       "Your property details, images, and documents are stored securely and shared only with potential buyers/tenants.",
+//       "We do not sell or share your personal information with third parties without your explicit consent.",
+//       "You have the right to request deletion or modification of your property data at any time by contacting support."
+//     ],
+//     terms: [
+//       "You must provide accurate and truthful information about the property being listed on our platform.",
+//       "We reserve the right to remove any property listing that violates our community guidelines or local laws.",
+//       "The agent commission is applicable only upon successful property sale or rental agreement completion.",
+//       "Any disputes arising from property transactions will be resolved through arbitration as per applicable laws."
+//     ]
+//   };
+
+//   const referralId = localStorage.getItem('referral_id');
+//   const userId = localStorage.getItem('user_id');
+//   const role = localStorage.getItem('role');
+//   const username = localStorage.getItem('user_name');
+
+//   const [propertyCategories, setPropertyCategories] = useState([]);
+//   const [propertyTypes, setPropertyTypes] = useState([]);
+//   const [amenities, setAmenities] = useState([]);
+//   const [newAmenity, setNewAmenity] = useState('');
+//   const [showResidentialFields, setShowResidentialFields] = useState(false);
+//   const [showBuiltupArea, setShowBuiltupArea] = useState(true);
+
+//   const [countries, setCountries] = useState([]);
+//   const [states, setStates] = useState([]);
+//   const [cities, setCities] = useState([]);
+
+//   // Updated tabs order: Basic Details, Location Details, Media Upload, Property Details (combined)
+//   const tabs = [
+//     { id: 'basic-details', label: 'Basic Details' },
+//     { id: 'location-details', label: 'Location Details' },
+//     { id: 'media-upload', label: 'Media Upload' },
+//     { id: 'property-details', label: 'Property Details' }
+//   ];
+
+//   const [errors, setErrors] = useState({});
+
+//   const [formData, setFormData] = useState({
+//     lookingTo: 'sell',
+//     category: '',
+//     propertyType: '',
+//     propertyTitle: '',
+//     description: '',
+//     address: '',
+//     city: '',
+//     state: '',
+//     country: 'IN',
+//     pinCode: '',
+//     latitude: '',
+//     longitude: '',
+//     plotArea: '',
+//     pricePerUnit: '',
+//     areaUnit: 'sq.ft.',
+//     length: '',
+//     breadth: '',
+//     numberOfFloors: 1,
+//     numberOfBedrooms: '',
+//     numberOfBalconies: '',
+//     numberOfBathrooms: '',
+//     floor: "",
+//     furnishing_status: "",
+//     openSides: 0,
+//     builtupArea: '',
+//     numberOfRoads: 0,
+//     roadWidth1: null,
+//     roadWidth2: null,
+//     facing: 'east',
+//     ownershipType: 'Freehold',
+//     price: '',
+//     maintenance: '',
+//     amenities: [],
+//     propertyUniqueness: '',
+//     locationAdvantages: '',
+//     otherFeatures: '',
+//     ownerName: '',
+//     ownerContact: '',
+//     ownerEmail: '',
+//     isFeatured: false,
+//     images: [],
+//     videos: [],
+//     userId: userId,
+//     added_by: userId,
+//     role: null,
+//     agent_commission: "",
+//     files: [],
+//     layout: null,
+//     preferred_tenants: '',
+//     rent_amount: '',
+//     deposit_amount: '',
+//     available_from: '',
+//     agreement_video: null,
+//     agreement_file: null,
+//     total_property_value: '',
+//   });
+
+//   // Reset policy acceptance when tab changes
+//   useEffect(() => {
+//     setPolicyAccepted(false);
+//   }, [activeTab]);
+
+//   const fetchAmenities = async () => {
+//     try {
+//       const response = await axios.get(`${baseurl}/amenities/`);
+//       let amenitiesData = response.data;
+
+//       if (response.data.results) {
+//         amenitiesData = response.data.results;
+//       }
+
+//       const formattedAmenities = Array.isArray(amenitiesData)
+//         ? amenitiesData.map(amenity => ({
+//           ...amenity,
+//           amenity_id: parseInt(amenity.amenity_id) || amenity.amenity_id
+//         }))
+//         : [];
+
+//       setAmenities(formattedAmenities);
+//     } catch (error) {
+//       console.error('Error fetching amenities:', error);
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: 'Failed to fetch amenities',
+//         confirmButtonColor: '#d33',
+//       });
+//     }
+//   };
+
+//   const handleAddAmenity = async () => {
+//     if (!newAmenity.trim()) {
+//       Swal.fire({
+//         icon: 'warning',
+//         title: 'Empty Field',
+//         text: 'Please enter an amenity name',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       return;
+//     }
+
+//     try {
+//       const response = await axios.post(`${baseurl}/amenities/`, {
+//         name: newAmenity.trim(),
+//       });
+
+//       if (response.data) {
+//         setNewAmenity('');
+
+//         Swal.fire({
+//           icon: 'success',
+//           title: 'Success',
+//           text: 'Amenity added successfully!',
+//           timer: 1500,
+//           showConfirmButton: false,
+//         });
+
+//         await fetchAmenities();
+//       }
+//     } catch (error) {
+//       console.error("Error adding amenity:", error);
+
+//       let errorMessage = 'Failed to add amenity';
+//       if (error.response?.data) {
+//         errorMessage = error.response.data.message || JSON.stringify(error.response.data);
+//       }
+
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: errorMessage,
+//         confirmButtonColor: '#d33',
+//       });
+//     }
+//   };
+
+//   useEffect(() => {
+//     const allCountries = Country.getAllCountries();
+//     setCountries(allCountries);
+//   }, []);
+
+//   useEffect(() => {
+//     if (formData.country) {
+//       const statesOfCountry = State.getStatesOfCountry(formData.country);
+//       setStates(statesOfCountry);
+
+//       if (!isViewing) {
+//         setFormData(prev => ({
+//           ...prev,
+//           state: '',
+//           city: ''
+//         }));
+//       }
+//     } else {
+//       setStates([]);
+//       setCities([]);
+//     }
+//   }, [formData.country, isViewing]);
+
+//   useEffect(() => {
+//     if (formData.country && formData.state) {
+//       const citiesOfState = City.getCitiesOfState(formData.country, formData.state);
+//       setCities(citiesOfState);
+
+//       if (!isViewing) {
+//         setFormData(prev => ({
+//           ...prev,
+//           city: ''
+//         }));
+//       }
+//     } else {
+//       setCities([]);
+//     }
+//   }, [formData.country, formData.state, isViewing]);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const [categoriesRes, amenitiesRes] = await Promise.all([
+//           axios.get(`${baseurl}/property-categories/`),
+//           axios.get(`${baseurl}/amenities/`)
+//         ]);
+
+//         setPropertyCategories(categoriesRes.data.results || categoriesRes.data || []);
+
+//         let amenitiesData = amenitiesRes.data;
+//         if (amenitiesRes.data.results) {
+//           amenitiesData = amenitiesRes.data.results;
+//         }
+
+//         const formattedAmenities = Array.isArray(amenitiesData)
+//           ? amenitiesData.map(amenity => ({
+//             ...amenity,
+//             amenity_id: parseInt(amenity.amenity_id) || amenity.amenity_id
+//           }))
+//           : [];
+//         setAmenities(formattedAmenities);
+
+//         if (id && mode !== 'add') {
+//           const response = await axios.get(`${baseurl}/property/${id}`);
+//           const propertyData = response.data;
+
+//           if (propertyData.amenities) {
+//             propertyData.amenities = propertyData.amenities.map(id => parseInt(id));
+//           }
+
+//           if (propertyData.policy_accepted) {
+//             setPolicyAccepted(propertyData.policy_accepted);
+//           }
+
+//           setFormData(propertyData);
+//           setIsEditing(mode === 'edit');
+//           setIsViewing(mode === 'view');
+//         }
+//       } catch (error) {
+//         console.error('Error fetching data:', error);
+//         Swal.fire({
+//           icon: 'error',
+//           title: 'Error',
+//           text: 'Failed to load data',
+//           confirmButtonColor: '#d33',
+//         });
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchData();
+//   }, [id, mode]);
+
+//   useEffect(() => {
+//     if (formData.category) {
+//       axios
+//         .get(`${baseurl}/property-types/category-id/${formData.category}/`)
+//         .then((response) => {
+//           const data = response.data.results || response.data;
+//           setPropertyTypes(Array.isArray(data) ? data : []);
+//         })
+//         .catch((error) => {
+//           console.error('Error fetching property types:', error);
+//           setPropertyTypes([]);
+//         });
+//     } else {
+//       setPropertyTypes([]);
+//     }
+//   }, [formData.category]);
+
+//   useEffect(() => {
+//     if (!formData.propertyType || !Array.isArray(propertyTypes)) return;
+
+//     const selectedType = propertyTypes.find(
+//       (type) => Number(type.property_type_id) === Number(formData.propertyType)
+//     );
+
+//     if (!selectedType) return;
+
+//     const typeName = selectedType.name.toLowerCase();
+
+//     const residentialTypes = [
+//       "flat",
+//       "house",
+//       "apartment",
+//       "villa"
+//     ];
+
+//     const isResidential = residentialTypes.some(type =>
+//       typeName.includes(type)
+//     );
+
+//     setShowResidentialFields(isResidential);
+//     setShowBuiltupArea(!typeName.includes("plot"));
+//   }, [formData.propertyType, propertyTypes]);
+
+//   useEffect(() => {
+//     if (formData.lookingTo === 'sell') {
+//       const price = parseFloat(formData.price) || 0;
+//       const commission = parseFloat(formData.agent_commission) || 0;
+//       const total = price + commission;
+//       setFormData(prev => ({
+//         ...prev,
+//         total_property_value: total
+//       }));
+//     }
+//   }, [formData.price, formData.agent_commission, formData.lookingTo]);
+
+//   const handleChange = (e) => {
+//     if (isViewing) return;
+
+//     const { name, value, type, checked } = e.target;
+//     const newValue = type === 'checkbox' ? checked : value;
+
+//     if (errors[name]) {
+//       setErrors(prev => ({
+//         ...prev,
+//         [name]: ''
+//       }));
+//     }
+
+//     setFormData((prev) => {
+//       const updated = { ...prev, [name]: newValue };
+
+//       if (name === "pricePerUnit" || name === "plotArea") {
+//         const pricePerUnit = parseFloat(updated.pricePerUnit) || 0;
+//         const plotArea = parseFloat(updated.plotArea) || 0;
+//         updated.price = pricePerUnit * plotArea;
+//       }
+
+//       if (formData.lookingTo === 'sell') {
+//         const price = parseFloat(updated.price) || 0;
+//         const commission = parseFloat(updated.agent_commission) || 0;
+//         updated.total_property_value = price + commission;
+//       }
+
+//       return updated;
+//     });
+//   };
+
+//   const handleTabClick = (tab) => {
+//     setActiveTab(tab);
+//   };
+
+//   const validateCurrentTab = () => {
+//     if (isViewing) return true;
+
+//     const newErrors = {};
+
+//     switch (activeTab) {
+//       case 'basic-details':
+//         if (!formData.propertyTitle?.trim()) newErrors.propertyTitle = 'Property Title is required';
+//         if (!formData.category) newErrors.category = 'Property Category is required';
+//         if (!formData.propertyType) newErrors.propertyType = 'Property Type is required';
+//         break;
+
+//       case 'location-details':
+//         if (!formData.address?.trim()) newErrors.address = 'Address is required';
+//         if (!formData.city?.trim()) newErrors.city = 'City is required';
+//         if (!formData.state?.trim()) newErrors.state = 'State is required';
+//         if (!formData.country?.trim()) newErrors.country = 'Country is required';
+//         break;
+
+//       case 'media-upload':
+//         if (formData.images.length === 0) {
+//           Swal.fire({
+//             icon: 'info',
+//             title: 'Required Field',
+//             text: 'Please upload at least one property image',
+//             confirmButtonColor: '#3085d6',
+//           });
+//           return false;
+//         }
+//         break;
+
+//       case 'property-details':
+//         // Property Profile validations
+//         if (!formData.areaUnit?.trim()) newErrors.areaUnit = 'Area Unit is required';
+//         if (!formData.plotArea || formData.plotArea <= 0) newErrors.plotArea = 'Valid Area is required';
+//         if (!formData.pricePerUnit || formData.pricePerUnit <= 0) newErrors.pricePerUnit = 'Valid Price Per Unit is required';
+        
+//         // Pricing validations
+//         if (formData.lookingTo === 'sell') {
+//           if (!formData.price || formData.price <= 0) newErrors.price = 'Property Value is required';
+//           if (!formData.total_property_value || formData.total_property_value <= 0) newErrors.total_property_value = 'Total Property Value is required';
+//         } else {
+//           if (!formData.rent_amount || formData.rent_amount <= 0) newErrors.rent_amount = 'Rent Amount is required';
+//         }
+        
+//         // Validate policy acceptance
+//         if (!policyAccepted) {
+//           Swal.fire({
+//             icon: 'warning',
+//             title: 'Policy Acceptance Required',
+//             text: 'Please accept the Privacy Policy and Terms & Conditions to continue',
+//             confirmButtonColor: '#3085d6',
+//           });
+//           return false;
+//         }
+//         break;
+//     }
+
+//     setErrors(prev => ({ ...prev, ...newErrors }));
+//     return Object.keys(newErrors).length === 0;
+//   };
+
+//   const handleNext = () => {
+//     if (!validateCurrentTab()) {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Validation Error',
+//         text: 'Please fill all required fields correctly',
+//         confirmButtonColor: '#d33',
+//       });
+//       return;
+//     }
+
+//     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
+//     if (currentIndex < tabs.length - 1) {
+//       setActiveTab(tabs[currentIndex + 1].id);
+//     }
+//   };
+
+//   const handleBack = () => {
+//     const currentIndex = tabs.findIndex(tab => tab.id === activeTab);
+//     if (currentIndex > 0) {
+//       setActiveTab(tabs[currentIndex - 1].id);
+//     }
+//   };
+
+//   const handleFileUpload = async (e, type) => {
+//     if (isViewing) return;
+
+//     const files = Array.from(e.target.files);
+//     if (!files.length) return;
+
+//     if (type === 'agreement_video' || type === 'agreement_file' || type === 'layout') {
+//       const file = files[0];
+//       if (file) {
+//         setFormData(prev => ({
+//           ...prev,
+//           [type]: {
+//             name: file.name,
+//             type: file.type,
+//             size: file.size,
+//             file: file
+//           }
+//         }));
+//       }
+//       e.target.value = '';
+//       return;
+//     }
+
+//     const newFiles = files.map(file => ({
+//       name: file.name,
+//       type: file.type,
+//       size: file.size,
+//       file: file,
+//       preview: type === 'images' ? URL.createObjectURL(file) : null
+//     }));
+
+//     setFormData(prev => ({
+//       ...prev,
+//       [type]: [...prev[type], ...newFiles]
+//     }));
+
+//     e.target.value = '';
+//   };
+
+//   const removeFile = (index, type) => {
+//     if (isViewing) return;
+
+//     setFormData(prev => ({
+//       ...prev,
+//       [type]: prev[type].filter((_, i) => i !== index)
+//     }));
+//   };
+
+//   const removeSingleFile = (type) => {
+//     if (isViewing) return;
+
+//     setFormData(prev => ({
+//       ...prev,
+//       [type]: null
+//     }));
+//   };
+
+//   const handleAmenityChange = (amenityId) => {
+//     if (isViewing) return;
+
+//     setFormData(prev => {
+//       const numericId = parseInt(amenityId);
+//       const newAmenities = prev.amenities.includes(numericId)
+//         ? prev.amenities.filter(id => id !== numericId)
+//         : [...prev.amenities, numericId];
+//       return { ...prev, amenities: newAmenities };
+//     });
+//   };
+
+//   const renderError = (fieldName) => {
+//     return errors[fieldName] ? (
+//       <div className="invalid-feedback" style={{ display: 'block' }}>
+//         {errors[fieldName]}
+//       </div>
+//     ) : null;
+//   };
+
+//   const getInputClass = (fieldName) => {
+//     return `form-control customer-form-input ${errors[fieldName] ? 'is-invalid' : ''} ${isViewing ? 'view-mode' : ''}`;
+//   };
+
+//   const getSelectClass = (fieldName) => {
+//     return `form-select customer-form-input ${errors[fieldName] ? 'is-invalid' : ''} ${isViewing ? 'view-mode' : ''}`;
+//   };
+
+//   const getTextareaClass = (fieldName) => {
+//     return `form-control customer-form-input ${errors[fieldName] ? 'is-invalid' : ''} ${isViewing ? 'view-mode' : ''}`;
+//   };
+
+//   const renderField = (fieldConfig) => {
+//     const { type = 'text', name, label, required = true, options, rows, disabled = false, readOnly = false, ...props } = fieldConfig;
+
+//     if (isViewing) {
+//       const value = formData[name];
+//       const displayValue = Array.isArray(value)
+//         ? value.join(', ')
+//         : (value !== null && value !== undefined && value !== '' ? value.toString() : 'N/A');
+
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label view-mode-label">{label}</label>
+//           <div className="view-mode-value">{displayValue}</div>
+//         </div>
+//       );
+//     }
+
+//     if (type === 'select') {
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//           <select
+//             className={getSelectClass(name)}
+//             name={name}
+//             value={formData[name] || ''}
+//             onChange={handleChange}
+//             required={required}
+//             disabled={disabled || isViewing}
+//             {...props}
+//           >
+//             <option value="">Select</option>
+//             {options?.map(option => (
+//               <option key={option.value} value={option.value}>
+//                 {option.label}
+//               </option>
+//             ))}
+//           </select>
+//           {renderError(name)}
+//         </div>
+//       );
+//     }
+
+//     if (type === 'textarea') {
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//           <textarea
+//             name={name}
+//             value={formData[name] || ''}
+//             className={getTextareaClass(name)}
+//             onChange={handleChange}
+//             required={required}
+//             rows={rows || 3}
+//             disabled={disabled || isViewing}
+//             {...props}
+//           />
+//           {renderError(name)}
+//         </div>
+//       );
+//     }
+
+//     if (type === 'checkbox') {
+//       return (
+//         <div className="mb-3 form-check">
+//           <input
+//             type="checkbox"
+//             name={name}
+//             checked={formData[name] || false}
+//             className="form-check-input"
+//             onChange={handleChange}
+//             disabled={disabled || isViewing}
+//             {...props}
+//           />
+//           <label className="form-check-label">{label}{required && '*'}</label>
+//           {renderError(name)}
+//         </div>
+//       );
+//     }
+
+//     return (
+//       <div className="mb-3">
+//         <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//         <input
+//           type={type}
+//           name={name}
+//           value={formData[name] || ''}
+//           className={getInputClass(name)}
+//           onChange={handleChange}
+//           required={required}
+//           disabled={disabled || isViewing}
+//           readOnly={readOnly}
+//           {...props}
+//         />
+//         {renderError(name)}
+//       </div>
+//     );
+//   };
+
+//   const renderAmenitiesField = () => {
+//     if (isViewing) {
+//       const selectedAmenities = Array.isArray(amenities)
+//         ? amenities
+//           .filter(amenity => formData.amenities.includes(parseInt(amenity.amenity_id)))
+//           .map(amenity => amenity.name)
+//         : [];
+
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label view-mode-label">Amenities</label>
+//           <div className="view-mode-value">
+//             {selectedAmenities.length > 0 ? selectedAmenities.join(', ') : 'None'}
+//           </div>
+//         </div>
+//       );
+//     }
+
+//     return (
+//       <div className="mb-3">
+//         <label className="admin-customer-form-label">Amenities</label>
+
+//         <div className="row mb-3">
+//           <div className="col-md-8">
+//             <input
+//               type="text"
+//               className="form-control"
+//               placeholder="Enter new amenity name"
+//               value={newAmenity}
+//               onChange={(e) => setNewAmenity(e.target.value)}
+//               onKeyPress={(e) => {
+//                 if (e.key === 'Enter') {
+//                   e.preventDefault();
+//                   handleAddAmenity();
+//                 }
+//               }}
+//             />
+//           </div>
+//           <div className="col-md-4">
+//             <button
+//               type="button"
+//               className="btn"
+//               style={{
+//                 backgroundColor: '#273c75',
+//                 borderColor: '#273c75',
+//                 color: 'white',
+//                 width: '100%'
+//               }}
+//               onClick={handleAddAmenity}
+//               disabled={!newAmenity.trim()}
+//             >
+//               Add Amenity
+//             </button>
+//           </div>
+//         </div>
+
+//         <div className="amenities-checkbox-group" style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid #dee2e6', padding: '10px', borderRadius: '4px' }}>
+//           {Array.isArray(amenities) && amenities.length > 0 ? (
+//             amenities.map(amenity => (
+//               <div className="form-check form-check-inline" key={amenity.amenity_id} style={{ marginBottom: '8px', width: 'calc(33.33% - 10px)' }}>
+//                 <input
+//                   className="form-check-input"
+//                   type="checkbox"
+//                   id={`amenity-${amenity.amenity_id}`}
+//                   checked={formData.amenities.includes(parseInt(amenity.amenity_id))}
+//                   onChange={() => handleAmenityChange(amenity.amenity_id)}
+//                   disabled={isViewing}
+//                 />
+//                 <label className="form-check-label" htmlFor={`amenity-${amenity.amenity_id}`}>
+//                   {amenity.name}
+//                 </label>
+//               </div>
+//             ))
+//           ) : (
+//             <p className="text-muted text-center">No amenities available. Add one using the field above.</p>
+//           )}
+//         </div>
+
+//         {formData.amenities.length > 0 && (
+//           <div className="mt-2 text-primary">
+//             <small>{formData.amenities.length} amenit{formData.amenities.length === 1 ? 'y' : 'ies'} selected</small>
+//           </div>
+//         )}
+//       </div>
+//     );
+//   };
+
+//   const renderFileUploadField = (type, label, accept, required = false, isSingle = false) => {
+//     if (isViewing) {
+//       const file = formData[type];
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label view-mode-label">{label}</label>
+//           <div className="view-mode-value">
+//             {file ? (Array.isArray(file) ? file.map(f => f.name).join(', ') : file.name) : 'No file uploaded'}
+//           </div>
+//         </div>
+//       );
+//     }
+
+//     if (isSingle) {
+//       const file = formData[type];
+//       return (
+//         <div className="mb-3">
+//           <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//           <div className="file-upload-container">
+//             <div className="input-group">
+//               <input
+//                 id={`${type}-upload`}
+//                 type="file"
+//                 accept={accept}
+//                 className="form-control"
+//                 onChange={(e) => handleFileUpload(e, type)}
+//                 disabled={isViewing}
+//               />
+//               <button
+//                 type="button"
+//                 className="btn btn-outline-secondary media-upload-btn"
+//                 onClick={() => document.getElementById(`${type}-upload`).click()}
+//                 disabled={isViewing}
+//               >
+//                 <i className="bi bi-upload me-1"></i> Upload
+//               </button>
+//             </div>
+//             <div className="uploaded-files mt-2">
+//               {file && (
+//                 <div className="uploaded-file-item d-flex align-items-center justify-content-between">
+//                   <span className="file-name">{file.name}</span>
+//                   <button
+//                     type="button"
+//                     className="btn btn-sm btn-danger ms-2"
+//                     onClick={() => removeSingleFile(type)}
+//                     style={{ cursor: 'pointer' }}
+//                   >
+//                     ✕
+//                   </button>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       );
+//     }
+
+//     return (
+//       <div className="mb-3">
+//         <label className="admin-customer-form-label">{label}{required && '*'}</label>
+//         <div className="file-upload-container">
+//           <div className="input-group">
+//             <input
+//               id={`${type}-upload`}
+//               type="file"
+//               accept={accept}
+//               multiple={true}
+//               className="form-control"
+//               onChange={(e) => handleFileUpload(e, type)}
+//               disabled={isViewing}
+//             />
+//             <button
+//               type="button"
+//               className="btn btn-outline-secondary media-upload-btn"
+//               onClick={() => document.getElementById(`${type}-upload`).click()}
+//               disabled={isViewing}
+//             >
+//               <i className="bi bi-upload me-1"></i> Upload
+//             </button>
+//           </div>
+//           <div className="uploaded-files mt-2">
+//             {formData[type] && formData[type].length > 0 ? (
+//               formData[type].map((file, index) => (
+//                 file && (
+//                   <div key={index} className="uploaded-file-item d-flex align-items-center justify-content-between">
+//                     <span className="file-name">{file.name}</span>
+//                     <button
+//                       type="button"
+//                       className="btn btn-sm btn-danger ms-2"
+//                       onClick={() => removeFile(index, type)}
+//                       style={{ cursor: 'pointer' }}
+//                     >
+//                       ✕
+//                     </button>
+//                   </div>
+//                 )
+//               ))
+//             ) : null}
+//           </div>
+//           {required && type === 'images' && formData.images.length === 0 && (
+//             <div className="invalid-feedback d-block">
+//               At least one image is required
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     );
+//   };
+
+//   const renderActiveTab = () => {
+//     if (loading) {
+//       return <div className="loading-spinner text-center py-5">Loading property data...</div>;
+//     }
+
+//     switch (activeTab) {
+//       case 'basic-details':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'lookingTo',
+//                     label: 'Looking To',
+//                     options: [
+//                       { value: 'sell', label: 'Sell' },
+//                       { value: 'rent', label: 'Rent' }
+//                     ]
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'category',
+//                     label: 'Property Category',
+//                     options: Array.isArray(propertyCategories)
+//                       ? propertyCategories.map(category => ({
+//                         value: category.property_category_id,
+//                         label: category.name
+//                       }))
+//                       : []
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'propertyType',
+//                     label: 'Property Type',
+//                     options: Array.isArray(propertyTypes)
+//                       ? propertyTypes.map(type => ({
+//                         value: type.property_type_id,
+//                         label: type.name
+//                       }))
+//                       : [],
+//                     disabled: !formData.category
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'propertyTitle',
+//                     label: 'Property Title'
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'description',
+//                     label: 'Description',
+//                     rows: 4,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         );
+
+//       case 'location-details':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   <div className="mb-3">
+//                     <label className="admin-customer-form-label">Country *</label>
+//                     {isViewing ? (
+//                       <div className="view-mode-value">
+//                         {countries.find(c => c.isoCode === formData.country)?.name || formData.country || 'N/A'}
+//                       </div>
+//                     ) : (
+//                       <>
+//                         <select
+//                           className={`form-select customer-form-input ${errors.country ? 'is-invalid' : ''}`}
+//                           name="country"
+//                           value={formData.country || ''}
+//                           onChange={(e) => {
+//                             const selectedCountry = e.target.value;
+//                             setFormData(prev => ({
+//                               ...prev,
+//                               country: selectedCountry,
+//                               state: '',
+//                               city: ''
+//                             }));
+//                             if (errors.country) {
+//                               setErrors(prev => ({ ...prev, country: '' }));
+//                             }
+//                           }}
+//                           required
+//                         >
+//                           <option value="">Select Country</option>
+//                           {countries.map(country => (
+//                             <option key={country.isoCode} value={country.isoCode}>
+//                               {country.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                         {renderError('country')}
+//                       </>
+//                     )}
+//                   </div>
+//                 </div>
+//                 <div className="col-md-6">
+//                   <div className="mb-3">
+//                     <label className="admin-customer-form-label">State *</label>
+//                     {isViewing ? (
+//                       <div className="view-mode-value">
+//                         {states.find(s => s.isoCode === formData.state)?.name || formData.state || 'N/A'}
+//                       </div>
+//                     ) : (
+//                       <>
+//                         <select
+//                           className={`form-select customer-form-input ${errors.state ? 'is-invalid' : ''}`}
+//                           name="state"
+//                           value={formData.state || ''}
+//                           onChange={(e) => {
+//                             const selectedState = e.target.value;
+//                             setFormData(prev => ({
+//                               ...prev,
+//                               state: selectedState,
+//                               city: ''
+//                             }));
+//                             if (errors.state) {
+//                               setErrors(prev => ({ ...prev, state: '' }));
+//                             }
+//                           }}
+//                           disabled={!formData.country}
+//                           required
+//                         >
+//                           <option value="">Select State</option>
+//                           {states.map(state => (
+//                             <option key={state.isoCode} value={state.isoCode}>
+//                               {state.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                         {renderError('state')}
+//                       </>
+//                     )}
+//                   </div>
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   <div className="mb-3">
+//                     <label className="admin-customer-form-label">City *</label>
+//                     {isViewing ? (
+//                       <div className="view-mode-value">
+//                         {formData.city || 'N/A'}
+//                       </div>
+//                     ) : (
+//                       <>
+//                         <select
+//                           className={`form-select customer-form-input ${errors.city ? 'is-invalid' : ''}`}
+//                           name="city"
+//                           value={formData.city || ''}
+//                           onChange={(e) => {
+//                             setFormData(prev => ({
+//                               ...prev,
+//                               city: e.target.value
+//                             }));
+//                             if (errors.city) {
+//                               setErrors(prev => ({ ...prev, city: '' }));
+//                             }
+//                           }}
+//                           disabled={!formData.state}
+//                           required
+//                         >
+//                           <option value="">Select City</option>
+//                           {cities.map(city => (
+//                             <option key={city.name} value={city.name}>
+//                               {city.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                         {renderError('city')}
+//                       </>
+//                     )}
+//                   </div>
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'pinCode',
+//                     label: 'Pin Code(optional)',
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'address',
+//                     label: 'Full Address',
+//                     rows: 3
+//                   })}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         );
+
+//       case 'media-upload':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderFileUploadField('images', 'Property Images', 'image/*', true, false)}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderFileUploadField('videos', 'Property Videos', 'video/*', false, false)}
+//                 </div>
+
+//                 <div className="col-md-6">
+//                   {renderFileUploadField('files', 'Property Documents', '.pdf,.doc,.docx,.xls,.xlsx,.txt', false, false)}
+//                 </div>
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderFileUploadField('layout', 'Layout', '.pdf,.jpg,.jpeg,.png,.dwg', false, true)}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {/* Empty column for alignment */}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         );
+
+//       case 'property-details':
+//         return (
+//           <div className="form-section">
+//             <div className="form-section-content">
+//               {/* Property Profile Section */}
+//               {showResidentialFields && (
+//                 <>
+//                   <div className="row">
+//                     <div className="col-md-3">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'numberOfBedrooms',
+//                         label: 'Bedrooms',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-3">
+//                       <div className="mb-3">
+//                         <label className="admin-customer-form-label">Bathrooms</label>
+//                         <input
+//                           type="number"
+//                           name="numberOfBathrooms"
+//                           value={formData.numberOfBathrooms || ''}
+//                           className={getInputClass('numberOfBathrooms')}
+//                           onChange={handleChange}
+//                           min="0"
+//                           disabled={isViewing}
+//                         />
+//                       </div>
+//                     </div>
+//                     <div className="col-md-3">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'numberOfBalconies',
+//                         label: 'Balconies',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-3">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'numberOfFloors',
+//                         label: 'Total Floors',
+//                         min: 1,
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'floor',
+//                         label: 'Floor Number',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'select',
+//                         name: 'furnishing_status',
+//                         label: 'Furnishing Status',
+//                         options: [
+//                           { value: 'Semi-Furnished', label: 'Semi-Furnished' },
+//                           { value: 'Fully-Furnished', label: 'Fully-Furnished' },
+//                           { value: 'Unfurnished', label: 'Unfurnished' }
+//                         ],
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+//                 </>
+//               )}
+
+//               <div className="row">
+//                 <div className="col-md-4">
+//                   {renderField({
+//                     type: 'select',
+//                     name: 'areaUnit',
+//                     label: 'Area Unit',
+//                     options: [
+//                       { value: 'sq.ft.', label: 'Square Feet' },
+//                       { value: 'sq.m.', label: 'Square Meters' },
+//                       { value: 'sq.yd.', label: 'Square Yards' },
+//                       { value: 'acres', label: 'Acres' },
+//                       { value: 'hectares', label: 'Hectares' },
+//                       { value: 'cents', label: 'Cents' }
+//                     ],
+//                     required: true
+//                   })}
+//                 </div>
+//                 <div className="col-md-4">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'plotArea',
+//                     label: 'Area',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: true
+//                   })}
+//                 </div>
+//                 <div className="col-md-4">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'pricePerUnit',
+//                     label: 'Price Per Unit',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: true
+//                   })}
+//                 </div>
+//               </div>
+
+//               {/* Pricing Section - Moved here */}
+//               {formData.lookingTo === 'sell' ? (
+//                 <>
+//                   <div className="row">
+//                     <div className="col-md-4">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'price',
+//                         label: 'Property Value',
+//                         step: '0.01',
+//                         min: 0,
+//                         readOnly: true,
+//                         required: true
+//                       })}
+//                     </div>
+//                     <div className="col-md-4">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'agent_commission',
+//                         label: 'Team Payout',
+//                         step: '0.01',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-4">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'total_property_value',
+//                         label: 'Total Property Value',
+//                         step: '0.01',
+//                         min: 0,
+//                         readOnly: true,
+//                         required: true
+//                       })}
+//                     </div>
+//                   </div>
+//                 </>
+//               ) : (
+//                 <>
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         name: 'preferred_tenants',
+//                         label: 'Preferred Tenants',
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'rent_amount',
+//                         label: 'Rent Amount',
+//                         step: '0.01',
+//                         min: 0
+//                       })}
+//                     </div>
+//                   </div>
+
+//                   <div className="row">
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'deposit_amount',
+//                         label: 'Deposit Amount',
+//                         step: '0.01',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'date',
+//                         name: 'available_from',
+//                         label: 'Available From',
+//                         required: false
+//                       })}
+//                     </div>
+//                   </div>
+//                 </>
+//               )}
+
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'length',
+//                     label: 'Length (ft)',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: false
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     type: 'number',
+//                     name: 'breadth',
+//                     label: 'Breadth (ft)',
+//                     step: '0.01',
+//                     min: 0,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               {showBuiltupArea && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'builtupArea',
+//                       label: 'Built-up Area',
+//                       step: '0.01',
+//                       min: 0,
+//                       required: false
+//                     })}
+//                   </div>
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'select',
+//                       name: 'facing',
+//                       label: 'Facing Direction',
+//                       options: [
+//                         { value: 'east', label: 'East' },
+//                         { value: 'west', label: 'West' },
+//                         { value: 'north', label: 'North' },
+//                         { value: 'south', label: 'South' },
+//                         { value: 'north_east', label: 'North-East' },
+//                         { value: 'north_west', label: 'North-West' },
+//                         { value: 'south_east', label: 'South-East' },
+//                         { value: 'south_west', label: 'South-West' }
+//                       ],
+//                       required: false
+//                     })}
+//                   </div>
+//                 </div>
+//               )}
+
+//               {!showBuiltupArea && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'select',
+//                       name: 'facing',
+//                       label: 'Facing Direction',
+//                       options: [
+//                         { value: 'east', label: 'East' },
+//                         { value: 'west', label: 'West' },
+//                         { value: 'north', label: 'North' },
+//                         { value: 'south', label: 'South' },
+//                         { value: 'north-east', label: 'North-East' },
+//                         { value: 'north-west', label: 'North-West' },
+//                         { value: 'south-east', label: 'South-East' },
+//                         { value: 'south-west', label: 'South-West' }
+//                       ],
+//                       required: false
+//                     })}
+//                   </div>
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'openSides',
+//                       label: 'Number of Open Sides',
+//                       min: 0,
+//                       max: 4,
+//                       required: false
+//                     })}
+//                   </div>
+//                 </div>
+//               )}
+
+//               {showBuiltupArea && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'openSides',
+//                       label: 'Number of Open Sides',
+//                       min: 0,
+//                       max: 4,
+//                       required: false
+//                     })}
+//                   </div>
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'numberOfRoads',
+//                       label: 'Number of Roads',
+//                       min: 0,
+//                       max: 2,
+//                       required: false
+//                     })}
+//                   </div>
+//                 </div>
+//               )}
+
+//               {formData.numberOfRoads >= 1 && (
+//                 <div className="row">
+//                   <div className="col-md-6">
+//                     {renderField({
+//                       type: 'number',
+//                       name: 'roadWidth1',
+//                       label: 'Road 1 Width (ft)',
+//                       step: '0.01',
+//                       min: 0,
+//                       required: false
+//                     })}
+//                   </div>
+//                   {formData.numberOfRoads >= 2 && (
+//                     <div className="col-md-6">
+//                       {renderField({
+//                         type: 'number',
+//                         name: 'roadWidth2',
+//                         label: 'Road 2 Width (ft)',
+//                         step: '0.01',
+//                         min: 0,
+//                         required: false
+//                       })}
+//                     </div>
+//                   )}
+//                 </div>
+//               )}
+
+//               <div className="row">
+//                 <div className="col-12">
+//                   {renderField({
+//                     type: 'textarea',
+//                     name: 'locationAdvantages',
+//                     label: 'Location Advantages',
+//                     rows: 3,
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               {renderAmenitiesField()}
+
+//               {/* Owner Information Section */}
+//               <div className="row">
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'ownerName',
+//                     label: 'Owner Name',
+//                     required: false
+//                   })}
+//                 </div>
+//                 <div className="col-md-6">
+//                   {renderField({
+//                     name: 'ownerContact',
+//                     label: 'Owner Phone Number',
+//                     required: false
+//                   })}
+//                 </div>
+//               </div>
+
+//               {/* Legal Agreement Section */}
+//               {!isViewing && (
+//                 <div className="policy-section" style={{ borderTop: '1px solid #dee2e6', marginTop: '20px', paddingTop: '20px' }}>
+//                   <div className="row">
+//                     <div className="col-12">
+//                       <h5 className="mb-3" style={{ color: '#273c75', fontWeight: '600' }}>
+//                         Legal Agreement
+//                       </h5>
+//                     </div>
+//                   </div>
+
+//                   <div className="row mb-3">
+//                     <div className="col-12">
+//                       <div className="form-check d-flex align-items-center justify-content-between" style={{ paddingLeft: '0' }}>
+//                         <div className="d-flex align-items-center">
+//                           <input
+//                             type="checkbox"
+//                             className="form-check-input me-2"
+//                             id="policyAcceptance"
+//                             checked={policyAccepted}
+//                             onChange={(e) => setPolicyAccepted(e.target.checked)}
+//                             style={{ cursor: 'pointer', transform: 'scale(1.1)' }}
+//                           />
+//                           <label className="form-check-label" htmlFor="policyAcceptance" style={{ fontWeight: '500' }}>
+//                             I agree to the <strong>Privacy Policy</strong> and <strong>Terms & Conditions</strong>
+//                           </label>
+//                         </div>
+//                         <button
+//                           type="button"
+//                           className="btn btn-sm btn-outline-primary"
+//                           onClick={() => setShowPolicyModal(true)}
+//                           style={{ fontSize: '0.875rem' }}
+//                         >
+//                           View Policies
+//                         </button>
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   {!policyAccepted && (
+//                     <div className="row">
+//                       <div className="col-12">
+//                         <div className="alert alert-warning" style={{ marginTop: '10px' }}>
+//                           <i className="bi bi-exclamation-triangle-fill me-2"></i>
+//                           Please accept the Privacy Policy and Terms & Conditions to submit the property.
+//                         </div>
+//                       </div>
+//                     </div>
+//                   )}
+//                 </div>
+//               )}
+
+//               {isViewing && (
+//                 <div className="policy-section" style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #dee2e6' }}>
+//                   <div className="row">
+//                     <div className="col-12">
+//                       <h5 className="mb-3" style={{ color: '#273c75', fontWeight: '600' }}>
+//                         Legal Agreements
+//                       </h5>
+//                       <div className="view-mode-value" style={{ backgroundColor: '#e8f5e9', padding: '12px', borderRadius: '8px' }}>
+//                         ✓ Privacy Policy and Terms & Conditions Accepted
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         );
+
+//       default:
+//         return null;
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     if (e) e.preventDefault();
+
+//     if (isViewing) {
+//       navigate('/a-dashboard');
+//       return;
+//     }
+
+//     if (!policyAccepted) {
+//       Swal.fire({
+//         icon: 'warning',
+//         title: 'Policy Acceptance Required',
+//         text: 'Please accept the Privacy Policy and Terms & Conditions to submit the property',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       return;
+//     }
+
+//     let isValid = true;
+//     for (const tab of tabs) {
+//       setActiveTab(tab.id);
+//       if (!validateCurrentTab()) {
+//         isValid = false;
+//         break;
+//       }
+//     }
+
+//     if (!isValid) {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Incomplete Form',
+//         text: 'Please complete all required fields in all steps',
+//         confirmButtonColor: '#d33',
+//       });
+//       return;
+//     }
+
+//     setIsSubmitting(true);
+
+//     try {
+//       const payload = new FormData();
+
+//       const formFields = {
+//         looking_to: formData.lookingTo,
+//         property_title: formData.propertyTitle,
+//         description: formData.description || '',
+//         address: formData.address,
+//         city: formData.city,
+//         state: formData.state,
+//         country: formData.country,
+//         pin_code: formData.pinCode,
+//         latitude: formData.latitude || '12.120000',
+//         longitude: formData.longitude || '12.120000',
+//         area: formData.plotArea,
+//         area_unit: formData.areaUnit,
+//         price_per_unit: formData.pricePerUnit || '0.00',
+//         builtup_area: formData.builtupArea || '0.00',
+//         length_ft: formData.length || '0.00',
+//         breadth_ft: formData.breadth || '0.00',
+//         number_of_floors: formData.numberOfFloors || 0,
+//         number_of_open_sides: formData.openSides || 0,
+//         number_of_roads: formData.numberOfRoads || 0,
+//         road_width_1_ft: formData.roadWidth1 || '0.00',
+//         road_width_2_ft: formData.roadWidth2 || '0.00',
+//         facing: formData.facing,
+//         ownership_type: formData.ownershipType,
+//         property_value: formData.price,
+//         property_uniqueness: formData.propertyUniqueness || '',
+//         location_advantages: formData.locationAdvantages || '',
+//         other_features: formData.otherFeatures || '',
+//         owner_name: formData.ownerName,
+//         owner_contact: formData.ownerContact,
+//         owner_email: formData.ownerEmail || '',
+//         is_featured: formData.isFeatured,
+//         category: formData.category,
+//         property_type: formData.propertyType,
+//         user_id: userId,
+//         referral_id: referralId,
+//         number_of_bedrooms: formData.numberOfBedrooms || 0,
+//         number_of_balconies: formData.numberOfBalconies || 0,
+//         number_of_bathrooms: formData.numberOfBathrooms || 0,
+//         floor: formData.floor || 0,
+//         furnishing_status: formData.furnishing_status || '',
+//         agent_commission: formData.agent_commission || '0.00',
+//         total_property_value: formData.total_property_value,
+//         username: username,
+//         preferred_tenants: formData.preferred_tenants || '',
+//         rent_amount: formData.rent_amount || '0.00',
+//         deposit_amount: formData.deposit_amount || '0.00',
+//         available_from: formData.available_from || '',
+//         policy_accepted: policyAccepted
+//       };
+
+//       Object.entries(formFields).forEach(([key, value]) => {
+//         if (value !== null && value !== undefined && value !== '') {
+//           payload.append(key, value);
+//         }
+//       });
+
+//       if (formData.amenities && formData.amenities.length > 0) {
+//         formData.amenities.forEach((id) => {
+//           payload.append("amenities", id.toString());
+//         });
+//       }
+
+//       formData.images.forEach((img) => {
+//         if (img.file) {
+//           payload.append('images', img.file, img.name);
+//         }
+//       });
+
+//       formData.videos.forEach((vid) => {
+//         if (vid.file) {
+//           payload.append('videos', vid.file, vid.name);
+//         }
+//       });
+
+//       formData.files.forEach((doc) => {
+//         if (doc.file) {
+//           payload.append('files', doc.file, doc.name);
+//         }
+//       });
+
+//       if (formData.layout?.file) {
+//         payload.append('layout', formData.layout.file, formData.layout.name);
+//       }
+
+//       if (formData.agreement_video?.file) {
+//         payload.append('agreement_video', formData.agreement_video.file, formData.agreement_video.name);
+//       }
+
+//       if (formData.agreement_file?.file) {
+//         payload.append('agreement_file', formData.agreement_file.file, formData.agreement_file.name);
+//       }
+
+//       const endpoint = isEditing ? `${baseurl}/property/${id}/` : `${baseurl}/property/`;
+//       const method = isEditing ? 'put' : 'post';
+
+//       await axios[method](endpoint, payload, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data'
+//         }
+//       });
+
+//       Swal.fire({
+//         icon: 'success',
+//         title: 'Success',
+//         text: isEditing ? 'Property Updated Successfully!' : 'Property Added Successfully!',
+//         confirmButtonColor: '#3085d6',
+//       });
+//       navigate("/agent-my-properties");
+
+//     } catch (error) {
+//       console.error('Detailed submission error:', error);
+
+//       let errorMessage = isEditing ? 'Error updating property' : 'Error adding property';
+//       if (error.response?.data) {
+//         errorMessage += `: ${JSON.stringify(error.response.data)}`;
+//       }
+
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Submission Failed',
+//         text: errorMessage,
+//         confirmButtonColor: '#d33',
+//       });
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   const getTitle = () => {
+//     switch (mode) {
+//       case 'add': return "Add Property";
+//       case 'edit': return "Edit Property";
+//       case 'view': return "View Property";
+//       default: return "Property";
+//     }
+//   };
+
+//   return (
+//     <>
+//       <AgentNavbar />
+//       <div className="container-fluid admin-add-property-main-div">
+//         <div className="row">
+//           <div className="col-12">
+//             <div className="property-form-container">
+//               <div className="admin-form-header">
+//                 <h2 className="form-title">{getTitle()}</h2>
+//                 <div className="admin-form-actions">
+//                   {!isViewing && (
+//                     <>
+//                       <button
+//                         type="button"
+//                         className="btn btn-secondary me-2"
+//                         onClick={() => navigate(-1)}
+//                         disabled={isSubmitting}
+//                       >
+//                         Cancel
+//                       </button>
+//                       <button
+//                         type="button"
+//                         className="btn"
+//                         style={{
+//                           backgroundColor: '#273c75',
+//                           borderColor: '#273c75',
+//                           color: 'white',
+//                           whiteSpace: 'nowrap',
+//                           opacity: policyAccepted ? '1' : '0.6',
+//                           cursor: policyAccepted ? 'pointer' : 'not-allowed'
+//                         }}
+//                         onClick={handleSubmit}
+//                         disabled={isSubmitting || !policyAccepted}
+//                       >
+//                         {isSubmitting ? 'Saving...' : (isEditing ? 'Update Property' : 'Add Property')}
+//                       </button>
+//                     </>
+//                   )}
+//                   {isViewing && (
+//                     <button
+//                       type="button"
+//                       className="btn btn-secondary"
+//                       onClick={() => navigate(-1)}
+//                     >
+//                       Back to List
+//                     </button>
+//                   )}
+//                 </div>
+//               </div>
+
+//               <div className="admin-form-tabs-container">
+//                 <ul className="nav nav-tabs admin-form-tabs">
+//                   {tabs.map((tab) => (
+//                     <li className="nav-item" key={tab.id}>
+//                       <button
+//                         className={`nav-link ${activeTab === tab.id ? 'active' : ''}`}
+//                         onClick={() => handleTabClick(tab.id)}
+//                         type="button"
+//                       >
+//                         {tab.label}
+//                       </button>
+//                     </li>
+//                   ))}
+//                 </ul>
+//               </div>
+
+//               <div className="admin-form-body">
+//                 <form onSubmit={handleSubmit}>
+//                   {renderActiveTab()}
+
+//                   {!isViewing && (
+//                     <div className="admin-form-navigation">
+//                       <div className="row">
+//                         <div className="col-md-6">
+//                           {activeTab !== 'basic-details' && (
+//                             <button
+//                               type="button"
+//                               className="btn btn-secondary"
+//                               onClick={handleBack}
+//                               disabled={isSubmitting}
+//                             >
+//                               <i className="bi bi-arrow-left me-1"></i> Back
+//                             </button>
+//                           )}
+//                         </div>
+//                         <div className="col-md-6 text-end">
+//                           {activeTab !== 'property-details' ? (
+//                             <button
+//                               type="button"
+//                               className="btn"
+//                               style={{
+//                                 backgroundColor: '#273c75',
+//                                 borderColor: '#273c75',
+//                                 color: 'white'
+//                               }}
+//                               onClick={handleNext}
+//                               disabled={isSubmitting}
+//                             >
+//                               Next <i className="bi bi-arrow-right ms-1"></i>
+//                             </button>
+//                           ) : (
+//                             <button
+//                               type="button"
+//                               className="btn"
+//                               style={{
+//                                 backgroundColor: '#273c75',
+//                                 borderColor: '#273c75',
+//                                 color: 'white',
+//                                 opacity: policyAccepted ? '1' : '0.6'
+//                               }}
+//                               onClick={handleSubmit}
+//                               disabled={isSubmitting || !policyAccepted}
+//                             >
+//                               {isSubmitting ? (
+//                                 <>
+//                                   <span className="spinner-border spinner-border-sm me-1"></span>
+//                                   Saving...
+//                                 </>
+//                               ) : (
+//                                 <>
+//                                   {isEditing ? 'Update Property' : 'Add Property'}
+//                                   <i className="bi bi-check-circle ms-1"></i>
+//                                 </>
+//                               )}
+//                             </button>
+//                           )}
+//                         </div>
+//                       </div>
+//                     </div>
+//                   )}
+//                 </form>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       <PolicyModal
+//         isOpen={showPolicyModal}
+//         onClose={() => setShowPolicyModal(false)}
+//         title="Privacy Policy & Terms & Conditions"
+//         content={policyContent}
+//       />
+//     </>
+//   );
+// };
+
+// export default AgentAddPropertyForm;
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import "./Add_Property.css";
 import axios from 'axios';
@@ -7330,7 +15136,7 @@ import { baseurl } from '../../BaseURL/BaseURL';
 import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import { Country, State, City } from "country-state-city";
 
-// Modal component for Privacy Policy and Terms & Conditions
+// Modal component for combined Privacy Policy and Terms & Conditions
 const PolicyModal = ({ isOpen, onClose, title, content }) => {
   if (!isOpen) return null;
 
@@ -7342,12 +15148,27 @@ const PolicyModal = ({ isOpen, onClose, title, content }) => {
           <button className="policy-modal-close" onClick={onClose}>&times;</button>
         </div>
         <div className="policy-modal-body">
-          {content.map((point, index) => (
-            <div key={index} className="policy-point">
-              <span className="policy-point-bullet">{index + 1}.</span>
-              <p>{point}</p>
-            </div>
-          ))}
+          {/* Privacy Policy Section */}
+          <div className="policy-section mb-4">
+            <h4 className="policy-section-title">Privacy Policy</h4>
+            {content.privacy.map((point, index) => (
+              <div key={`privacy-${index}`} className="policy-point">
+                <span className="policy-point-bullet">{index + 1}.</span>
+                <p>{point}</p>
+              </div>
+            ))}
+          </div>
+          
+          {/* Terms & Conditions Section */}
+          <div className="policy-section">
+            <h4 className="policy-section-title">Terms & Conditions</h4>
+            {content.terms.map((point, index) => (
+              <div key={`terms-${index}`} className="policy-point">
+                <span className="policy-point-bullet">{index + 1}.</span>
+                <p>{point}</p>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="policy-modal-footer">
           <button className="btn btn-secondary" onClick={onClose}>Close</button>
@@ -7366,27 +15187,28 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  // New state for policy checkboxes
-  const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const [termsAccepted, setTermsAccepted] = useState(false);
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-  const [showTermsModal, setShowTermsModal] = useState(false);
+  // Single state for combined policy acceptance
+  const [policyAccepted, setPolicyAccepted] = useState(false);
+  const [showPolicyModal, setShowPolicyModal] = useState(false);
 
-  // Privacy Policy content - 4 random points
-  const privacyPolicyContent = [
-    "We collect and process your personal information only for property transactions and communication purposes.",
-    "Your property details, images, and documents are stored securely and shared only with potential buyers/tenants.",
-    "We do not sell or share your personal information with third parties without your explicit consent.",
-    "You have the right to request deletion or modification of your property data at any time by contacting support."
-  ];
+  // New state for price calculation mode
+  const [priceMode, setPriceMode] = useState('per_unit'); // 'per_unit' or 'per_property'
 
-  // Terms & Conditions content - 4 random points
-  const termsAndConditionsContent = [
-    "You must provide accurate and truthful information about the property being listed on our platform.",
-    "We reserve the right to remove any property listing that violates our community guidelines or local laws.",
-    "The agent commission is applicable only upon successful property sale or rental agreement completion.",
-    "Any disputes arising from property transactions will be resolved through arbitration as per applicable laws."
-  ];
+  // Combined content for Privacy Policy and Terms & Conditions
+  const policyContent = {
+    privacy: [
+      "We collect and process your personal information only for property transactions and communication purposes.",
+      "Your property details, images, and documents are stored securely and shared only with potential buyers/tenants.",
+      "We do not sell or share your personal information with third parties without your explicit consent.",
+      "You have the right to request deletion or modification of your property data at any time by contacting support."
+    ],
+    terms: [
+      "You must provide accurate and truthful information about the property being listed on our platform.",
+      "We reserve the right to remove any property listing that violates our community guidelines or local laws.",
+      "The agent commission is applicable only upon successful property sale or rental agreement completion.",
+      "Any disputes arising from property transactions will be resolved through arbitration as per applicable laws."
+    ]
+  };
 
   const referralId = localStorage.getItem('referral_id');
   const userId = localStorage.getItem('user_id');
@@ -7400,21 +15222,16 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
   const [showResidentialFields, setShowResidentialFields] = useState(false);
   const [showBuiltupArea, setShowBuiltupArea] = useState(true);
 
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [receivables, setReceivables] = useState(0);
-  const [payables, setPayables] = useState(0);
-  const [error, setError] = useState(null);
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
 
+  // Updated tabs order: Basic Details, Location Details, Media Upload, Property Details (combined)
   const tabs = [
     { id: 'basic-details', label: 'Basic Details' },
     { id: 'location-details', label: 'Location Details' },
-    { id: 'property-profile', label: 'Property Profile' },
     { id: 'media-upload', label: 'Media Upload' },
-    { id: 'pricing-ownership', label: 'Pricing & Ownership' }
+    { id: 'property-details', label: 'Property Details' }
   ];
 
   const [errors, setErrors] = useState({});
@@ -7440,6 +15257,7 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
     numberOfFloors: 1,
     numberOfBedrooms: '',
     numberOfBalconies: '',
+    numberOfBathrooms: '',
     floor: "",
     furnishing_status: "",
     openSides: 0,
@@ -7473,12 +15291,12 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
     available_from: '',
     agreement_video: null,
     agreement_file: null,
+    total_property_value: '',
   });
 
-  // Reset checkboxes when tab changes or component mounts
+  // Reset policy acceptance when tab changes
   useEffect(() => {
-    setPrivacyAccepted(false);
-    setTermsAccepted(false);
+    setPolicyAccepted(false);
   }, [activeTab]);
 
   const fetchAmenities = async () => {
@@ -7625,6 +15443,10 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
             propertyData.amenities = propertyData.amenities.map(id => parseInt(id));
           }
 
+          if (propertyData.policy_accepted) {
+            setPolicyAccepted(propertyData.policy_accepted);
+          }
+
           setFormData(propertyData);
           setIsEditing(mode === 'edit');
           setIsViewing(mode === 'view');
@@ -7689,15 +15511,26 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
 
   useEffect(() => {
     if (formData.lookingTo === 'sell') {
-      const price = parseFloat(formData.price) || 0;
+      let price = 0;
+      
+      if (priceMode === 'per_unit') {
+        // Calculate price based on area and price per unit
+        price = (parseFloat(formData.pricePerUnit) || 0) * (parseFloat(formData.plotArea) || 0);
+      } else {
+        // Use manually entered price
+        price = parseFloat(formData.price) || 0;
+      }
+      
       const commission = parseFloat(formData.agent_commission) || 0;
       const total = price + commission;
+      
       setFormData(prev => ({
         ...prev,
+        price: price,
         total_property_value: total
       }));
     }
-  }, [formData.price, formData.agent_commission, formData.lookingTo]);
+  }, [formData.pricePerUnit, formData.plotArea, formData.agent_commission, formData.lookingTo, priceMode, formData.price]);
 
   const handleChange = (e) => {
     if (isViewing) return;
@@ -7714,21 +15547,25 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
 
     setFormData((prev) => {
       const updated = { ...prev, [name]: newValue };
-
-      if (name === "pricePerUnit" || name === "plotArea") {
-        const pricePerUnit = parseFloat(updated.pricePerUnit) || 0;
-        const plotArea = parseFloat(updated.plotArea) || 0;
-        updated.price = pricePerUnit * plotArea;
-      }
-
-      if (formData.lookingTo === 'sell') {
-        const price = parseFloat(updated.price) || 0;
-        const commission = parseFloat(updated.agent_commission) || 0;
-        updated.total_property_value = price + commission;
-      }
-
       return updated;
     });
+  };
+
+  const handlePriceModeChange = (mode) => {
+    setPriceMode(mode);
+    if (mode === 'per_property') {
+      // Clear price per unit when switching to per property mode
+      setFormData(prev => ({
+        ...prev,
+        pricePerUnit: ''
+      }));
+    } else {
+      // Clear manual price when switching to per unit mode
+      setFormData(prev => ({
+        ...prev,
+        price: ''
+      }));
+    }
   };
 
   const handleTabClick = (tab) => {
@@ -7754,12 +15591,6 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
         if (!formData.country?.trim()) newErrors.country = 'Country is required';
         break;
 
-      case 'property-profile':
-        if (!formData.areaUnit?.trim()) newErrors.areaUnit = 'Area Unit is required';
-        if (!formData.plotArea || formData.plotArea <= 0) newErrors.plotArea = 'Valid Area is required';
-        if (!formData.pricePerUnit || formData.pricePerUnit <= 0) newErrors.pricePerUnit = 'Valid Price Per Unit is required';
-        break;
-
       case 'media-upload':
         if (formData.images.length === 0) {
           Swal.fire({
@@ -7772,28 +15603,31 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
         }
         break;
 
-      case 'pricing-ownership':
+      case 'property-details':
+        // Property Profile validations
+        if (!formData.areaUnit?.trim()) newErrors.areaUnit = 'Area Unit is required';
+        if (!formData.plotArea || formData.plotArea <= 0) newErrors.plotArea = 'Valid Area is required';
+        
+        if (priceMode === 'per_unit') {
+          if (!formData.pricePerUnit || formData.pricePerUnit <= 0) newErrors.pricePerUnit = 'Valid Price Per Unit is required';
+        }
+        
+        // Pricing validations
         if (formData.lookingTo === 'sell') {
-          if (!formData.price || formData.price <= 0) newErrors.price = 'Property Value is required';
+          if (priceMode === 'per_property') {
+            if (!formData.price || formData.price <= 0) newErrors.price = 'Property Value is required';
+          }
           if (!formData.total_property_value || formData.total_property_value <= 0) newErrors.total_property_value = 'Total Property Value is required';
         } else {
           if (!formData.rent_amount || formData.rent_amount <= 0) newErrors.rent_amount = 'Rent Amount is required';
         }
-        // Validate checkboxes in the last tab
-        if (!privacyAccepted) {
+        
+        // Validate policy acceptance
+        if (!policyAccepted) {
           Swal.fire({
             icon: 'warning',
-            title: 'Privacy Policy Required',
-            text: 'Please accept the Privacy Policy to continue',
-            confirmButtonColor: '#3085d6',
-          });
-          return false;
-        }
-        if (!termsAccepted) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Terms & Conditions Required',
-            text: 'Please accept the Terms & Conditions to continue',
+            title: 'Policy Acceptance Required',
+            text: 'Please accept the Privacy Policy and Terms & Conditions to continue',
             confirmButtonColor: '#3085d6',
           });
           return false;
@@ -7835,7 +15669,6 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
 
-    // For single file upload fields (agreement_video, agreement_file, layout)
     if (type === 'agreement_video' || type === 'agreement_file' || type === 'layout') {
       const file = files[0];
       if (file) {
@@ -7853,7 +15686,6 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
       return;
     }
 
-    // For multiple file upload fields
     const newFiles = files.map(file => ({
       name: file.name,
       type: file.type,
@@ -7921,7 +15753,7 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
   };
 
   const renderField = (fieldConfig) => {
-    const { type = 'text', name, label, required = true, options, multiline, rows, disabled = false, readOnly = false, ...props } = fieldConfig;
+    const { type = 'text', name, label, required = true, options, rows, disabled = false, readOnly = false, ...props } = fieldConfig;
 
     if (isViewing) {
       const value = formData[name];
@@ -8112,7 +15944,7 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
         <div className="mb-3">
           <label className="admin-customer-form-label view-mode-label">{label}</label>
           <div className="view-mode-value">
-            {file ? file.name : 'No file uploaded'}
+            {file ? (Array.isArray(file) ? file.map(f => f.name).join(', ') : file.name) : 'No file uploaded'}
           </div>
         </div>
       );
@@ -8162,7 +15994,6 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
       );
     }
 
-    // For multiple file upload fields
     return (
       <div className="mb-3">
         <label className="admin-customer-form-label">{label}{required && '*'}</label>
@@ -8436,10 +16267,43 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
           </div>
         );
 
-      case 'property-profile':
+      case 'media-upload':
         return (
           <div className="form-section">
             <div className="form-section-content">
+              <div className="row">
+                <div className="col-12">
+                  {renderFileUploadField('images', 'Property Images', 'image/*', true, false)}
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-6">
+                  {renderFileUploadField('videos', 'Property Videos', 'video/*', false, false)}
+                </div>
+
+                <div className="col-md-6">
+                  {renderFileUploadField('files', 'Property Documents', '.pdf,.doc,.docx,.xls,.xlsx,.txt', false, false)}
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-6">
+                  {renderFileUploadField('layout', 'Layout', '.pdf,.jpg,.jpeg,.png,.dwg', false, true)}
+                </div>
+                <div className="col-md-6">
+                  {/* Empty column for alignment */}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'property-details':
+        return (
+          <div className="form-section">
+            <div className="form-section-content">
+              {/* Property Profile Section */}
               {showResidentialFields && (
                 <>
                   <div className="row">
@@ -8541,16 +16405,116 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
                   })}
                 </div>
                 <div className="col-md-4">
+                  <div className="mb-3">
+                    <label className="admin-customer-form-label">Price *</label>
+                    <select
+                      className="form-select customer-form-input"
+                      value={priceMode}
+                      onChange={(e) => handlePriceModeChange(e.target.value)}
+                      disabled={isViewing}
+                    >
+                      <option value="per_unit">Price per unit</option>
+                      <option value="per_property">Price per property</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-6">
                   {renderField({
                     type: 'number',
                     name: 'pricePerUnit',
                     label: 'Price Per Unit',
                     step: '0.01',
                     min: 0,
-                    required: true
+                    required: priceMode === 'per_unit',
+                    disabled: priceMode !== 'per_unit' || isViewing
+                  })}
+                </div>
+                <div className="col-md-6">
+                  {renderField({
+                    type: 'number',
+                    name: 'price',
+                    label: 'Property Value',
+                    step: '0.01',
+                    min: 0,
+                    required: priceMode === 'per_property',
+                    disabled: priceMode !== 'per_property' || isViewing
                   })}
                 </div>
               </div>
+
+              {/* Pricing Section */}
+              {formData.lookingTo === 'sell' ? (
+                <>
+                  <div className="row">
+                    <div className="col-md-6">
+                      {renderField({
+                        type: 'number',
+                        name: 'agent_commission',
+                        label: 'Team Payout',
+                        step: '0.01',
+                        min: 0,
+                        required: false
+                      })}
+                    </div>
+                    <div className="col-md-6">
+                      {renderField({
+                        type: 'number',
+                        name: 'total_property_value',
+                        label: 'Total Property Value',
+                        step: '0.01',
+                        min: 0,
+                        readOnly: true,
+                        required: true
+                      })}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="row">
+                    <div className="col-md-6">
+                      {renderField({
+                        name: 'preferred_tenants',
+                        label: 'Preferred Tenants',
+                        required: false
+                      })}
+                    </div>
+                    <div className="col-md-6">
+                      {renderField({
+                        type: 'number',
+                        name: 'rent_amount',
+                        label: 'Rent Amount',
+                        step: '0.01',
+                        min: 0
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      {renderField({
+                        type: 'number',
+                        name: 'deposit_amount',
+                        label: 'Deposit Amount',
+                        step: '0.01',
+                        min: 0,
+                        required: false
+                      })}
+                    </div>
+                    <div className="col-md-6">
+                      {renderField({
+                        type: 'date',
+                        name: 'available_from',
+                        label: 'Available From',
+                        required: false
+                      })}
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="row">
                 <div className="col-md-6">
@@ -8692,16 +16656,8 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
                   )}
                 </div>
               )}
+
               <div className="row">
-                {/* <div className="col-6">
-                  {renderField({
-                    type: 'textarea',
-                    name: 'otherFeatures',
-                    label: 'Other Features',
-                    rows: 3,
-                    required: false
-                  })}
-                </div> */}
                 <div className="col-12">
                   {renderField({
                     type: 'textarea',
@@ -8712,142 +16668,10 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
                   })}
                 </div>
               </div>
-
-              {/* <div className="row">
-                <div className="col-12">
-                  {renderField({
-                    type: 'textarea',
-                    name: 'locationAdvantages',
-                    label: 'Location Advantages',
-                    rows: 3,
-                    required: false
-                  })}
-                </div>
-              </div> */}
 
               {renderAmenitiesField()}
-            </div>
-          </div>
-        );
 
-      case 'media-upload':
-        return (
-          <div className="form-section">
-            <div className="form-section-content">
-              <div className="row">
-                <div className="col-12">
-                  {renderFileUploadField('images', 'Property Images', 'image/*', true, false)}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-md-6">
-                  {renderFileUploadField('videos', 'Property Videos', 'video/*', false, false)}
-                </div>
-
-                <div className="col-md-6">
-                  {renderFileUploadField('files', 'Property Documents', '.pdf,.doc,.docx,.xls,.xlsx,.txt', false, false)}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-md-6">
-                  {renderFileUploadField('layout', 'Layout', '.pdf,.jpg,.jpeg,.png,.dwg', false, true)}
-                </div>
-                <div className="col-md-6">
-                  {/* Empty column for alignment, or add another field here if needed */}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'pricing-ownership':
-        return (
-          <div className="form-section">
-            <div className="form-section-content">
-              {formData.lookingTo === 'sell' ? (
-                <>
-                  <div className="row">
-                    <div className="col-md-6">
-                      {renderField({
-                        type: 'number',
-                        name: 'price',
-                        label: 'Property Value',
-                        step: '0.01',
-                        min: 0,
-                        readOnly: true
-                      })}
-                    </div>
-                    <div className="col-md-6">
-                      {renderField({
-                        type: 'number',
-                        name: 'agent_commission',
-                        label: 'Team Payout',
-                        step: '0.01',
-                        min: 0,
-                        required: false
-                      })}
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="col-md-12">
-                      {renderField({
-                        type: 'number',
-                        name: 'total_property_value',
-                        label: 'Total Property Value',
-                        step: '0.01',
-                        min: 0,
-                        readOnly: true
-                      })}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="row">
-                    <div className="col-md-6">
-                      {renderField({
-                        name: 'preferred_tenants',
-                        label: 'Preferred Tenants',
-                        required: false
-                      })}
-                    </div>
-                    <div className="col-md-6">
-                      {renderField({
-                        type: 'number',
-                        name: 'rent_amount',
-                        label: 'Rent Amount',
-                        step: '0.01',
-                        min: 0
-                      })}
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="col-md-6">
-                      {renderField({
-                        type: 'number',
-                        name: 'deposit_amount',
-                        label: 'Deposit Amount',
-                        step: '0.01',
-                        min: 0,
-                        required: false
-                      })}
-                    </div>
-                    <div className="col-md-6">
-                      {renderField({
-                        type: 'date',
-                        name: 'available_from',
-                        label: 'Available From',
-                        required: false
-                      })}
-                    </div>
-                  </div>
-                </>
-              )}
-
+              {/* Owner Information Section */}
               <div className="row">
                 <div className="col-md-6">
                   {renderField({
@@ -8865,9 +16689,9 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
                 </div>
               </div>
 
-              {/* Privacy Policy and Terms & Conditions Section */}
+              {/* Legal Agreement Section */}
               {!isViewing && (
-                <div className="policy-section" style={{ borderTop: '1px solid #dee2e6' }}>
+                <div className="policy-section" style={{ borderTop: '1px solid #dee2e6', marginTop: '20px', paddingTop: '20px' }}>
                   <div className="row">
                     <div className="col-12">
                       <h5 className="mb-3" style={{ color: '#273c75', fontWeight: '600' }}>
@@ -8876,7 +16700,6 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
                     </div>
                   </div>
 
-                  {/* Privacy Policy Checkbox */}
                   <div className="row mb-3">
                     <div className="col-12">
                       <div className="form-check d-flex align-items-center justify-content-between" style={{ paddingLeft: '0' }}>
@@ -8884,63 +16707,33 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
                           <input
                             type="checkbox"
                             className="form-check-input me-2"
-                            id="privacyPolicy"
-                            checked={privacyAccepted}
-                            onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                            id="policyAcceptance"
+                            checked={policyAccepted}
+                            onChange={(e) => setPolicyAccepted(e.target.checked)}
                             style={{ cursor: 'pointer', transform: 'scale(1.1)' }}
                           />
-                          <label className="form-check-label" htmlFor="privacyPolicy" style={{ fontWeight: '500' }}>
-                            I agree to the Privacy Policy
+                          <label className="form-check-label" htmlFor="policyAcceptance" style={{ fontWeight: '500' }}>
+                            I agree to the <strong>Privacy Policy</strong> and <strong>Terms & Conditions</strong>
                           </label>
                         </div>
                         <button
                           type="button"
                           className="btn btn-sm btn-outline-primary"
-                          onClick={() => setShowPrivacyModal(true)}
+                          onClick={() => setShowPolicyModal(true)}
                           style={{ fontSize: '0.875rem' }}
                         >
-                          View Privacy Policy
+                          View Policies
                         </button>
                       </div>
                     </div>
                   </div>
 
-                  {/* Terms & Conditions Checkbox */}
-                  <div className="row mb-3">
-                    <div className="col-12">
-                      <div className="form-check d-flex align-items-center justify-content-between" style={{ paddingLeft: '0' }}>
-                        <div className="d-flex align-items-center">
-                          <input
-                            type="checkbox"
-                            className="form-check-input me-2"
-                            id="termsConditions"
-                            checked={termsAccepted}
-                            onChange={(e) => setTermsAccepted(e.target.checked)}
-                            style={{ cursor: 'pointer', transform: 'scale(1.1)' }}
-                          />
-                          <label className="form-check-label" htmlFor="termsConditions" style={{ fontWeight: '500' }}>
-                            I agree to the Terms & Conditions
-                          </label>
-                        </div>
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-outline-primary"
-                          onClick={() => setShowTermsModal(true)}
-                          style={{ fontSize: '0.875rem' }}
-                        >
-                          View Terms & Conditions
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Validation Message */}
-                  {activeTab === 'pricing-ownership' && (!privacyAccepted || !termsAccepted) && (
+                  {!policyAccepted && (
                     <div className="row">
                       <div className="col-12">
                         <div className="alert alert-warning" style={{ marginTop: '10px' }}>
                           <i className="bi bi-exclamation-triangle-fill me-2"></i>
-                          Please accept both Privacy Policy and Terms & Conditions to submit the property.
+                          Please accept the Privacy Policy and Terms & Conditions to submit the property.
                         </div>
                       </div>
                     </div>
@@ -8948,7 +16741,6 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
                 </div>
               )}
 
-              {/* Show accepted agreements in view mode */}
               {isViewing && (
                 <div className="policy-section" style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #dee2e6' }}>
                   <div className="row">
@@ -8956,9 +16748,8 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
                       <h5 className="mb-3" style={{ color: '#273c75', fontWeight: '600' }}>
                         Legal Agreements
                       </h5>
-                      <div className="view-mode-value">
-                        ✓ Privacy Policy Accepted<br />
-                        ✓ Terms & Conditions Accepted
+                      <div className="view-mode-value" style={{ backgroundColor: '#e8f5e9', padding: '12px', borderRadius: '8px' }}>
+                        ✓ Privacy Policy and Terms & Conditions Accepted
                       </div>
                     </div>
                   </div>
@@ -8981,22 +16772,11 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
       return;
     }
 
-    // Validate checkboxes before submission
-    if (!privacyAccepted) {
+    if (!policyAccepted) {
       Swal.fire({
         icon: 'warning',
-        title: 'Privacy Policy Required',
-        text: 'Please accept the Privacy Policy to submit the property',
-        confirmButtonColor: '#3085d6',
-      });
-      return;
-    }
-
-    if (!termsAccepted) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Terms & Conditions Required',
-        text: 'Please accept the Terms & Conditions to submit the property',
+        title: 'Policy Acceptance Required',
+        text: 'Please accept the Privacy Policy and Terms & Conditions to submit the property',
         confirmButtonColor: '#3085d6',
       });
       return;
@@ -9039,7 +16819,7 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
         longitude: formData.longitude || '12.120000',
         area: formData.plotArea,
         area_unit: formData.areaUnit,
-        price_per_unit: formData.pricePerUnit || '0.00',
+        price_per_unit: priceMode === 'per_unit' ? formData.pricePerUnit : '0',
         builtup_area: formData.builtupArea || '0.00',
         length_ft: formData.length || '0.00',
         breadth_ft: formData.breadth || '0.00',
@@ -9074,8 +16854,8 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
         rent_amount: formData.rent_amount || '0.00',
         deposit_amount: formData.deposit_amount || '0.00',
         available_from: formData.available_from || '',
-        privacy_accepted: privacyAccepted,
-        terms_accepted: termsAccepted
+        policy_accepted: policyAccepted,
+        price_mode: priceMode
       };
 
       Object.entries(formFields).forEach(([key, value]) => {
@@ -9193,11 +16973,11 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
                           borderColor: '#273c75',
                           color: 'white',
                           whiteSpace: 'nowrap',
-                          opacity: (privacyAccepted && termsAccepted) ? '1' : '0.6',
-                          cursor: (privacyAccepted && termsAccepted) ? 'pointer' : 'not-allowed'
+                          opacity: policyAccepted ? '1' : '0.6',
+                          cursor: policyAccepted ? 'pointer' : 'not-allowed'
                         }}
                         onClick={handleSubmit}
-                        disabled={isSubmitting || !privacyAccepted || !termsAccepted}
+                        disabled={isSubmitting || !policyAccepted}
                       >
                         {isSubmitting ? 'Saving...' : (isEditing ? 'Update Property' : 'Add Property')}
                       </button>
@@ -9251,7 +17031,7 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
                           )}
                         </div>
                         <div className="col-md-6 text-end">
-                          {activeTab !== 'pricing-ownership' ? (
+                          {activeTab !== 'property-details' ? (
                             <button
                               type="button"
                               className="btn"
@@ -9273,10 +17053,10 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
                                 backgroundColor: '#273c75',
                                 borderColor: '#273c75',
                                 color: 'white',
-                                opacity: (privacyAccepted && termsAccepted) ? '1' : '0.6'
+                                opacity: policyAccepted ? '1' : '0.6'
                               }}
                               onClick={handleSubmit}
-                              disabled={isSubmitting || !privacyAccepted || !termsAccepted}
+                              disabled={isSubmitting || !policyAccepted}
                             >
                               {isSubmitting ? (
                                 <>
@@ -9302,20 +17082,11 @@ const AgentAddPropertyForm = ({ user, mode = 'add' }) => {
         </div>
       </div>
 
-      {/* Privacy Policy Modal */}
       <PolicyModal
-        isOpen={showPrivacyModal}
-        onClose={() => setShowPrivacyModal(false)}
-        title="Privacy Policy"
-        content={privacyPolicyContent}
-      />
-
-      {/* Terms & Conditions Modal */}
-      <PolicyModal
-        isOpen={showTermsModal}
-        onClose={() => setShowTermsModal(false)}
-        title="Terms & Conditions"
-        content={termsAndConditionsContent}
+        isOpen={showPolicyModal}
+        onClose={() => setShowPolicyModal(false)}
+        title="Privacy Policy & Terms & Conditions"
+        content={policyContent}
       />
     </>
   );

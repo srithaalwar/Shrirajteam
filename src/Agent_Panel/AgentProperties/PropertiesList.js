@@ -8673,7 +8673,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
       color: '#fff'
     }}
   >
-    BUY NOW
+    BOOK NOW
   </button>
 </div>
       </div>
@@ -9726,7 +9726,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
       color: '#fff'
     }}
   >
-    BUY NOW
+    BOOK NOW
   </button>
 </div>
                   </div>
