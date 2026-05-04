@@ -275,11 +275,11 @@
   .page-container {
     padding: 20px;
   }
-  
+
   .form-container {
     padding: 24px;
   }
-  
+
   .form-grid {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 16px;
@@ -290,73 +290,87 @@
   .page-container {
     padding: 16px;
   }
-  
+
   .form-container {
     padding: 20px;
     border-radius: 10px;
   }
-  
+
   .form-grid {
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
+
   .section-title {
     font-size: 16px;
     margin-bottom: 16px;
   }
-  
+
   .form-section {
     margin-bottom: 24px;
     padding-bottom: 24px;
   }
-  
+
   .form-actions {
     flex-direction: column;
     gap: 12px;
   }
-  
+
   .primary-btn,
   .secondary-btn {
     width: 100%;
   }
 }
 
+
+
+@media (max-width: 767px) {
+  .edit-profile-cancel_update_button {
+    display: flex;
+    flex-direction: row !important;
+    gap: 15px;
+  }
+
+}
 @media (max-width: 480px) {
   .page-container {
     padding: 12px;
   }
-  
+
   .form-container {
     padding: 16px;
     border-radius: 8px;
   }
-  
+
   .page-header h2 {
     font-size: 20px;
   }
-  
+
   .back-btn {
     font-size: 13px;
     padding: 6px 12px;
   }
-  
+
   .form-input {
     padding: 10px 12px;
     font-size: 14px;
   }
-  
+
   .form-label {
     font-size: 13px;
   }
-  
+
   .file-label {
     padding: 8px 12px;
     font-size: 13px;
   }
-  
+
   .form-actions {
     padding-top: 16px;
     margin-top: 16px;
   }
+
+ 
 }
+
+ 

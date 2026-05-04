@@ -373,6 +373,8 @@ function Subscription() {
                 <th>Description</th>
                 <th>Duration (Days)</th>
                 <th>Price</th>
+                <th>TAX PERCENTAGE</th>
+                <th>FINAL Price</th>
                 <th>User Type</th>
                 <th>Actions</th>
               </tr>
@@ -397,6 +399,9 @@ function Subscription() {
                       <td>{plan.description || '—'}</td>
                       <td>{variant.duration_in_days}</td>
                       <td>{formatCurrency(variant.price)}</td>
+                      <td>{variant.tax_percent}</td>
+                      <td>{formatCurrency(variant.final_price)}</td>
+
                       <td>
                         <span style={{
                           display: 'inline-block',

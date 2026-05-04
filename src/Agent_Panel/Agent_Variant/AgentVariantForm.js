@@ -4991,7 +4991,7 @@ const AddVariantForm = ({ onSuccess, onCancel }) => {
           <div className="form-actions">
             <button
               type="button"
-              className="btn btn-secondary"
+              className="btn btn-outline-secondary"
               onClick={handleCancel}
               disabled={loading}
             >
@@ -5137,6 +5137,11 @@ const AddVariantForm = ({ onSuccess, onCancel }) => {
             width: 100%;
           }
         }
+            @media (max-width: 767px) {
+             .form-actions {
+            flex-direction: row;
+          }
+      }
       `}</style>
     </>
   );

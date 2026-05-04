@@ -2826,7 +2826,7 @@ const TeamEditProfile = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="d-flex justify-content-between pt-3 mt-4 border-top">
+            <div className="d-flex justify-content-between pt-3 mt-4 border-top edit-profile-cancel_update_button">
               <button
                 type="button"
                 className="btn btn-outline-secondary"

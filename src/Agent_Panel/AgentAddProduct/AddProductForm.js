@@ -9891,7 +9891,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
                     </select>
                     <button
                       type="button"
-                      className="btn btn-outline-primary"
+                      className="btn btn-outline-primary mobile-plus-category"
                       onClick={() => setShowCategoryModal(true)}
                       title="Add New Category"
                       style={{ borderLeft: 'none' }}
@@ -10193,7 +10193,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
           </div>
 
           {/* Form Actions */}
-          <div className="form-actions">
+          <div className="form-actions add-product-form">
             <button type="button" className="btn btn-secondary" onClick={handleCancel} disabled={loading}>
               Cancel
             </button>
@@ -10384,7 +10384,7 @@ const AddProductForm = ({ onSuccess, onCancel }) => {
                 <div className="modal-footer">
                   <button
                     type="button"
-                    className="btn btn-secondary"
+                    className="btn btn-outline-secondary"
                     onClick={() => {
                       setShowCategoryModal(false);
                       resetCategoryForm();

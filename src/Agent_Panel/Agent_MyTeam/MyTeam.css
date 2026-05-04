@@ -110,3 +110,11 @@
 .scroll-btn.right {
   right: 0;
 }
+
+
+@media (max-width: 767px) {
+
+.mobile-view-team{
+
+}
+}

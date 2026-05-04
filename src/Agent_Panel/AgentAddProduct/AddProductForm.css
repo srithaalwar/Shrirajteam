@@ -330,3 +330,19 @@ textarea.form-control {
 .form-section:focus-within {
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
+
+@media (max-width: 767px) {
+
+
+.mobile-plus-category{
+
+  margin-top: 10px;
+
+}
+
+.add-product-form{
+  display: flex;
+  flex-direction: row !important;
+
+}
+}

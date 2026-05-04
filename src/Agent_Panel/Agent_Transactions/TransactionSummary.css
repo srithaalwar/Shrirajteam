@@ -520,3 +520,109 @@
     gap: 8px;
   }
 }
+
+
+/* Enhanced Pagination Styles */
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #e0e0e0;
+  transform: translateY(-1px);
+}
+
+.page-number:hover:not(.active) {
+  background-color: #f0f0f0;
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Mobile Responsive Pagination */
+@media (max-width: 768px) {
+  .pagination-container {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px !important;
+  }
+  
+  .pagination-container > div:first-child {
+    justify-content: center;
+    order: 2;
+  }
+  
+  .pagination-container > div:nth-child(2) {
+    order: 1;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  
+  .mobile-page-info {
+    display: block !important;
+    order: 3;
+    margin-top: 8px;
+  }
+  
+  /* Make pagination buttons more touch-friendly on mobile */
+  .pagination-container button {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    padding: 8px 12px !important;
+    font-size: 16px !important;
+  }
+  
+  /* Adjust select dropdown for mobile */
+  .pagination-container select {
+    min-height: 40px;
+    font-size: 16px !important;
+  }
+  
+  /* Better spacing for page numbers on mobile */
+  .pagination-container > div:nth-child(2) > div {
+    gap: 6px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-container button {
+    min-width: 38px !important;
+    min-height: 38px !important;
+    padding: 6px 8px !important;
+    font-size: 14px !important;
+  }
+  
+  .pagination-container select {
+    min-height: 36px;
+    font-size: 14px !important;
+  }
+  
+  .pagination-container span {
+    font-size: 12px !important;
+  }
+  
+  /* Stack items properly on very small screens */
+  .pagination-container > div:first-child {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+/* Touch-friendly improvements for all interactive elements */
+@media (hover: none) and (pointer: coarse) {
+  .pagination-container button,
+  .pagination-container select {
+    cursor: pointer;
+  }
+  
+  .pagination-container button:active {
+    opacity: 0.7;
+  }
+}

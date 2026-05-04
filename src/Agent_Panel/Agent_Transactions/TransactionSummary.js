@@ -2764,50 +2764,258 @@ function AgentTransactionSummary() {
                 </div>
 
                 {/* Pagination */}
-                {totalItems > 0 && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderTop: '1px solid #dee2e6', background: '#f8f9fa' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ fontSize: '14px', color: '#666' }}>Show:</span>
-                            <select value={itemsPerPage} onChange={handleItemsPerPageChange} style={{ padding: '6px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px' }}>
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                            <span style={{ fontSize: '14px', color: '#666' }}>Showing {startIndex + 1} to {endIndex} of {totalItems} items</span>
-                        </div>
-                        
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            {[
-                                { label: '««', page: 1, disabled: currentPage === 1 },
-                                { label: '«', page: currentPage - 1, disabled: currentPage === 1 },
-                            ].map((btn, i) => (
-                                <button key={i} onClick={() => handlePageChange(btn.page)} disabled={btn.disabled}
-                                    style={{ padding: '6px 12px', border: '1px solid #ddd', borderRadius: '4px', background: btn.disabled ? '#f8f9fa' : 'white', color: btn.disabled ? '#ccc' : '#333', cursor: btn.disabled ? 'not-allowed' : 'pointer', fontSize: '14px' }}>
-                                    {btn.label}
-                                </button>
-                            ))}
-                            {getPageNumbers().map(page => (
-                                <button key={page} onClick={() => handlePageChange(page)}
-                                    style={{ padding: '6px 12px', border: '1px solid #ddd', borderRadius: '4px', background: currentPage === page ? '#273c75' : 'white', color: currentPage === page ? 'white' : '#333', cursor: 'pointer', fontSize: '14px', fontWeight: currentPage === page ? 'bold' : 'normal' }}>
-                                    {page}
-                                </button>
-                            ))}
-                            {[
-                                { label: '»', page: currentPage + 1, disabled: currentPage === totalPages },
-                                { label: '»»', page: totalPages, disabled: currentPage === totalPages },
-                            ].map((btn, i) => (
-                                <button key={i} onClick={() => handlePageChange(btn.page)} disabled={btn.disabled}
-                                    style={{ padding: '6px 12px', border: '1px solid #ddd', borderRadius: '4px', background: btn.disabled ? '#f8f9fa' : 'white', color: btn.disabled ? '#ccc' : '#333', cursor: btn.disabled ? 'not-allowed' : 'pointer', fontSize: '14px' }}>
-                                    {btn.label}
-                                </button>
-                            ))}
-                        </div>
-                        
-                        <div style={{ fontSize: '14px', color: '#666' }}>Page {currentPage} of {totalPages}</div>
-                    </div>
-                )}
+              {/* Pagination - Mobile Responsive */}
+{totalItems > 0 && (
+  <div className="pagination-container" style={{ 
+    display: 'flex', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    padding: '16px', 
+    borderTop: '1px solid #dee2e6', 
+    background: '#f8f9fa',
+    flexWrap: 'wrap',
+    gap: '12px'
+  }}>
+    {/* Left side - Items per page and info */}
+    <div style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      gap: '8px',
+      flexWrap: 'wrap'
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ fontSize: '14px', color: '#666' }}>Show:</span>
+        <select 
+          value={itemsPerPage} 
+          onChange={handleItemsPerPageChange} 
+          style={{ 
+            padding: '6px 12px', 
+            border: '1px solid #ddd', 
+            borderRadius: '4px', 
+            fontSize: '14px',
+            backgroundColor: 'white',
+            cursor: 'pointer'
+          }}
+        >
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+      <div style={{ fontSize: '14px', color: '#666' }}>
+        Showing {startIndex + 1} to {endIndex} of {totalItems} items
+      </div>
+    </div>
+    
+    {/* Right side - Pagination buttons */}
+    <div style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      gap: '6px',
+      flexWrap: 'wrap',
+      justifyContent: 'center'
+    }}>
+      {/* First Page Button */}
+      <button 
+        onClick={() => handlePageChange(1)} 
+        disabled={currentPage === 1}
+        className="pagination-btn"
+        style={{ 
+          padding: '6px 10px', 
+          border: '1px solid #ddd', 
+          borderRadius: '4px', 
+          background: currentPage === 1 ? '#f8f9fa' : 'white', 
+          color: currentPage === 1 ? '#ccc' : '#333', 
+          cursor: currentPage === 1 ? 'not-allowed' : 'pointer', 
+          fontSize: '14px',
+          minWidth: '40px',
+          transition: 'all 0.2s'
+        }}
+      >
+        «
+      </button>
+      
+      {/* Previous Button */}
+      <button 
+        onClick={() => handlePageChange(currentPage - 1)} 
+        disabled={currentPage === 1}
+        style={{ 
+          padding: '6px 10px', 
+          border: '1px solid #ddd', 
+          borderRadius: '4px', 
+          background: currentPage === 1 ? '#f8f9fa' : 'white', 
+          color: currentPage === 1 ? '#ccc' : '#333', 
+          cursor: currentPage === 1 ? 'not-allowed' : 'pointer', 
+          fontSize: '14px',
+          minWidth: '40px'
+        }}
+      >
+        ‹
+      </button>
+      
+      {/* Page Numbers - Responsive */}
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: '4px',
+        flexWrap: 'wrap',
+        justifyContent: 'center'
+      }}>
+        {totalPages <= 7 ? (
+          // Show all pages if total pages are 7 or less
+          getPageNumbers().map(page => (
+            <button 
+              key={page} 
+              onClick={() => handlePageChange(page)}
+              className={`page-number ${currentPage === page ? 'active' : ''}`}
+              style={{ 
+                padding: '6px 12px', 
+                border: '1px solid #ddd', 
+                borderRadius: '4px', 
+                background: currentPage === page ? '#273c75' : 'white', 
+                color: currentPage === page ? 'white' : '#333', 
+                cursor: 'pointer', 
+                fontSize: '14px', 
+                fontWeight: currentPage === page ? 'bold' : 'normal',
+                minWidth: '40px',
+                transition: 'all 0.2s'
+              }}
+            >
+              {page}
+            </button>
+          ))
+        ) : (
+          // Show limited pages with ellipsis for mobile
+          <>
+            {/* First page */}
+            <button 
+              onClick={() => handlePageChange(1)}
+              style={{ 
+                padding: '6px 12px', 
+                border: '1px solid #ddd', 
+                borderRadius: '4px', 
+                background: currentPage === 1 ? '#273c75' : 'white', 
+                color: currentPage === 1 ? 'white' : '#333', 
+                cursor: 'pointer', 
+                fontSize: '14px',
+                minWidth: '40px'
+              }}
+            >
+              1
+            </button>
+            
+            {/* Ellipsis if current page > 3 */}
+            {currentPage > 3 && (
+              <span style={{ padding: '6px 8px', color: '#666' }}>...</span>
+            )}
+            
+            {/* Pages around current page */}
+            {(() => {
+              const pages = [];
+              let startPage = Math.max(2, currentPage - 1);
+              let endPage = Math.min(totalPages - 1, currentPage + 1);
+              
+              for (let i = startPage; i <= endPage; i++) {
+                pages.push(
+                  <button 
+                    key={i} 
+                    onClick={() => handlePageChange(i)}
+                    style={{ 
+                      padding: '6px 12px', 
+                      border: '1px solid #ddd', 
+                      borderRadius: '4px', 
+                      background: currentPage === i ? '#273c75' : 'white', 
+                      color: currentPage === i ? 'white' : '#333', 
+                      cursor: 'pointer', 
+                      fontSize: '14px',
+                      minWidth: '40px'
+                    }}
+                  >
+                    {i}
+                  </button>
+                );
+              }
+              return pages;
+            })()}
+            
+            {/* Ellipsis if current page < totalPages - 2 */}
+            {currentPage < totalPages - 2 && (
+              <span style={{ padding: '6px 8px', color: '#666' }}>...</span>
+            )}
+            
+            {/* Last page */}
+            {totalPages > 1 && (
+              <button 
+                onClick={() => handlePageChange(totalPages)}
+                style={{ 
+                  padding: '6px 12px', 
+                  border: '1px solid #ddd', 
+                  borderRadius: '4px', 
+                  background: currentPage === totalPages ? '#273c75' : 'white', 
+                  color: currentPage === totalPages ? 'white' : '#333', 
+                  cursor: 'pointer', 
+                  fontSize: '14px',
+                  minWidth: '40px'
+                }}
+              >
+                {totalPages}
+              </button>
+            )}
+          </>
+        )}
+      </div>
+      
+      {/* Next Button */}
+      <button 
+        onClick={() => handlePageChange(currentPage + 1)} 
+        disabled={currentPage === totalPages}
+        style={{ 
+          padding: '6px 10px', 
+          border: '1px solid #ddd', 
+          borderRadius: '4px', 
+          background: currentPage === totalPages ? '#f8f9fa' : 'white', 
+          color: currentPage === totalPages ? '#ccc' : '#333', 
+          cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', 
+          fontSize: '14px',
+          minWidth: '40px'
+        }}
+      >
+        ›
+      </button>
+      
+      {/* Last Page Button */}
+      <button 
+        onClick={() => handlePageChange(totalPages)} 
+        disabled={currentPage === totalPages}
+        style={{ 
+          padding: '6px 10px', 
+          border: '1px solid #ddd', 
+          borderRadius: '4px', 
+          background: currentPage === totalPages ? '#f8f9fa' : 'white', 
+          color: currentPage === totalPages ? '#ccc' : '#333', 
+          cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', 
+          fontSize: '14px',
+          minWidth: '40px'
+        }}
+      >
+        »
+      </button>
+    </div>
+    
+    {/* Page info for mobile */}
+    <div style={{ 
+      fontSize: '14px', 
+      color: '#666',
+      textAlign: 'center',
+      width: '100%',
+      display: 'none' // Hidden by default, show only on mobile via media query
+    }} className="mobile-page-info">
+      Page {currentPage} of {totalPages}
+    </div>
+  </div>
+)}
             </div>
         </>
     );

@@ -851,7 +851,7 @@ function MyTeam() {
         {/* Navigation and Search Row */}
         <div className="d-flex align-items-center mb-3">
           {historyStack.length > 0 && (
-            <button className="btn btn-outline-primary me-3" onClick={handleBack}>
+            <button className="btn btn-outline-primary me-3 mobile-view-team" onClick={handleBack}>
               ← Back to {historyStack.at(-1)?.agent?.first_name || "Previous"}
             </button>
           )}
@@ -859,9 +859,7 @@ function MyTeam() {
           {/* Search Bar */}
           <div className="flex-grow-1 position-relative">
             <div className="input-group">
-              <span className="input-group-text bg-white border-end-0">
-                <i className="bi bi-search text-muted"></i>
-              </span>
+            
               <input
                 type="text"
                 className="form-control border-start-0"
