@@ -1442,6 +1442,914 @@
 
 
 
+// import React, { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { baseurl } from "../../BaseURL/BaseURL";
+// import ClientNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
+// import axios from "axios";
+// import { Country, State, City } from "country-state-city";
+// import Swal from "sweetalert2";
+// import "bootstrap/dist/css/bootstrap.min.css";
+
+// const ClientEditProfile = () => {
+//   const navigate = useNavigate();
+//   const userId = Number(localStorage.getItem("user_id"));
+  
+//   const [formData, setFormData] = useState({
+//     first_name: "",
+//     last_name: "",
+//     email: "",
+//     phone_number: "",
+//     date_of_birth: "",
+//     gender: "",
+//     marital_status: "",
+//     address: "",
+//     city: "",
+//     state: "",
+//     country: "",
+//     pin_code: "",
+//     account_holder_name: "",
+//     bank_name: "",
+//     branch_name: "",
+//     account_number: "",
+//     account_type: "",
+//     ifsc_code: "",
+//     pan_number: "",
+//     aadhaar_number: "",
+//     nominee_relationship: "",
+//     nominee_reference_to: "",
+//     image: null,
+//     aadhaar_front: null,
+//     aadhaar_back: null,
+//     pan_front: null,
+//     pan_back: null,
+//     bank_passbook: null,
+//     cancelled_cheque: null,
+//     nominee_aadhaar_front: null,
+//     nominee_aadhaar_back: null,
+//   });
+
+//   const [errors, setErrors] = useState({});
+//   const [countries, setCountries] = useState([]);
+//   const [states, setStates] = useState([]);
+//   const [cities, setCities] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [initialLoading, setInitialLoading] = useState(true);
+
+//   const requiredFields = [
+//     "first_name", "last_name", "email", "phone_number", "date_of_birth",
+//     "gender",  "address", "city", "state", "country", "pin_code",
+//     "account_holder_name", "bank_name", "branch_name", "account_number", "account_type", "ifsc_code",
+//     "pan_number", "aadhaar_number", "nominee_reference_to",
+//   ];
+
+//   useEffect(() => {
+//     if (!userId) return;
+//     setCountries(Country.getAllCountries());
+//     fetchUserData();
+//   }, [userId]);
+
+//   const fetchUserData = async () => {
+//     try {
+//       const response = await axios.get(`${baseurl}/users/${userId}/`);
+//       const user = response.data;
+
+//       const toFileObject = (url) =>
+//         url ? { name: url.split("/").pop(), url, file: null } : null;
+
+//       const countryObj = Country.getCountryByCode(user.country) || 
+//                         Country.getAllCountries().find(c => c.name === user.country);
+//       const countryName = countryObj?.name || user.country;
+
+//       const stateObj = State.getStateByCodeAndCountry(user.state, user.country) || 
+//                       State.getStatesOfCountry(countryObj?.isoCode).find(s => s.name === user.state);
+//       const stateName = stateObj?.name || user.state;
+
+//       const statesArray = countryObj ? State.getStatesOfCountry(countryObj.isoCode) : [];
+//       const citiesArray = (countryObj && stateObj) ? 
+//                          City.getCitiesOfState(countryObj.isoCode, stateObj.isoCode) : [];
+
+//       setStates(statesArray);
+//       setCities(citiesArray);
+
+//       // FIX: Convert date_of_birth from DD-MM-YYYY to YYYY-MM-DD
+//       const formatDateForInput = (dateStr) => {
+//         if (!dateStr) return "";
+//         try {
+//           const [day, month, year] = dateStr.split("-");
+//           return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+//         } catch (error) {
+//           console.error("Error formatting date:", error);
+//           return "";
+//         }
+//       };
+
+//       setFormData({
+//         ...user,
+//         country: countryName,
+//         state: stateName,
+//         city: user.city || "",
+//         // FIX: Convert date format for input field
+//         date_of_birth: formatDateForInput(user.date_of_birth),
+//         // FIX: Ensure gender is lowercase (API expects lowercase)
+//         gender: user.gender ? user.gender.toLowerCase() : "",
+//         image: toFileObject(user.image),
+//         aadhaar_front: toFileObject(user.aadhaar_front),
+//         aadhaar_back: toFileObject(user.aadhaar_back),
+//         pan_front: toFileObject(user.pan_front),
+//         pan_back: toFileObject(user.pan_back),
+//         bank_passbook: toFileObject(user.bank_passbook),
+//         cancelled_cheque: toFileObject(user.cancelled_cheque),
+//         nominee_aadhaar_front: toFileObject(user.nominee_aadhaar_front),
+//         nominee_aadhaar_back: toFileObject(user.nominee_aadhaar_back),
+//       });
+//     } catch (error) {
+//       console.error("Error fetching user data:", error);
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: "Failed to load user data",
+//       });
+//     } finally {
+//       setInitialLoading(false);
+//     }
+//   };
+
+//   const handleChange = (e) => {
+//     const { name, value, type, files } = e.target;
+
+//     if (type === "file" && files.length > 0) {
+//       const file = files[0];
+//       const url = URL.createObjectURL(file);
+//       setFormData(prev => ({
+//         ...prev,
+//         [name]: { file, url, name: file.name },
+//       }));
+//       setErrors(prev => ({ ...prev, [name]: "" }));
+//     } else {
+//       setFormData(prev => ({
+//         ...prev,
+//         [name]: value,
+//       }));
+//       setErrors(prev => ({ ...prev, [name]: "" }));
+//     }
+//   };
+
+//   const handleCountryChange = (e) => {
+//     const countryName = e.target.value;
+//     setFormData({ ...formData, country: countryName, state: "", city: "" });
+
+//     const countryObj = countries.find(c => c.name === countryName);
+//     const statesArray = countryObj ? State.getStatesOfCountry(countryObj.isoCode) : [];
+//     setStates(statesArray);
+//     setCities([]);
+//   };
+
+//   const handleStateChange = (e) => {
+//     const stateName = e.target.value;
+//     setFormData({ ...formData, state: stateName, city: "" });
+
+//     const countryObj = countries.find(c => c.name === formData.country);
+//     const stateObj = states.find(s => s.name === stateName);
+//     const citiesArray = (countryObj && stateObj) ? 
+//                        City.getCitiesOfState(countryObj.isoCode, stateObj.isoCode) : [];
+//     setCities(citiesArray);
+//   };
+
+//   const handleCityChange = (e) => {
+//     const cityName = e.target.value;
+//     setFormData({ ...formData, city: cityName });
+//   };
+
+//   const handleRemove = (name) => {
+//     setFormData(prev => ({ ...prev, [name]: null }));
+//   };
+
+//   // const handleSubmit = async (e) => {
+//   //   e.preventDefault();
+//   //   setLoading(true);
+
+//   //   let newErrors = {};
+//   //   let missingFields = [];
+
+//   //   requiredFields.forEach((field) => {
+//   //     const value = formData[field];
+//   //     if (!value || value === "") {
+//   //       newErrors[field] = "This field is required";
+//   //       missingFields.push(field.replace(/_/g, " ").toUpperCase());
+//   //     }
+//   //   });
+
+//   //   if (Object.keys(newErrors).length > 0) {
+//   //     setErrors(newErrors);
+//   //     setLoading(false);
+      
+//   //     Swal.fire({
+//   //       icon: "warning",
+//   //       title: "Missing Required Fields",
+//   //       html: "Please fill the following required fields:<br/><br/>" + 
+//   //             missingFields.join("<br/>"),
+//   //       confirmButtonColor: "#6C63FF",
+//   //     });
+//   //     return;
+//   //   }
+
+//   //   const form = new FormData();
+    
+//   //   // Process all fields
+//   //   Object.entries(formData).forEach(([key, value]) => {
+//   //     if (key === "date_of_birth") {
+//   //       // Send date in YYYY-MM-DD format
+//   //       // Input field already provides YYYY-MM-DD format
+//   //       if (value) {
+//   //         form.append(key, value);
+//   //       }
+//   //     } else if (key === "gender") {
+//   //       // Ensure gender is lowercase
+//   //       form.append(key, value.toLowerCase());
+//   //     } else if (key === "marital_status") {
+//   //       // Ensure marital_status is lowercase
+//   //       form.append(key, value.toLowerCase());
+//   //     } else if (
+//   //       ["image", "aadhaar_front", "aadhaar_back", "pan_front", "pan_back", 
+//   //        "bank_passbook", "cancelled_cheque", "nominee_aadhaar_front", 
+//   //        "nominee_aadhaar_back"].includes(key)
+//   //     ) {
+//   //       if (value?.file instanceof File) {
+//   //         form.append(key, value.file);
+//   //       } else if (value?.url && !value?.file) {
+//   //         // If we have URL but no file (from server), don't send anything
+//   //       }
+//   //     } else {
+//   //       form.append(key, value);
+//   //     }
+//   //   });
+
+//   //   // Debug log
+//   //   console.log("Form data being sent:", {
+//   //     date_of_birth: form.get("date_of_birth"),
+//   //     gender: form.get("gender"),
+//   //     marital_status: form.get("marital_status")
+//   //   });
+
+//   //   try {
+//   //     await axios.put(`${baseurl}/users/${userId}/`, form, {
+//   //       headers: { "Content-Type": "multipart/form-data" },
+//   //     });
+      
+//   //     Swal.fire({
+//   //       icon: "success",
+//   //       title: "Success!",
+//   //       text: "Profile updated successfully",
+//   //       confirmButtonColor: "#6C63FF",
+//   //     }).then(() => {
+//   //       navigate("/client-profile");
+//   //     });
+//   //   } catch (error) {
+//   //     console.error("Update failed:", error.response?.data || error.message);
+      
+//   //     // Better error message
+//   //     let errorMessage = "Failed to update profile";
+//   //     if (error.response?.data) {
+//   //       if (typeof error.response.data === 'object') {
+//   //         const errors = Object.values(error.response.data).flat();
+//   //         errorMessage = errors.join(', ');
+//   //       } else if (typeof error.response.data === 'string') {
+//   //         errorMessage = error.response.data;
+//   //       } else if (error.response.data.detail) {
+//   //         errorMessage = error.response.data.detail;
+//   //       }
+//   //     }
+      
+//   //     Swal.fire({
+//   //       icon: "error",
+//   //       title: "Error",
+//   //       text: errorMessage,
+//   //       confirmButtonColor: "#6C63FF",
+//   //     });
+//   //   } finally {
+//   //     setLoading(false);
+//   //   }
+//   // };
+
+//   const handleSubmit = async (e) => {
+//   e.preventDefault();
+//   setLoading(true);
+
+//   let newErrors = {};
+//   let missingFields = [];
+
+//   requiredFields.forEach((field) => {
+//     const value = formData[field];
+//     if (!value || value === "") {
+//       newErrors[field] = "This field is required";
+//       missingFields.push(field.replace(/_/g, " ").toUpperCase());
+//     }
+//   });
+
+//   if (Object.keys(newErrors).length > 0) {
+//     setErrors(newErrors);
+//     setLoading(false);
+    
+//     Swal.fire({
+//       icon: "warning",
+//       title: "Missing Required Fields",
+//       html: "Please fill the following required fields:<br/><br/>" + 
+//             missingFields.join("<br/>"),
+//       confirmButtonColor: "#6C63FF",
+//     });
+//     return;
+//   }
+
+//   const form = new FormData();
+  
+//   // Process all fields
+//   Object.entries(formData).forEach(([key, value]) => {
+//     if (key === "date_of_birth") {
+//       // Send date in YYYY-MM-DD format
+//       // Input field already provides YYYY-MM-DD format
+//       if (value) {
+//         form.append(key, value);
+//       }
+//     } else if (key === "gender") {
+//       // Ensure gender is lowercase - with null check
+//       if (value && typeof value === 'string') {
+//         form.append(key, value.toLowerCase());
+//       } else {
+//         form.append(key, value || "");
+//       }
+//     } else if (key === "marital_status") {
+//       // Ensure marital_status is lowercase - with null check
+//       if (value && typeof value === 'string') {
+//         form.append(key, value.toLowerCase());
+//       } else {
+//         form.append(key, value || "");
+//       }
+//     } else if (
+//       ["image", "aadhaar_front", "aadhaar_back", "pan_front", "pan_back", 
+//        "bank_passbook", "cancelled_cheque", "nominee_aadhaar_front", 
+//        "nominee_aadhaar_back"].includes(key)
+//     ) {
+//       if (value?.file instanceof File) {
+//         form.append(key, value.file);
+//       } else if (value?.url && !value?.file) {
+//         // If we have URL but no file (from server), don't send anything
+//       }
+//     } else {
+//       // For all other fields, check if value exists
+//       form.append(key, value || "");
+//     }
+//   });
+
+//   // Debug log
+//   console.log("Form data being sent:", {
+//     date_of_birth: form.get("date_of_birth"),
+//     gender: form.get("gender"),
+//     marital_status: form.get("marital_status")
+//   });
+
+//   try {
+//     await axios.put(`${baseurl}/users/${userId}/`, form, {
+//       headers: { "Content-Type": "multipart/form-data" },
+//     });
+    
+//     Swal.fire({
+//       icon: "success",
+//       title: "Success!",
+//       text: "Profile updated successfully",
+//       confirmButtonColor: "#6C63FF",
+//     }).then(() => {
+//       navigate("/client-profile");
+//     });
+//   } catch (error) {
+//     console.error("Update failed:", error.response?.data || error.message);
+    
+//     // Better error message
+//     let errorMessage = "Failed to update profile";
+//     if (error.response?.data) {
+//       if (typeof error.response.data === 'object') {
+//         const errors = Object.values(error.response.data).flat();
+//         errorMessage = errors.join(', ');
+//       } else if (typeof error.response.data === 'string') {
+//         errorMessage = error.response.data;
+//       } else if (error.response.data.detail) {
+//         errorMessage = error.response.data.detail;
+//       }
+//     }
+    
+//     Swal.fire({
+//       icon: "error",
+//       title: "Error",
+//       text: errorMessage,
+//       confirmButtonColor: "#6C63FF",
+//     });
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+//   if (initialLoading) {
+//     return (
+//       <>
+//         <ClientNavbar />
+//         <div className="container my-4">
+//           <div className="card p-4 text-center">
+//             <h4 className="mb-3">Edit Profile</h4>
+//             <div className="text-muted">Loading...</div>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   return (
+//     <>
+//       <ClientNavbar />
+      
+//       <div className="container my-4">
+//         <div className="card p-4">
+//           <div className="d-flex justify-content-between align-items-center mb-4">
+//             <button 
+//               className="btn btn-outline-secondary"
+//               onClick={() => navigate("/client-profile")}
+//             >
+//               ← Back
+//             </button>
+//             <h4 className="text-center mb-0">Edit Profile</h4>
+//             <div style={{width: "100px"}}></div> {/* Spacer for alignment */}
+//           </div>
+
+//           <form onSubmit={handleSubmit}>
+//             {/* Basic Information */}
+//             <div className="mb-4">
+//               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Basic Information</h5>
+//               <div className="row">
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     First Name <span className="text-danger">*</span>
+//                   </label>
+//                   <input
+//                     type="text"
+//                     name="first_name"
+//                     value={formData.first_name}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.first_name ? 'is-invalid' : ''}`}
+//                     placeholder="Enter first name"
+//                     disabled={loading}
+//                   />
+//                   {errors.first_name && <div className="invalid-feedback">{errors.first_name}</div>}
+//                 </div>
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     Last Name <span className="text-danger">*</span>
+//                   </label>
+//                   <input
+//                     type="text"
+//                     name="last_name"
+//                     value={formData.last_name}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.last_name ? 'is-invalid' : ''}`}
+//                     placeholder="Enter last name"
+//                     disabled={loading}
+//                   />
+//                   {errors.last_name && <div className="invalid-feedback">{errors.last_name}</div>}
+//                 </div>
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     Email <span className="text-danger">*</span>
+//                   </label>
+//                   <input
+//                     type="email"
+//                     name="email"
+//                     value={formData.email}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+//                     placeholder="Enter email"
+//                     disabled={loading}
+//                   />
+//                   {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+//                 </div>
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     Phone Number <span className="text-danger">*</span>
+//                   </label>
+//                   <input
+//                     type="tel"
+//                     name="phone_number"
+//                     value={formData.phone_number}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.phone_number ? 'is-invalid' : ''}`}
+//                     placeholder="Enter phone number"
+//                     disabled={loading}
+//                   />
+//                   {errors.phone_number && <div className="invalid-feedback">{errors.phone_number}</div>}
+//                 </div>
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     Date of Birth <span className="text-danger">*</span>
+//                   </label>
+//                   <input
+//                     type="date"
+//                     name="date_of_birth"
+//                     value={formData.date_of_birth}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.date_of_birth ? 'is-invalid' : ''}`}
+//                     disabled={loading}
+//                   />
+//                   {errors.date_of_birth && <div className="invalid-feedback">{errors.date_of_birth}</div>}
+//                   <small className="text-muted">Format: YYYY-MM-DD</small>
+//                 </div>
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     Gender <span className="text-danger">*</span>
+//                   </label>
+//                   <select
+//                     name="gender"
+//                     value={formData.gender}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.gender ? 'is-invalid' : ''}`}
+//                     disabled={loading}
+//                   >
+//                     <option value="">Select Gender</option>
+//                     <option value="female">Female</option>
+//                     <option value="male">Male</option>
+//                     <option value="other">Other</option>
+//                   </select>
+//                   {errors.gender && <div className="invalid-feedback">{errors.gender}</div>}
+//                   <small className="text-muted">Note: Will be saved as lowercase</small>
+//                 </div>
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     Marital Status <span className="text-danger">*</span>
+//                   </label>
+//                   <select
+//                     name="marital_status"
+//                     value={formData.marital_status}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.marital_status ? 'is-invalid' : ''}`}
+//                     disabled={loading}
+//                   >
+//                     <option value="">Select Status</option>
+//                     <option value="single">Single</option>
+//                     <option value="married">Married</option>
+//                     <option value="divorced">Divorced</option>
+//                     <option value="widowed">Widowed</option>
+//                   </select>
+//                   {errors.marital_status && <div className="invalid-feedback">{errors.marital_status}</div>}
+//                   <small className="text-muted">Note: Will be saved as lowercase</small>
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Address Details */}
+//             <div className="mb-4">
+//               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Address Details</h5>
+//               <div className="row">
+//                 <div className="col-12 mb-3">
+//                   <label className="form-label">
+//                     Address <span className="text-danger">*</span>
+//                   </label>
+//                   <input
+//                     type="text"
+//                     name="address"
+//                     value={formData.address}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.address ? 'is-invalid' : ''}`}
+//                     placeholder="Enter full address"
+//                     disabled={loading}
+//                   />
+//                   {errors.address && <div className="invalid-feedback">{errors.address}</div>}
+//                 </div>
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     Country <span className="text-danger">*</span>
+//                   </label>
+//                   <select
+//                     value={formData.country}
+//                     onChange={handleCountryChange}
+//                     className={`form-control ${errors.country ? 'is-invalid' : ''}`}
+//                     disabled={loading || countries.length === 0}
+//                   >
+//                     <option value="">Select Country</option>
+//                     {countries.map((c) => (
+//                       <option key={c.isoCode} value={c.name}>
+//                         {c.name}
+//                       </option>
+//                     ))}
+//                   </select>
+//                   {errors.country && <div className="invalid-feedback">{errors.country}</div>}
+//                 </div>
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     State <span className="text-danger">*</span>
+//                   </label>
+//                   <select
+//                     value={formData.state}
+//                     onChange={handleStateChange}
+//                     className={`form-control ${errors.state ? 'is-invalid' : ''}`}
+//                     disabled={loading || !states.length}
+//                   >
+//                     <option value="">Select State</option>
+//                     {states.map((s) => (
+//                       <option key={s.isoCode} value={s.name}>
+//                         {s.name}
+//                       </option>
+//                     ))}
+//                   </select>
+//                   {errors.state && <div className="invalid-feedback">{errors.state}</div>}
+//                 </div>
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     City <span className="text-danger">*</span>
+//                   </label>
+//                   <select
+//                     value={formData.city}
+//                     onChange={handleCityChange}
+//                     className={`form-control ${errors.city ? 'is-invalid' : ''}`}
+//                     disabled={loading || !cities.length}
+//                   >
+//                     <option value="">Select City</option>
+//                     {cities.map((city) => (
+//                       <option key={city.name} value={city.name}>
+//                         {city.name}
+//                       </option>
+//                     ))}
+//                   </select>
+//                   {errors.city && <div className="invalid-feedback">{errors.city}</div>}
+//                 </div>
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     Pin Code <span className="text-danger">*</span>
+//                   </label>
+//                   <input
+//                     type="text"
+//                     name="pin_code"
+//                     value={formData.pin_code}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.pin_code ? 'is-invalid' : ''}`}
+//                     placeholder="Enter pin code"
+//                     disabled={loading}
+//                   />
+//                   {errors.pin_code && <div className="invalid-feedback">{errors.pin_code}</div>}
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Banking Details */}
+//             <div className="mb-4">
+//               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Banking Details</h5>
+//               <div className="row">
+//                 {[
+//                   { name: "account_holder_name", label: "Account Holder Name" },
+//                   { name: "bank_name", label: "Bank Name" },
+//                   { name: "branch_name", label: "Branch Name" },
+//                   { name: "account_number", label: "Account Number" },
+//                   { name: "ifsc_code", label: "IFSC Code" },
+//                 ].map(({ name, label }) => (
+//                   <div className="col-md-6 mb-3" key={name}>
+//                     <label className="form-label">
+//                       {label} <span className="text-danger">*</span>
+//                     </label>
+//                     <input
+//                       type="text"
+//                       name={name}
+//                       value={formData[name]}
+//                       onChange={handleChange}
+//                       className={`form-control ${errors[name] ? 'is-invalid' : ''}`}
+//                       placeholder={`Enter ${label.toLowerCase()}`}
+//                       disabled={loading}
+//                     />
+//                     {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
+//                   </div>
+//                 ))}
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     Account Type <span className="text-danger">*</span>
+//                   </label>
+//                   <select
+//                     name="account_type"
+//                     value={formData.account_type}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.account_type ? 'is-invalid' : ''}`}
+//                     disabled={loading}
+//                   >
+//                     <option value="">Select Account Type</option>
+//                     <option value="Savings">Savings</option>
+//                     <option value="Current">Current</option>
+//                   </select>
+//                   {errors.account_type && <div className="invalid-feedback">{errors.account_type}</div>}
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* KYC Verification */}
+//             <div className="mb-4">
+//               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>KYC Verification</h5>
+//               <div className="row">
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     PAN Number <span className="text-danger">*</span>
+//                   </label>
+//                   <input
+//                     type="text"
+//                     name="pan_number"
+//                     value={formData.pan_number}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.pan_number ? 'is-invalid' : ''}`}
+//                     placeholder="Enter PAN number"
+//                     disabled={loading}
+//                   />
+//                   {errors.pan_number && <div className="invalid-feedback">{errors.pan_number}</div>}
+//                 </div>
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     Aadhaar Number <span className="text-danger">*</span>
+//                   </label>
+//                   <input
+//                     type="text"
+//                     name="aadhaar_number"
+//                     value={formData.aadhaar_number}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.aadhaar_number ? 'is-invalid' : ''}`}
+//                     placeholder="Enter Aadhaar number"
+//                     disabled={loading}
+//                   />
+//                   {errors.aadhaar_number && <div className="invalid-feedback">{errors.aadhaar_number}</div>}
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* File Uploads */}
+//             <div className="mb-4">
+//               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Uploads</h5>
+//               <div className="row">
+//                 {[
+//                   { label: "Upload Image", name: "image" },
+//                   { label: "Aadhaar Front", name: "aadhaar_front" },
+//                   { label: "Aadhaar Back", name: "aadhaar_back" },
+//                   { label: "PAN Front", name: "pan_front" },
+//                   { label: "PAN Back", name: "pan_back" },
+//                   { label: "Bank Passbook", name: "bank_passbook" },
+//                   { label: "Cancelled Cheque", name: "cancelled_cheque" },
+//                 ].map(({ label, name }) => (
+//                   <div className="col-md-6 mb-3" key={name}>
+//                     <label className="form-label">
+//                       {label} <span className="text-danger">*</span>
+//                     </label>
+//                     <div>
+//                       <input
+//                         type="file"
+//                         name={name}
+//                         id={name}
+//                         onChange={handleChange}
+//                         className="form-control"
+//                         disabled={loading}
+//                       />
+//                       {formData[name]?.name && (
+//                         <div className="mt-2 d-flex justify-content-between align-items-center">
+//                           <small className="text-muted">{formData[name].name}</small>
+//                           <button 
+//                             type="button" 
+//                             className="btn btn-sm btn-outline-danger"
+//                             onClick={() => handleRemove(name)}
+//                             disabled={loading}
+//                           >
+//                             ×
+//                           </button>
+//                         </div>
+//                       )}
+//                     </div>
+//                     {errors[name] && <div className="text-danger small mt-1">{errors[name]}</div>}
+//                   </div>
+//                 ))}
+//               </div>
+//             </div>
+
+//             {/* Nominee Details */}
+//             <div className="mb-4">
+//               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Nominee Details</h5>
+//               <div className="row">
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     Nominee Relationship <span className="text-danger">*</span>
+//                   </label>
+//                   <input
+//                     type="text"
+//                     name="nominee_relationship"
+//                     value={formData.nominee_relationship}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.nominee_relationship ? 'is-invalid' : ''}`}
+//                     placeholder="Enter relationship"
+//                     disabled={loading}
+//                   />
+//                   {errors.nominee_relationship && <div className="invalid-feedback">{errors.nominee_relationship}</div>}
+//                 </div>
+
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">
+//                     Nominee Name <span className="text-danger">*</span>
+//                   </label>
+//                   <input
+//                     type="text"
+//                     name="nominee_reference_to"
+//                     value={formData.nominee_reference_to}
+//                     onChange={handleChange}
+//                     className={`form-control ${errors.nominee_reference_to ? 'is-invalid' : ''}`}
+//                     placeholder="Enter nominee name"
+//                     disabled={loading}
+//                   />
+//                   {errors.nominee_reference_to && <div className="invalid-feedback">{errors.nominee_reference_to}</div>}
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Nominee Uploads */}
+//             <div className="mb-4">
+//               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Nominee Uploads</h5>
+//               <div className="row">
+//                 {[
+//                   { label: "Nominee Aadhaar Front", name: "nominee_aadhaar_front" },
+//                   { label: "Nominee Aadhaar Back", name: "nominee_aadhaar_back" },
+//                 ].map(({ label, name }) => (
+//                   <div className="col-md-6 mb-3" key={name}>
+//                     <label className="form-label">
+//                       {label} <span className="text-danger">*</span>
+//                     </label>
+//                     <div>
+//                       <input
+//                         type="file"
+//                         name={name}
+//                         id={`nominee_${name}`}
+//                         onChange={handleChange}
+//                         className="form-control"
+//                         disabled={loading}
+//                       />
+//                       {formData[name]?.name && (
+//                         <div className="mt-2 d-flex justify-content-between align-items-center">
+//                           <small className="text-muted">{formData[name].name}</small>
+//                           <button 
+//                             type="button" 
+//                             className="btn btn-sm btn-outline-danger"
+//                             onClick={() => handleRemove(name)}
+//                             disabled={loading}
+//                           >
+//                             ×
+//                           </button>
+//                         </div>
+//                       )}
+//                     </div>
+//                     {errors[name] && <div className="text-danger small mt-1">{errors[name]}</div>}
+//                   </div>
+//                 ))}
+//               </div>
+//             </div>
+
+//             {/* Submit Button */}
+//             <div className="d-flex justify-content-between pt-3 mt-4 border-top">
+//               <button
+//                 type="button"
+//                 className="btn btn-outline-secondary"
+//                 onClick={() => navigate("/client-profile")}
+//                 disabled={loading}
+//               >
+//                 Cancel
+//               </button>
+//               <button
+//                 type="submit"
+//                 className="btn"
+//                 style={{
+//                   backgroundColor: "rgb(20, 5, 60)",
+//                   borderColor: "rgb(20, 5, 60)",
+//                   color: "white",
+//                   minWidth: "180px",
+//                 }}
+//                 disabled={loading}
+//               >
+//                 {loading ? "Updating..." : "Update Profile"}
+//               </button>
+//             </div>
+//           </form>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default ClientEditProfile;
+
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { baseurl } from "../../BaseURL/BaseURL";
@@ -1458,6 +2366,7 @@ const ClientEditProfile = () => {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
+    full_name: "",
     email: "",
     phone_number: "",
     date_of_birth: "",
@@ -1474,6 +2383,7 @@ const ClientEditProfile = () => {
     account_number: "",
     account_type: "",
     ifsc_code: "",
+    upi_id: "",
     pan_number: "",
     aadhaar_number: "",
     nominee_relationship: "",
@@ -1495,13 +2405,7 @@ const ClientEditProfile = () => {
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-
-  const requiredFields = [
-    "first_name", "last_name", "email", "phone_number", "date_of_birth",
-    "gender",  "address", "city", "state", "country", "pin_code",
-    "account_holder_name", "bank_name", "branch_name", "account_number", "account_type", "ifsc_code",
-    "pan_number", "aadhaar_number", "nominee_reference_to",
-  ];
+  const [hasFirstLastName, setHasFirstLastName] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
@@ -1532,12 +2436,26 @@ const ClientEditProfile = () => {
       setStates(statesArray);
       setCities(citiesArray);
 
-      // FIX: Convert date_of_birth from DD-MM-YYYY to YYYY-MM-DD
+      // Check if user has first_name/last_name
+      const hasFL = (user.first_name && user.first_name.trim() !== "") || 
+                    (user.last_name && user.last_name.trim() !== "");
+      setHasFirstLastName(hasFL);
+
+      // Format date for input
       const formatDateForInput = (dateStr) => {
         if (!dateStr) return "";
         try {
-          const [day, month, year] = dateStr.split("-");
-          return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+          if (dateStr.includes("-")) {
+            const parts = dateStr.split("-");
+            if (parts[0].length === 4) return dateStr;
+            const [day, month, year] = parts;
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+          }
+          if (dateStr.includes("/")) {
+            const [day, month, year] = dateStr.split("/");
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+          }
+          return dateStr;
         } catch (error) {
           console.error("Error formatting date:", error);
           return "";
@@ -1546,13 +2464,14 @@ const ClientEditProfile = () => {
 
       setFormData({
         ...user,
+        full_name: user.full_name || "",
         country: countryName,
         state: stateName,
         city: user.city || "",
-        // FIX: Convert date format for input field
+        upi_id: user.upi_id || "",
         date_of_birth: formatDateForInput(user.date_of_birth),
-        // FIX: Ensure gender is lowercase (API expects lowercase)
         gender: user.gender ? user.gender.toLowerCase() : "",
+        marital_status: user.marital_status ? user.marital_status.toLowerCase() : "",
         image: toFileObject(user.image),
         aadhaar_front: toFileObject(user.aadhaar_front),
         aadhaar_back: toFileObject(user.aadhaar_back),
@@ -1569,6 +2488,7 @@ const ClientEditProfile = () => {
         icon: "error",
         title: "Error",
         text: "Failed to load user data",
+        confirmButtonColor: "#6C63FF",
       });
     } finally {
       setInitialLoading(false);
@@ -1625,228 +2545,80 @@ const ClientEditProfile = () => {
     setFormData(prev => ({ ...prev, [name]: null }));
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-
-  //   let newErrors = {};
-  //   let missingFields = [];
-
-  //   requiredFields.forEach((field) => {
-  //     const value = formData[field];
-  //     if (!value || value === "") {
-  //       newErrors[field] = "This field is required";
-  //       missingFields.push(field.replace(/_/g, " ").toUpperCase());
-  //     }
-  //   });
-
-  //   if (Object.keys(newErrors).length > 0) {
-  //     setErrors(newErrors);
-  //     setLoading(false);
-      
-  //     Swal.fire({
-  //       icon: "warning",
-  //       title: "Missing Required Fields",
-  //       html: "Please fill the following required fields:<br/><br/>" + 
-  //             missingFields.join("<br/>"),
-  //       confirmButtonColor: "#6C63FF",
-  //     });
-  //     return;
-  //   }
-
-  //   const form = new FormData();
-    
-  //   // Process all fields
-  //   Object.entries(formData).forEach(([key, value]) => {
-  //     if (key === "date_of_birth") {
-  //       // Send date in YYYY-MM-DD format
-  //       // Input field already provides YYYY-MM-DD format
-  //       if (value) {
-  //         form.append(key, value);
-  //       }
-  //     } else if (key === "gender") {
-  //       // Ensure gender is lowercase
-  //       form.append(key, value.toLowerCase());
-  //     } else if (key === "marital_status") {
-  //       // Ensure marital_status is lowercase
-  //       form.append(key, value.toLowerCase());
-  //     } else if (
-  //       ["image", "aadhaar_front", "aadhaar_back", "pan_front", "pan_back", 
-  //        "bank_passbook", "cancelled_cheque", "nominee_aadhaar_front", 
-  //        "nominee_aadhaar_back"].includes(key)
-  //     ) {
-  //       if (value?.file instanceof File) {
-  //         form.append(key, value.file);
-  //       } else if (value?.url && !value?.file) {
-  //         // If we have URL but no file (from server), don't send anything
-  //       }
-  //     } else {
-  //       form.append(key, value);
-  //     }
-  //   });
-
-  //   // Debug log
-  //   console.log("Form data being sent:", {
-  //     date_of_birth: form.get("date_of_birth"),
-  //     gender: form.get("gender"),
-  //     marital_status: form.get("marital_status")
-  //   });
-
-  //   try {
-  //     await axios.put(`${baseurl}/users/${userId}/`, form, {
-  //       headers: { "Content-Type": "multipart/form-data" },
-  //     });
-      
-  //     Swal.fire({
-  //       icon: "success",
-  //       title: "Success!",
-  //       text: "Profile updated successfully",
-  //       confirmButtonColor: "#6C63FF",
-  //     }).then(() => {
-  //       navigate("/client-profile");
-  //     });
-  //   } catch (error) {
-  //     console.error("Update failed:", error.response?.data || error.message);
-      
-  //     // Better error message
-  //     let errorMessage = "Failed to update profile";
-  //     if (error.response?.data) {
-  //       if (typeof error.response.data === 'object') {
-  //         const errors = Object.values(error.response.data).flat();
-  //         errorMessage = errors.join(', ');
-  //       } else if (typeof error.response.data === 'string') {
-  //         errorMessage = error.response.data;
-  //       } else if (error.response.data.detail) {
-  //         errorMessage = error.response.data.detail;
-  //       }
-  //     }
-      
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: errorMessage,
-  //       confirmButtonColor: "#6C63FF",
-  //     });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+    e.preventDefault();
+    setLoading(true);
 
-  let newErrors = {};
-  let missingFields = [];
-
-  requiredFields.forEach((field) => {
-    const value = formData[field];
-    if (!value || value === "") {
-      newErrors[field] = "This field is required";
-      missingFields.push(field.replace(/_/g, " ").toUpperCase());
-    }
-  });
-
-  if (Object.keys(newErrors).length > 0) {
-    setErrors(newErrors);
-    setLoading(false);
+    // No validation - all fields are optional
+    const form = new FormData();
     
-    Swal.fire({
-      icon: "warning",
-      title: "Missing Required Fields",
-      html: "Please fill the following required fields:<br/><br/>" + 
-            missingFields.join("<br/>"),
-      confirmButtonColor: "#6C63FF",
-    });
-    return;
-  }
-
-  const form = new FormData();
-  
-  // Process all fields
-  Object.entries(formData).forEach(([key, value]) => {
-    if (key === "date_of_birth") {
-      // Send date in YYYY-MM-DD format
-      // Input field already provides YYYY-MM-DD format
-      if (value) {
-        form.append(key, value);
-      }
-    } else if (key === "gender") {
-      // Ensure gender is lowercase - with null check
-      if (value && typeof value === 'string') {
-        form.append(key, value.toLowerCase());
+    Object.entries(formData).forEach(([key, value]) => {
+      if (key === "date_of_birth") {
+        if (value && value.trim() !== "") {
+          form.append(key, value);
+        }
+      } else if (key === "gender") {
+        if (value && typeof value === 'string' && value.trim() !== "") {
+          form.append(key, value.toLowerCase());
+        }
+      } else if (key === "marital_status") {
+        if (value && typeof value === 'string' && value.trim() !== "") {
+          form.append(key, value.toLowerCase());
+        }
+      } else if (
+        ["image", "aadhaar_front", "aadhaar_back", "pan_front", "pan_back", 
+         "bank_passbook", "cancelled_cheque", "nominee_aadhaar_front", 
+         "nominee_aadhaar_back"].includes(key)
+      ) {
+        if (value?.file instanceof File) {
+          form.append(key, value.file);
+        }
       } else {
-        form.append(key, value || "");
+        // Only append if value is not null or undefined
+        if (value !== null && value !== undefined && value !== "") {
+          form.append(key, value);
+        }
       }
-    } else if (key === "marital_status") {
-      // Ensure marital_status is lowercase - with null check
-      if (value && typeof value === 'string') {
-        form.append(key, value.toLowerCase());
-      } else {
-        form.append(key, value || "");
-      }
-    } else if (
-      ["image", "aadhaar_front", "aadhaar_back", "pan_front", "pan_back", 
-       "bank_passbook", "cancelled_cheque", "nominee_aadhaar_front", 
-       "nominee_aadhaar_back"].includes(key)
-    ) {
-      if (value?.file instanceof File) {
-        form.append(key, value.file);
-      } else if (value?.url && !value?.file) {
-        // If we have URL but no file (from server), don't send anything
-      }
-    } else {
-      // For all other fields, check if value exists
-      form.append(key, value || "");
-    }
-  });
+    });
 
-  // Debug log
-  console.log("Form data being sent:", {
-    date_of_birth: form.get("date_of_birth"),
-    gender: form.get("gender"),
-    marital_status: form.get("marital_status")
-  });
-
-  try {
-    await axios.put(`${baseurl}/users/${userId}/`, form, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    
-    Swal.fire({
-      icon: "success",
-      title: "Success!",
-      text: "Profile updated successfully",
-      confirmButtonColor: "#6C63FF",
-    }).then(() => {
-      navigate("/client-profile");
-    });
-  } catch (error) {
-    console.error("Update failed:", error.response?.data || error.message);
-    
-    // Better error message
-    let errorMessage = "Failed to update profile";
-    if (error.response?.data) {
-      if (typeof error.response.data === 'object') {
-        const errors = Object.values(error.response.data).flat();
-        errorMessage = errors.join(', ');
-      } else if (typeof error.response.data === 'string') {
-        errorMessage = error.response.data;
-      } else if (error.response.data.detail) {
-        errorMessage = error.response.data.detail;
+    try {
+      await axios.put(`${baseurl}/users/${userId}/`, form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Profile updated successfully",
+        confirmButtonColor: "#6C63FF",
+      }).then(() => {
+        navigate("/client-profile");
+      });
+    } catch (error) {
+      console.error("Update failed:", error.response?.data || error.message);
+      
+      let errorMessage = "Failed to update profile";
+      if (error.response?.data) {
+        if (typeof error.response.data === 'object') {
+          const errors = Object.values(error.response.data).flat();
+          errorMessage = errors.join(', ');
+        } else if (typeof error.response.data === 'string') {
+          errorMessage = error.response.data;
+        } else if (error.response.data.detail) {
+          errorMessage = error.response.data.detail;
+        }
       }
+      
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: errorMessage,
+        confirmButtonColor: "#6C63FF",
+      });
+    } finally {
+      setLoading(false);
     }
-    
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: errorMessage,
-      confirmButtonColor: "#6C63FF",
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   if (initialLoading) {
     return (
@@ -1876,7 +2648,7 @@ const ClientEditProfile = () => {
               ← Back
             </button>
             <h4 className="text-center mb-0">Edit Profile</h4>
-            <div style={{width: "100px"}}></div> {/* Spacer for alignment */}
+            <div style={{width: "100px"}}></div>
           </div>
 
           <form onSubmit={handleSubmit}>
@@ -1884,95 +2656,100 @@ const ClientEditProfile = () => {
             <div className="mb-4">
               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Basic Information</h5>
               <div className="row">
-                <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    First Name <span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="first_name"
-                    value={formData.first_name}
-                    onChange={handleChange}
-                    className={`form-control ${errors.first_name ? 'is-invalid' : ''}`}
-                    placeholder="Enter first name"
-                    disabled={loading}
-                  />
-                  {errors.first_name && <div className="invalid-feedback">{errors.first_name}</div>}
-                </div>
+                {/* Show Full Name field for users who registered with full_name */}
+                {!hasFirstLastName && (
+                  <div className="col-md-12 mb-3">
+                    <label className="form-label">Full Name</label>
+                    <input
+                      type="text"
+                      name="full_name"
+                      value={formData.full_name || ""}
+                      onChange={handleChange}
+                      className="form-control"
+                      placeholder="Enter full name"
+                      disabled={loading}
+                    />
+                    <small className="text-muted">Enter your complete name</small>
+                  </div>
+                )}
+
+                {/* Show First Name & Last Name fields for users who registered with first_name/last_name */}
+                {hasFirstLastName && (
+                  <>
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">First Name</label>
+                      <input
+                        type="text"
+                        name="first_name"
+                        value={formData.first_name || ""}
+                        onChange={handleChange}
+                        className="form-control"
+                        placeholder="Enter first name"
+                        disabled={loading}
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Last Name</label>
+                      <input
+                        type="text"
+                        name="last_name"
+                        value={formData.last_name || ""}
+                        onChange={handleChange}
+                        className="form-control"
+                        placeholder="Enter last name"
+                        disabled={loading}
+                      />
+                    </div>
+                  </>
+                )}
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Last Name <span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="last_name"
-                    value={formData.last_name}
-                    onChange={handleChange}
-                    className={`form-control ${errors.last_name ? 'is-invalid' : ''}`}
-                    placeholder="Enter last name"
-                    disabled={loading}
-                  />
-                  {errors.last_name && <div className="invalid-feedback">{errors.last_name}</div>}
-                </div>
-
-                <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Email <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Email</label>
                   <input
                     type="email"
                     name="email"
-                    value={formData.email}
+                    value={formData.email || ""}
                     onChange={handleChange}
-                    className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter email"
                     disabled={loading}
                   />
-                  {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Phone Number <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Phone Number</label>
                   <input
                     type="tel"
                     name="phone_number"
-                    value={formData.phone_number}
+                    value={formData.phone_number || ""}
                     onChange={handleChange}
-                    className={`form-control ${errors.phone_number ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter phone number"
                     disabled={loading}
                   />
-                  {errors.phone_number && <div className="invalid-feedback">{errors.phone_number}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Date of Birth <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Date of Birth</label>
                   <input
                     type="date"
                     name="date_of_birth"
-                    value={formData.date_of_birth}
+                    value={formData.date_of_birth || ""}
                     onChange={handleChange}
-                    className={`form-control ${errors.date_of_birth ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading}
                   />
-                  {errors.date_of_birth && <div className="invalid-feedback">{errors.date_of_birth}</div>}
                   <small className="text-muted">Format: YYYY-MM-DD</small>
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Gender <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Gender</label>
                   <select
                     name="gender"
-                    value={formData.gender}
+                    value={formData.gender || ""}
                     onChange={handleChange}
-                    className={`form-control ${errors.gender ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading}
                   >
                     <option value="">Select Gender</option>
@@ -1980,19 +2757,15 @@ const ClientEditProfile = () => {
                     <option value="male">Male</option>
                     <option value="other">Other</option>
                   </select>
-                  {errors.gender && <div className="invalid-feedback">{errors.gender}</div>}
-                  <small className="text-muted">Note: Will be saved as lowercase</small>
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Marital Status <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Marital Status</label>
                   <select
                     name="marital_status"
-                    value={formData.marital_status}
+                    value={formData.marital_status || ""}
                     onChange={handleChange}
-                    className={`form-control ${errors.marital_status ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading}
                   >
                     <option value="">Select Status</option>
@@ -2001,8 +2774,6 @@ const ClientEditProfile = () => {
                     <option value="divorced">Divorced</option>
                     <option value="widowed">Widowed</option>
                   </select>
-                  {errors.marital_status && <div className="invalid-feedback">{errors.marital_status}</div>}
-                  <small className="text-muted">Note: Will be saved as lowercase</small>
                 </div>
               </div>
             </div>
@@ -2012,29 +2783,24 @@ const ClientEditProfile = () => {
               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Address Details</h5>
               <div className="row">
                 <div className="col-12 mb-3">
-                  <label className="form-label">
-                    Address <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Address</label>
                   <input
                     type="text"
                     name="address"
-                    value={formData.address}
+                    value={formData.address || ""}
                     onChange={handleChange}
-                    className={`form-control ${errors.address ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter full address"
                     disabled={loading}
                   />
-                  {errors.address && <div className="invalid-feedback">{errors.address}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Country <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Country</label>
                   <select
-                    value={formData.country}
+                    value={formData.country || ""}
                     onChange={handleCountryChange}
-                    className={`form-control ${errors.country ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading || countries.length === 0}
                   >
                     <option value="">Select Country</option>
@@ -2044,17 +2810,14 @@ const ClientEditProfile = () => {
                       </option>
                     ))}
                   </select>
-                  {errors.country && <div className="invalid-feedback">{errors.country}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    State <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">State</label>
                   <select
-                    value={formData.state}
+                    value={formData.state || ""}
                     onChange={handleStateChange}
-                    className={`form-control ${errors.state ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading || !states.length}
                   >
                     <option value="">Select State</option>
@@ -2064,17 +2827,14 @@ const ClientEditProfile = () => {
                       </option>
                     ))}
                   </select>
-                  {errors.state && <div className="invalid-feedback">{errors.state}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    City <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">City</label>
                   <select
-                    value={formData.city}
+                    value={formData.city || ""}
                     onChange={handleCityChange}
-                    className={`form-control ${errors.city ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading || !cities.length}
                   >
                     <option value="">Select City</option>
@@ -2084,23 +2844,19 @@ const ClientEditProfile = () => {
                       </option>
                     ))}
                   </select>
-                  {errors.city && <div className="invalid-feedback">{errors.city}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Pin Code <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Pin Code</label>
                   <input
                     type="text"
                     name="pin_code"
-                    value={formData.pin_code}
+                    value={formData.pin_code || ""}
                     onChange={handleChange}
-                    className={`form-control ${errors.pin_code ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter pin code"
                     disabled={loading}
                   />
-                  {errors.pin_code && <div className="invalid-feedback">{errors.pin_code}</div>}
                 </div>
               </div>
             </div>
@@ -2117,38 +2873,46 @@ const ClientEditProfile = () => {
                   { name: "ifsc_code", label: "IFSC Code" },
                 ].map(({ name, label }) => (
                   <div className="col-md-6 mb-3" key={name}>
-                    <label className="form-label">
-                      {label} <span className="text-danger">*</span>
-                    </label>
+                    <label className="form-label">{label}</label>
                     <input
                       type="text"
                       name={name}
-                      value={formData[name]}
+                      value={formData[name] || ""}
                       onChange={handleChange}
-                      className={`form-control ${errors[name] ? 'is-invalid' : ''}`}
+                      className="form-control"
                       placeholder={`Enter ${label.toLowerCase()}`}
                       disabled={loading}
                     />
-                    {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
                   </div>
                 ))}
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Account Type <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Account Type</label>
                   <select
                     name="account_type"
-                    value={formData.account_type}
+                    value={formData.account_type || ""}
                     onChange={handleChange}
-                    className={`form-control ${errors.account_type ? 'is-invalid' : ''}`}
+                    className="form-control"
                     disabled={loading}
                   >
                     <option value="">Select Account Type</option>
                     <option value="Savings">Savings</option>
                     <option value="Current">Current</option>
                   </select>
-                  {errors.account_type && <div className="invalid-feedback">{errors.account_type}</div>}
+                </div>
+
+                {/* UPI ID Field */}
+                <div className="col-md-6 mb-3">
+                  <label className="form-label">UPI ID</label>
+                  <input
+                    type="text"
+                    name="upi_id"
+                    value={formData.upi_id || ""}
+                    onChange={handleChange}
+                    className="form-control"
+                    placeholder="Enter UPI ID (e.g., username@okhdfcbank)"
+                    disabled={loading}
+                  />
                 </div>
               </div>
             </div>
@@ -2158,35 +2922,29 @@ const ClientEditProfile = () => {
               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>KYC Verification</h5>
               <div className="row">
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    PAN Number <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">PAN Number</label>
                   <input
                     type="text"
                     name="pan_number"
-                    value={formData.pan_number}
+                    value={formData.pan_number || ""}
                     onChange={handleChange}
-                    className={`form-control ${errors.pan_number ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter PAN number"
                     disabled={loading}
                   />
-                  {errors.pan_number && <div className="invalid-feedback">{errors.pan_number}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Aadhaar Number <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Aadhaar Number</label>
                   <input
                     type="text"
                     name="aadhaar_number"
-                    value={formData.aadhaar_number}
+                    value={formData.aadhaar_number || ""}
                     onChange={handleChange}
-                    className={`form-control ${errors.aadhaar_number ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter Aadhaar number"
                     disabled={loading}
                   />
-                  {errors.aadhaar_number && <div className="invalid-feedback">{errors.aadhaar_number}</div>}
                 </div>
               </div>
             </div>
@@ -2205,9 +2963,7 @@ const ClientEditProfile = () => {
                   { label: "Cancelled Cheque", name: "cancelled_cheque" },
                 ].map(({ label, name }) => (
                   <div className="col-md-6 mb-3" key={name}>
-                    <label className="form-label">
-                      {label} <span className="text-danger">*</span>
-                    </label>
+                    <label className="form-label">{label}</label>
                     <div>
                       <input
                         type="file"
@@ -2231,7 +2987,6 @@ const ClientEditProfile = () => {
                         </div>
                       )}
                     </div>
-                    {errors[name] && <div className="text-danger small mt-1">{errors[name]}</div>}
                   </div>
                 ))}
               </div>
@@ -2242,35 +2997,29 @@ const ClientEditProfile = () => {
               <h5 className="mb-3" style={{color: "rgb(30, 10, 80)"}}>Nominee Details</h5>
               <div className="row">
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Nominee Relationship <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Nominee Relationship</label>
                   <input
                     type="text"
                     name="nominee_relationship"
-                    value={formData.nominee_relationship}
+                    value={formData.nominee_relationship || ""}
                     onChange={handleChange}
-                    className={`form-control ${errors.nominee_relationship ? 'is-invalid' : ''}`}
+                    className="form-control"
                     placeholder="Enter relationship"
                     disabled={loading}
                   />
-                  {errors.nominee_relationship && <div className="invalid-feedback">{errors.nominee_relationship}</div>}
                 </div>
 
                 <div className="col-md-6 mb-3">
-                  <label className="form-label">
-                    Nominee Name <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label">Nominee Reference To</label>
                   <input
                     type="text"
                     name="nominee_reference_to"
-                    value={formData.nominee_reference_to}
+                    value={formData.nominee_reference_to || ""}
                     onChange={handleChange}
-                    className={`form-control ${errors.nominee_reference_to ? 'is-invalid' : ''}`}
-                    placeholder="Enter nominee name"
+                    className="form-control"
+                    placeholder="Enter reference"
                     disabled={loading}
                   />
-                  {errors.nominee_reference_to && <div className="invalid-feedback">{errors.nominee_reference_to}</div>}
                 </div>
               </div>
             </div>
@@ -2284,9 +3033,7 @@ const ClientEditProfile = () => {
                   { label: "Nominee Aadhaar Back", name: "nominee_aadhaar_back" },
                 ].map(({ label, name }) => (
                   <div className="col-md-6 mb-3" key={name}>
-                    <label className="form-label">
-                      {label} <span className="text-danger">*</span>
-                    </label>
+                    <label className="form-label">{label}</label>
                     <div>
                       <input
                         type="file"
@@ -2310,7 +3057,6 @@ const ClientEditProfile = () => {
                         </div>
                       )}
                     </div>
-                    {errors[name] && <div className="text-danger small mt-1">{errors[name]}</div>}
                   </div>
                 ))}
               </div>

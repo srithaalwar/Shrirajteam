@@ -264,6 +264,290 @@
 //=====================================
 
 
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import Swal from "sweetalert2";
+// import { useNavigate } from "react-router-dom";
+// import { baseurl } from "../../BaseURL/BaseURL";
+// import WebsiteNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
+// import "./ClientProfile.css";
+
+// const ClientProfile = () => {
+//   const [userData, setUserData] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+//   const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
+//   const navigate = useNavigate();
+//   const userId = localStorage.getItem("user_id");
+
+//   useEffect(() => {
+//     axios
+//       .get(`${baseurl}/users/${userId}/`)
+//       .then((response) => {
+//         const data = response.data;
+//         setUserData(data);
+//         setLoading(false);
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching user data:", error);
+//         setLoading(false);
+//       });
+//   }, [userId]);
+
+//   const handleDeleteAccount = async () => {
+//     try {
+//       const response = await fetch(
+//         `${baseurl}/users/${userId}/`,
+//         {
+//           method: "DELETE",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
+
+//       if (response.ok) {
+//         await Swal.fire({
+//           title: "Account Deleted",
+//           text: "Your account has been deleted successfully.",
+//           icon: "success",
+//           confirmButtonText: "OK",
+//         });
+
+//         localStorage.removeItem("token");
+//         localStorage.removeItem("userData");
+//         localStorage.removeItem("user_id");
+
+//         window.location.href = "/login";
+//       } else {
+//         Swal.fire({
+//           title: "Failed",
+//           text: "Unable to delete account. Please try again.",
+//           icon: "error",
+//         });
+//       }
+//     } catch (error) {
+//       console.error("Error:", error);
+//       Swal.fire({
+//         title: "Error",
+//         text: "Something went wrong. Please try again.",
+//         icon: "error",
+//       });
+//     }
+
+//     setShowDeleteDialog(false);
+//     setDeleteConfirmationText("");
+//   };
+
+//   const confirmDelete = () => {
+//     if (deleteConfirmationText.toLowerCase() === "delete") {
+//       setShowDeleteDialog(false);
+//       setTimeout(() => {
+//         handleDeleteAccount();
+//       }, 200);
+//     } else {
+//       Swal.fire({
+//         title: "Confirmation Failed",
+//         text: 'Please type "delete" to confirm account deletion.',
+//         icon: "warning",
+//         confirmButtonText: "OK",
+//       });
+//     }
+//   };
+
+//   const handleCloseModal = () => {
+//     setShowDeleteDialog(false);
+//     setDeleteConfirmationText("");
+//   };
+
+//   if (loading) {
+//     return (
+//       <>
+//         <WebsiteNavbar />
+//         <div className="partner-profile-page">
+//           <div className="profile-container">
+//             <div className="profile-loading">Loading...</div>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   if (!userData) {
+//     return (
+//       <>
+//         <WebsiteNavbar />
+//         <div className="partner-profile-page">
+//           <div className="profile-container">
+//             <div className="profile-error">Failed to load profile</div>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   return (
+//     <>
+//       <WebsiteNavbar />
+      
+//       <div className="partner-profile-page">
+//         <div className="profile-container">
+//           {/* Profile Header */}
+//           <div className="profile-header">
+//             <h2>Profile</h2>
+//             <button 
+//               className="profile-edit-btn"
+//               onClick={() => navigate("/client-edit-profile")}
+//               title="Edit Profile"
+//             >
+//               ✏️
+//             </button>
+//           </div>
+
+//           {/* Profile Card */}
+//           <div className="profile-card">
+//             {/* Profile Fields */}
+//             <div className="profile-field">
+//               <span className="profile-label">First Name:</span>
+//               <span className="profile-value">{userData.first_name || "N/A"}</span>
+//             </div>
+            
+//             <div className="profile-divider"></div>
+            
+//             <div className="profile-field">
+//               <span className="profile-label">Last Name:</span>
+//               <span className="profile-value">{userData.last_name || "N/A"}</span>
+//             </div>
+            
+//             <div className="profile-divider"></div>
+            
+//             <div className="profile-field">
+//               <span className="profile-label">Date of Birth:</span>
+//               <span className="profile-value">
+//                 {userData.date_of_birth}
+//               </span>
+//             </div>
+            
+//             <div className="profile-divider"></div>
+            
+//             <div className="profile-field">
+//               <span className="profile-label">Gender:</span>
+//               <span className="profile-value">{userData.gender || "N/A"}</span>
+//             </div>
+            
+//             <div className="profile-divider"></div>
+            
+//             <div className="profile-field">
+//               <span className="profile-label">Email Address:</span>
+//               <span className="profile-value">{userData.email || "N/A"}</span>
+//             </div>
+            
+//             <div className="profile-divider"></div>
+            
+//             <div className="profile-field">
+//               <span className="profile-label">Mobile Number:</span>
+//               <span className="profile-value">{userData.phone_number || "N/A"}</span>
+//             </div>
+            
+//             <div className="profile-divider"></div>
+            
+//             <div className="profile-field">
+//               <span className="profile-label">Role:</span>
+//               <span className="profile-value">
+//                 {userData.roles[0]?.role_name === "Agent"
+//                   ? "Team"
+//                   : userData.roles[0]?.role_name || "N/A"}
+//               </span>
+//             </div>
+            
+//             <div className="profile-divider"></div>
+            
+//             <div className="profile-field">
+//               <span className="profile-label">Pan number:</span>
+//               <span className="profile-value">{userData.pan_number || ""}</span>
+//             </div>
+            
+//             <div className="profile-divider"></div>
+            
+//             <div className="profile-field">
+//               <span className="profile-label">Aadhaar number:</span>
+//               <span className="profile-value">{userData.aadhaar_number || ""}</span>
+//             </div>
+            
+//             {/* Action Buttons */}
+//             <div className="profile-actions">
+//               <button 
+//                 className="profile-close-btn"
+//                 onClick={() => navigate("/client-dashboard")}
+//               >
+//                 Close
+//               </button>
+              
+//               <button 
+//                 className="profile-delete-btn"
+//                 onClick={() => setShowDeleteDialog(true)}
+//               >
+//                 Delete Account
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Delete Account Confirmation Modal */}
+//       {showDeleteDialog && (
+//         <div className="modal-overlay">
+//           <div className="delete-modal">
+//             <div className="modal-header">
+//               <h3>Delete Account</h3>
+//               <button 
+//                 className="modal-close"
+//                 onClick={handleCloseModal}
+//               >
+//                 ×
+//               </button>
+//             </div>
+            
+//             <div className="modal-body">
+//               <p className="warning-text">
+//                 ⚠️ Warning: This action is permanent and cannot be undone!
+//               </p>
+//               <p>Please type <strong>"delete"</strong> in the box below to confirm.</p>
+//               <input
+//                 type="text"
+//                 className="delete-confirmation-input"
+//                 placeholder='Type "delete" to confirm'
+//                 value={deleteConfirmationText}
+//                 onChange={(e) => setDeleteConfirmationText(e.target.value)}
+//                 autoFocus
+//               />
+//             </div>
+            
+//             <div className="modal-footer">
+//               <button 
+//                 className="secondary-btn"
+//                 onClick={handleCloseModal}
+//               >
+//                 Cancel
+//               </button>
+//               <button 
+//                 className={`delete-confirm-btn ${deleteConfirmationText.toLowerCase() === "delete" ? "active" : ""}`}
+//                 onClick={confirmDelete}
+//                 disabled={deleteConfirmationText.toLowerCase() !== "delete"}
+//               >
+//                 Delete Account
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </>
+//   );
+// };
+
+// export default ClientProfile;
+
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -272,11 +556,46 @@ import { baseurl } from "../../BaseURL/BaseURL";
 import WebsiteNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
 import "./ClientProfile.css";
 
+// ✅ Function to get display name from user data
+const getUserDisplayName = (user) => {
+  const firstName = user.first_name || "";
+  const lastName = user.last_name || "";
+  const fullName = user.full_name || "";
+  
+  // If user has both first_name and last_name, show them together
+  if (firstName && firstName.trim() !== "" && lastName && lastName.trim() !== "") {
+    return `${firstName} ${lastName}`.trim();
+  }
+  // If user has only full_name, show full_name
+  else if (fullName && fullName.trim() !== "") {
+    return fullName;
+  }
+  // If user has only first_name
+  else if (firstName && firstName.trim() !== "") {
+    return firstName;
+  }
+  // If user has only last_name
+  else if (lastName && lastName.trim() !== "") {
+    return lastName;
+  }
+  // No name available
+  else {
+    return "";
+  }
+};
+
+// ✅ Function to check if user has first_name/last_name
+const hasFirstLastName = (user) => {
+  return (user.first_name && user.first_name.trim() !== "") || 
+         (user.last_name && user.last_name.trim() !== "");
+};
+
 const ClientProfile = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const navigate = useNavigate();
   const userId = localStorage.getItem("user_id");
 
@@ -286,6 +605,7 @@ const ClientProfile = () => {
       .then((response) => {
         const data = response.data;
         setUserData(data);
+        setDisplayName(getUserDisplayName(data));
         setLoading(false);
       })
       .catch((error) => {
@@ -406,25 +726,37 @@ const ClientProfile = () => {
 
           {/* Profile Card */}
           <div className="profile-card">
-            {/* Profile Fields */}
+            {/* Name Field - Show based on how user registered */}
             <div className="profile-field">
-              <span className="profile-label">First Name:</span>
-              <span className="profile-value">{userData.first_name || "N/A"}</span>
+              <span className="profile-label">Name:</span>
+              <span className="profile-value">{displayName || "N/A"}</span>
             </div>
             
             <div className="profile-divider"></div>
             
-            <div className="profile-field">
-              <span className="profile-label">Last Name:</span>
-              <span className="profile-value">{userData.last_name || "N/A"}</span>
-            </div>
-            
-            <div className="profile-divider"></div>
+            {/* Show First Name & Last Name separately ONLY if user has them */}
+            {hasFirstLastName(userData) && (
+              <>
+                <div className="profile-field">
+                  <span className="profile-label">First Name:</span>
+                  <span className="profile-value">{userData.first_name || "N/A"}</span>
+                </div>
+                
+                <div className="profile-divider"></div>
+                
+                <div className="profile-field">
+                  <span className="profile-label">Last Name:</span>
+                  <span className="profile-value">{userData.last_name || "N/A"}</span>
+                </div>
+                
+                <div className="profile-divider"></div>
+              </>
+            )}
             
             <div className="profile-field">
               <span className="profile-label">Date of Birth:</span>
               <span className="profile-value">
-                {userData.date_of_birth}
+                {userData.date_of_birth || "N/A"}
               </span>
             </div>
             
@@ -454,9 +786,9 @@ const ClientProfile = () => {
             <div className="profile-field">
               <span className="profile-label">Role:</span>
               <span className="profile-value">
-                {userData.roles[0]?.role_name === "Agent"
+                {userData.roles && userData.roles[0]?.role_name === "Agent"
                   ? "Team"
-                  : userData.roles[0]?.role_name || "N/A"}
+                  : userData.roles && userData.roles[0]?.role_name || "N/A"}
               </span>
             </div>
             
@@ -464,14 +796,14 @@ const ClientProfile = () => {
             
             <div className="profile-field">
               <span className="profile-label">Pan number:</span>
-              <span className="profile-value">{userData.pan_number || ""}</span>
+              <span className="profile-value">{userData.pan_number || "N/A"}</span>
             </div>
             
             <div className="profile-divider"></div>
             
             <div className="profile-field">
               <span className="profile-label">Aadhaar number:</span>
-              <span className="profile-value">{userData.aadhaar_number || ""}</span>
+              <span className="profile-value">{userData.aadhaar_number || "N/A"}</span>
             </div>
             
             {/* Action Buttons */}
