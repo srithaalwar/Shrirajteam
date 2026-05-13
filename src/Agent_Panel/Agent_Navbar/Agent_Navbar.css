@@ -1681,9 +1681,9 @@
 }
 
 @media (max-width: 768px) {
-  .wn-mobile-search-row {
+  /* .wn-mobile-search-row {
     display: block;
-  }
+  } */
   
   /* Hide the search container margin adjustments on mobile */
   .wn-mobile-search-row .wn-search-container {

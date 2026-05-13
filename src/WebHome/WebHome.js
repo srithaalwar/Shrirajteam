@@ -8,7 +8,8 @@ import ElectronicAndMobilesCarousel from "../ElectronicAndMobilesCarousel/Carous
 import ClothingAndGarmentsCarousel from "../ClothingAndGarmentsCarousel/Carousel";
 import GroceryAndKiranamCarousel from "../GroceryAndKiranamCarousel/Carousel";
 import FootWearCarousel from "../FootWearCarousel/Carousel";
-
+import WebButtonRow from "./ButtonRow"
+import SearchBar from "./SearchBar/AgentSearchBar"
 const WebHome = () => {
   const [carouselImages, setCarouselImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -102,6 +103,7 @@ const WebHome = () => {
   return (
     <div>
       <WebsiteNavbar />
+      <SearchBar/>
 
       <div className="mani-as-home-wrap">
 
@@ -182,6 +184,7 @@ const WebHome = () => {
             ))}
           </div>
         </div>
+        <WebButtonRow/>
 
         {/* ── Categories ── */}
         <Categories />

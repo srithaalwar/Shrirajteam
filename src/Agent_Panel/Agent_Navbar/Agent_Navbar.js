@@ -15683,7 +15683,7 @@ const AgentNavbar = () => {
   </div>
   
   {/* Mobile Search Toggle Button - Shows only on mobile */}
-  <div className="wn-mobile-search-toggle">
+  {/* <div className="wn-mobile-search-toggle">
     <button 
       className="wn-mobile-search-btn"
       onClick={() => {
@@ -15699,7 +15699,7 @@ const AgentNavbar = () => {
     >
       <FaSearch />
     </button>
-  </div>
+  </div> */}
         
         {/* Header Dropdown Menus - Desktop */}
         <div className="wn-header-dropdowns">

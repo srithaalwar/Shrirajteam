@@ -1,0 +1,297 @@
+/* ButtonRow.css */
+.button-row-container {
+  position: relative;
+  width: 100%;
+  background: #f5f5f5;
+  padding: 0;
+  box-shadow: none;
+}
+
+/* Buttons wrapper - Desktop styles (preserved) */
+.buttons-wrapper {
+  display: flex;
+  transition: all 0.3s ease;
+}
+
+/* Desktop view - row without scroll */
+.buttons-wrapper.desktop-row {
+  justify-content: center;
+  flex-wrap: wrap;
+  overflow-x: visible;
+  scrollbar-width: none;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 15px 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  gap: 15px;
+}
+
+/* Mobile view - grid layout exactly like image */
+.buttons-wrapper.mobile-scroll {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  overflow-x: visible;
+  overflow-y: visible;
+  scroll-behavior: auto;
+  -webkit-overflow-scrolling: auto;
+  scrollbar-width: none;
+  cursor: default;
+  white-space: normal;
+  background: #f8f9fa;
+  padding: 16px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.buttons-wrapper.mobile-scroll:active {
+  cursor: default;
+}
+
+/* Hide scrollbar for mobile grid (not needed) */
+.buttons-wrapper.mobile-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Individual button styling - Desktop */
+.buttons-wrapper.desktop-row .action-button {
+  background: white;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 30px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.buttons-wrapper.desktop-row .action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+  color: white;
+}
+
+.buttons-wrapper.desktop-row .action-button:active {
+  transform: translateY(0);
+}
+
+/* Individual button styling - Mobile (Icon above text with different background colors) */
+.buttons-wrapper.mobile-scroll .action-button {
+  border: none;
+  border-radius: 16px;
+  padding: 14px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: normal;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  flex-shrink: 1;
+  width: 100%;
+  min-width: 0;
+  backdrop-filter: blur(0px);
+}
+
+/* Different background colors for each button in mobile view */
+.buttons-wrapper.mobile-scroll .action-button:nth-child(1) {
+  background: linear-gradient(135deg, #FF6B6B 0%, #EE5A5A 100%);
+}
+
+.buttons-wrapper.mobile-scroll .action-button:nth-child(2) {
+  background: linear-gradient(135deg, #4ECDC4 0%, #3BA89F 100%);
+}
+
+.buttons-wrapper.mobile-scroll .action-button:nth-child(3) {
+  background: linear-gradient(135deg, #45B7D1 0%, #3498B6 100%);
+}
+
+.buttons-wrapper.mobile-scroll .action-button:nth-child(4) {
+  background: linear-gradient(135deg, #F7B731 0%, #E5A520 100%);
+}
+
+.buttons-wrapper.mobile-scroll .action-button:nth-child(5) {
+  background: linear-gradient(135deg, #A855F7 0%, #8B3EE8 100%);
+}
+
+/* Alternative colorful scheme with solid colors - uncomment if you prefer solid over gradients */
+/* .buttons-wrapper.mobile-scroll .action-button:nth-child(1) { background-color: #FF6B6B; }
+.buttons-wrapper.mobile-scroll .action-button:nth-child(2) { background-color: #4ECDC4; }
+.buttons-wrapper.mobile-scroll .action-button:nth-child(3) { background-color: #45B7D1; }
+.buttons-wrapper.mobile-scroll .action-button:nth-child(4) { background-color: #F7B731; }
+.buttons-wrapper.mobile-scroll .action-button:nth-child(5) { background-color: #A855F7; } */
+
+/* Active/Tap effect for mobile */
+.buttons-wrapper.mobile-scroll .action-button:active {
+  transform: scale(0.95);
+  filter: brightness(0.92);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile button icon styling */
+.buttons-wrapper.mobile-scroll .button-icon {
+  font-size: 28px;
+  margin-bottom: 2px;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Mobile button text styling */
+.buttons-wrapper.mobile-scroll .button-text {
+  font-size: 11px;
+  font-weight: 500;
+  color: white;
+  text-align: center;
+  word-break: keep-all;
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Scroll buttons - Hide for mobile grid (not needed) */
+.scroll-btn {
+  display: none;
+}
+
+/* Media Queries - Preserve desktop styles */
+@media (max-width: 1024px) {
+  .buttons-wrapper.desktop-row {
+    gap: 12px;
+  }
+  
+  .buttons-wrapper.desktop-row .action-button {
+    padding: 8px 20px;
+    font-size: 14px;
+  }
+  
+  .buttons-wrapper.desktop-row .button-icon {
+    font-size: 18px;
+  }
+  
+  .buttons-wrapper.desktop-row .button-text {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .button-row-container {
+    padding: 0;
+  }
+  
+  .buttons-wrapper.mobile-scroll {
+    gap: 10px;
+    padding: 14px 10px;
+  }
+  
+  .buttons-wrapper.mobile-scroll .button-icon {
+    font-size: 26px;
+  }
+  
+  .buttons-wrapper.mobile-scroll .button-text {
+    font-size: 10px;
+  }
+  
+  .buttons-wrapper.mobile-scroll .action-button {
+    padding: 12px 6px;
+    gap: 6px;
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .buttons-wrapper.mobile-scroll {
+    gap: 8px;
+    padding: 12px 8px;
+  }
+  
+  .buttons-wrapper.mobile-scroll .button-icon {
+    font-size: 24px;
+  }
+  
+  .buttons-wrapper.mobile-scroll .button-text {
+    font-size: 9px;
+  }
+  
+  .buttons-wrapper.mobile-scroll .action-button {
+    padding: 10px 4px;
+    gap: 5px;
+    border-radius: 12px;
+  }
+}
+
+/* Very small devices */
+@media (max-width: 400px) {
+  .buttons-wrapper.mobile-scroll {
+    gap: 6px;
+    padding: 10px 6px;
+  }
+  
+  .buttons-wrapper.mobile-scroll .button-icon {
+    font-size: 22px;
+  }
+  
+  .buttons-wrapper.mobile-scroll .button-text {
+    font-size: 10px;
+  }
+  
+  .buttons-wrapper.mobile-scroll .action-button {
+    padding: 8px 2px;
+    border-radius: 10px;
+  }
+}
+
+/* Optional: Animation for new buttons - desktop only */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.buttons-wrapper.desktop-row .action-button {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Stagger animation for each button - desktop only */
+.buttons-wrapper.desktop-row .action-button:nth-child(1) { animation-delay: 0.05s; }
+.buttons-wrapper.desktop-row .action-button:nth-child(2) { animation-delay: 0.1s; }
+.buttons-wrapper.desktop-row .action-button:nth-child(3) { animation-delay: 0.15s; }
+.buttons-wrapper.desktop-row .action-button:nth-child(4) { animation-delay: 0.2s; }
+.buttons-wrapper.desktop-row .action-button:nth-child(5) { animation-delay: 0.25s; }
+
+/* Mobile entrance animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.buttons-wrapper.mobile-scroll .action-button {
+  animation: fadeInUp 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+.buttons-wrapper.mobile-scroll .action-button:nth-child(1) { animation-delay: 0.05s; }
+.buttons-wrapper.mobile-scroll .action-button:nth-child(2) { animation-delay: 0.1s; }
+.buttons-wrapper.mobile-scroll .action-button:nth-child(3) { animation-delay: 0.15s; }
+.buttons-wrapper.mobile-scroll .action-button:nth-child(4) { animation-delay: 0.2s; }
+.buttons-wrapper.mobile-scroll .action-button:nth-child(5) { animation-delay: 0.25s; }

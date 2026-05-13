@@ -251,14 +251,14 @@
 
 /* Tiny phone */
 @media (max-width: 390px) {
-  .mani-as-banner-wrap { height: 185px; }
+  /* .mani-as-banner-wrap { height: 185px; } */
     .mani-as-banner-img {
     object-fit: contain;
   }
 }
 
 @media (max-width: 360px) {
-  .mani-as-banner-wrap { height: 165px; }
+  /* .mani-as-banner-wrap { height: 165px; } */
     .mani-as-banner-img {
     object-fit: contain;
   }
