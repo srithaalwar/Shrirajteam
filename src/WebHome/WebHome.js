@@ -187,7 +187,7 @@ const WebHome = () => {
         <WebButtonRow/>
 
         {/* ── Categories ── */}
-        <Categories />
+        {/* <Categories /> */}
 
         {/* ══════════════════════════════════ */}
         {/* ════  PRODUCT CAROUSELS  ════════ */}

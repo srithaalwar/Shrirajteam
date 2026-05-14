@@ -2156,7 +2156,7 @@ const AgentHome = () => {
 <SearchBar/>
       <AgentHomeBanner />
 <ButtonRow/>
-      <Categories />
+      {/* <Categories /> */}
 
       <div className="agent-home-container">
         {displayedCategories.length === 0 ? (
