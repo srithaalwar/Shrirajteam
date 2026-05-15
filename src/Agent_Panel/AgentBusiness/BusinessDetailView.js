@@ -833,6 +833,404 @@
 // };
 
 // export default ViewBusiness;
+// import React, { useState, useEffect } from 'react';
+// import { useParams, useNavigate } from 'react-router-dom';
+// import axios from 'axios';
+// import Swal from 'sweetalert2';
+// import { baseurl } from '../../BaseURL/BaseURL';
+// import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import './ViewBusiness.css';
+
+// const AgentViewBusiness = () => {
+//   const { id } = useParams();
+//   const navigate = useNavigate();
+//   const [business, setBusiness] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [categories, setCategories] = useState([]);
+
+//   const userId = localStorage.getItem('user_id');
+
+//   // Business types mapping
+//   const BUSINESS_TYPES = {
+//     'individual': 'Individual',
+//     'proprietor': 'Proprietor',
+//     'partnership': 'Partnership',
+//     'private_limited': 'Private Limited',
+//     'llp': 'LLP'
+//   };
+
+//   // Days of week mapping
+//   const DAYS_MAP = {
+//     'monday': 'Monday',
+//     'tuesday': 'Tuesday',
+//     'wednesday': 'Wednesday',
+//     'thursday': 'Thursday',
+//     'friday': 'Friday',
+//     'saturday': 'Saturday',
+//     'sunday': 'Sunday'
+//   };
+
+//   useEffect(() => {
+//     fetchBusinessDetails();
+//     fetchCategories();
+//   }, [id]);
+
+//   const fetchBusinessDetails = async () => {
+//     try {
+//       setLoading(true);
+//       const response = await axios.get(`${baseurl}/business/${id}/?user_id=${userId}`);
+//       setBusiness(response.data);
+//     } catch (error) {
+//       console.error('Error fetching business details:', error);
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: 'Failed to load business details',
+//         confirmButtonColor: '#d33',
+//       }).then(() => {
+//         navigate('/agent-my-business');
+//       });
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const fetchCategories = async () => {
+//     try {
+//       const response = await axios.get(`${baseurl}/categories/`);
+//       const businessCategories = response.data.results?.filter(cat => cat.level === 'business') || [];
+//       setCategories(businessCategories);
+//     } catch (error) {
+//       console.error('Error fetching categories:', error);
+//     }
+//   };
+
+//   const getCategoryNames = () => {
+//     if (!business?.categories?.length) return 'No categories';
+//     return business.categories
+//       .map(catId => {
+//         const category = categories.find(c => c.category_id === parseInt(catId));
+//         return category ? category.name : '';
+//       })
+//       .filter(name => name)
+//       .join(', ');
+//   };
+
+//   const getVerificationStatusBadge = () => {
+//     const status = business?.verification_status;
+//     const statusConfig = {
+//       'pending': { label: 'Pending', class: 'badge-warning' },
+//       'verified': { label: 'Verified', class: 'badge-success' },
+//       'rejected': { label: 'Rejected', class: 'badge-danger' },
+//       'suspended': { label: 'Suspended', class: 'badge-secondary' }
+//     };
+//     const config = statusConfig[status] || { label: status, class: 'badge-info' };
+//     return (
+//       <span className={`badge ${config.class} verification-badge`}>
+//         {config.label}
+//       </span>
+//     );
+//   };
+
+//   const formatTime = (time) => {
+//     if (!time) return 'Closed';
+//     const [hours, minutes] = time.split(':');
+//     const hour = parseInt(hours, 10);
+//     const ampm = hour >= 12 ? 'PM' : 'AM';
+//     const hour12 = hour % 12 || 12;
+//     return `${hour12}:${minutes} ${ampm}`;
+//   };
+
+//   const handleDelete = async () => {
+//     const result = await Swal.fire({
+//       title: 'Delete Business?',
+//       text: `Are you sure you want to delete "${business?.business_name}"?`,
+//       icon: 'warning',
+//       showCancelButton: true,
+//       confirmButtonColor: '#d33',
+//       cancelButtonColor: '#3085d6',
+//       confirmButtonText: 'Yes, delete it!'
+//     });
+
+//     if (result.isConfirmed) {
+//       try {
+//         await axios.delete(`${baseurl}/business/${id}/?user_id=${userId}`);
+//         Swal.fire({
+//           icon: 'success',
+//           title: 'Deleted!',
+//           text: 'Business has been deleted.',
+//           confirmButtonColor: '#3085d6',
+//         }).then(() => {
+//           navigate('/agent-my-business');
+//         });
+//       } catch (error) {
+//         console.error('Error deleting business:', error);
+//         Swal.fire({
+//           icon: 'error',
+//           title: 'Error',
+//           text: 'Failed to delete business',
+//           confirmButtonColor: '#d33',
+//         });
+//       }
+//     }
+//   };
+
+//   const handleViewProducts = () => {
+//     navigate(`/my-products?business=${business?.business_id}`);
+//   };
+
+//   const InfoField = ({ label, value }) => {
+//     return (
+//       <div className="info-field">
+//         <span className="info-label">{label}:</span>
+//         <span className="info-value">{value || 'N/A'}</span>
+//       </div>
+//     );
+//   };
+
+//   const SectionTitle = ({ title }) => {
+//     return (
+//       <div className="section-title">
+//         <h3>{title}</h3>
+//       </div>
+//     );
+//   };
+
+//   if (loading) {
+//     return (
+//       <>
+//         <AgentNavbar />
+//         <div className="agent-view-business-container">
+//           <div className="loading-container">
+//             <div className="spinner-border text-primary" role="status">
+//               <span className="visually-hidden">Loading...</span>
+//             </div>
+//             <p className="mt-3">Loading business details...</p>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   if (!business) {
+//     return (
+//       <>
+//         <AgentNavbar />
+//         <div className="agent-view-business-container">
+//           <div className="error-container">
+//             <i className="bi bi-exclamation-triangle-fill display-1 text-warning"></i>
+//             <h3 className="mt-3">Business Not Found</h3>
+//             <p>The business you're looking for doesn't exist or has been removed.</p>
+//             <button className="btn btn-primary mt-3" onClick={() => navigate('/agent-my-business')}>
+//               Back to Businesses
+//             </button>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   return (
+//     <>
+//       <AgentNavbar />
+//       <div className="agent-view-business-container">
+//         {/* Header with Back Button and Title */}
+//         <div className="view-header">
+//           <button className="btn-back" onClick={() => navigate('/agent-my-business')}>
+//             <i className="bi bi-arrow-left"></i> Back
+//           </button>
+//           <h1 className="business-title">{business.business_name}</h1>
+//           <div className="header-actions">
+//             <button className="btn-products" onClick={handleViewProducts}>
+//               <i className="bi bi-box-seam"></i> Products
+//             </button>
+//             <button className="btn-edit" onClick={() => navigate(`/edit-business/${id}`)}>
+//               <i className="bi bi-pencil"></i> Edit
+//             </button>
+//             <button className="btn-delete" onClick={handleDelete}>
+//               <i className="bi bi-trash"></i> Delete
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* Logo and Banner Section */}
+//         <div className="media-section">
+//           <div className="logo-container">
+//             {business.logo ? (
+//               <img 
+//                 src={`${baseurl}${business.logo}`} 
+//                 alt={`${business.business_name} logo`}
+//                 className="business-logo"
+//                 onError={(e) => {
+//                   e.target.onerror = null;
+//                   e.target.src = 'https://via.placeholder.com/100x100/6c757d/ffffff?text=Logo';
+//                 }}
+//               />
+//             ) : (
+//               <div className="logo-placeholder">
+//                 <i className="bi bi-building"></i>
+//               </div>
+//             )}
+//           </div>
+//           <div className="banner-container">
+//             {business.banner ? (
+//               <img 
+//                 src={`${baseurl}${business.banner}`} 
+//                 alt={`${business.business_name} banner`}
+//                 className="business-banner"
+//                 onError={(e) => {
+//                   e.target.onerror = null;
+//                   e.target.src = 'https://via.placeholder.com/800x200/6c757d/ffffff?text=No+Banner';
+//                 }}
+//               />
+//             ) : (
+//               <div className="banner-placeholder">
+//                 <i className="bi bi-image"></i>
+//                 <span>No Banner</span>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+
+//         {/* Status Section (Read-only for agents) */}
+//         <div className="status-section">
+//           <div className="status-row">
+//             <span className="status-label">Verification Status:</span>
+//             {getVerificationStatusBadge()}
+//             {business.is_featured && (
+//               <span className="featured-badge">Featured</span>
+//             )}
+//             {/* {business.is_active ? (
+//               <span className="active-badge active">Active</span>
+//             ) : (
+//               <span className="active-badge inactive">Inactive</span>
+//             )} */}
+//           </div>
+//         </div>
+
+//         {/* Basic Information */}
+//         <div className="info-section">
+//           <SectionTitle title="Basic Information" />
+//           <div className="info-grid">
+//             <InfoField label="Business Name" value={business.business_name} />
+//             <InfoField label="Legal Name" value={business.legal_name} />
+//             <InfoField label="Business Type" value={BUSINESS_TYPES[business.business_type] || business.business_type} />
+//             <InfoField label="Categories" value={getCategoryNames()} />
+//           </div>
+//           <div className="description-field">
+//             <InfoField label="Description" value={business.description} />
+//           </div>
+//         </div>
+
+//         {/* Contact Information */}
+//         <div className="info-section">
+//           <SectionTitle title="Contact Information" />
+//           <div className="info-grid">
+//             <InfoField label="Support Email" value={business.support_email} />
+//             <InfoField label="Support Phone" value={business.support_phone} />
+//             <InfoField label="Website" value={business.website} />
+//           </div>
+//         </div>
+
+//         {/* Address Information */}
+//         <div className="info-section">
+//           <SectionTitle title="Address" />
+//           <div className="info-grid">
+//             <InfoField label="Address Line 1" value={business.address_line1} />
+//             <InfoField label="Address Line 2" value={business.address_line2} />
+//           </div>
+//           <div className="info-grid">
+//             <InfoField label="City" value={business.city} />
+//             <InfoField label="State" value={business.state} />
+//           </div>
+//           <div className="info-grid">
+//             <InfoField label="Country" value={business.country} />
+//             <InfoField label="Pincode" value={business.pincode} />
+//           </div>
+//         </div>
+
+//         {/* Bank & Compliance */}
+//         <div className="info-section">
+//           <SectionTitle title="Bank & Compliance" />
+//           <div className="info-grid">
+//             <InfoField label="Account Holder Name" value={business.bank_account_name} />
+//             <InfoField label="Account Number" value={business.bank_account_number} />
+//             <InfoField label="IFSC Code" value={business.bank_ifsc} />
+//           </div>
+//           <div className="info-grid">
+//             <InfoField label="Bank Name" value={business.bank_name} />
+//             <InfoField label="GST Number" value={business.gst_number} />
+//             <InfoField label="PAN Number" value={business.pan_number} />
+//           </div>
+//         </div>
+
+//         {/* Marketplace Settings */}
+//         <div className="info-section">
+//           <SectionTitle title="Marketplace Settings" />
+//           <div className="info-grid">
+//             <InfoField label="Commission Percentage" value={`${business.commission_percent}%`} />
+//             <InfoField label="Settlement Cycle" value={`${business.settlement_cycle_days} days`} />
+//             <InfoField label="Minimum Order Value" value={`₹${business.min_order_value}`} />
+//           </div>
+//         </div>
+
+//         {/* Working Hours */}
+//         <div className="info-section">
+//           <SectionTitle title="Working Hours" />
+//           <div className="working-hours-table-container">
+//             <table className="working-hours-table">
+//               <thead>
+//                 <tr>
+//                   <th>Day</th>
+//                   <th>Opening Time</th>
+//                   <th>Closing Time</th>
+//                   <th>Status</th>
+//                 </tr>
+//               </thead>
+//               <tbody>
+//                 {business.working_hours && business.working_hours.length > 0 ? (
+//                   business.working_hours.map((hour) => (
+//                     <tr key={hour.day}>
+//                       <td className="day-cell">{DAYS_MAP[hour.day] || hour.day}</td>
+//                       <td>{!hour.is_closed && hour.opens_at ? formatTime(hour.opens_at) : '—'}</td>
+//                       <td>{!hour.is_closed && hour.closes_at ? formatTime(hour.closes_at) : '—'}</td>
+//                       <td>
+//                         {hour.is_closed ? (
+//                           <span className="closed-badge">Closed</span>
+//                         ) : (
+//                           <span className="open-badge">Open</span>
+//                         )}
+//                       </td>
+//                     </tr>
+//                   ))
+//                 ) : (
+//                   <tr>
+//                     <td colSpan="4" className="text-center">No working hours set</td>
+//                   </tr>
+//                 )}
+//               </tbody>
+//             </table>
+//           </div>
+//         </div>
+
+//         {/* Action Buttons */}
+//         <div className="admin-action-buttons">
+//           <button className="btn btn-secondary" onClick={() => navigate('/agent-my-business')}>
+//             <i className="bi bi-arrow-left"></i> Back to List
+//           </button>
+//           <button className="btn btn-primary" onClick={() => navigate(`/edit-business/${id}`)}>
+//             <i className="bi bi-pencil"></i> Edit Business
+//           </button>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default AgentViewBusiness;
+
+
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -1100,11 +1498,12 @@ const AgentViewBusiness = () => {
             {business.is_featured && (
               <span className="featured-badge">Featured</span>
             )}
-            {/* {business.is_active ? (
-              <span className="active-badge active">Active</span>
-            ) : (
-              <span className="active-badge inactive">Inactive</span>
-            )} */}
+            {/* Display Order Badge */}
+            {business.display_order && (
+              <span className="display-order-badge">
+                Display Order: {business.display_order}
+              </span>
+            )}
           </div>
         </div>
 
@@ -1116,6 +1515,7 @@ const AgentViewBusiness = () => {
             <InfoField label="Legal Name" value={business.legal_name} />
             <InfoField label="Business Type" value={BUSINESS_TYPES[business.business_type] || business.business_type} />
             <InfoField label="Categories" value={getCategoryNames()} />
+            <InfoField label="Display Order" value={business.display_order || 'Not set'} />
           </div>
           <div className="description-field">
             <InfoField label="Description" value={business.description} />
