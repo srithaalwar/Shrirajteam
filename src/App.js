@@ -372,7 +372,8 @@ import RegisterVerifyOTP from "./Register/RegisterVerifyOTP";
 import OrderCommission from "./Admin_Panel/Admin_Orders/Order_commission"
 import OrderDetails from "./Admin_Panel/Admin_Orders/OrderDetails";
 import BusinessEnquiries from "./Agent_Panel/AgentMyBusiness/Agent_Enquiries";
-import AdminBusinessEnquiries from "./Admin_Panel/Admin_Business/Admin_Enquiries_List/Admin_Enquiries"
+import AdminBusinessEnquiries from "./Admin_Panel/Admin_Business/Admin_Enquiries_List/Admin_Enquiries";
+import AdminPropertyBookings from "./Admin_Panel/AdminPropertyBookings/AdminPropertyBookingsTransactions"
 function App() {
   return (
     <BrowserRouter>
@@ -539,6 +540,8 @@ function App() {
 <Route path="/productcategoryform" element={<ProductCategoryForm />} />
 <Route path="/editproductcategory/:id" element={<EditProductCategory />} />
         <Route path="/admin-transactions" element={<AdminTransactions />} />
+        <Route path="/admin-bookings" element={<AdminPropertyBookings />} />
+
         <Route path="/products-commission-distribution" element={<AdminProductsDistribution />} />
 
         <Route path="/admin-orders" element={<AdminOrders />} />

@@ -1910,7 +1910,9 @@ const AdminNavbar = () => {
     { path: "/admin-add-property", name: "Add Property", icon: <FaPlusCircle /> },
     { path: "/admin-properties", name: "All Properties", icon: <FaClipboardList /> },
     { path: "/tablecategory", name: "Property Categories", icon: <FaTag /> },
-    { path: "/admin-sitevisit", name: "Site Visits", icon: <FaEye /> }
+    { path: "/admin-sitevisit", name: "Site Visits", icon: <FaEye /> },
+    { path: "/admin-bookings", name: "Bookings", icon: <FaEye /> }
+
   ];
 
   const businessItems = [
