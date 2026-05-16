@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import './TransactionSummary.css';
 import AdminNavbar from "./../Admin_Navbar/Admin_Navbar";
 import { baseurl } from '../../BaseURL/BaseURL';
 import Swal from "sweetalert2";
 
-function AdminTransactionSummary() {
+function AdminPropertyBookings() {
 
     const [transactions, setTransactions] = useState([]);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
@@ -14,28 +13,21 @@ function AdminTransactionSummary() {
     const [searchQuery, setSearchQuery] = useState('');
     const [error, setError] = useState(null);
     const [updatingCOD, setUpdatingCOD] = useState(null);
-    const [uploadingFile, setUploadingFile] = useState(null);
     
-    // Advanced filters
-    const [selectedType, setSelectedType] = useState("All");
-    const [statusFilter, setStatusFilter] = useState("All");
-    const [paymentModeFilter, setPaymentModeFilter] = useState("All");
-    const [dateFrom, setDateFrom] = useState("");
-    const [dateTo, setDateTo] = useState("");
-    const [selectedRole, setSelectedRole] = useState("All");
-    const [selectedUserId, setSelectedUserId] = useState("");
-    const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
-    
-    // User data for dropdown
-    const [users, setUsers] = useState([]);
-    const [loadingUsers, setLoadingUsers] = useState(false);
-    const [userSearchTerm, setUserSearchTerm] = useState("");
-    const [showUserDropdown, setShowUserDropdown] = useState(false);
-    
-    // Unique values for filters
-    const [uniqueTypes, setUniqueTypes] = useState(["All"]);
-    const [uniqueStatuses, setUniqueStatuses] = useState(["All"]);
-    const [uniquePaymentModes, setUniquePaymentModes] = useState(["All"]);
+    // Payment Modal States
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [selectedTransaction, setSelectedTransaction] = useState(null);
+    const [paymentLoading, setPaymentLoading] = useState(false);
+    const [paymentFile, setPaymentFile] = useState(null);
+    const [paymentFormData, setPaymentFormData] = useState({
+        property_name: '',
+        amount: '',
+        payment_mode: '',
+        payment_method: '',
+        order_id: '',
+        transaction_id: '',
+        payment_date: new Date().toISOString().split('T')[0]
+    });
     
     // Pagination states
     const [currentPage, setCurrentPage] = useState(1);
@@ -43,20 +35,20 @@ function AdminTransactionSummary() {
     const [totalItems, setTotalItems] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     
-    // API URL
-    const API_URL = `${baseurl}/transactions/`;
-
-    // Transaction For choices - Only Property related
-    const TRANSACTION_FOR_CHOICES = {
-        'property': 'Property',
-        'product_commission': 'Product Commission'
-    };
-
-    // Role choices - Only Client and Agent
-    const ROLE_CHOICES = ['Client', 'Agent'];
-
-    // Status choices - match backend exactly
-    const STATUS_CHOICES = ['All', 'success', 'pending', 'failed'];
+    // Payment mode options
+    const PAYMENT_MODES = [
+        { value: 'UPI', label: 'UPI' },
+        { value: 'Card', label: 'Card' },
+        { value: 'Net Banking', label: 'Net Banking' },
+        { value: 'Cash', label: 'Cash' },
+        { value: 'Bank Transfer', label: 'Bank Transfer' }
+    ];
+    
+    const PAYMENT_METHODS = [
+        { value: 'Online', label: 'Online' },
+        { value: 'Offline', label: 'Offline' },
+        { value: 'COD', label: 'COD' }
+    ];
 
     // Format date for display
     const formatDateForDisplay = (dateTimeString) => {
@@ -84,26 +76,6 @@ function AdminTransactionSummary() {
         }
     };
 
-    // Format date for API
-    const formatDateForAPI = (date) => {
-        if (!date) return "";
-        try {
-            const d = new Date(date);
-            if (isNaN(d.getTime())) return "";
-            const year = d.getFullYear();
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        } catch (error) {
-            return "";
-        }
-    };
-
-    // Map transaction_for to more readable values
-    const mapTransactionFor = (transactionFor) => {
-        return TRANSACTION_FOR_CHOICES[transactionFor] || transactionFor;
-    };
-
     // Map payment_mode to more readable values
     const mapPaymentMode = (paymentMode, paymentMethod) => {
         if (paymentMethod === 'COD') {
@@ -124,26 +96,13 @@ function AdminTransactionSummary() {
         return map[paymentMode] || paymentMode || 'N/A';
     };
 
-    // Reverse map payment mode for API
-    const reverseMapPaymentMode = (mode) => {
-        const map = {
-            'UPI': 'upi',
-            'UPI QR': 'UPI_QR',
-            'Net Banking': 'netbanking',
-            'Credit Card': 'card',
-            'Debit Card': 'card',
-            'Card': 'card',
-            'COD': 'cod'
-        };
-        return map[mode] || mode.toLowerCase();
-    };
-
     // Get status badge color based on backend status
     const getStatusColor = (status) => {
         switch(status?.toLowerCase()) {
             case 'success': return '#10b981';
             case 'pending': return '#f59e0b';
             case 'failed': return '#ef4444';
+            case 'partial': return '#8b5cf6';
             default: return '#6b7280';
         }
     };
@@ -201,117 +160,124 @@ function AdminTransactionSummary() {
         }
     };
 
-    // Handle file upload for transaction
-    const handleFileUpload = async (transaction, file) => {
-        if (!file) {
-            Swal.fire({
-                icon: "warning",
-                title: "No File",
-                text: "Please select a file to upload",
-            });
-            return;
-        }
+    // Handle make full payment button click
+    const handleMakeFullPayment = (transaction) => {
+        setSelectedTransaction(transaction);
+        setPaymentFormData({
+            property_name: transaction.property_name,
+            amount: transaction.paid_amount,
+            payment_mode: '',
+            payment_method: '',
+            order_id: transaction.order || '',
+            transaction_id: transaction.transaction_id,
+            payment_date: new Date().toISOString().split('T')[0]
+        });
+        setPaymentFile(null);
+        setShowPaymentModal(true);
+    };
 
-        // Check file type
-        const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-        if (!validTypes.includes(file.type)) {
+    // Handle payment form input change
+    const handlePaymentFormChange = (e) => {
+        const { name, value } = e.target;
+        setPaymentFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    // Handle payment file change
+    const handlePaymentFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Check file type
+            const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Invalid File Type",
+                    text: "Please upload PDF, JPG, or PNG files only",
+                });
+                return;
+            }
+
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                Swal.fire({
+                    icon: "error",
+                    title: "File Too Large",
+                    text: "File size should be less than 5MB",
+                });
+                return;
+            }
+
+            setPaymentFile(file);
+        }
+    };
+
+    // Handle payment submission
+    const handleSubmitPayment = async () => {
+        // Validate form
+        if (!paymentFormData.payment_mode) {
             Swal.fire({
                 icon: "error",
-                title: "Invalid File Type",
-                text: "Please upload PDF, JPG, or PNG files only",
+                title: "Validation Error",
+                text: "Please select payment mode",
             });
             return;
         }
-
-        // Check file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
+        
+        if (!paymentFormData.payment_method) {
             Swal.fire({
                 icon: "error",
-                title: "File Too Large",
-                text: "File size should be less than 5MB",
+                title: "Validation Error",
+                text: "Please select payment method",
             });
             return;
         }
 
-        setUploadingFile(transaction.transaction_id);
+        setPaymentLoading(true);
 
         try {
             const formData = new FormData();
-            formData.append('document_file', file);
+            formData.append('transaction_id', paymentFormData.transaction_id);
+            formData.append('order_id', paymentFormData.order_id);
+            formData.append('payment_mode', paymentFormData.payment_mode);
+            formData.append('payment_method', paymentFormData.payment_method);
+            formData.append('payment_date', paymentFormData.payment_date);
+            formData.append('paid_amount', paymentFormData.amount);
             
-            const response = await axios.patch(
-                `${baseurl}/transactions/${transaction.transaction_id}/upload-document/`,
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    }
+            if (paymentFile) {
+                formData.append('payment_proof', paymentFile);
+            }
+
+            const response = await axios.post(`${baseurl}/transactions/make-full-payment/`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
                 }
-            );
-            
+            });
+
             Swal.fire({
                 icon: "success",
                 title: "Success",
-                text: "Document uploaded successfully",
-                timer: 2000,
-                showConfirmButton: false
+                text: response.data.message || "Full payment processed successfully",
+                confirmButtonColor: "#6C63FF",
             });
-            
+
+            setShowPaymentModal(false);
+            setSelectedTransaction(null);
+            setPaymentFile(null);
             await fetchTransactions();
-            
+
         } catch (error) {
-            console.error('Error uploading file:', error);
+            console.error('Error processing payment:', error);
             Swal.fire({
                 icon: "error",
-                title: "Upload Failed",
-                text: error.response?.data?.message || "Failed to upload document",
+                title: "Payment Failed",
+                text: error.response?.data?.message || "Failed to process payment",
                 confirmButtonColor: "#6C63FF",
             });
         } finally {
-            setUploadingFile(null);
-        }
-    };
-
-    // Trigger file input click
-    const triggerFileUpload = (transaction) => {
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = '.pdf,.jpg,.jpeg,.png';
-        fileInput.onchange = (e) => {
-            if (e.target.files && e.target.files[0]) {
-                handleFileUpload(transaction, e.target.files[0]);
-            }
-        };
-        fileInput.click();
-    };
-
-    // Fetch users from API
-    const fetchUsers = async () => {
-        setLoadingUsers(true);
-        try {
-            const response = await axios.get(`${baseurl}/users/`);
-            console.log('Users API Response:', response.data);
-            
-            let usersList = [];
-            if (response.data && response.data.results) {
-                usersList = response.data.results;
-            } else if (Array.isArray(response.data)) {
-                usersList = response.data;
-            } else if (response.data && response.data.data) {
-                usersList = response.data.data;
-            }
-            
-            setUsers(usersList);
-        } catch (error) {
-            console.error('Error fetching users:', error);
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "Failed to load users list",
-                confirmButtonColor: "#6C63FF",
-            });
-        } finally {
-            setLoadingUsers(false);
+            setPaymentLoading(false);
         }
     };
 
@@ -328,38 +294,6 @@ function AdminTransactionSummary() {
             
             if (searchQuery.trim()) {
                 params.append('search', searchQuery.trim());
-            }
-            
-            if (selectedType !== "All") {
-                const apiTransactionFor = Object.keys(TRANSACTION_FOR_CHOICES).find(
-                    key => TRANSACTION_FOR_CHOICES[key] === selectedType
-                );
-                if (apiTransactionFor && apiTransactionFor !== 'property') {
-                    params.append('transaction_for', apiTransactionFor);
-                }
-            }
-            
-            if (selectedRole !== "All" && (selectedRole === 'Client' || selectedRole === 'Agent')) {
-                params.append('role_name', selectedRole);
-            }
-            
-            if (selectedUserId && selectedUserId.trim()) {
-                params.append('user_id', selectedUserId.trim());
-            }
-            
-            if (statusFilter !== "All") {
-                params.append('status', statusFilter);
-            }
-            
-            if (paymentModeFilter !== "All") {
-                params.append('payment_mode', reverseMapPaymentMode(paymentModeFilter));
-            }
-            
-            if (dateFrom) {
-                params.append('start_date', formatDateForAPI(dateFrom));
-            }
-            if (dateTo) {
-                params.append('end_date', formatDateForAPI(dateTo));
             }
             
             params.append('page', currentPage);
@@ -440,8 +374,6 @@ function AdminTransactionSummary() {
             const calculatedPages = Math.ceil(count / itemsPerPage);
             setTotalPages(calculatedPages || 1);
             
-            extractUniqueValues(transformedData);
-            
         } catch (error) {
             console.error('Error fetching transactions:', error);
             setError(`Failed to fetch transactions: ${error.message}`);
@@ -460,71 +392,10 @@ function AdminTransactionSummary() {
         }
     };
 
-    // Extract unique values for filter dropdowns
-    const extractUniqueValues = (data) => {
-        const types = ["All", "Property"];
-        setUniqueTypes(types);
-        
-        const statuses = ["All"];
-        data.forEach(item => {
-            const status = item.status;
-            if (status && !statuses.includes(status)) {
-                statuses.push(status);
-            }
-        });
-        setUniqueStatuses(statuses);
-        
-        const modes = ["All"];
-        data.forEach(item => {
-            if (item.payment_mode && !modes.includes(item.payment_mode)) {
-                modes.push(item.payment_mode);
-            }
-        });
-        setUniquePaymentModes(modes);
-    };
-
-    // Filter users based on search term
-    const getFilteredUsers = () => {
-        if (!userSearchTerm) return users;
-        const searchLower = userSearchTerm.toLowerCase();
-        return users.filter(user => 
-            (user.user_id && user.user_id.toString().includes(searchLower)) ||
-            (user.first_name && user.first_name.toLowerCase().includes(searchLower)) ||
-            (user.last_name && user.last_name.toLowerCase().includes(searchLower)) ||
-            (user.email && user.email.toLowerCase().includes(searchLower)) ||
-            (user.phone_number && user.phone_number.includes(searchLower))
-        );
-    };
-
-    // Handle user selection
-    const handleUserSelect = (user) => {
-        setSelectedUserId(user.user_id.toString());
-        setUserSearchTerm(`${user.user_id} - ${user.first_name || ''} ${user.last_name || ''} (${user.email})`);
-        setShowUserDropdown(false);
-        setCurrentPage(1);
-    };
-
-    // Clear selected user
-    const clearSelectedUser = () => {
-        setSelectedUserId("");
-        setUserSearchTerm("");
-        setShowUserDropdown(false);
-        setCurrentPage(1);
-    };
-
     // Fetch data when filters or pagination changes
     useEffect(() => {
         fetchTransactions();
-    }, [currentPage, itemsPerPage, selectedType, searchQuery, statusFilter, paymentModeFilter, dateFrom, dateTo, selectedRole, selectedUserId]);
-
-    // Load users on component mount
-    useEffect(() => {
-        fetchUsers();
-    }, []);
-
-    // Calculate pagination
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentTransactions = filteredTransactions.slice(0, itemsPerPage);
+    }, [currentPage, itemsPerPage, searchQuery]);
 
     // Generate page numbers
     const getPageNumbers = () => {
@@ -578,9 +449,8 @@ function AdminTransactionSummary() {
 
         const headers = [
             "S.No", "Transaction ID", "Order ID", "Transaction Date", "Property Name",
-            "Plan Name", "Transaction For", "Paid Amount", "Payment Mode",
-            "Payment Method", "Role", "User ID", "PhonePe Merchant Order ID",
-            "PhonePe Order ID", "PhonePe Transaction ID", "Document Number", "Status"
+            "Plan Name", "Paid Amount", "Payment Mode",
+            "Payment Method", "Role", "User ID", "Status"
         ];
 
         const csvContent = [
@@ -593,16 +463,11 @@ function AdminTransactionSummary() {
                     `"${item.displayDate}"`,
                     `"${item.property_name}"`,
                     `"${item.plan_name}"`,
-                    `"${mapTransactionFor(item.transaction_for)}"`,
                     `"${parseFloat(item.paid_amount).toLocaleString('en-IN')}"`,
                     `"${item.payment_mode}"`,
                     `"${item.payment_method}"`,
                     `"${item.role}"`,
                     `"${item.user_id}"`,
-                    `"${item.phone_pe_merchant_order_id || ''}"`,
-                    `"${item.phone_pe_order_id || ''}"`,
-                    `"${item.phone_pe_transaction_id || ''}"`,
-                    `"${item.document_number || ''}"`,
                     `"${item.status}"`
                 ].join(",")
             )
@@ -635,60 +500,10 @@ function AdminTransactionSummary() {
         setCurrentPage(1);
     };
 
-    const handleTypeFilterChange = (e) => {
-        setSelectedType(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const handleStatusFilterChange = (e) => {
-        setStatusFilter(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const handlePaymentModeFilterChange = (e) => {
-        setPaymentModeFilter(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const handleRoleFilterChange = (e) => {
-        setSelectedRole(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const handleDateFromChange = (e) => {
-        setDateFrom(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const handleDateToChange = (e) => {
-        setDateTo(e.target.value);
-        setCurrentPage(1);
-    };
-
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             fetchTransactions();
         }
-    };
-
-    // Clear all filters
-    const clearAllFilters = () => {
-        setSearchQuery("");
-        setSelectedType("All");
-        setStatusFilter("All");
-        setPaymentModeFilter("All");
-        setDateFrom("");
-        setDateTo("");
-        setSelectedRole("All");
-        clearSelectedUser();
-        setCurrentPage(1);
-    };
-
-    // Check if any filters are active
-    const hasActiveFilters = () => {
-        return searchQuery !== "" || selectedType !== "All" || statusFilter !== "All" || 
-               paymentModeFilter !== "All" || dateFrom !== "" || dateTo !== "" ||
-               selectedRole !== "All" || selectedUserId !== "";
     };
 
     const handleRefresh = () => {
@@ -750,58 +565,33 @@ function AdminTransactionSummary() {
         }
     };
 
-    // Render actions cell with upload button
+    // Render actions cell with make payment button
     const renderActionsCell = (transaction) => {
-        const isUploading = uploadingFile === transaction.transaction_id;
-        
-        return (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <button
-                    onClick={() => triggerFileUpload(transaction)}
-                    disabled={isUploading}
-                    style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#273c75',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        fontSize: '12px',
-                        cursor: isUploading ? 'not-allowed' : 'pointer',
-                        fontWeight: '500',
-                        whiteSpace: 'nowrap',
-                        opacity: isUploading ? 0.6 : 1
-                    }}
-                >
-                    {isUploading ? (
-                        <>
-                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" style={{ marginRight: '4px' }}></span>
-                            Uploading...
-                        </>
-                    ) : (
-                        '📄 Upload Files'
-                    )}
-                </button>
-            </div>
-        );
-    };
-
-    // Handle clicking outside the user dropdown
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            const userDropdownContainer = document.querySelector('.user-dropdown-container');
-            if (userDropdownContainer && !userDropdownContainer.contains(event.target)) {
-                setShowUserDropdown(false);
-            }
-        };
-
-        if (showUserDropdown) {
-            document.addEventListener('mousedown', handleClickOutside);
+        // Only show Make Payment button for pending transactions
+        if (transaction.status === 'pending') {
+            return (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <button
+                        onClick={() => handleMakeFullPayment(transaction)}
+                        style={{
+                            padding: '6px 12px',
+                            backgroundColor: '#10b981',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            fontSize: '12px',
+                            cursor: 'pointer',
+                            fontWeight: '500',
+                            whiteSpace: 'nowrap'
+                        }}
+                    >
+                        💰 Make Full Payment
+                    </button>
+                </div>
+            );
         }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [showUserDropdown]);
+        return <span style={{ color: '#999' }}>-</span>;
+    };
 
     return (
         <>
@@ -810,9 +600,9 @@ function AdminTransactionSummary() {
             <div className="staff-page">
                 {/* Header */}
                 <div className="staff-header">
-                    <h2>Property Transaction Summary</h2>
+                    <h2>Property Bookings</h2>
                     <div style={{ fontSize: '14px', color: '#666', marginTop: '8px' }}>
-                        Total Property Transactions: {totalItems}
+                        Total Property Bookings: {totalItems}
                     </div>
                     <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
                         <button 
@@ -847,7 +637,7 @@ function AdminTransactionSummary() {
                 <div className="staff-toolbar">
                     <div className="toolbar-left">
                         {/* Search Box */}
-                        <div className="search-box" style={{ position: 'relative', flex: 1 }}>
+                        <div className="search-box" style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
                             <input
                                 type="text"
                                 placeholder={searchPlaceholder}
@@ -893,45 +683,9 @@ function AdminTransactionSummary() {
                                 </button>
                             )}
                         </div>
-
-                        {/* Advanced Filters Toggle */}
-                        <button
-                            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                            style={{
-                                padding: '8px 12px',
-                                border: '1px solid #ddd',
-                                borderRadius: '4px',
-                                background: showAdvancedFilters ? '#273c75' : 'white',
-                                color: showAdvancedFilters ? 'white' : '#333',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                marginLeft: '8px',
-                                whiteSpace: 'nowrap'
-                            }}
-                        >
-                            {showAdvancedFilters ? 'Hide Filters' : 'Show Filters'} 🔽
-                        </button>
                     </div>
 
                     <div className="toolbar-right">
-                        {hasActiveFilters() && (
-                            <button 
-                                onClick={clearAllFilters}
-                                style={{
-                                    backgroundColor: '#6c757d',
-                                    color: 'white',
-                                    padding: '8px 16px',
-                                    borderRadius: '4px',
-                                    fontSize: '14px',
-                                    cursor: 'pointer',
-                                    fontWeight: '500',
-                                    border: 'none',
-                                    marginRight: '8px'
-                                }}
-                            >
-                                Clear Filters
-                            </button>
-                        )}
                         <button 
                             className="export-btn"
                             style={{
@@ -952,275 +706,15 @@ function AdminTransactionSummary() {
                     </div>
                 </div>
 
-                {/* Advanced Filters */}
-                {showAdvancedFilters && (
-                    <div className="advanced-filters" style={{
-                        padding: '16px',
-                        backgroundColor: '#f8f9fa',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        marginTop: '12px',
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: '16px',
-                        alignItems: 'flex-end'
-                    }}>
-                        {/* Transaction Type Filter */}
-                        <div style={{ minWidth: '180px' }}>
-                            <label style={{ display: 'block', fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                                Transaction For
-                            </label>
-                            <select 
-                                value={selectedType}
-                                onChange={handleTypeFilterChange}
-                                style={{
-                                    padding: '8px 12px',
-                                    border: '1px solid #ddd',
-                                    borderRadius: '4px',
-                                    fontSize: '14px',
-                                    width: '100%'
-                                }}
-                            >
-                                {uniqueTypes.map((type) => (
-                                    <option key={type} value={type}>
-                                        {type === 'All' ? 'All Transactions' : type}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Role Filter - Only Client and Agent */}
-                        <div style={{ minWidth: '150px' }}>
-                            <label style={{ display: 'block', fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                                Role
-                            </label>
-                            <select 
-                                value={selectedRole}
-                                onChange={handleRoleFilterChange}
-                                style={{
-                                    padding: '8px 12px',
-                                    border: '1px solid #ddd',
-                                    borderRadius: '4px',
-                                    fontSize: '14px',
-                                    width: '100%'
-                                }}
-                            >
-                                <option value="All">All Roles</option>
-                                {ROLE_CHOICES.map((role) => (
-                                    <option key={role} value={role}>
-                                        {role}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* User ID Filter with Searchable Dropdown */}
-                        <div style={{ minWidth: '250px', position: 'relative' }} className="user-dropdown-container">
-                            <label style={{ display: 'block', fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                                Select User
-                            </label>
-                            <div style={{ position: 'relative' }}>
-                                <input
-                                    type="text"
-                                    placeholder="Search by ID, Name, Email, or Phone..."
-                                    value={userSearchTerm}
-                                    onChange={(e) => {
-                                        setUserSearchTerm(e.target.value);
-                                        setShowUserDropdown(true);
-                                        if (e.target.value === "") {
-                                            setSelectedUserId("");
-                                        }
-                                    }}
-                                    onFocus={() => setShowUserDropdown(true)}
-                                    style={{
-                                        padding: '8px 12px',
-                                        border: '1px solid #ddd',
-                                        borderRadius: '4px',
-                                        fontSize: '14px',
-                                        width: '100%',
-                                        paddingRight: selectedUserId ? '30px' : '12px'
-                                    }}
-                                />
-                                {selectedUserId && (
-                                    <button
-                                        onClick={clearSelectedUser}
-                                        style={{
-                                            position: 'absolute',
-                                            right: '8px',
-                                            top: '50%',
-                                            transform: 'translateY(-50%)',
-                                            background: 'transparent',
-                                            border: 'none',
-                                            cursor: 'pointer',
-                                            color: '#999',
-                                            fontSize: '16px'
-                                        }}
-                                    >
-                                        ✕
-                                    </button>
-                                )}
-                                
-                                {/* User Dropdown */}
-                                {showUserDropdown && (
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: '100%',
-                                        left: 0,
-                                        right: 0,
-                                        maxHeight: '300px',
-                                        overflowY: 'auto',
-                                        backgroundColor: 'white',
-                                        border: '1px solid #ddd',
-                                        borderRadius: '4px',
-                                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                                        zIndex: 1000,
-                                        marginTop: '2px'
-                                    }}>
-                                        {loadingUsers ? (
-                                            <div style={{ padding: '12px', textAlign: 'center', color: '#666' }}>
-                                                Loading users...
-                                            </div>
-                                        ) : getFilteredUsers().length === 0 ? (
-                                            <div style={{ padding: '12px', textAlign: 'center', color: '#666' }}>
-                                                No users found
-                                            </div>
-                                        ) : (
-                                            getFilteredUsers().map((user) => (
-                                                <div
-                                                    key={user.user_id}
-                                                    onClick={() => handleUserSelect(user)}
-                                                    style={{
-                                                        padding: '10px 12px',
-                                                        cursor: 'pointer',
-                                                        borderBottom: '1px solid #f0f0f0',
-                                                        transition: 'background 0.2s'
-                                                    }}
-                                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
-                                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
-                                                >
-                                                    <div style={{ fontWeight: '500', marginBottom: '4px' }}>
-                                                        ID: {user.user_id}
-                                                    </div>
-                                                    <div style={{ fontSize: '12px', color: '#666' }}>
-                                                        {user.first_name || ''} {user.last_name || ''}
-                                                        {user.email && ` • ${user.email}`}
-                                                        {user.phone_number && ` • ${user.phone_number}`}
-                                                    </div>
-                                                    {user.roles && user.roles.length > 0 && (
-                                                        <div style={{ fontSize: '11px', color: '#999', marginTop: '2px' }}>
-                                                            Role: {user.roles.map(r => r.role_name).join(', ')}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            ))
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Status Filter */}
-                        <div style={{ minWidth: '150px' }}>
-                            <label style={{ display: 'block', fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                                Status
-                            </label>
-                            <select 
-                                value={statusFilter}
-                                onChange={handleStatusFilterChange}
-                                style={{
-                                    padding: '8px 12px',
-                                    border: '1px solid #ddd',
-                                    borderRadius: '4px',
-                                    fontSize: '14px',
-                                    width: '100%'
-                                }}
-                            >
-                                {uniqueStatuses.map((status) => (
-                                    <option key={status} value={status}>
-                                        {status === 'All' ? 'All Statuses' : status}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Payment Mode Filter */}
-                        <div style={{ minWidth: '150px' }}>
-                            <label style={{ display: 'block', fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                                Payment Mode
-                            </label>
-                            <select 
-                                value={paymentModeFilter}
-                                onChange={handlePaymentModeFilterChange}
-                                style={{
-                                    padding: '8px 12px',
-                                    border: '1px solid #ddd',
-                                    borderRadius: '4px',
-                                    fontSize: '14px',
-                                    width: '100%'
-                                }}
-                            >
-                                {uniquePaymentModes.map((mode) => (
-                                    <option key={mode} value={mode}>
-                                        {mode}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Date From */}
-                        <div style={{ minWidth: '150px' }}>
-                            <label style={{ display: 'block', fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                                Date From
-                            </label>
-                            <input
-                                type="date"
-                                value={dateFrom}
-                                onChange={handleDateFromChange}
-                                style={{
-                                    padding: '8px 12px',
-                                    border: '1px solid #ddd',
-                                    borderRadius: '4px',
-                                    fontSize: '14px',
-                                    width: '100%'
-                                }}
-                            />
-                        </div>
-
-                        {/* Date To */}
-                        <div style={{ minWidth: '150px' }}>
-                            <label style={{ display: 'block', fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-                                Date To
-                            </label>
-                            <input
-                                type="date"
-                                value={dateTo}
-                                onChange={handleDateToChange}
-                                style={{
-                                    padding: '8px 12px',
-                                    border: '1px solid #ddd',
-                                    borderRadius: '4px',
-                                    fontSize: '14px',
-                                    width: '100%'
-                                }}
-                            />
-                        </div>
-
-                        {/* Filter Hint */}
-                        <div style={{ fontSize: '12px', color: '#666', flex: 1, textAlign: 'right' }}>
-                            <span>💡 You can search by: transaction ID, order ID, property, plan, amount, status, payment mode</span>
-                        </div>
-                    </div>
-                )}
-
                 {/* Summary Cards */}
-                <div className="summary-cards">
+                {/* <div className="summary-cards">
                     <div className="summary-card">
                         <div className="card-icon" style={{ background: '#e0f2fe' }}>
                             <span style={{ color: '#0284c7' }}>₹</span>
                         </div>
                         <div className="card-content">
                             <div className="card-value">{totalItems}</div>
-                            <div className="card-label">Total Property Transactions</div>
+                            <div className="card-label">Total Bookings</div>
                         </div>
                     </div>
                     <div className="summary-card">
@@ -1258,7 +752,7 @@ function AdminTransactionSummary() {
                             <div className="card-label">Failed</div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Table */}
                 <div className="staff-table-wrapper">
@@ -1271,7 +765,6 @@ function AdminTransactionSummary() {
                                 <th>DATE & TIME</th>
                                 <th>PROPERTY NAME</th>
                                 <th>PLAN NAME</th>
-                                <th>TRANSACTION FOR</th>
                                 <th>AMOUNT</th>
                                 <th>PAYMENT MODE</th>
                                 <th>PAYMENT METHOD</th>
@@ -1287,19 +780,19 @@ function AdminTransactionSummary() {
                         <tbody>
                             {loading ? (
                                 <tr>
-                                    <td colSpan="16" className="no-data">
+                                    <td colSpan="15" className="no-data">
                                         <div className="text-center py-4">
                                             <div className="spinner-border text-primary" role="status">
                                                 <span className="visually-hidden">Loading...</span>
                                             </div>
-                                            <p className="mt-2">Loading property transactions...</p>
+                                            <p className="mt-2">Loading property bookings...</p>
                                         </div>
                                     </td>
                                 </tr>
-                            ) : currentTransactions.length > 0 ? (
-                                currentTransactions.map((transaction, index) => (
+                            ) : filteredTransactions.length > 0 ? (
+                                filteredTransactions.map((transaction, index) => (
                                     <tr key={transaction.transaction_id}>
-                                        <td>{startIndex + index + 1}</td>
+                                        <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                                         <td className="transaction-id">
                                             <strong>{transaction.transaction_id}</strong>
                                         </td>
@@ -1316,12 +809,6 @@ function AdminTransactionSummary() {
                                         </td>
                                         <td>
                                             <span className="plan-badge">{transaction.plan_name}</span>
-                                        </td>
-                                        <td>
-                                            <span className={`type-badge ${transaction.payment_type === 'Booking-Amount' ? 'booking' : 
-                                                transaction.payment_type === 'Full-Amount' ? 'full' : 'property'}`}>
-                                                {mapTransactionFor(transaction.transaction_for)}
-                                            </span>
                                         </td>
                                         <td className="amount-cell">
                                             <strong>₹{parseFloat(transaction.paid_amount).toLocaleString('en-IN')}</strong>
@@ -1365,7 +852,7 @@ function AdminTransactionSummary() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="16" className="no-data">
+                                    <td colSpan="15" className="no-data">
                                         {error ? (
                                             <div className="text-center py-4">
                                                 <p className="text-danger">{error}</p>
@@ -1376,26 +863,8 @@ function AdminTransactionSummary() {
                                                     Retry
                                                 </button>
                                             </div>
-                                        ) : hasActiveFilters() ? (
-                                            <div className="text-center py-4">
-                                                <p>No property transactions found matching your criteria</p>
-                                                <button
-                                                    onClick={clearAllFilters}
-                                                    style={{
-                                                        marginTop: '12px',
-                                                        padding: '8px 16px',
-                                                        backgroundColor: '#273c75',
-                                                        color: 'white',
-                                                        border: 'none',
-                                                        borderRadius: '4px',
-                                                        cursor: 'pointer'
-                                                    }}
-                                                >
-                                                    Clear All Filters
-                                                </button>
-                                            </div>
                                         ) : (
-                                            "No property transactions found"
+                                            "No property bookings found"
                                         )}
                                     </td>
                                 </tr>
@@ -1433,7 +902,7 @@ function AdminTransactionSummary() {
                                 <option value="100">100</option>
                             </select>
                             <span style={{ fontSize: '14px', color: '#666' }}>
-                                Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, totalItems)} of {totalItems} items
+                                Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} items
                             </span>
                         </div>
                         
@@ -1529,6 +998,179 @@ function AdminTransactionSummary() {
                 )}
             </div>
 
+            {/* Payment Modal */}
+            {showPaymentModal && (
+                <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1050 }}>
+                    <div className="modal-dialog modal-lg">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Make Full Payment</h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    onClick={() => {
+                                        setShowPaymentModal(false);
+                                        setSelectedTransaction(null);
+                                        setPaymentFile(null);
+                                    }}
+                                ></button>
+                            </div>
+                            <div className="modal-body">
+                                <form>
+                                    {/* Property Name - Readonly */}
+                                    <div className="mb-3">
+                                        <label className="form-label">Property Name</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={paymentFormData.property_name}
+                                            readOnly
+                                            style={{ backgroundColor: '#f8f9fa' }}
+                                        />
+                                    </div>
+
+                                    {/* Amount - Readonly */}
+                                    <div className="mb-3">
+                                        <label className="form-label">Amount (₹)</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={`₹${parseFloat(paymentFormData.amount).toLocaleString('en-IN')}`}
+                                            readOnly
+                                            style={{ backgroundColor: '#f8f9fa' }}
+                                        />
+                                    </div>
+
+                                    <div className="row">
+                                        {/* Order ID - Readonly */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Order ID</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                value={paymentFormData.order_id}
+                                                readOnly
+                                                style={{ backgroundColor: '#f8f9fa' }}
+                                            />
+                                        </div>
+
+                                        {/* Transaction ID - Readonly */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Transaction ID</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                value={paymentFormData.transaction_id}
+                                                readOnly
+                                                style={{ backgroundColor: '#f8f9fa' }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="row">
+                                        {/* Payment Mode */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Payment Mode *</label>
+                                            <select
+                                                name="payment_mode"
+                                                className="form-control"
+                                                value={paymentFormData.payment_mode}
+                                                onChange={handlePaymentFormChange}
+                                                required
+                                            >
+                                                <option value="">Select Payment Mode</option>
+                                                {PAYMENT_MODES.map(mode => (
+                                                    <option key={mode.value} value={mode.value}>
+                                                        {mode.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        {/* Payment Method */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Payment Method *</label>
+                                            <select
+                                                name="payment_method"
+                                                className="form-control"
+                                                value={paymentFormData.payment_method}
+                                                onChange={handlePaymentFormChange}
+                                                required
+                                            >
+                                                <option value="">Select Payment Method</option>
+                                                {PAYMENT_METHODS.map(method => (
+                                                    <option key={method.value} value={method.value}>
+                                                        {method.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Payment Date */}
+                                    <div className="mb-3">
+                                        <label className="form-label">Payment Date</label>
+                                        <input
+                                            type="date"
+                                            name="payment_date"
+                                            className="form-control"
+                                            value={paymentFormData.payment_date}
+                                            onChange={handlePaymentFormChange}
+                                        />
+                                    </div>
+
+                                    {/* Upload Files */}
+                                    <div className="mb-3">
+                                        <label className="form-label">Upload Payment Proof</label>
+                                        <input
+                                            type="file"
+                                            className="form-control"
+                                            onChange={handlePaymentFileChange}
+                                            accept=".pdf,.jpg,.jpeg,.png"
+                                        />
+                                        <small className="text-muted">Supported formats: PDF, JPG, PNG (Max 5MB)</small>
+                                        {paymentFile && (
+                                            <div className="mt-2">
+                                                <span className="badge bg-success">File selected: {paymentFile.name}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="modal-footer">
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={() => {
+                                        setShowPaymentModal(false);
+                                        setSelectedTransaction(null);
+                                        setPaymentFile(null);
+                                    }}
+                                    disabled={paymentLoading}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-success"
+                                    onClick={handleSubmitPayment}
+                                    disabled={paymentLoading}
+                                >
+                                    {paymentLoading ? (
+                                        <>
+                                            <span className="spinner-border spinner-border-sm me-2"></span>
+                                            Processing...
+                                        </>
+                                    ) : (
+                                        'Confirm Payment'
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <style jsx>{`
                 .method-badge {
                     padding: 4px 8px;
@@ -1559,21 +1201,6 @@ function AdminTransactionSummary() {
                     font-weight: 500;
                     display: inline-block;
                 }
-                select.status-dropdown {
-                    padding: 4px 8px;
-                    border-radius: 4px;
-                    font-size: 12px;
-                    font-weight: 500;
-                    cursor: pointer;
-                    outline: none;
-                }
-                select.status-dropdown:focus {
-                    border-color: #273c75;
-                }
-                select.status-dropdown:disabled {
-                    opacity: 0.6;
-                    cursor: not-allowed;
-                }
                 .role-badge {
                     padding: 4px 8px;
                     border-radius: 4px;
@@ -1582,9 +1209,83 @@ function AdminTransactionSummary() {
                     background-color: #e0e7ff;
                     color: #4338ca;
                 }
+                .summary-cards {
+                    display: flex;
+                    gap: 20px;
+                    padding: 20px;
+                }
+                .summary-card {
+                    flex: 1;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    padding: 15px;
+                    background: white;
+                    border-radius: 8px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                }
+                .card-icon {
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 24px;
+                }
+                .card-value {
+                    font-size: 24px;
+                    font-weight: bold;
+                }
+                .card-label {
+                    font-size: 12px;
+                    color: #666;
+                }
+                .staff-table-wrapper {
+                    overflow-x: auto;
+                    padding: 0 20px;
+                }
+                .staff-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                .staff-table th,
+                .staff-table td {
+                    padding: 12px;
+                    text-align: left;
+                    border-bottom: 1px solid #eee;
+                }
+                .staff-table th {
+                    background-color: #f8f9fa;
+                    font-weight: 600;
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    color: #666;
+                }
+                .staff-header {
+                    padding: 20px;
+                    border-bottom: 1px solid #eee;
+                }
+                .staff-toolbar {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 20px;
+                    gap: 20px;
+                }
+                .toolbar-left {
+                    flex: 1;
+                }
+                .modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto;
+                }
             `}</style>
         </>
     );
 }
 
-export default AdminTransactionSummary;
+export default AdminPropertyBookings;
