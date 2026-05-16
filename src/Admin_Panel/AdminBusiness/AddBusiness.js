@@ -2534,7 +2534,7 @@ import Swal from 'sweetalert2';
 import { baseurl } from '../../BaseURL/BaseURL';
 import AdminNavbar from "../../Admin_Panel/Admin_Navbar/Admin_Navbar";
 
-const AddBusinessForm = ({ user, mode = 'add' }) => {  
+const AdminAddBusinessForm = ({ user, mode = 'add' }) => {  
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('basic-details');
   const [isEditing, setIsEditing] = useState(mode === 'edit');
@@ -2595,6 +2595,7 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
     description: '',
     logo: '',
     banner: '',
+     display_order: '',
     
     // Contact Info
     categories: [],
@@ -2687,6 +2688,7 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
             description: businessData.description || '',
             logo: businessData.logo || '',
             banner: businessData.banner || '',
+            display_order: businessData.display_order || '',
             categories: businessData.categories || [],
             support_email: businessData.support_email || '',
             support_phone: businessData.support_phone || '',
@@ -3178,6 +3180,19 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
                   })}
                 </div>
               </div>
+                <div className="row">
+          <div className="col-md-4">
+            {renderField({
+              type: 'number',
+              name: 'display_order',
+              label: 'Display Order',
+              required: false,
+              min: 0,
+              step: 1
+            })}
+            <small className="form-text text-muted">Lower number displays first in listings</small>
+          </div>
+        </div>
 
               <div className="row">
                 <div className="col-md-6">
@@ -3554,6 +3569,9 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
       formDataToSend.append('legal_name', formData.legal_name || '');
       formDataToSend.append('business_type', formData.business_type);
       formDataToSend.append('description', formData.description || '');
+      if (formData.display_order !== null && formData.display_order !== '') {
+  formDataToSend.append('display_order', formData.display_order);
+}
       formData.categories.forEach(cat => {
         formDataToSend.append('categories', cat);
       });
@@ -3826,4 +3844,4 @@ const AddBusinessForm = ({ user, mode = 'add' }) => {
   );
 };
 
-export default AddBusinessForm;
+export default AdminAddBusinessForm;

@@ -317,6 +317,7 @@ const AdminViewBusiness = () => {
             <InfoField label="Legal Name" value={business.legal_name} />
             <InfoField label="Business Type" value={BUSINESS_TYPES[business.business_type] || business.business_type} />
             <InfoField label="Categories" value={getCategoryNames(business.categories)} />
+             <InfoField label="Display Order" value={business.display_order || 'Not set'} />
           </div>
           <div className="description-field">
             <InfoField label="Description" value={business.description} />

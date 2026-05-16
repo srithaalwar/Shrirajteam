@@ -3,7 +3,7 @@
   position: relative;
   flex: 1;
   max-width: 600px;
-  margin: 0 20px;
+  margin: 0 5px;
 }
 
 /* Hide search completely on mobile */
@@ -17,7 +17,7 @@
   display: flex;
   align-items: center;
   border: 2px solid #ddd;
-  border-radius: 50px;
+  border-radius: 20px;
   overflow: hidden;
   background: white;
   transition: all 0.2s ease;

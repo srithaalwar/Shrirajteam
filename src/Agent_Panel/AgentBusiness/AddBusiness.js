@@ -6524,9 +6524,9 @@ const AgentAddBusinessForm = ({ user, mode = 'add' }) => {
       if (categoryFormData.parent) {
         formDataObj.append('parent', categoryFormData.parent);
       }
-      if (categoryFormData.display_order) {
-        formDataObj.append('display_order', categoryFormData.display_order);
-      }
+      // if (categoryFormData.display_order) {
+      //   formDataObj.append('display_order', categoryFormData.display_order);
+      // }
       formDataObj.append('is_active', categoryFormData.is_active);
       if (categoryFormData.icon) {
         formDataObj.append('icon', categoryFormData.icon);
@@ -7153,7 +7153,7 @@ const AgentAddBusinessForm = ({ user, mode = 'add' }) => {
               </div>
 
               {/* New row for Display Order */}
-              <div className="row">
+              {/* <div className="row">
                  <div className="col-md-6">
                   {renderField({
                     type: 'select',
@@ -7175,7 +7175,7 @@ const AgentAddBusinessForm = ({ user, mode = 'add' }) => {
                   })}
                   <small className="form-text text-muted">Lower number displays first in listings</small>
                 </div>
-              </div>
+              </div> */}
 
               <div className="row">
                 <div className="col-md-6">
@@ -7700,9 +7700,9 @@ const AgentAddBusinessForm = ({ user, mode = 'add' }) => {
       formDataToSend.append('description', formData.description || '');
       
       // Add display_order if provided
-      if (formData.display_order !== null && formData.display_order !== '') {
-        formDataToSend.append('display_order', formData.display_order);
-      }
+      // if (formData.display_order !== null && formData.display_order !== '') {
+      //   formDataToSend.append('display_order', formData.display_order);
+      // }
       
       formData.categories.forEach(cat => {
         formDataToSend.append('categories', cat);
@@ -8071,7 +8071,7 @@ const AgentAddBusinessForm = ({ user, mode = 'add' }) => {
                       </div>
                     </div>
 
-                    <div className="col-md-6">
+                    {/* <div className="col-md-6">
                       <div className="mb-3">
                         <label className="form-label">Display Order</label>
                         <input
@@ -8086,7 +8086,7 @@ const AgentAddBusinessForm = ({ user, mode = 'add' }) => {
                         />
                         <small className="text-muted">Lower numbers display first</small>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="row">

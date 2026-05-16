@@ -1499,11 +1499,11 @@ const AgentViewBusiness = () => {
               <span className="featured-badge">Featured</span>
             )}
             {/* Display Order Badge */}
-            {business.display_order && (
+            {/* {business.display_order && (
               <span className="display-order-badge">
                 Display Order: {business.display_order}
               </span>
-            )}
+            )} */}
           </div>
         </div>
 
@@ -1515,7 +1515,7 @@ const AgentViewBusiness = () => {
             <InfoField label="Legal Name" value={business.legal_name} />
             <InfoField label="Business Type" value={BUSINESS_TYPES[business.business_type] || business.business_type} />
             <InfoField label="Categories" value={getCategoryNames()} />
-            <InfoField label="Display Order" value={business.display_order || 'Not set'} />
+            {/* <InfoField label="Display Order" value={business.display_order || 'Not set'} /> */}
           </div>
           <div className="description-field">
             <InfoField label="Description" value={business.description} />
