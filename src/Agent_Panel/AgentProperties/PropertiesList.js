@@ -35,22 +35,22 @@
 // const getImageUrl = (images) => {
 //   if (images && images.length > 0) {
 //     const imagePath = images[0].image;
-    
+
 //     if (imagePath.startsWith('/media/')) {
 //       return `${baseurl}${imagePath}`;
 //     }
-    
+
 //     if (imagePath.startsWith('media/')) {
 //       return `${baseurl}/${imagePath}`;
 //     }
-    
+
 //     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
 //       return imagePath;
 //     }
-    
+
 //     return `${baseurl}/${imagePath}`;
 //   }
-  
+
 //   return "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
 // };
 
@@ -185,11 +185,11 @@
 //     if (result.isConfirmed) {
 //       try {
 //         setIsDeleting(true);
-        
+
 //         if (onDeleteProperty) {
 //           await onDeleteProperty(property.property_id);
 //         }
-        
+
 //         Swal.fire(
 //           'Deleted!',
 //           'The property has been deleted successfully.',
@@ -215,7 +215,7 @@
 
 //   const distributionCommission = getDistributionCommission();
 //   const imageUrl = getImageUrl(property.images);
-  
+
 //   const formattedPrice = property.looking_to === "sell" 
 //     ? formatPrice(property.total_property_value || property.property_value)
 //     : `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`;
@@ -228,12 +228,12 @@
 //   const handleVerificationStatusChange = async (e) => {
 //     const newStatus = e.target.value;
 //     const previousStatus = verificationStatus;
-    
+
 //     setVerificationStatus(newStatus);
-    
+
 //     try {
 //       setIsUpdating(true);
-      
+
 //       const response = await fetch(`${baseurl}/properties/${property.property_id}/`, {
 //         method: 'PUT',
 //         headers: {
@@ -243,19 +243,19 @@
 //           verification_status: newStatus
 //         })
 //       });
-      
+
 //       if (!response.ok) {
 //         throw new Error(`Failed to update verification status: ${response.status}`);
 //       }
-      
+
 //       const result = await response.json();
-      
+
 //       if (onVerificationStatusUpdate) {
 //         onVerificationStatusUpdate(property.property_id, newStatus);
 //       }
-      
+
 //       console.log('Verification status updated successfully:', result);
-      
+
 //     } catch (error) {
 //       console.error('Error updating verification status:', error);
 //       setVerificationStatus(previousStatus);
@@ -321,7 +321,7 @@
 //             </span>
 //           )}
 //         </div>
-        
+
 //         <div className="d-flex align-items-center gap-2 mt-auto">
 //           <span className="h5 fw-bold text-dark">
 //             {formattedPrice}
@@ -344,14 +344,14 @@
 //             <Info size={16} />
 //             PAYOUT
 //           </button>
-          
+
 //           <CommissionTooltip 
 //             show={showCommissionTooltip}
 //             commissions={commissionData}
 //             distributionCommission={distributionCommission}
 //           />
 //         </div>
-        
+
 //         <button 
 //           onClick={handleViewDetails}
 //           className="btn w-100 fw-semibold py-2 mt-2"
@@ -405,7 +405,7 @@
 //           )}
 //         </div>
 //       </button>
-      
+
 //       {isOpen && (
 //         <div className="px-3 pb-3">
 //           {children}
@@ -520,11 +520,11 @@
 //       const newSelection = prev.includes(categoryName)
 //         ? prev.filter((c) => c !== categoryName)
 //         : [...prev, categoryName];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedCategories, onFilterChange]);
@@ -534,11 +534,11 @@
 //       const newSelection = prev.includes(typeName)
 //         ? prev.filter((b) => b !== typeName)
 //         : [...prev, typeName];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedTypes, onFilterChange]);
@@ -548,11 +548,11 @@
 //       const newSelection = prev.includes(range)
 //         ? prev.filter((r) => r !== range)
 //         : [...prev, range];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedPriceRanges, onFilterChange]);
@@ -562,11 +562,11 @@
 //       const newSelection = prev.includes(name)
 //         ? prev.filter((c) => c !== name)
 //         : [...prev, name];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedCities, onFilterChange]);
@@ -576,11 +576,11 @@
 //       const newSelection = prev.includes(type)
 //         ? prev.filter((t) => t !== type)
 //         : [...prev, type];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedTransactionTypes, onFilterChange]);
@@ -590,11 +590,11 @@
 //       const newSelection = prev.includes(roleId)
 //         ? prev.filter((r) => r !== roleId)
 //         : [...prev, roleId];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedRoles, onFilterChange]);
@@ -609,7 +609,7 @@
 //         return [sortValue];
 //       }
 //     });
-    
+
 //     if (onFilterChange) {
 //       setTimeout(() => onFilterChange(), 0);
 //     }
@@ -627,7 +627,7 @@
 //     setTypeSearch("");
 //     setCitySearch("");
 //     setRoleSearch("");
-    
+
 //     if (onFilterChange) {
 //       setTimeout(() => onFilterChange(), 0);
 //     }
@@ -662,7 +662,7 @@
 //         </div>
 //       )}
 
-      
+
 
 //       {/* Transaction Type Filter */}
 //       <FilterSection
@@ -1108,7 +1108,7 @@
 //       <div className="list-group">
 //         {properties.map((property) => {
 //           const imageUrl = getImageUrl(property.images);
-          
+
 //           const getPriceInfo = () => {
 //             if (property.looking_to === "sell") {
 //               const price = property.total_property_value || property.property_value;
@@ -1148,7 +1148,7 @@
 //             const handleMouseLeave = () => {
 //               setShowCommissionTooltip(false);
 //             };
-            
+
 //             const handleViewDetails = () => {
 //               if (!hasActiveSubscription) {
 //                 Swal.fire({
@@ -1162,7 +1162,7 @@
 //               }
 //               navigate(`/agent-properties-details/${property.property_id}`);
 //             };
-            
+
 //             return (
 //               <div className="list-group-item mb-3">
 //                 <div className="row g-3">
@@ -1211,7 +1211,7 @@
 //                         </span>
 //                       )}
 //                     </div>
-                    
+
 //                     <div className="d-flex align-items-center gap-2">
 //                       <span className="h5 fw-bold text-dark">
 //                         {priceInfo.price}
@@ -1235,14 +1235,14 @@
 //                         <Info size={14} />
 //                         PAYOUT
 //                       </button>
-                      
+
 //                       <CommissionTooltip 
 //                         show={showCommissionTooltip}
 //                         commissions={commissionData}
 //                         distributionCommission={distributionCommission}
 //                       />
 //                     </div>
-                    
+
 //                     <button 
 //                       onClick={handleViewDetails}
 //                       className="btn fw-semibold py-2"
@@ -1362,11 +1362,11 @@
 //     try {
 //       setLoadingSubscription(true);
 //       const res = await fetch(`${baseurl}/user-subscriptions/user-id/${currentUserId}/`);
-      
+
 //       if (res.ok) {
 //         const response = await res.json();
 //         console.log("Subscription API Response:", response);
-        
+
 //         // Check if user has any active subscription based on latest_status
 //         if (response && response.latest_status === "paid") {
 //           setHasActiveSubscription(true);
@@ -1446,21 +1446,21 @@
 //           'Content-Type': 'application/json',
 //         }
 //       });
-      
+
 //       if (!response.ok) {
 //         throw new Error(`Failed to delete property: ${response.status}`);
 //       }
-      
+
 //       setProperties(prevProperties => 
 //         prevProperties.filter(property => property.property_id !== propertyId)
 //       );
 //       setFilteredProperties(prevProperties => 
 //         prevProperties.filter(property => property.property_id !== propertyId)
 //       );
-      
+
 //       // Update total count
 //       setTotalCount(prev => prev - 1);
-      
+
 //       return true;
 //     } catch (error) {
 //       console.error('Error deleting property:', error);
@@ -1508,46 +1508,46 @@
 //   const fetchApprovedProperties = useCallback(async () => {
 //     try {
 //       setLoading(true);
-      
+
 //       const params = new URLSearchParams();
-      
+
 //       // Add verification status filter
 //       params.append('verification_status', 'verified');
-      
+
 //       // Add pagination parameters
 //       params.append('page', currentPage);
 //       params.append('page_size', pageSize);
-      
+
 //       // Add search term if exists
 //       if (searchTerm.trim()) {
 //         params.append('search', searchTerm.trim());
 //       }
-      
+
 //       // Add category filter if exists
 //       if (selectedCategories.length > 0) {
 //         params.append('category', selectedCategories.join(','));
 //       }
-      
+
 //       // Add type filter if exists
 //       if (selectedTypes.length > 0) {
 //         params.append('property_type', selectedTypes.join(','));
 //       }
-      
+
 //       // Add transaction type filter if exists
 //       if (selectedTransactionTypes.length > 0) {
 //         params.append('looking_to', selectedTransactionTypes.join(','));
 //       }
-      
+
 //       // Add city filter if exists
 //       if (selectedCities.length > 0) {
 //         params.append('city', selectedCities.join(','));
 //       }
-      
+
 //       // Add role filter if exists
 //       if (selectedRoles.length > 0) {
 //         params.append('user_role', selectedRoles.join(','));
 //       }
-      
+
 //       // Add sort parameter if selected
 //       if (selectedSortOptions.length > 0) {
 //         const sortValue = selectedSortOptions[0];
@@ -1557,23 +1557,23 @@
 //           params.append('ordering', '-price');
 //         }
 //       }
-      
+
 //       const queryString = params.toString();
 //       const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
-      
+
 //       const response = await fetch(url);
 //       if (!response.ok) {
 //         throw new Error(`HTTP error! status: ${response.status}`);
 //       }
-      
+
 //       const data = await response.json();
 //       const propertiesArray = data.results || [];
-      
+
 //       // Filter out properties where user_id matches the current user's id
 //       const filteredProperties = propertiesArray.filter(
 //         (property) => property.user_id?.toString() !== currentUserId
 //       );
-      
+
 //       setProperties(filteredProperties);
 //       setFilteredProperties(filteredProperties);
 //       setTotalCount(data.count || 0);
@@ -1600,16 +1600,16 @@
 //   // Apply price range filter client-side
 //   useEffect(() => {
 //     if (properties.length === 0) return;
-    
+
 //     let result = [...properties];
-    
+
 //     // Apply price range filter (client-side only)
 //     if (selectedPriceRanges.length > 0) {
 //       result = result.filter(property => {
 //         const price = parseFloat(property.looking_to === "sell" 
 //           ? (property.total_property_value || property.property_value)
 //           : property.rent_amount || 0);
-        
+
 //         return selectedPriceRanges.some(rangeLabel => {
 //           switch (rangeLabel) {
 //             case "Under ₹10L":
@@ -1630,7 +1630,7 @@
 //         });
 //       });
 //     }
-    
+
 //     setFilteredProperties(result);
 //   }, [properties, selectedPriceRanges]);
 
@@ -1697,7 +1697,7 @@
 //   // Render pagination
 //   const renderPagination = () => {
 //     if (totalPages <= 1) return null;
-    
+
 //     return (
 //       <nav aria-label="Properties pagination" className="mt-5">
 //         <ul className="pagination justify-content-center flex-wrap">
@@ -1713,7 +1713,7 @@
 //               <span className="visually-hidden">Previous</span>
 //             </button>
 //           </li>
-          
+
 //           {/* First Page */}
 //           {currentPage > 2 && (
 //             <li className="page-item">
@@ -1726,14 +1726,14 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Ellipsis if needed */}
 //           {currentPage > 3 && (
 //             <li className="page-item disabled">
 //               <span className="page-link">...</span>
 //             </li>
 //           )}
-          
+
 //           {/* Page Before Current */}
 //           {currentPage > 1 && (
 //             <li className="page-item">
@@ -1746,7 +1746,7 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Current Page */}
 //           <li className="page-item active" aria-current="page">
 //             <button className="page-link">
@@ -1754,7 +1754,7 @@
 //               <span className="visually-hidden">(current)</span>
 //             </button>
 //           </li>
-          
+
 //           {/* Page After Current */}
 //           {currentPage < totalPages && (
 //             <li className="page-item">
@@ -1767,14 +1767,14 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Ellipsis if needed */}
 //           {currentPage < totalPages - 2 && (
 //             <li className="page-item disabled">
 //               <span className="page-link">...</span>
 //             </li>
 //           )}
-          
+
 //           {/* Last Page */}
 //           {currentPage < totalPages - 1 && (
 //             <li className="page-item">
@@ -1787,7 +1787,7 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Next Button */}
 //           <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
 //             <button 
@@ -1801,7 +1801,7 @@
 //             </button>
 //           </li>
 //         </ul>
-        
+
 //         {/* Page Info */}
 //         <div className="text-center text-muted small mt-2">
 //           Page {currentPage} of {totalPages} • {filteredProperties.length} properties on this page • {totalCount} total properties
@@ -1846,7 +1846,7 @@
 //   return (
 //     <div className="min-vh-100 d-flex flex-column">
 //       <WebsiteNavbar />
-      
+
 //       <main className="flex-grow-1 bg-light">
 //         <div className="container py-4">
 //           {/* Mobile Filter Modal */}
@@ -1926,7 +1926,7 @@
 
 //             <div className="col-lg-9">
 //               {renderSubscriptionBanner()}
-              
+
 //               {(loading && filteredProperties.length === 0) ? (
 //                 <div className="text-center py-5">
 //                   <div className="spinner-border text-primary" role="status">
@@ -2002,22 +2002,22 @@
 // const getImageUrl = (images) => {
 //   if (images && images.length > 0) {
 //     const imagePath = images[0].image;
-    
+
 //     if (imagePath.startsWith('/media/')) {
 //       return `${baseurl}${imagePath}`;
 //     }
-    
+
 //     if (imagePath.startsWith('media/')) {
 //       return `${baseurl}/${imagePath}`;
 //     }
-    
+
 //     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
 //       return imagePath;
 //     }
-    
+
 //     return `${baseurl}/${imagePath}`;
 //   }
-  
+
 //   return "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
 // };
 
@@ -2152,11 +2152,11 @@
 //     if (result.isConfirmed) {
 //       try {
 //         setIsDeleting(true);
-        
+
 //         if (onDeleteProperty) {
 //           await onDeleteProperty(property.property_id);
 //         }
-        
+
 //         Swal.fire(
 //           'Deleted!',
 //           'The property has been deleted successfully.',
@@ -2182,7 +2182,7 @@
 
 //   const distributionCommission = getDistributionCommission();
 //   const imageUrl = getImageUrl(property.images);
-  
+
 //   const formattedPrice = property.looking_to === "sell" 
 //     ? formatPrice(property.total_property_value || property.property_value)
 //     : `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`;
@@ -2195,12 +2195,12 @@
 //   const handleVerificationStatusChange = async (e) => {
 //     const newStatus = e.target.value;
 //     const previousStatus = verificationStatus;
-    
+
 //     setVerificationStatus(newStatus);
-    
+
 //     try {
 //       setIsUpdating(true);
-      
+
 //       const response = await fetch(`${baseurl}/properties/${property.property_id}/`, {
 //         method: 'PUT',
 //         headers: {
@@ -2210,19 +2210,19 @@
 //           verification_status: newStatus
 //         })
 //       });
-      
+
 //       if (!response.ok) {
 //         throw new Error(`Failed to update verification status: ${response.status}`);
 //       }
-      
+
 //       const result = await response.json();
-      
+
 //       if (onVerificationStatusUpdate) {
 //         onVerificationStatusUpdate(property.property_id, newStatus);
 //       }
-      
+
 //       console.log('Verification status updated successfully:', result);
-      
+
 //     } catch (error) {
 //       console.error('Error updating verification status:', error);
 //       setVerificationStatus(previousStatus);
@@ -2288,7 +2288,7 @@
 //             </span>
 //           )}
 //         </div>
-        
+
 //         <div className="d-flex align-items-center gap-2 mt-auto">
 //           <span className="h5 fw-bold text-dark">
 //             {formattedPrice}
@@ -2311,14 +2311,14 @@
 //             <Info size={16} />
 //             PAYOUT
 //           </button>
-          
+
 //           <CommissionTooltip 
 //             show={showCommissionTooltip}
 //             commissions={commissionData}
 //             distributionCommission={distributionCommission}
 //           />
 //         </div>
-        
+
 //         <button 
 //           onClick={handleViewDetails}
 //           className="btn w-100 fw-semibold py-2 mt-2"
@@ -2372,7 +2372,7 @@
 //           )}
 //         </div>
 //       </button>
-      
+
 //       {isOpen && (
 //         <div className="px-3 pb-3">
 //           {children}
@@ -2487,11 +2487,11 @@
 //       const newSelection = prev.includes(categoryName)
 //         ? prev.filter((c) => c !== categoryName)
 //         : [...prev, categoryName];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedCategories, onFilterChange]);
@@ -2501,11 +2501,11 @@
 //       const newSelection = prev.includes(typeName)
 //         ? prev.filter((b) => b !== typeName)
 //         : [...prev, typeName];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedTypes, onFilterChange]);
@@ -2515,11 +2515,11 @@
 //       const newSelection = prev.includes(range)
 //         ? prev.filter((r) => r !== range)
 //         : [...prev, range];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedPriceRanges, onFilterChange]);
@@ -2529,11 +2529,11 @@
 //       const newSelection = prev.includes(name)
 //         ? prev.filter((c) => c !== name)
 //         : [...prev, name];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedCities, onFilterChange]);
@@ -2543,11 +2543,11 @@
 //       const newSelection = prev.includes(type)
 //         ? prev.filter((t) => t !== type)
 //         : [...prev, type];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedTransactionTypes, onFilterChange]);
@@ -2557,11 +2557,11 @@
 //       const newSelection = prev.includes(roleId)
 //         ? prev.filter((r) => r !== roleId)
 //         : [...prev, roleId];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedRoles, onFilterChange]);
@@ -2576,7 +2576,7 @@
 //         return [sortValue];
 //       }
 //     });
-    
+
 //     if (onFilterChange) {
 //       setTimeout(() => onFilterChange(), 0);
 //     }
@@ -2594,7 +2594,7 @@
 //     setTypeSearch("");
 //     setCitySearch("");
 //     setRoleSearch("");
-    
+
 //     if (onFilterChange) {
 //       setTimeout(() => onFilterChange(), 0);
 //     }
@@ -3073,7 +3073,7 @@
 //       <div className="list-group">
 //         {properties.map((property) => {
 //           const imageUrl = getImageUrl(property.images);
-          
+
 //           const getPriceInfo = () => {
 //             if (property.looking_to === "sell") {
 //               const price = property.total_property_value || property.property_value;
@@ -3113,7 +3113,7 @@
 //             const handleMouseLeave = () => {
 //               setShowCommissionTooltip(false);
 //             };
-            
+
 //             const handleViewDetails = () => {
 //               if (!hasActiveSubscription) {
 //                 Swal.fire({
@@ -3127,7 +3127,7 @@
 //               }
 //               navigate(`/agent-properties-details/${property.property_id}`);
 //             };
-            
+
 //             return (
 //               <div className="list-group-item mb-3">
 //                 <div className="row g-3">
@@ -3176,7 +3176,7 @@
 //                         </span>
 //                       )}
 //                     </div>
-                    
+
 //                     <div className="d-flex align-items-center gap-2">
 //                       <span className="h5 fw-bold text-dark">
 //                         {priceInfo.price}
@@ -3200,14 +3200,14 @@
 //                         <Info size={14} />
 //                         PAYOUT
 //                       </button>
-                      
+
 //                       <CommissionTooltip 
 //                         show={showCommissionTooltip}
 //                         commissions={commissionData}
 //                         distributionCommission={distributionCommission}
 //                       />
 //                     </div>
-                    
+
 //                     <button 
 //                       onClick={handleViewDetails}
 //                       className="btn fw-semibold py-2"
@@ -3327,11 +3327,11 @@
 //     try {
 //       setLoadingSubscription(true);
 //       const res = await fetch(`${baseurl}/user-subscriptions/user-id/${currentUserId}/`);
-      
+
 //       if (res.ok) {
 //         const response = await res.json();
 //         console.log("Subscription API Response:", response);
-        
+
 //         // Check if user has any active subscription based on latest_status
 //         if (response && response.latest_status === "paid") {
 //           setHasActiveSubscription(true);
@@ -3411,21 +3411,21 @@
 //           'Content-Type': 'application/json',
 //         }
 //       });
-      
+
 //       if (!response.ok) {
 //         throw new Error(`Failed to delete property: ${response.status}`);
 //       }
-      
+
 //       setProperties(prevProperties => 
 //         prevProperties.filter(property => property.property_id !== propertyId)
 //       );
 //       setFilteredProperties(prevProperties => 
 //         prevProperties.filter(property => property.property_id !== propertyId)
 //       );
-      
+
 //       // Update total count
 //       setTotalCount(prev => prev - 1);
-      
+
 //       return true;
 //     } catch (error) {
 //       console.error('Error deleting property:', error);
@@ -3473,46 +3473,46 @@
 //   const fetchApprovedProperties = useCallback(async () => {
 //     try {
 //       setLoading(true);
-      
+
 //       const params = new URLSearchParams();
-      
+
 //       // Add verification status filter
 //       params.append('verification_status', 'verified');
-      
+
 //       // Add pagination parameters
 //       params.append('page', currentPage);
 //       params.append('page_size', pageSize);
-      
+
 //       // Add search term if exists
 //       if (searchTerm.trim()) {
 //         params.append('search', searchTerm.trim());
 //       }
-      
+
 //       // Add category filter if exists
 //       if (selectedCategories.length > 0) {
 //         params.append('category', selectedCategories.join(','));
 //       }
-      
+
 //       // Add type filter if exists
 //       if (selectedTypes.length > 0) {
 //         params.append('property_type', selectedTypes.join(','));
 //       }
-      
+
 //       // Add transaction type filter if exists
 //       if (selectedTransactionTypes.length > 0) {
 //         params.append('looking_to', selectedTransactionTypes.join(','));
 //       }
-      
+
 //       // Add city filter if exists
 //       if (selectedCities.length > 0) {
 //         params.append('city', selectedCities.join(','));
 //       }
-      
+
 //       // Add role filter if exists
 //       if (selectedRoles.length > 0) {
 //         params.append('user_role', selectedRoles.join(','));
 //       }
-      
+
 //       // Add sort parameter if selected
 //       if (selectedSortOptions.length > 0) {
 //         const sortValue = selectedSortOptions[0];
@@ -3522,23 +3522,23 @@
 //           params.append('ordering', '-price');
 //         }
 //       }
-      
+
 //       const queryString = params.toString();
 //       const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
-      
+
 //       const response = await fetch(url);
 //       if (!response.ok) {
 //         throw new Error(`HTTP error! status: ${response.status}`);
 //       }
-      
+
 //       const data = await response.json();
 //       const propertiesArray = data.results || [];
-      
+
 //       // Filter out properties where user_id matches the current user's id
 //       const filteredProperties = propertiesArray.filter(
 //         (property) => property.user_id?.toString() !== currentUserId
 //       );
-      
+
 //       setProperties(filteredProperties);
 //       setFilteredProperties(filteredProperties);
 //       setTotalCount(data.count || 0);
@@ -3565,16 +3565,16 @@
 //   // Apply price range filter client-side
 //   useEffect(() => {
 //     if (properties.length === 0) return;
-    
+
 //     let result = [...properties];
-    
+
 //     // Apply price range filter (client-side only)
 //     if (selectedPriceRanges.length > 0) {
 //       result = result.filter(property => {
 //         const price = parseFloat(property.looking_to === "sell" 
 //           ? (property.total_property_value || property.property_value)
 //           : property.rent_amount || 0);
-        
+
 //         return selectedPriceRanges.some(rangeLabel => {
 //           switch (rangeLabel) {
 //             case "Under ₹10L":
@@ -3595,7 +3595,7 @@
 //         });
 //       });
 //     }
-    
+
 //     setFilteredProperties(result);
 //   }, [properties, selectedPriceRanges]);
 
@@ -3662,7 +3662,7 @@
 //   // Render pagination
 //   const renderPagination = () => {
 //     if (totalPages <= 1) return null;
-    
+
 //     return (
 //       <nav aria-label="Properties pagination" className="mt-5">
 //         <ul className="pagination justify-content-center flex-wrap">
@@ -3678,7 +3678,7 @@
 //               <span className="visually-hidden">Previous</span>
 //             </button>
 //           </li>
-          
+
 //           {/* First Page */}
 //           {currentPage > 2 && (
 //             <li className="page-item">
@@ -3691,14 +3691,14 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Ellipsis if needed */}
 //           {currentPage > 3 && (
 //             <li className="page-item disabled">
 //               <span className="page-link">...</span>
 //             </li>
 //           )}
-          
+
 //           {/* Page Before Current */}
 //           {currentPage > 1 && (
 //             <li className="page-item">
@@ -3711,7 +3711,7 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Current Page */}
 //           <li className="page-item active" aria-current="page">
 //             <button className="page-link">
@@ -3719,7 +3719,7 @@
 //               <span className="visually-hidden">(current)</span>
 //             </button>
 //           </li>
-          
+
 //           {/* Page After Current */}
 //           {currentPage < totalPages && (
 //             <li className="page-item">
@@ -3732,14 +3732,14 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Ellipsis if needed */}
 //           {currentPage < totalPages - 2 && (
 //             <li className="page-item disabled">
 //               <span className="page-link">...</span>
 //             </li>
 //           )}
-          
+
 //           {/* Last Page */}
 //           {currentPage < totalPages - 1 && (
 //             <li className="page-item">
@@ -3752,7 +3752,7 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Next Button */}
 //           <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
 //             <button 
@@ -3766,7 +3766,7 @@
 //             </button>
 //           </li>
 //         </ul>
-        
+
 //         {/* Page Info */}
 //         <div className="text-center text-muted small mt-2">
 //           Page {currentPage} of {totalPages} • {filteredProperties.length} properties on this page • {totalCount} total properties
@@ -3811,7 +3811,7 @@
 //   return (
 //     <div className="min-vh-100 d-flex flex-column">
 //       <WebsiteNavbar />
-      
+
 //       <main className="flex-grow-1 bg-light">
 //         <div className="container py-4">
 //           {/* Mobile Filter Modal */}
@@ -3892,7 +3892,7 @@
 
 //             <div className="col-lg-9 col-12">
 //               {renderSubscriptionBanner()}
-              
+
 //               {(loading && filteredProperties.length === 0) ? (
 //                 <div className="text-center py-5">
 //                   <div className="spinner-border text-primary" role="status">
@@ -3971,22 +3971,22 @@
 // const getImageUrl = (images) => {
 //   if (images && images.length > 0) {
 //     const imagePath = images[0].image;
-    
+
 //     if (imagePath.startsWith('/media/')) {
 //       return `${baseurl}${imagePath}`;
 //     }
-    
+
 //     if (imagePath.startsWith('media/')) {
 //       return `${baseurl}/${imagePath}`;
 //     }
-    
+
 //     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
 //       return imagePath;
 //     }
-    
+
 //     return `${baseurl}/${imagePath}`;
 //   }
-  
+
 //   return "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
 // };
 
@@ -4121,11 +4121,11 @@
 //     if (result.isConfirmed) {
 //       try {
 //         setIsDeleting(true);
-        
+
 //         if (onDeleteProperty) {
 //           await onDeleteProperty(property.property_id);
 //         }
-        
+
 //         Swal.fire(
 //           'Deleted!',
 //           'The property has been deleted successfully.',
@@ -4151,7 +4151,7 @@
 
 //   const distributionCommission = getDistributionCommission();
 //   const imageUrl = getImageUrl(property.images);
-  
+
 //   const formattedPrice = property.looking_to === "sell" 
 //     ? formatPrice(property.total_property_value || property.property_value)
 //     : `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`;
@@ -4164,12 +4164,12 @@
 //   const handleVerificationStatusChange = async (e) => {
 //     const newStatus = e.target.value;
 //     const previousStatus = verificationStatus;
-    
+
 //     setVerificationStatus(newStatus);
-    
+
 //     try {
 //       setIsUpdating(true);
-      
+
 //       const response = await fetch(`${baseurl}/properties/${property.property_id}/`, {
 //         method: 'PUT',
 //         headers: {
@@ -4179,19 +4179,19 @@
 //           verification_status: newStatus
 //         })
 //       });
-      
+
 //       if (!response.ok) {
 //         throw new Error(`Failed to update verification status: ${response.status}`);
 //       }
-      
+
 //       const result = await response.json();
-      
+
 //       if (onVerificationStatusUpdate) {
 //         onVerificationStatusUpdate(property.property_id, newStatus);
 //       }
-      
+
 //       console.log('Verification status updated successfully:', result);
-      
+
 //     } catch (error) {
 //       console.error('Error updating verification status:', error);
 //       setVerificationStatus(previousStatus);
@@ -4257,7 +4257,7 @@
 //             </span>
 //           )}
 //         </div>
-        
+
 //         <div className="d-flex align-items-center gap-2 mt-auto">
 //           <span className="h5 fw-bold text-dark">
 //             {formattedPrice}
@@ -4280,14 +4280,14 @@
 //             <Info size={16} />
 //             PAYOUT
 //           </button>
-          
+
 //           <CommissionTooltip 
 //             show={showCommissionTooltip}
 //             commissions={commissionData}
 //             distributionCommission={distributionCommission}
 //           />
 //         </div>
-        
+
 //         <button 
 //           onClick={handleViewDetails}
 //           className="btn w-100 fw-semibold py-2 mt-2"
@@ -4341,7 +4341,7 @@
 //           )}
 //         </div>
 //       </button>
-      
+
 //       {isOpen && (
 //         <div className="px-3 pb-3">
 //           {children}
@@ -4456,11 +4456,11 @@
 //       const newSelection = prev.includes(categoryName)
 //         ? prev.filter((c) => c !== categoryName)
 //         : [...prev, categoryName];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedCategories, onFilterChange]);
@@ -4470,11 +4470,11 @@
 //       const newSelection = prev.includes(typeName)
 //         ? prev.filter((b) => b !== typeName)
 //         : [...prev, typeName];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedTypes, onFilterChange]);
@@ -4484,11 +4484,11 @@
 //       const newSelection = prev.includes(range)
 //         ? prev.filter((r) => r !== range)
 //         : [...prev, range];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedPriceRanges, onFilterChange]);
@@ -4498,11 +4498,11 @@
 //       const newSelection = prev.includes(name)
 //         ? prev.filter((c) => c !== name)
 //         : [...prev, name];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedCities, onFilterChange]);
@@ -4512,11 +4512,11 @@
 //       const newSelection = prev.includes(type)
 //         ? prev.filter((t) => t !== type)
 //         : [...prev, type];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedTransactionTypes, onFilterChange]);
@@ -4526,11 +4526,11 @@
 //       const newSelection = prev.includes(roleId)
 //         ? prev.filter((r) => r !== roleId)
 //         : [...prev, roleId];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedRoles, onFilterChange]);
@@ -4545,7 +4545,7 @@
 //         return [sortValue];
 //       }
 //     });
-    
+
 //     if (onFilterChange) {
 //       setTimeout(() => onFilterChange(), 0);
 //     }
@@ -4563,7 +4563,7 @@
 //     setTypeSearch("");
 //     setCitySearch("");
 //     setRoleSearch("");
-    
+
 //     if (onFilterChange) {
 //       setTimeout(() => onFilterChange(), 0);
 //     }
@@ -5046,7 +5046,7 @@
 //       <div className="list-group">
 //         {properties.map((property) => {
 //           const imageUrl = getImageUrl(property.images);
-          
+
 //           const getPriceInfo = () => {
 //             if (property.looking_to === "sell") {
 //               const price = property.total_property_value || property.property_value;
@@ -5086,7 +5086,7 @@
 //             const handleMouseLeave = () => {
 //               setShowCommissionTooltip(false);
 //             };
-            
+
 //             const handleViewDetails = () => {
 //               if (!hasActiveSubscription) {
 //                 Swal.fire({
@@ -5100,7 +5100,7 @@
 //               }
 //               navigate(`/agent-properties-details/${property.property_id}`);
 //             };
-            
+
 //             return (
 //               <div className="list-group-item mb-3">
 //                 <div className="row g-3">
@@ -5149,7 +5149,7 @@
 //                         </span>
 //                       )}
 //                     </div>
-                    
+
 //                     <div className="d-flex align-items-center gap-2">
 //                       <span className="h5 fw-bold text-dark">
 //                         {priceInfo.price}
@@ -5173,14 +5173,14 @@
 //                         <Info size={14} />
 //                         PAYOUT
 //                       </button>
-                      
+
 //                       <CommissionTooltip 
 //                         show={showCommissionTooltip}
 //                         commissions={commissionData}
 //                         distributionCommission={distributionCommission}
 //                       />
 //                     </div>
-                    
+
 //                     <button 
 //                       onClick={handleViewDetails}
 //                       className="btn fw-semibold py-2"
@@ -5300,11 +5300,11 @@
 //     try {
 //       setLoadingSubscription(true);
 //       const res = await fetch(`${baseurl}/user-subscriptions/user-id/${currentUserId}/`);
-      
+
 //       if (res.ok) {
 //         const response = await res.json();
 //         console.log("Subscription API Response:", response);
-        
+
 //         // Check if user has any active subscription based on latest_status
 //         if (response && response.latest_status === "paid") {
 //           setHasActiveSubscription(true);
@@ -5384,21 +5384,21 @@
 //           'Content-Type': 'application/json',
 //         }
 //       });
-      
+
 //       if (!response.ok) {
 //         throw new Error(`Failed to delete property: ${response.status}`);
 //       }
-      
+
 //       setProperties(prevProperties => 
 //         prevProperties.filter(property => property.property_id !== propertyId)
 //       );
 //       setFilteredProperties(prevProperties => 
 //         prevProperties.filter(property => property.property_id !== propertyId)
 //       );
-      
+
 //       // Update total count
 //       setTotalCount(prev => prev - 1);
-      
+
 //       return true;
 //     } catch (error) {
 //       console.error('Error deleting property:', error);
@@ -5446,46 +5446,46 @@
 //   const fetchApprovedProperties = useCallback(async () => {
 //     try {
 //       setLoading(true);
-      
+
 //       const params = new URLSearchParams();
-      
+
 //       // Add verification status filter
 //       params.append('verification_status', 'verified');
-      
+
 //       // Add pagination parameters
 //       params.append('page', currentPage);
 //       params.append('page_size', pageSize);
-      
+
 //       // Add search term if exists
 //       if (searchTerm.trim()) {
 //         params.append('search', searchTerm.trim());
 //       }
-      
+
 //       // Add category filter if exists
 //       if (selectedCategories.length > 0) {
 //         params.append('category', selectedCategories.join(','));
 //       }
-      
+
 //       // Add type filter if exists
 //       if (selectedTypes.length > 0) {
 //         params.append('property_type', selectedTypes.join(','));
 //       }
-      
+
 //       // Add transaction type filter if exists
 //       if (selectedTransactionTypes.length > 0) {
 //         params.append('looking_to', selectedTransactionTypes.join(','));
 //       }
-      
+
 //       // Add city filter if exists
 //       if (selectedCities.length > 0) {
 //         params.append('city', selectedCities.join(','));
 //       }
-      
+
 //       // Add role filter if exists
 //       if (selectedRoles.length > 0) {
 //         params.append('user_role', selectedRoles.join(','));
 //       }
-      
+
 //       // Add sort parameter if selected
 //       if (selectedSortOptions.length > 0) {
 //         const sortValue = selectedSortOptions[0];
@@ -5495,23 +5495,23 @@
 //           params.append('ordering', '-price');
 //         }
 //       }
-      
+
 //       const queryString = params.toString();
 //       const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
-      
+
 //       const response = await fetch(url);
 //       if (!response.ok) {
 //         throw new Error(`HTTP error! status: ${response.status}`);
 //       }
-      
+
 //       const data = await response.json();
 //       const propertiesArray = data.results || [];
-      
+
 //       // Filter out properties where user_id matches the current user's id
 //       const filteredProperties = propertiesArray.filter(
 //         (property) => property.user_id?.toString() !== currentUserId
 //       );
-      
+
 //       setProperties(filteredProperties);
 //       setFilteredProperties(filteredProperties);
 //       setTotalCount(data.count || 0);
@@ -5538,16 +5538,16 @@
 //   // Apply price range filter client-side
 //   useEffect(() => {
 //     if (properties.length === 0) return;
-    
+
 //     let result = [...properties];
-    
+
 //     // Apply price range filter (client-side only)
 //     if (selectedPriceRanges.length > 0) {
 //       result = result.filter(property => {
 //         const price = parseFloat(property.looking_to === "sell" 
 //           ? (property.total_property_value || property.property_value)
 //           : property.rent_amount || 0);
-        
+
 //         return selectedPriceRanges.some(rangeLabel => {
 //           switch (rangeLabel) {
 //             case "Under ₹10L":
@@ -5568,7 +5568,7 @@
 //         });
 //       });
 //     }
-    
+
 //     setFilteredProperties(result);
 //   }, [properties, selectedPriceRanges]);
 
@@ -5635,7 +5635,7 @@
 //   // Render pagination
 //   const renderPagination = () => {
 //     if (totalPages <= 1) return null;
-    
+
 //     return (
 //       <nav aria-label="Properties pagination" className="mt-5">
 //         <ul className="pagination justify-content-center flex-wrap">
@@ -5651,7 +5651,7 @@
 //               <span className="visually-hidden">Previous</span>
 //             </button>
 //           </li>
-          
+
 //           {/* First Page */}
 //           {currentPage > 2 && (
 //             <li className="page-item">
@@ -5664,14 +5664,14 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Ellipsis if needed */}
 //           {currentPage > 3 && (
 //             <li className="page-item disabled">
 //               <span className="page-link">...</span>
 //             </li>
 //           )}
-          
+
 //           {/* Page Before Current */}
 //           {currentPage > 1 && (
 //             <li className="page-item">
@@ -5684,7 +5684,7 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Current Page */}
 //           <li className="page-item active" aria-current="page">
 //             <button className="page-link">
@@ -5692,7 +5692,7 @@
 //               <span className="visually-hidden">(current)</span>
 //             </button>
 //           </li>
-          
+
 //           {/* Page After Current */}
 //           {currentPage < totalPages && (
 //             <li className="page-item">
@@ -5705,14 +5705,14 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Ellipsis if needed */}
 //           {currentPage < totalPages - 2 && (
 //             <li className="page-item disabled">
 //               <span className="page-link">...</span>
 //             </li>
 //           )}
-          
+
 //           {/* Last Page */}
 //           {currentPage < totalPages - 1 && (
 //             <li className="page-item">
@@ -5725,7 +5725,7 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Next Button */}
 //           <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
 //             <button 
@@ -5739,7 +5739,7 @@
 //             </button>
 //           </li>
 //         </ul>
-        
+
 //         {/* Page Info */}
 //         <div className="text-center text-muted small mt-2">
 //           Page {currentPage} of {totalPages} • {filteredProperties.length} properties on this page • {totalCount} total properties
@@ -5784,7 +5784,7 @@
 //   return (
 //     <div className="min-vh-100 d-flex flex-column">
 //       <WebsiteNavbar />
-      
+
 //       <main className="flex-grow-1 bg-light">
 //         <div className="container py-4">
 //           {/* Mobile Filter Modal */}
@@ -5865,7 +5865,7 @@
 
 //             <div className="col-lg-9 col-12">
 //               {renderSubscriptionBanner()}
-              
+
 //               {(loading && filteredProperties.length === 0) ? (
 //                 <div className="text-center py-5">
 //                   <div className="spinner-border text-primary" role="status">
@@ -5943,22 +5943,22 @@
 // const getImageUrl = (images) => {
 //   if (images && images.length > 0) {
 //     const imagePath = images[0].image;
-    
+
 //     if (imagePath.startsWith('/media/')) {
 //       return `${baseurl}${imagePath}`;
 //     }
-    
+
 //     if (imagePath.startsWith('media/')) {
 //       return `${baseurl}/${imagePath}`;
 //     }
-    
+
 //     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
 //       return imagePath;
 //     }
-    
+
 //     return `${baseurl}/${imagePath}`;
 //   }
-  
+
 //   return "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
 // };
 
@@ -6087,11 +6087,11 @@
 //     if (result.isConfirmed) {
 //       try {
 //         setIsDeleting(true);
-        
+
 //         if (onDeleteProperty) {
 //           await onDeleteProperty(property.property_id);
 //         }
-        
+
 //         Swal.fire(
 //           'Deleted!',
 //           'The property has been deleted successfully.',
@@ -6117,7 +6117,7 @@
 
 //   const distributionCommission = getDistributionCommission();
 //   const imageUrl = getImageUrl(property.images);
-  
+
 //   const formattedPrice = property.looking_to === "sell" 
 //     ? formatPrice(property.total_property_value || property.property_value)
 //     : `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`;
@@ -6130,12 +6130,12 @@
 //   const handleVerificationStatusChange = async (e) => {
 //     const newStatus = e.target.value;
 //     const previousStatus = verificationStatus;
-    
+
 //     setVerificationStatus(newStatus);
-    
+
 //     try {
 //       setIsUpdating(true);
-      
+
 //       const response = await fetch(`${baseurl}/properties/${property.property_id}/`, {
 //         method: 'PUT',
 //         headers: {
@@ -6145,19 +6145,19 @@
 //           verification_status: newStatus
 //         })
 //       });
-      
+
 //       if (!response.ok) {
 //         throw new Error(`Failed to update verification status: ${response.status}`);
 //       }
-      
+
 //       const result = await response.json();
-      
+
 //       if (onVerificationStatusUpdate) {
 //         onVerificationStatusUpdate(property.property_id, newStatus);
 //       }
-      
+
 //       console.log('Verification status updated successfully:', result);
-      
+
 //     } catch (error) {
 //       console.error('Error updating verification status:', error);
 //       setVerificationStatus(previousStatus);
@@ -6223,7 +6223,7 @@
 //             </span>
 //           )}
 //         </div>
-        
+
 //         <div className="d-flex align-items-center gap-2 mt-auto">
 //           <span className="h5 fw-bold text-dark">
 //             {formattedPrice}
@@ -6246,14 +6246,14 @@
 //             <Info size={16} />
 //             PAYOUT
 //           </button>
-          
+
 //           <CommissionTooltip 
 //             show={showCommissionTooltip}
 //             commissions={commissionData}
 //             distributionCommission={distributionCommission}
 //           />
 //         </div>
-        
+
 //         {/* Button Container - Always shows VIEW DETAILS, plus BUY NOW if no active subscription */}
 //      {/* Button Container - Now stacked vertically */}
 // <div className="d-flex flex-column gap-2 mt-2">
@@ -6268,7 +6268,7 @@
 //   >
 //     VIEW DETAILS
 //   </button>
-  
+
 //   {!hasActiveSubscription && (
 //     <button 
 //       onClick={handleBuyNow}
@@ -6321,7 +6321,7 @@
 //           )}
 //         </div>
 //       </button>
-      
+
 //       {isOpen && (
 //         <div className="px-3 pb-3">
 //           {children}
@@ -6436,11 +6436,11 @@
 //       const newSelection = prev.includes(categoryName)
 //         ? prev.filter((c) => c !== categoryName)
 //         : [...prev, categoryName];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedCategories, onFilterChange]);
@@ -6450,11 +6450,11 @@
 //       const newSelection = prev.includes(typeName)
 //         ? prev.filter((b) => b !== typeName)
 //         : [...prev, typeName];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedTypes, onFilterChange]);
@@ -6464,11 +6464,11 @@
 //       const newSelection = prev.includes(range)
 //         ? prev.filter((r) => r !== range)
 //         : [...prev, range];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedPriceRanges, onFilterChange]);
@@ -6478,11 +6478,11 @@
 //       const newSelection = prev.includes(name)
 //         ? prev.filter((c) => c !== name)
 //         : [...prev, name];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedCities, onFilterChange]);
@@ -6492,11 +6492,11 @@
 //       const newSelection = prev.includes(type)
 //         ? prev.filter((t) => t !== type)
 //         : [...prev, type];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedTransactionTypes, onFilterChange]);
@@ -6506,11 +6506,11 @@
 //       const newSelection = prev.includes(roleId)
 //         ? prev.filter((r) => r !== roleId)
 //         : [...prev, roleId];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedRoles, onFilterChange]);
@@ -6525,7 +6525,7 @@
 //         return [sortValue];
 //       }
 //     });
-    
+
 //     if (onFilterChange) {
 //       setTimeout(() => onFilterChange(), 0);
 //     }
@@ -6543,7 +6543,7 @@
 //     setTypeSearch("");
 //     setCitySearch("");
 //     setRoleSearch("");
-    
+
 //     if (onFilterChange) {
 //       setTimeout(() => onFilterChange(), 0);
 //     }
@@ -7026,7 +7026,7 @@
 //       <div className="list-group">
 //         {properties.map((property) => {
 //           const imageUrl = getImageUrl(property.images);
-          
+
 //           const getPriceInfo = () => {
 //             if (property.looking_to === "sell") {
 //               const price = property.total_property_value || property.property_value;
@@ -7066,15 +7066,15 @@
 //             const handleMouseLeave = () => {
 //               setShowCommissionTooltip(false);
 //             };
-            
+
 //             const handleViewDetails = () => {
 //               navigate(`/agent-properties-details/${property.property_id}`);
 //             };
-            
+
 //             const handleBuyNow = () => {
 //               navigate('/agent-subscription-plan');
 //             };
-            
+
 //             return (
 //               <div className="list-group-item mb-3">
 //                 <div className="row g-3">
@@ -7123,7 +7123,7 @@
 //                         </span>
 //                       )}
 //                     </div>
-                    
+
 //                     <div className="d-flex align-items-center gap-2">
 //                       <span className="h5 fw-bold text-dark">
 //                         {priceInfo.price}
@@ -7147,14 +7147,14 @@
 //                         <Info size={14} />
 //                         PAYOUT
 //                       </button>
-                      
+
 //                       <CommissionTooltip 
 //                         show={showCommissionTooltip}
 //                         commissions={commissionData}
 //                         distributionCommission={distributionCommission}
 //                       />
 //                     </div>
-                    
+
 //                     {/* Button Container for List View */}
 //                   {/* Button Container for List View - Now stacked vertically */}
 // <div className="d-flex flex-column gap-2">
@@ -7169,7 +7169,7 @@
 //   >
 //     VIEW DETAILS
 //   </button>
-  
+
 //   {!hasActiveSubscription && (
 //     <button 
 //       onClick={handleBuyNow}
@@ -7288,11 +7288,11 @@
 //     try {
 //       setLoadingSubscription(true);
 //       const res = await fetch(`${baseurl}/user-subscriptions/user-id/${currentUserId}/`);
-      
+
 //       if (res.ok) {
 //         const response = await res.json();
 //         console.log("Subscription API Response:", response);
-        
+
 //         // Check if user has any active subscription based on latest_status
 //         if (response && response.latest_status === "paid") {
 //           setHasActiveSubscription(true);
@@ -7372,21 +7372,21 @@
 //           'Content-Type': 'application/json',
 //         }
 //       });
-      
+
 //       if (!response.ok) {
 //         throw new Error(`Failed to delete property: ${response.status}`);
 //       }
-      
+
 //       setProperties(prevProperties => 
 //         prevProperties.filter(property => property.property_id !== propertyId)
 //       );
 //       setFilteredProperties(prevProperties => 
 //         prevProperties.filter(property => property.property_id !== propertyId)
 //       );
-      
+
 //       // Update total count
 //       setTotalCount(prev => prev - 1);
-      
+
 //       return true;
 //     } catch (error) {
 //       console.error('Error deleting property:', error);
@@ -7434,46 +7434,46 @@
 //   const fetchApprovedProperties = useCallback(async () => {
 //     try {
 //       setLoading(true);
-      
+
 //       const params = new URLSearchParams();
-      
+
 //       // Add verification status filter
 //       params.append('verification_status', 'verified');
-      
+
 //       // Add pagination parameters
 //       params.append('page', currentPage);
 //       params.append('page_size', pageSize);
-      
+
 //       // Add search term if exists
 //       if (searchTerm.trim()) {
 //         params.append('search', searchTerm.trim());
 //       }
-      
+
 //       // Add category filter if exists
 //       if (selectedCategories.length > 0) {
 //         params.append('category', selectedCategories.join(','));
 //       }
-      
+
 //       // Add type filter if exists
 //       if (selectedTypes.length > 0) {
 //         params.append('property_type', selectedTypes.join(','));
 //       }
-      
+
 //       // Add transaction type filter if exists
 //       if (selectedTransactionTypes.length > 0) {
 //         params.append('looking_to', selectedTransactionTypes.join(','));
 //       }
-      
+
 //       // Add city filter if exists
 //       if (selectedCities.length > 0) {
 //         params.append('city', selectedCities.join(','));
 //       }
-      
+
 //       // Add role filter if exists
 //       if (selectedRoles.length > 0) {
 //         params.append('user_role', selectedRoles.join(','));
 //       }
-      
+
 //       // Add sort parameter if selected
 //       if (selectedSortOptions.length > 0) {
 //         const sortValue = selectedSortOptions[0];
@@ -7483,23 +7483,23 @@
 //           params.append('ordering', '-price');
 //         }
 //       }
-      
+
 //       const queryString = params.toString();
 //       const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
-      
+
 //       const response = await fetch(url);
 //       if (!response.ok) {
 //         throw new Error(`HTTP error! status: ${response.status}`);
 //       }
-      
+
 //       const data = await response.json();
 //       const propertiesArray = data.results || [];
-      
+
 //       // Filter out properties where user_id matches the current user's id
 //       const filteredProperties = propertiesArray.filter(
 //         (property) => property.user_id?.toString() !== currentUserId
 //       );
-      
+
 //       setProperties(filteredProperties);
 //       setFilteredProperties(filteredProperties);
 //       setTotalCount(data.count || 0);
@@ -7526,16 +7526,16 @@
 //   // Apply price range filter client-side
 //   useEffect(() => {
 //     if (properties.length === 0) return;
-    
+
 //     let result = [...properties];
-    
+
 //     // Apply price range filter (client-side only)
 //     if (selectedPriceRanges.length > 0) {
 //       result = result.filter(property => {
 //         const price = parseFloat(property.looking_to === "sell" 
 //           ? (property.total_property_value || property.property_value)
 //           : property.rent_amount || 0);
-        
+
 //         return selectedPriceRanges.some(rangeLabel => {
 //           switch (rangeLabel) {
 //             case "Under ₹10L":
@@ -7556,7 +7556,7 @@
 //         });
 //       });
 //     }
-    
+
 //     setFilteredProperties(result);
 //   }, [properties, selectedPriceRanges]);
 
@@ -7623,7 +7623,7 @@
 //   // Render pagination
 //   const renderPagination = () => {
 //     if (totalPages <= 1) return null;
-    
+
 //     return (
 //       <nav aria-label="Properties pagination" className="mt-5">
 //         <ul className="pagination justify-content-center flex-wrap">
@@ -7639,7 +7639,7 @@
 //               <span className="visually-hidden">Previous</span>
 //             </button>
 //           </li>
-          
+
 //           {/* First Page */}
 //           {currentPage > 2 && (
 //             <li className="page-item">
@@ -7652,14 +7652,14 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Ellipsis if needed */}
 //           {currentPage > 3 && (
 //             <li className="page-item disabled">
 //               <span className="page-link">...</span>
 //             </li>
 //           )}
-          
+
 //           {/* Page Before Current */}
 //           {currentPage > 1 && (
 //             <li className="page-item">
@@ -7672,7 +7672,7 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Current Page */}
 //           <li className="page-item active" aria-current="page">
 //             <button className="page-link">
@@ -7680,7 +7680,7 @@
 //               <span className="visually-hidden">(current)</span>
 //             </button>
 //           </li>
-          
+
 //           {/* Page After Current */}
 //           {currentPage < totalPages && (
 //             <li className="page-item">
@@ -7693,14 +7693,14 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Ellipsis if needed */}
 //           {currentPage < totalPages - 2 && (
 //             <li className="page-item disabled">
 //               <span className="page-link">...</span>
 //             </li>
 //           )}
-          
+
 //           {/* Last Page */}
 //           {currentPage < totalPages - 1 && (
 //             <li className="page-item">
@@ -7713,7 +7713,7 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Next Button */}
 //           <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
 //             <button 
@@ -7727,7 +7727,7 @@
 //             </button>
 //           </li>
 //         </ul>
-        
+
 //         {/* Page Info */}
 //         <div className="text-center text-muted small mt-2">
 //           Page {currentPage} of {totalPages} • {filteredProperties.length} properties on this page • {totalCount} total properties
@@ -7772,7 +7772,7 @@
 //   return (
 //     <div className="min-vh-100 d-flex flex-column">
 //       <WebsiteNavbar />
-      
+
 //       <main className="flex-grow-1 bg-light">
 //         <div className="container py-4">
 //           {/* Mobile Filter Modal */}
@@ -7853,7 +7853,7 @@
 
 //             <div className="col-lg-9 col-12">
 //               {renderSubscriptionBanner()}
-              
+
 //               {(loading && filteredProperties.length === 0) ? (
 //                 <div className="text-center py-5">
 //                   <div className="spinner-border text-primary" role="status">
@@ -7938,22 +7938,22 @@
 // const getImageUrl = (images) => {
 //   if (images && images.length > 0) {
 //     const imagePath = images[0].image;
-    
+
 //     if (imagePath.startsWith('/media/')) {
 //       return `${baseurl}${imagePath}`;
 //     }
-    
+
 //     if (imagePath.startsWith('media/')) {
 //       return `${baseurl}/${imagePath}`;
 //     }
-    
+
 //     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
 //       return imagePath;
 //     }
-    
+
 //     return `${baseurl}/${imagePath}`;
 //   }
-  
+
 //   return "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
 // };
 
@@ -8048,14 +8048,14 @@
 
 //     try {
 //       hasConfirmedRef.current = true;
-      
+
 //       console.log('Confirming payment for order:', orderId);
-      
+
 //       // Make sure we have the property and user ID
 //       if (!property?.property_id || !currentUserId) {
 //         throw new Error('Missing property or user information');
 //       }
-      
+
 //       // Second API call - Confirm Payment
 //       const confirmResponse = await fetch(`${baseurl}/property/confirm-payment/`, {
 //         method: 'POST',
@@ -8086,16 +8086,16 @@
 //       if (!confirmResponse.ok) {
 //         throw new Error(confirmData.message || `Payment confirmation failed: ${confirmResponse.status}`);
 //       }
-      
+
 //       console.log('Confirm Payment Data:', confirmData);
-      
+
 //       // Check if the payment status was updated successfully
 //       if (confirmData.status === 'success' || confirmData.payment_status === 'success') {
 //         setPaymentStep('confirmation');
-        
+
 //         // Clear pending payment from sessionStorage
 //         sessionStorage.removeItem('pendingPayment');
-        
+
 //         // Show success message
 //         Swal.fire({
 //           title: 'Payment Successful!',
@@ -8128,7 +8128,7 @@
 //     } catch (error) {
 //       console.error('Payment confirmation error:', error);
 //       hasConfirmedRef.current = false;
-      
+
 //       Swal.fire({
 //         title: 'Payment Confirmation Failed',
 //         text: error.message || 'Failed to confirm payment. Please contact support if the amount was deducted.',
@@ -8180,31 +8180,31 @@
 //               aria-label="Close"
 //             ></button>
 //           </div>
-          
+
 //           <div className="modal-body">
 //             {paymentStep === 'form' && (
 //               <div className="payment-form">
 //                 <h6 className="fw-bold mb-3">{property.property_title}</h6>
-                
+
 //                 <div className="mb-4">
 //                   <div className="bg-light p-3 rounded">
 //                     <div className="d-flex justify-content-between mb-2">
 //                       <span className="text-muted">Total Property Value:</span>
 //                       <span className="fw-bold">{formatPrice(totalValue)}</span>
 //                     </div>
-                    
+
 //                     <div className="d-flex justify-content-between mb-2">
 //                       <span className="text-muted">Booking Amount:</span>
 //                       <span className="fw-bold text-primary">{formatPrice(bookingAmount)}</span>
 //                     </div>
-                    
+
 //                     <div className="d-flex justify-content-between pt-2 border-top">
 //                       <span className="text-muted">Remaining Amount:</span>
 //                       <span className="fw-bold">{formatPrice(remainingAmount)}</span>
 //                     </div>
 //                   </div>
 //                 </div>
-                
+
 //                 <div className="mb-3">
 //                   <div className="row g-2">
 //                     <div className="col-6">
@@ -8221,14 +8221,14 @@
 //                     </div>
 //                   </div>
 //                 </div>
-                
+
 //                 <div className="alert alert-info small">
 //                   <i className="bi bi-info-circle me-2"></i>
 //                   You will be redirected to the payment gateway to complete your booking.
 //                 </div>
 //               </div>
 //             )}
-            
+
 //             {paymentStep === 'processing' && (
 //               <div className="text-center py-4">
 //                 <div className="spinner-border text-primary mb-3" role="status" style={{ width: '3rem', height: '3rem' }}>
@@ -8238,7 +8238,7 @@
 //                 <p className="text-muted small">Please wait while we redirect you to the payment gateway.</p>
 //               </div>
 //             )}
-            
+
 //             {paymentStep === 'confirmation' && (
 //               <div className="text-center py-4">
 //                 <div className="text-success mb-3">
@@ -8259,7 +8259,7 @@
 //               </div>
 //             )}
 //           </div>
-          
+
 //           <div className="modal-footer">
 //             {paymentStep === 'form' && (
 //               <>
@@ -8292,7 +8292,7 @@
 //                 </button>
 //               </>
 //             )}
-            
+
 //             {paymentStep === 'processing' && (
 //               <button 
 //                 type="button" 
@@ -8303,7 +8303,7 @@
 //                 Processing...
 //               </button>
 //             )}
-            
+
 //             {paymentStep === 'confirmation' && (
 //               <button 
 //                 type="button" 
@@ -8448,11 +8448,11 @@
 //     if (result.isConfirmed) {
 //       try {
 //         setIsDeleting(true);
-        
+
 //         if (onDeleteProperty) {
 //           await onDeleteProperty(property.property_id);
 //         }
-        
+
 //         Swal.fire(
 //           'Deleted!',
 //           'The property has been deleted successfully.',
@@ -8478,7 +8478,7 @@
 
 //   const distributionCommission = getDistributionCommission();
 //   const imageUrl = getImageUrl(property.images);
-  
+
 //   const formattedPrice = property.looking_to === "sell" 
 //     ? formatPrice(property.total_property_value || property.property_value)
 //     : `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`;
@@ -8491,12 +8491,12 @@
 //   const handleVerificationStatusChange = async (e) => {
 //     const newStatus = e.target.value;
 //     const previousStatus = verificationStatus;
-    
+
 //     setVerificationStatus(newStatus);
-    
+
 //     try {
 //       setIsUpdating(true);
-      
+
 //       const response = await fetch(`${baseurl}/properties/${property.property_id}/`, {
 //         method: 'PUT',
 //         headers: {
@@ -8506,19 +8506,19 @@
 //           verification_status: newStatus
 //         })
 //       });
-      
+
 //       if (!response.ok) {
 //         throw new Error(`Failed to update verification status: ${response.status}`);
 //       }
-      
+
 //       const result = await response.json();
-      
+
 //       if (onVerificationStatusUpdate) {
 //         onVerificationStatusUpdate(property.property_id, newStatus);
 //       }
-      
+
 //       console.log('Verification status updated successfully:', result);
-      
+
 //     } catch (error) {
 //       console.error('Error updating verification status:', error);
 //       setVerificationStatus(previousStatus);
@@ -8584,7 +8584,7 @@
 //             </span>
 //           )}
 //         </div>
-        
+
 //         <div className="d-flex align-items-center gap-2 mt-auto">
 //           <span className="h5 fw-bold text-dark">
 //             {formattedPrice}
@@ -8607,14 +8607,14 @@
 //             <Info size={16} />
 //             PAYOUT
 //           </button>
-          
+
 //           <CommissionTooltip 
 //             show={showCommissionTooltip}
 //             commissions={commissionData}
 //             distributionCommission={distributionCommission}
 //           />
 //         </div>
-        
+
 //         {/* Button Container - Now stacked vertically */}
 // {/* Button Container - Now stacked vertically */}
 // <div className="d-flex flex-column gap-2 mt-2">
@@ -8629,7 +8629,7 @@
 //   >
 //     VIEW DETAILS
 //   </button>
-  
+
 //   {/* BUY NOW button - Always show, but with different behavior based on subscription */}
 //   <button 
 //     onClick={() => {
@@ -8714,7 +8714,7 @@
 //           )}
 //         </div>
 //       </button>
-      
+
 //       {isOpen && (
 //         <div className="px-3 pb-3">
 //           {children}
@@ -8829,11 +8829,11 @@
 //       const newSelection = prev.includes(categoryName)
 //         ? prev.filter((c) => c !== categoryName)
 //         : [...prev, categoryName];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedCategories, onFilterChange]);
@@ -8843,11 +8843,11 @@
 //       const newSelection = prev.includes(typeName)
 //         ? prev.filter((b) => b !== typeName)
 //         : [...prev, typeName];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedTypes, onFilterChange]);
@@ -8857,11 +8857,11 @@
 //       const newSelection = prev.includes(range)
 //         ? prev.filter((r) => r !== range)
 //         : [...prev, range];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedPriceRanges, onFilterChange]);
@@ -8871,11 +8871,11 @@
 //       const newSelection = prev.includes(name)
 //         ? prev.filter((c) => c !== name)
 //         : [...prev, name];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedCities, onFilterChange]);
@@ -8885,11 +8885,11 @@
 //       const newSelection = prev.includes(type)
 //         ? prev.filter((t) => t !== type)
 //         : [...prev, type];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedTransactionTypes, onFilterChange]);
@@ -8899,11 +8899,11 @@
 //       const newSelection = prev.includes(roleId)
 //         ? prev.filter((r) => r !== roleId)
 //         : [...prev, roleId];
-      
+
 //       if (onFilterChange) {
 //         setTimeout(() => onFilterChange(), 0);
 //       }
-      
+
 //       return newSelection;
 //     });
 //   }, [setSelectedRoles, onFilterChange]);
@@ -8918,7 +8918,7 @@
 //         return [sortValue];
 //       }
 //     });
-    
+
 //     if (onFilterChange) {
 //       setTimeout(() => onFilterChange(), 0);
 //     }
@@ -8936,7 +8936,7 @@
 //     setTypeSearch("");
 //     setCitySearch("");
 //     setRoleSearch("");
-    
+
 //     if (onFilterChange) {
 //       setTimeout(() => onFilterChange(), 0);
 //     }
@@ -9537,7 +9537,7 @@
 //       <div className="list-group">
 //         {properties.map((property) => {
 //           const imageUrl = getImageUrl(property.images);
-          
+
 //           const getPriceInfo = () => {
 //             if (property.looking_to === "sell") {
 //               const price = property.total_property_value || property.property_value;
@@ -9577,17 +9577,17 @@
 //             const handleMouseLeave = () => {
 //               setShowCommissionTooltip(false);
 //             };
-            
+
 //             const handleViewDetails = () => {
 //               navigate(`/agent-properties-details/${property.property_id}`);
 //             };
-            
+
 //             const handleBuyNow = () => {
 //               if (onBuyNowClick) {
 //                 onBuyNowClick(property);
 //               }
 //             };
-            
+
 //             return (
 //               <div className="list-group-item mb-3">
 //                 <div className="row g-3">
@@ -9636,7 +9636,7 @@
 //                         </span>
 //                       )}
 //                     </div>
-                    
+
 //                     <div className="d-flex align-items-center gap-2">
 //                       <span className="h5 fw-bold text-dark">
 //                         {priceInfo.price}
@@ -9660,14 +9660,14 @@
 //                         <Info size={14} />
 //                         PAYOUT
 //                       </button>
-                      
+
 //                       <CommissionTooltip 
 //                         show={showCommissionTooltip}
 //                         commissions={commissionData}
 //                         distributionCommission={distributionCommission}
 //                       />
 //                     </div>
-                    
+
 //                     {/* Button Container for List View - Now stacked vertically */}
 //                  {/* Button Container for List View - Now stacked vertically */}
 // <div className="d-flex flex-column gap-2">
@@ -9682,7 +9682,7 @@
 //   >
 //     VIEW DETAILS
 //   </button>
-  
+
 //   {/* BUY NOW button for list view */}
 //   <button 
 //     onClick={() => {
@@ -9745,7 +9745,7 @@
 //     <div className={getGridClasses()}>
 //       {properties.map((property) => (
 //         <div key={property.property_id} className="col mb-4">
-          
+
 //           <PropertyCard 
 //             property={property} 
 //             onVerificationStatusUpdate={onVerificationStatusUpdate}
@@ -9866,11 +9866,11 @@
 //     try {
 //       setLoadingSubscription(true);
 //       const res = await fetch(`${baseurl}/user-subscriptions/user-id/${currentUserId}/`);
-      
+
 //       if (res.ok) {
 //         const response = await res.json();
 //         console.log("Subscription API Response:", response);
-        
+
 //         // Check if user has any active subscription based on latest_status
 //         if (response && response.latest_status === "paid") {
 //           setHasActiveSubscription(true);
@@ -9950,21 +9950,21 @@
 //           'Content-Type': 'application/json',
 //         }
 //       });
-      
+
 //       if (!response.ok) {
 //         throw new Error(`Failed to delete property: ${response.status}`);
 //       }
-      
+
 //       setProperties(prevProperties => 
 //         prevProperties.filter(property => property.property_id !== propertyId)
 //       );
 //       setFilteredProperties(prevProperties => 
 //         prevProperties.filter(property => property.property_id !== propertyId)
 //       );
-      
+
 //       // Update total count
 //       setTotalCount(prev => prev - 1);
-      
+
 //       return true;
 //     } catch (error) {
 //       console.error('Error deleting property:', error);
@@ -10012,50 +10012,50 @@
 //   const fetchApprovedProperties = useCallback(async () => {
 //     try {
 //       setLoading(true);
-      
+
 //       const params = new URLSearchParams();
-      
+
 //       // Add verification status filter
 //       params.append('verification_status', 'verified');
 
 //        if (statusFilter) {
 //         params.append("status", statusFilter);
 //       }
-      
+
 //       // Add pagination parameters
 //       params.append('page', currentPage);
 //       params.append('page_size', pageSize);
-      
+
 //       // Add search term if exists
 //       if (searchTerm.trim()) {
 //         params.append('search', searchTerm.trim());
 //       }
-      
+
 //       // Add category filter if exists
 //       if (selectedCategories.length > 0) {
 //         params.append('category', selectedCategories.join(','));
 //       }
-      
+
 //       // Add type filter if exists
 //       if (selectedTypes.length > 0) {
 //         params.append('property_type', selectedTypes.join(','));
 //       }
-      
+
 //       // Add transaction type filter if exists
 //       if (selectedTransactionTypes.length > 0) {
 //         params.append('looking_to', selectedTransactionTypes.join(','));
 //       }
-      
+
 //       // Add city filter if exists
 //       if (selectedCities.length > 0) {
 //         params.append('city', selectedCities.join(','));
 //       }
-      
+
 //       // Add role filter if exists
 //       if (selectedRoles.length > 0) {
 //         params.append('user_role', selectedRoles.join(','));
 //       }
-      
+
 //       // Add sort parameter if selected
 //       if (selectedSortOptions.length > 0) {
 //         const sortValue = selectedSortOptions[0];
@@ -10065,23 +10065,23 @@
 //           params.append('ordering', '-price');
 //         }
 //       }
-      
+
 //       const queryString = params.toString();
 //       const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
-      
+
 //       const response = await fetch(url);
 //       if (!response.ok) {
 //         throw new Error(`HTTP error! status: ${response.status}`);
 //       }
-      
+
 //       const data = await response.json();
 //       const propertiesArray = data.results || [];
-      
+
 //       // Filter out properties where user_id matches the current user's id
 //       const filteredProperties = propertiesArray.filter(
 //         (property) => property.user_id?.toString() !== currentUserId
 //       );
-      
+
 //       setProperties(filteredProperties);
 //       setFilteredProperties(filteredProperties);
 //       setTotalCount(data.count || 0);
@@ -10187,16 +10187,16 @@
 //   // Apply price range filter client-side
 //   useEffect(() => {
 //     if (properties.length === 0) return;
-    
+
 //     let result = [...properties];
-    
+
 //     // Apply price range filter (client-side only)
 //     if (selectedPriceRanges.length > 0) {
 //       result = result.filter(property => {
 //         const price = parseFloat(property.looking_to === "sell" 
 //           ? (property.total_property_value || property.property_value)
 //           : property.rent_amount || 0);
-        
+
 //         return selectedPriceRanges.some(rangeLabel => {
 //           switch (rangeLabel) {
 //             case "Under ₹10L":
@@ -10217,7 +10217,7 @@
 //         });
 //       });
 //     }
-    
+
 //     setFilteredProperties(result);
 //   }, [properties, selectedPriceRanges]);
 
@@ -10284,7 +10284,7 @@
 //   // Render pagination
 //   const renderPagination = () => {
 //     if (totalPages <= 1) return null;
-    
+
 //     return (
 //       <nav aria-label="Properties pagination" className="mt-5">
 //         <ul className="pagination justify-content-center flex-wrap">
@@ -10300,7 +10300,7 @@
 //               <span className="visually-hidden">Previous</span>
 //             </button>
 //           </li>
-          
+
 //           {/* First Page */}
 //           {currentPage > 2 && (
 //             <li className="page-item">
@@ -10313,14 +10313,14 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Ellipsis if needed */}
 //           {currentPage > 3 && (
 //             <li className="page-item disabled">
 //               <span className="page-link">...</span>
 //             </li>
 //           )}
-          
+
 //           {/* Page Before Current */}
 //           {currentPage > 1 && (
 //             <li className="page-item">
@@ -10333,7 +10333,7 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Current Page */}
 //           <li className="page-item active" aria-current="page">
 //             <button className="page-link">
@@ -10341,7 +10341,7 @@
 //               <span className="visually-hidden">(current)</span>
 //             </button>
 //           </li>
-          
+
 //           {/* Page After Current */}
 //           {currentPage < totalPages && (
 //             <li className="page-item">
@@ -10354,14 +10354,14 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Ellipsis if needed */}
 //           {currentPage < totalPages - 2 && (
 //             <li className="page-item disabled">
 //               <span className="page-link">...</span>
 //             </li>
 //           )}
-          
+
 //           {/* Last Page */}
 //           {currentPage < totalPages - 1 && (
 //             <li className="page-item">
@@ -10374,7 +10374,7 @@
 //               </button>
 //             </li>
 //           )}
-          
+
 //           {/* Next Button */}
 //           <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
 //             <button 
@@ -10388,7 +10388,7 @@
 //             </button>
 //           </li>
 //         </ul>
-        
+
 //         {/* Page Info */}
 //         <div className="text-center text-muted small mt-2">
 //           Page {currentPage} of {totalPages} • {filteredProperties.length} properties on this page • {totalCount} total properties
@@ -10433,10 +10433,10 @@
 //   return (
 //     <div className="min-vh-100 d-flex flex-column">
 //       <WebsiteNavbar />
-      
+
 //       <main className="flex-grow-1 bg-light">
 
-        
+
 //   {statusFilter && (
 //     <div className="alert alert-info d-flex align-items-center justify-content-between mb-3 py-2">
 //       <span>
@@ -10537,7 +10537,7 @@
 
 //             <div className="col-lg-9 col-12">
 //               {renderSubscriptionBanner()}
-              
+
 //               {(loading && filteredProperties.length === 0) ? (
 //                 <div className="text-center py-5">
 //                   <div className="spinner-border text-primary" role="status">
@@ -10579,14 +10579,14 @@
 
 
 
-//==============================================
-// below code removed subscription alert 
+//============================================================================
+// below code removed subscription alert and added razorpay integration 
 
 
 
 
 
-import React, { useState, useEffect, useCallback, useMemo, useRef  } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import {
   ChevronUp,
   ChevronDown,
@@ -10609,7 +10609,7 @@ import WebsiteNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import {  useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 // ============= Utility Functions =============
 const formatPrice = (price) => {
   const priceNum = parseFloat(price);
@@ -10624,22 +10624,22 @@ const formatPrice = (price) => {
 const getImageUrl = (images) => {
   if (images && images.length > 0) {
     const imagePath = images[0].image;
-    
+
     if (imagePath.startsWith('/media/')) {
       return `${baseurl}${imagePath}`;
     }
-    
+
     if (imagePath.startsWith('media/')) {
       return `${baseurl}/${imagePath}`;
     }
-    
+
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
       return imagePath;
     }
-    
+
     return `${baseurl}/${imagePath}`;
   }
-  
+
   return "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
 };
 
@@ -10723,7 +10723,7 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
         name: "Property Booking",
         description: `Booking Amount for ${property.property_title}`,
         order_id: data.razorpay_order_id,
-        handler: async function(response) {
+        handler: async function (response) {
           // Step 3: Verify payment with backend
           await handlePaymentVerification(response);
         },
@@ -10736,7 +10736,7 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
           color: "#273c75"
         },
         modal: {
-          ondismiss: function() {
+          ondismiss: function () {
             setIsProcessing(false);
             setPaymentStep('form');
             Swal.fire({
@@ -10797,10 +10797,10 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
 
       // Payment successful
       setPaymentStep('confirmation');
-      
+
       // Clear stored payment data
       localStorage.removeItem('property_payment');
-      
+
       // Show success message
       Swal.fire({
         title: 'Payment Successful!',
@@ -10829,7 +10829,7 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
 
     } catch (error) {
       console.error('Payment verification error:', error);
-      
+
       Swal.fire({
         title: 'Payment Verification Failed',
         text: error.message || 'Failed to verify payment. Please contact support if the amount was deducted.',
@@ -10852,15 +10852,15 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
   };
 
   return (
-    <div 
-      className="modal fade show d-block" 
+    <div
+      className="modal fade show d-block"
       style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1050 }}
-      tabIndex="-1" 
+      tabIndex="-1"
       role="dialog"
       onClick={handleClose}
     >
-      <div 
-        className="modal-dialog modal-dialog-centered" 
+      <div
+        className="modal-dialog modal-dialog-centered"
         role="document"
         onClick={(e) => e.stopPropagation()}
       >
@@ -10870,39 +10870,39 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
               <i className="bi bi-building me-2"></i>
               Book Property
             </h5>
-            <button 
-              type="button" 
-              className="btn-close btn-close-white" 
+            <button
+              type="button"
+              className="btn-close btn-close-white"
               onClick={handleClose}
               disabled={isProcessing}
               aria-label="Close"
             ></button>
           </div>
-          
+
           <div className="modal-body">
             {paymentStep === 'form' && (
               <div className="payment-form">
                 <h6 className="fw-bold mb-3">{property.property_title}</h6>
-                
+
                 <div className="mb-4">
                   <div className="bg-light p-3 rounded">
                     <div className="d-flex justify-content-between mb-2">
                       <span className="text-muted">Total Property Value:</span>
                       <span className="fw-bold">{formatPrice(totalValue)}</span>
                     </div>
-                    
+
                     <div className="d-flex justify-content-between mb-2">
                       <span className="text-muted">Booking Amount:</span>
                       <span className="fw-bold text-primary">{formatPrice(bookingAmount)}</span>
                     </div>
-                    
+
                     <div className="d-flex justify-content-between pt-2 border-top">
                       <span className="text-muted">Remaining Amount:</span>
                       <span className="fw-bold">{formatPrice(remainingAmount)}</span>
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="mb-3">
                   <div className="row g-2">
                     <div className="col-6">
@@ -10919,14 +10919,14 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="alert alert-info small">
                   <i className="bi bi-info-circle me-2"></i>
                   You will be redirected to Razorpay payment gateway to complete your booking.
                 </div>
               </div>
             )}
-            
+
             {paymentStep === 'processing' && (
               <div className="text-center py-4">
                 <div className="spinner-border text-primary mb-3" role="status" style={{ width: '3rem', height: '3rem' }}>
@@ -10936,13 +10936,13 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
                 <p className="text-muted small">Please wait while we redirect you to Razorpay.</p>
               </div>
             )}
-            
+
             {paymentStep === 'confirmation' && (
               <div className="text-center py-4">
                 <div className="text-success mb-3">
                   <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none"/>
-                    <path d="M8 12l3 3 6-6" stroke="currentColor" strokeLinecap="round"/>
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none" />
+                    <path d="M8 12l3 3 6-6" stroke="currentColor" strokeLinecap="round" />
                   </svg>
                 </div>
                 <h5 className="mb-2">Payment Successful!</h5>
@@ -10955,20 +10955,20 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
               </div>
             )}
           </div>
-          
+
           <div className="modal-footer">
             {paymentStep === 'form' && (
               <>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn btn-outline-secondary"
                   onClick={handleClose}
                   disabled={isProcessing}
                 >
                   Cancel
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn"
                   style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: 'white' }}
                   onClick={handleInitiatePayment}
@@ -10988,10 +10988,10 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
                 </button>
               </>
             )}
-            
+
             {paymentStep === 'processing' && (
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="btn btn-secondary w-100"
                 disabled={true}
               >
@@ -10999,10 +10999,10 @@ const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
                 Processing...
               </button>
             )}
-            
+
             {paymentStep === 'confirmation' && (
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="btn w-100"
                 style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: 'white' }}
                 onClick={handleClose}
@@ -11049,9 +11049,9 @@ const CommissionTooltip = ({ show, commissions, distributionCommission }) => {
 };
 
 // ============= Mobile Filter Modal Component =============
-const MobileFilterModal = ({ 
-  isOpen, 
-  onClose, 
+const MobileFilterModal = ({
+  isOpen,
+  onClose,
   children,
   activeFilterCount,
   onClearAll
@@ -11072,16 +11072,16 @@ const MobileFilterModal = ({
             </h5>
             <div className="d-flex align-items-center gap-2">
               {activeFilterCount > 0 && (
-                <button 
+                <button
                   onClick={onClearAll}
                   className="btn btn-sm btn-outline-danger me-2"
                 >
                   Clear All
                 </button>
               )}
-              <button 
-                type="button" 
-                className="btn-close" 
+              <button
+                type="button"
+                className="btn-close"
                 onClick={onClose}
                 aria-label="Close"
               ></button>
@@ -11091,8 +11091,8 @@ const MobileFilterModal = ({
             {children}
           </div>
           <div className="modal-footer sticky-bottom bg-white border-top">
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="btn btn-primary w-100"
               onClick={onClose}
             >
@@ -11143,11 +11143,11 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
     if (result.isConfirmed) {
       try {
         setIsDeleting(true);
-        
+
         if (onDeleteProperty) {
           await onDeleteProperty(property.property_id);
         }
-        
+
         Swal.fire(
           'Deleted!',
           'The property has been deleted successfully.',
@@ -11172,24 +11172,24 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
 
   const distributionCommission = getDistributionCommission();
   const imageUrl = getImageUrl(property.images);
-  
-  const formattedPrice = property.looking_to === "sell" 
+
+  const formattedPrice = property.looking_to === "sell"
     ? formatPrice(property.total_property_value || property.property_value)
     : `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`;
 
-  const depositText = property.deposit_amount 
+  const depositText = property.deposit_amount
     ? ` | Deposit: ₹${parseFloat(property.deposit_amount).toLocaleString()}`
     : '';
 
   const handleVerificationStatusChange = async (e) => {
     const newStatus = e.target.value;
     const previousStatus = verificationStatus;
-    
+
     setVerificationStatus(newStatus);
-    
+
     try {
       setIsUpdating(true);
-      
+
       const response = await fetch(`${baseurl}/properties/${property.property_id}/`, {
         method: 'PUT',
         headers: {
@@ -11199,19 +11199,19 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
           verification_status: newStatus
         })
       });
-      
+
       if (!response.ok) {
         throw new Error(`Failed to update verification status: ${response.status}`);
       }
-      
+
       const result = await response.json();
-      
+
       if (onVerificationStatusUpdate) {
         onVerificationStatusUpdate(property.property_id, newStatus);
       }
-      
+
       console.log('Verification status updated successfully:', result);
-      
+
     } catch (error) {
       console.error('Error updating verification status:', error);
       setVerificationStatus(previousStatus);
@@ -11250,7 +11250,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
         </div>
         {property.status && (
           <div className="position-absolute top-0 start-0 m-2">
-            <span className="badge bg-warning text-dark">
+            <span className={`badge ${property.status === 'booked' ? 'bg-danger' : 'bg-warning'} text-dark`}>
               {property.status.toUpperCase()}
             </span>
           </div>
@@ -11275,7 +11275,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
             </span>
           )}
         </div>
-        
+
         <div className="d-flex align-items-center gap-2 mt-auto">
           <span className="h5 fw-bold text-dark">
             {formattedPrice}
@@ -11286,7 +11286,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
         </div>
 
         <div className="position-relative mt-2">
-          <button 
+          <button
             className="btn w-100 fw-semibold py-2 d-flex align-items-center justify-content-center gap-2"
             style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
             onMouseEnter={handleMouseEnter}
@@ -11297,28 +11297,28 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
             <Info size={16} />
             PAYOUT
           </button>
-          
-          <CommissionTooltip 
+
+          <CommissionTooltip
             show={showCommissionTooltip}
             commissions={commissionData}
             distributionCommission={distributionCommission}
           />
         </div>
-        
+
         <div className="d-flex flex-column gap-2 mt-2">
-          <button 
+          <button
             onClick={handleViewDetails}
             className="btn w-100 fw-semibold py-2"
-            style={{ 
-              backgroundColor: '#273c75', 
-              borderColor: '#273c75', 
+            style={{
+              backgroundColor: '#273c75',
+              borderColor: '#273c75',
               color: '#fff'
             }}
           >
             VIEW DETAILS
           </button>
-          
-          <button 
+
+          {/* <button 
             onClick={handleBuyNow}
             className="btn w-100 fw-semibold py-2"
             style={{ 
@@ -11328,6 +11328,18 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
             }}
           >
             BOOK NOW
+          </button> */}
+          <button
+            onClick={handleBuyNow}
+            className={`btn w-100 fw-semibold py-2 ${property.status === 'booked' ? 'btn-secondary' : ''}`}
+            style={{
+              backgroundColor: property.status === 'booked' ? '#6c757d' : '#28a745',
+              borderColor: property.status === 'booked' ? '#6c757d' : '#28a745',
+              color: '#fff'
+            }}
+            disabled={property.status === 'booked'}
+          >
+            {property.status === 'booked' ? 'BOOKED' : 'BOOK NOW'}
           </button>
         </div>
       </div>
@@ -11336,18 +11348,18 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
 };
 
 // ============= Filter Section Component =============
-const FilterSection = ({ 
-  title, 
-  isOpen, 
-  onToggle, 
-  children 
+const FilterSection = ({
+  title,
+  isOpen,
+  onToggle,
+  children
 }) => {
   return (
     <div className="border rounded mb-3">
       <button
         onClick={onToggle}
         className="w-100 border-0 bg-transparent"
-        style={{ 
+        style={{
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
@@ -11368,7 +11380,7 @@ const FilterSection = ({
           )}
         </div>
       </button>
-      
+
       {isOpen && (
         <div className="px-3 pb-3">
           {children}
@@ -11379,8 +11391,8 @@ const FilterSection = ({
 };
 
 // ============= Filter Sidebar Component =============
-const FilterSidebar = ({ 
-  selectedCategories, 
+const FilterSidebar = ({
+  selectedCategories,
   setSelectedCategories,
   selectedTypes,
   setSelectedTypes,
@@ -11483,11 +11495,11 @@ const FilterSidebar = ({
       const newSelection = prev.includes(categoryName)
         ? prev.filter((c) => c !== categoryName)
         : [...prev, categoryName];
-      
+
       if (onFilterChange) {
         setTimeout(() => onFilterChange(), 0);
       }
-      
+
       return newSelection;
     });
   }, [setSelectedCategories, onFilterChange]);
@@ -11497,11 +11509,11 @@ const FilterSidebar = ({
       const newSelection = prev.includes(typeName)
         ? prev.filter((b) => b !== typeName)
         : [...prev, typeName];
-      
+
       if (onFilterChange) {
         setTimeout(() => onFilterChange(), 0);
       }
-      
+
       return newSelection;
     });
   }, [setSelectedTypes, onFilterChange]);
@@ -11511,11 +11523,11 @@ const FilterSidebar = ({
       const newSelection = prev.includes(range)
         ? prev.filter((r) => r !== range)
         : [...prev, range];
-      
+
       if (onFilterChange) {
         setTimeout(() => onFilterChange(), 0);
       }
-      
+
       return newSelection;
     });
   }, [setSelectedPriceRanges, onFilterChange]);
@@ -11525,11 +11537,11 @@ const FilterSidebar = ({
       const newSelection = prev.includes(name)
         ? prev.filter((c) => c !== name)
         : [...prev, name];
-      
+
       if (onFilterChange) {
         setTimeout(() => onFilterChange(), 0);
       }
-      
+
       return newSelection;
     });
   }, [setSelectedCities, onFilterChange]);
@@ -11539,11 +11551,11 @@ const FilterSidebar = ({
       const newSelection = prev.includes(type)
         ? prev.filter((t) => t !== type)
         : [...prev, type];
-      
+
       if (onFilterChange) {
         setTimeout(() => onFilterChange(), 0);
       }
-      
+
       return newSelection;
     });
   }, [setSelectedTransactionTypes, onFilterChange]);
@@ -11553,11 +11565,11 @@ const FilterSidebar = ({
       const newSelection = prev.includes(roleId)
         ? prev.filter((r) => r !== roleId)
         : [...prev, roleId];
-      
+
       if (onFilterChange) {
         setTimeout(() => onFilterChange(), 0);
       }
-      
+
       return newSelection;
     });
   }, [setSelectedRoles, onFilterChange]);
@@ -11570,7 +11582,7 @@ const FilterSidebar = ({
         return [sortValue];
       }
     });
-    
+
     if (onFilterChange) {
       setTimeout(() => onFilterChange(), 0);
     }
@@ -11588,16 +11600,16 @@ const FilterSidebar = ({
     setTypeSearch("");
     setCitySearch("");
     setRoleSearch("");
-    
+
     if (onFilterChange) {
       setTimeout(() => onFilterChange(), 0);
     }
   };
 
-  const activeFilterCount = 
-    selectedCategories.length + 
-    selectedTypes.length + 
-    selectedPriceRanges.length + 
+  const activeFilterCount =
+    selectedCategories.length +
+    selectedTypes.length +
+    selectedPriceRanges.length +
     selectedCities.length +
     selectedTransactionTypes.length +
     selectedRoles.length +
@@ -11612,7 +11624,7 @@ const FilterSidebar = ({
             Filters
           </h5>
           {activeFilterCount > 0 && (
-            <button 
+            <button
               onClick={clearAllFilters}
               className="btn btn-sm btn-outline-secondary"
               aria-label="Clear all filters"
@@ -11647,7 +11659,7 @@ const FilterSidebar = ({
                   checked={selectedTransactionTypes.includes(type.name)}
                   readOnly
                   tabIndex={-1}
-                  onChange={() => {}}
+                  onChange={() => { }}
                 />
                 <span className={`small ${selectedTransactionTypes.includes(type.name) ? 'fw-semibold text-dark' : 'text-muted'}`}>
                   {type.displayName}
@@ -11702,7 +11714,7 @@ const FilterSidebar = ({
                     checked={selectedCategories.includes(category.name.toLowerCase())}
                     readOnly
                     tabIndex={-1}
-                    onChange={() => {}}
+                    onChange={() => { }}
                   />
                   <span className={`small ${selectedCategories.includes(category.name.toLowerCase()) ? 'fw-semibold text-dark' : 'text-muted'}`}>
                     {category.name}
@@ -11758,7 +11770,7 @@ const FilterSidebar = ({
                     checked={selectedTypes.includes(type.name.toLowerCase())}
                     readOnly
                     tabIndex={-1}
-                    onChange={() => {}}
+                    onChange={() => { }}
                   />
                   <span className={`small ${selectedTypes.includes(type.name.toLowerCase()) ? 'fw-semibold text-dark' : 'text-muted'}`}>
                     {type.name}
@@ -11794,7 +11806,7 @@ const FilterSidebar = ({
                   checked={selectedPriceRanges.includes(range.label)}
                   readOnly
                   tabIndex={-1}
-                  onChange={() => {}}
+                  onChange={() => { }}
                 />
                 <span className={`small ${selectedPriceRanges.includes(range.label) ? 'fw-semibold text-dark' : 'text-muted'}`}>
                   {range.label}
@@ -11830,7 +11842,7 @@ const FilterSidebar = ({
                   checked={selectedSortOptions.includes(option.value)}
                   readOnly
                   tabIndex={-1}
-                  onChange={() => {}}
+                  onChange={() => { }}
                 />
                 <span className={`small ${selectedSortOptions.includes(option.value) ? 'fw-semibold text-dark' : 'text-muted'}`}>
                   {option.label}
@@ -11850,8 +11862,8 @@ const FilterSidebar = ({
               return (
                 <span key={sortValue} className="badge bg-dark-subtle text-dark border border-dark d-flex align-items-center">
                   Sort: {sortOption?.label || sortValue}
-                  <button 
-                    onClick={() => toggleSortOption(sortValue)} 
+                  <button
+                    onClick={() => toggleSortOption(sortValue)}
                     className="btn-close btn-close-sm ms-1"
                     aria-label={`Remove sort filter`}
                   ></button>
@@ -11861,8 +11873,8 @@ const FilterSidebar = ({
             {selectedTransactionTypes.map(type => (
               <span key={type} className="badge bg-info-subtle text-info border border-info d-flex align-items-center">
                 {type === 'sell' ? 'Sale' : 'Rent'}
-                <button 
-                  onClick={() => toggleTransactionType(type)} 
+                <button
+                  onClick={() => toggleTransactionType(type)}
                   className="btn-close btn-close-sm ms-1"
                   aria-label={`Remove ${type} filter`}
                 ></button>
@@ -11873,8 +11885,8 @@ const FilterSidebar = ({
               return (
                 <span key={roleId} className="badge bg-purple-subtle text-purple border border-purple d-flex align-items-center">
                   {role?.role_name || 'Role'}
-                  <button 
-                    onClick={() => toggleRole(roleId)} 
+                  <button
+                    onClick={() => toggleRole(roleId)}
                     className="btn-close btn-close-sm ms-1"
                     aria-label={`Remove ${role?.role_name} role filter`}
                   ></button>
@@ -11884,8 +11896,8 @@ const FilterSidebar = ({
             {selectedCategories.map(catName => (
               <span key={catName} className="badge bg-primary-subtle text-primary border border-primary d-flex align-items-center">
                 {catName.charAt(0).toUpperCase() + catName.slice(1)}
-                <button 
-                  onClick={() => toggleCategory(catName)} 
+                <button
+                  onClick={() => toggleCategory(catName)}
                   className="btn-close btn-close-sm ms-1"
                   aria-label={`Remove ${catName} category filter`}
                 ></button>
@@ -11894,8 +11906,8 @@ const FilterSidebar = ({
             {selectedTypes.map(typeName => (
               <span key={typeName} className="badge bg-success-subtle text-success border border-success d-flex align-items-center">
                 {typeName.charAt(0).toUpperCase() + typeName.slice(1)}
-                <button 
-                  onClick={() => toggleType(typeName)} 
+                <button
+                  onClick={() => toggleType(typeName)}
                   className="btn-close btn-close-sm ms-1"
                   aria-label={`Remove ${typeName} type filter`}
                 ></button>
@@ -11904,8 +11916,8 @@ const FilterSidebar = ({
             {selectedPriceRanges.map(range => (
               <span key={range} className="badge bg-warning-subtle text-warning border border-warning d-flex align-items-center">
                 {range}
-                <button 
-                  onClick={() => togglePriceRange(range)} 
+                <button
+                  onClick={() => togglePriceRange(range)}
                   className="btn-close btn-close-sm ms-1"
                   aria-label={`Remove ${range} price filter`}
                 ></button>
@@ -11914,8 +11926,8 @@ const FilterSidebar = ({
             {selectedCities.map(city => (
               <span key={city} className="badge bg-danger-subtle text-danger border border-danger d-flex align-items-center">
                 {city}
-                <button 
-                  onClick={() => toggleCity(city)} 
+                <button
+                  onClick={() => toggleCity(city)}
                   className="btn-close btn-close-sm ms-1"
                   aria-label={`Remove ${city} location filter`}
                 ></button>
@@ -12010,9 +12022,8 @@ const ProductHeader = ({
                 <button
                   key={mode}
                   onClick={() => onViewModeChange(mode)}
-                  className={`btn btn-outline-secondary ${
-                    viewMode === mode ? "active" : ""
-                  }`}
+                  className={`btn btn-outline-secondary ${viewMode === mode ? "active" : ""
+                    }`}
                   style={{ padding: '0.375rem 0.75rem' }}
                   title={label}
                   aria-label={`Switch to ${label} view`}
@@ -12063,7 +12074,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
       <div className="list-group">
         {properties.map((property) => {
           const imageUrl = getImageUrl(property.images);
-          
+
           const getPriceInfo = () => {
             if (property.looking_to === "sell") {
               const price = property.total_property_value || property.property_value;
@@ -12075,7 +12086,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
             } else {
               return {
                 price: `₹${parseFloat(property.rent_amount || 0).toLocaleString()}/month`,
-                suffix: property.deposit_amount 
+                suffix: property.deposit_amount
                   ? `Deposit: ₹${parseFloat(property.deposit_amount).toLocaleString()}`
                   : '',
                 showDeposit: true
@@ -12101,17 +12112,17 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
             const handleMouseLeave = () => {
               setShowCommissionTooltip(false);
             };
-            
+
             const handleViewDetails = () => {
               navigate(`/agent-properties-details/${property.property_id}`);
             };
-            
+
             const handleBuyNow = () => {
               if (onBuyNowClick) {
                 onBuyNowClick(property);
               }
             };
-            
+
             return (
               <div className="list-group-item mb-3">
                 <div className="row g-3">
@@ -12160,7 +12171,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                         </span>
                       )}
                     </div>
-                    
+
                     <div className="d-flex align-items-center gap-2">
                       <span className="h5 fw-bold text-dark">
                         {priceInfo.price}
@@ -12172,7 +12183,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                   </div>
                   <div className="col-md-3 d-flex flex-column gap-2">
                     <div className="position-relative">
-                      <button 
+                      <button
                         className="btn fw-semibold py-2 d-flex align-items-center justify-content-center gap-2 w-100"
                         style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
                         onMouseEnter={handleMouseEnter}
@@ -12183,28 +12194,28 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                         <Info size={14} />
                         PAYOUT
                       </button>
-                      
-                      <CommissionTooltip 
+
+                      <CommissionTooltip
                         show={showCommissionTooltip}
                         commissions={commissionData}
                         distributionCommission={distributionCommission}
                       />
                     </div>
-                    
+
                     <div className="d-flex flex-column gap-2">
-                      <button 
+                      <button
                         onClick={handleViewDetails}
                         className="btn w-100 fw-semibold py-2"
-                        style={{ 
-                          backgroundColor: '#273c75', 
-                          borderColor: '#273c75', 
+                        style={{
+                          backgroundColor: '#273c75',
+                          borderColor: '#273c75',
                           color: '#fff'
                         }}
                       >
                         VIEW DETAILS
                       </button>
-                      
-                      <button 
+
+                      {/* <button 
                         onClick={handleBuyNow}
                         className="btn w-100 fw-semibold py-2"
                         style={{ 
@@ -12214,6 +12225,18 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                         }}
                       >
                         BOOK NOW
+                      </button> */}
+                      <button
+                        onClick={handleBuyNow}
+                        className={`btn w-100 fw-semibold py-2 ${property.status === 'booked' ? 'btn-secondary' : ''}`}
+                        style={{
+                          backgroundColor: property.status === 'booked' ? '#6c757d' : '#28a745',
+                          borderColor: property.status === 'booked' ? '#6c757d' : '#28a745',
+                          color: '#fff'
+                        }}
+                        disabled={property.status === 'booked'}
+                      >
+                        {property.status === 'booked' ? 'BOOKED' : 'BOOK NOW'}
                       </button>
                     </div>
                   </div>
@@ -12232,8 +12255,8 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
     <div className={getGridClasses()}>
       {properties.map((property) => (
         <div key={property.property_id} className="col mb-4">
-          <PropertyCard 
-            property={property} 
+          <PropertyCard
+            property={property}
             onVerificationStatusUpdate={onVerificationStatusUpdate}
             onDeleteProperty={onDeleteProperty}
             commissionData={commissionData}
@@ -12287,10 +12310,10 @@ const AgentProperties = () => {
 
   const currentUserId = localStorage.getItem("user_id");
 
-  const activeFilterCount = 
-    selectedCategories.length + 
-    selectedTypes.length + 
-    selectedPriceRanges.length + 
+  const activeFilterCount =
+    selectedCategories.length +
+    selectedTypes.length +
+    selectedPriceRanges.length +
     selectedCities.length +
     selectedTransactionTypes.length +
     selectedRoles.length +
@@ -12362,16 +12385,16 @@ const AgentProperties = () => {
   }, []);
 
   const handleVerificationStatusUpdate = useCallback((propertyId, newStatus) => {
-    setProperties(prevProperties => 
-      prevProperties.map(property => 
-        property.property_id === propertyId 
+    setProperties(prevProperties =>
+      prevProperties.map(property =>
+        property.property_id === propertyId
           ? { ...property, verification_status: newStatus }
           : property
       )
     );
-    setFilteredProperties(prevProperties => 
-      prevProperties.map(property => 
-        property.property_id === propertyId 
+    setFilteredProperties(prevProperties =>
+      prevProperties.map(property =>
+        property.property_id === propertyId
           ? { ...property, verification_status: newStatus }
           : property
       )
@@ -12386,20 +12409,20 @@ const AgentProperties = () => {
           'Content-Type': 'application/json',
         }
       });
-      
+
       if (!response.ok) {
         throw new Error(`Failed to delete property: ${response.status}`);
       }
-      
-      setProperties(prevProperties => 
+
+      setProperties(prevProperties =>
         prevProperties.filter(property => property.property_id !== propertyId)
       );
-      setFilteredProperties(prevProperties => 
+      setFilteredProperties(prevProperties =>
         prevProperties.filter(property => property.property_id !== propertyId)
       );
-      
+
       setTotalCount(prev => prev - 1);
-      
+
       return true;
     } catch (error) {
       console.error('Error deleting property:', error);
@@ -12444,42 +12467,42 @@ const AgentProperties = () => {
   const fetchApprovedProperties = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       const params = new URLSearchParams();
-      
+
       params.append('verification_status', 'verified');
 
       if (statusFilter) {
         params.append("status", statusFilter);
       }
-      
+
       params.append('page', currentPage);
       params.append('page_size', pageSize);
-      
+
       if (searchTerm.trim()) {
         params.append('search', searchTerm.trim());
       }
-      
+
       if (selectedCategories.length > 0) {
         params.append('category', selectedCategories.join(','));
       }
-      
+
       if (selectedTypes.length > 0) {
         params.append('property_type', selectedTypes.join(','));
       }
-      
+
       if (selectedTransactionTypes.length > 0) {
         params.append('looking_to', selectedTransactionTypes.join(','));
       }
-      
+
       if (selectedCities.length > 0) {
         params.append('city', selectedCities.join(','));
       }
-      
+
       if (selectedRoles.length > 0) {
         params.append('user_role', selectedRoles.join(','));
       }
-      
+
       if (selectedSortOptions.length > 0) {
         const sortValue = selectedSortOptions[0];
         if (sortValue === 'price-low') {
@@ -12488,22 +12511,22 @@ const AgentProperties = () => {
           params.append('ordering', '-price');
         }
       }
-      
+
       const queryString = params.toString();
       const url = `${baseurl}/properties/${queryString ? `?${queryString}` : ''}`;
-      
+
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
       const propertiesArray = data.results || [];
-      
+
       const filteredProperties = propertiesArray.filter(
         (property) => property.user_id?.toString() !== currentUserId
       );
-      
+
       setProperties(filteredProperties);
       setFilteredProperties(filteredProperties);
       setTotalCount(data.count || 0);
@@ -12515,8 +12538,8 @@ const AgentProperties = () => {
       setLoading(false);
     }
   }, [
-    currentPage, 
-    pageSize, 
+    currentPage,
+    pageSize,
     searchTerm,
     selectedCategories,
     selectedTypes,
@@ -12525,84 +12548,84 @@ const AgentProperties = () => {
     selectedRoles,
     selectedSortOptions,
     currentUserId,
-    statusFilter  
+    statusFilter
   ]);
 
   useEffect(() => {
-  const confirmPropertyPayment = async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const razorpay_payment_id = urlParams.get('razorpay_payment_id');
-    const razorpay_order_id = urlParams.get('razorpay_order_id');
-    const razorpay_signature = urlParams.get('razorpay_signature');
-    
-    // Check if we have Razorpay response in URL
-    if (razorpay_payment_id && razorpay_order_id && razorpay_signature) {
-      try {
-        const storedPayment = localStorage.getItem('property_payment');
-        if (!storedPayment) {
-          console.error('No stored payment session found');
-          return;
-        }
+    const confirmPropertyPayment = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const razorpay_payment_id = urlParams.get('razorpay_payment_id');
+      const razorpay_order_id = urlParams.get('razorpay_order_id');
+      const razorpay_signature = urlParams.get('razorpay_signature');
 
-        const paymentData = JSON.parse(storedPayment);
+      // Check if we have Razorpay response in URL
+      if (razorpay_payment_id && razorpay_order_id && razorpay_signature) {
+        try {
+          const storedPayment = localStorage.getItem('property_payment');
+          if (!storedPayment) {
+            console.error('No stored payment session found');
+            return;
+          }
 
-        const confirmResponse = await fetch(`${baseurl}/property/confirm-payment/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            user_id: Number(currentUserId),
-            property_id: paymentData.property_id,
-            payment_type: "Booking-Amount",
-            razorpay_order_id: razorpay_order_id,
-            razorpay_payment_id: razorpay_payment_id,
-            razorpay_signature: razorpay_signature
-          })
-        });
+          const paymentData = JSON.parse(storedPayment);
 
-        const confirmData = await confirmResponse.json();
-
-        if (confirmResponse.ok) {
-          Swal.fire({
-            title: "Payment Successful! 🎉",
-            text: "Property booked successfully",
-            icon: "success",
+          const confirmResponse = await fetch(`${baseurl}/property/confirm-payment/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              user_id: Number(currentUserId),
+              property_id: paymentData.property_id,
+              payment_type: "Booking-Amount",
+              razorpay_order_id: razorpay_order_id,
+              razorpay_payment_id: razorpay_payment_id,
+              razorpay_signature: razorpay_signature
+            })
           });
 
-          localStorage.removeItem('property_payment');
-          fetchApprovedProperties();
-        } else {
-          throw new Error(confirmData.error || "Payment verification failed");
+          const confirmData = await confirmResponse.json();
+
+          if (confirmResponse.ok) {
+            Swal.fire({
+              title: "Payment Successful! 🎉",
+              text: "Property booked successfully",
+              icon: "success",
+            });
+
+            localStorage.removeItem('property_payment');
+            fetchApprovedProperties();
+          } else {
+            throw new Error(confirmData.error || "Payment verification failed");
+          }
+
+          // Clean URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+
+        } catch (err) {
+          console.error("Confirm error:", err);
+          Swal.fire({
+            title: "Payment Verification Failed",
+            text: err.message || "Failed to verify payment. Please contact support.",
+            icon: "warning"
+          });
         }
-
-        // Clean URL
-        window.history.replaceState({}, document.title, window.location.pathname);
-
-      } catch (err) {
-        console.error("Confirm error:", err);
-        Swal.fire({
-          title: "Payment Verification Failed",
-          text: err.message || "Failed to verify payment. Please contact support.",
-          icon: "warning"
-        });
       }
-    }
-  };
+    };
 
-  confirmPropertyPayment();
-}, [currentUserId, fetchApprovedProperties]);
+    confirmPropertyPayment();
+  }, [currentUserId, fetchApprovedProperties]);
   useEffect(() => {
     if (properties.length === 0) return;
-    
+
     let result = [...properties];
-    
+
     if (selectedPriceRanges.length > 0) {
       result = result.filter(property => {
-        const price = parseFloat(property.looking_to === "sell" 
+        const price = parseFloat(property.looking_to === "sell"
           ? (property.total_property_value || property.property_value)
           : property.rent_amount || 0);
-        
+
         return selectedPriceRanges.some(rangeLabel => {
           switch (rangeLabel) {
             case "Under ₹10L":
@@ -12623,7 +12646,7 @@ const AgentProperties = () => {
         });
       });
     }
-    
+
     setFilteredProperties(result);
   }, [properties, selectedPriceRanges]);
 
@@ -12659,13 +12682,13 @@ const AgentProperties = () => {
 
   const renderPagination = () => {
     if (totalPages <= 1) return null;
-    
+
     return (
       <nav aria-label="Properties pagination" className="mt-5">
         <ul className="pagination justify-content-center flex-wrap">
           <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-            <button 
-              className="page-link" 
+            <button
+              className="page-link"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
               aria-label="Go to previous page"
@@ -12674,11 +12697,11 @@ const AgentProperties = () => {
               <span className="visually-hidden">Previous</span>
             </button>
           </li>
-          
+
           {currentPage > 2 && (
             <li className="page-item">
-              <button 
-                className="page-link" 
+              <button
+                className="page-link"
                 onClick={() => handlePageChange(1)}
                 aria-label="Go to page 1"
               >
@@ -12686,17 +12709,17 @@ const AgentProperties = () => {
               </button>
             </li>
           )}
-          
+
           {currentPage > 3 && (
             <li className="page-item disabled">
               <span className="page-link">...</span>
             </li>
           )}
-          
+
           {currentPage > 1 && (
             <li className="page-item">
-              <button 
-                className="page-link" 
+              <button
+                className="page-link"
                 onClick={() => handlePageChange(currentPage - 1)}
                 aria-label={`Go to page ${currentPage - 1}`}
               >
@@ -12704,18 +12727,18 @@ const AgentProperties = () => {
               </button>
             </li>
           )}
-          
+
           <li className="page-item active" aria-current="page">
             <button className="page-link">
               {currentPage}
               <span className="visually-hidden">(current)</span>
             </button>
           </li>
-          
+
           {currentPage < totalPages && (
             <li className="page-item">
-              <button 
-                className="page-link" 
+              <button
+                className="page-link"
                 onClick={() => handlePageChange(currentPage + 1)}
                 aria-label={`Go to page ${currentPage + 1}`}
               >
@@ -12723,17 +12746,17 @@ const AgentProperties = () => {
               </button>
             </li>
           )}
-          
+
           {currentPage < totalPages - 2 && (
             <li className="page-item disabled">
               <span className="page-link">...</span>
             </li>
           )}
-          
+
           {currentPage < totalPages - 1 && (
             <li className="page-item">
-              <button 
-                className="page-link" 
+              <button
+                className="page-link"
                 onClick={() => handlePageChange(totalPages)}
                 aria-label={`Go to page ${totalPages}`}
               >
@@ -12741,10 +12764,10 @@ const AgentProperties = () => {
               </button>
             </li>
           )}
-          
+
           <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-            <button 
-              className="page-link" 
+            <button
+              className="page-link"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
               aria-label="Go to next page"
@@ -12754,7 +12777,7 @@ const AgentProperties = () => {
             </button>
           </li>
         </ul>
-        
+
         <div className="text-center text-muted small mt-2">
           Page {currentPage} of {totalPages} • {filteredProperties.length} properties on this page • {totalCount} total properties
         </div>
@@ -12798,7 +12821,7 @@ const AgentProperties = () => {
   return (
     <div className="min-vh-100 d-flex flex-column">
       <WebsiteNavbar />
-      
+
       <main className="flex-grow-1 bg-light">
         {statusFilter && (
           <div className="alert alert-info d-flex align-items-center justify-content-between mb-3 py-2">
@@ -12814,7 +12837,7 @@ const AgentProperties = () => {
           </div>
         )}
         <div className="container py-4">
-          <PaymentModal 
+          <PaymentModal
             isOpen={showPaymentModal}
             onClose={handlePaymentModalClose}
             property={selectedProperty}
@@ -12910,8 +12933,8 @@ const AgentProperties = () => {
                 </div>
               ) : (
                 <>
-                  <PropertyGrid 
-                    properties={filteredProperties} 
+                  <PropertyGrid
+                    properties={filteredProperties}
                     viewMode={viewMode}
                     onVerificationStatusUpdate={handleVerificationStatusUpdate}
                     onDeleteProperty={handleDeleteProperty}

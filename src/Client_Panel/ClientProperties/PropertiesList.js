@@ -4212,8 +4212,7 @@
 
 
 
-
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import {
   ChevronUp,
   ChevronDown,
@@ -4227,6 +4226,8 @@ import {
   User,
   Trash2,
   Edit,
+  Info,
+  XCircle
 } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./PropertiesList.css";
@@ -4234,7 +4235,6 @@ import WebsiteNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { Info } from "lucide-react";
 
 // ============= Utility Functions =============
 const formatPrice = (price) => {
@@ -4267,6 +4267,380 @@ const getImageUrl = (images) => {
   }
 
   return "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=300&fit=crop";
+};
+
+// ============= Payment Modal Component =============
+const PaymentModal = ({ isOpen, onClose, property, onPaymentInitiate }) => {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentStep, setPaymentStep] = useState('form');
+  const hasConfirmedRef = useRef(false);
+  const currentUserId = localStorage.getItem("user_id");
+
+  if (!isOpen || !property) return null;
+
+  const totalValue = parseFloat(property.total_property_value || 0);
+  const bookingAmount = parseFloat(property.booking_amount || 0);
+  const remainingAmount = parseFloat(property.property_value_without_booking_amount || 0);
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handleInitiatePayment = async () => {
+    if (!currentUserId) {
+      Swal.fire({
+        title: 'Error',
+        text: 'User not authenticated. Please login again.',
+        icon: 'error',
+      });
+      return;
+    }
+
+    setIsProcessing(true);
+    setPaymentStep('processing');
+
+    try {
+      // Check if Razorpay script is loaded
+      const isScriptLoaded = await loadRazorpayScript();
+      if (!isScriptLoaded) {
+        throw new Error('Failed to load Razorpay SDK. Please check your internet connection.');
+      }
+
+      // Step 1: Initiate payment and get Razorpay order details
+      const res = await fetch(`${baseurl}/property/initiate-payment/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: Number(currentUserId),
+          property_id: property.property_id,
+          payment_type: "Booking-Amount"
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to initiate payment");
+      }
+
+      // Store transaction info in localStorage for confirmation later
+      localStorage.setItem('property_payment', JSON.stringify({
+        property_id: property.property_id,
+        user_id: currentUserId,
+        razorpay_order_id: data.razorpay_order_id,
+        transaction_id: data.transaction_id,
+        property_title: property.property_title,
+        booking_amount: bookingAmount,
+        timestamp: Date.now()
+      }));
+
+      // Step 2: Open Razorpay checkout
+      const options = {
+        key: data.key,
+        amount: data.amount * 100, // Amount in paise
+        currency: data.currency,
+        name: "Property Booking",
+        description: `Booking Amount for ${property.property_title}`,
+        order_id: data.razorpay_order_id,
+        handler: async function(response) {
+          // Step 3: Verify payment with backend
+          await handlePaymentVerification(response);
+        },
+        prefill: {
+          name: localStorage.getItem("user_name") || "",
+          email: localStorage.getItem("user_email") || "",
+          contact: localStorage.getItem("user_phone") || ""
+        },
+        theme: {
+          color: "#273c75"
+        },
+        modal: {
+          ondismiss: function() {
+            setIsProcessing(false);
+            setPaymentStep('form');
+            Swal.fire({
+              title: 'Payment Cancelled',
+              text: 'You have cancelled the payment process.',
+              icon: 'info',
+              confirmButtonColor: '#273c75'
+            });
+          }
+        }
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+
+    } catch (err) {
+      console.error('Payment initiation error:', err);
+      Swal.fire({
+        title: "Error",
+        text: err.message || "Failed to initiate payment. Please try again.",
+        icon: "error"
+      });
+      setPaymentStep('form');
+      setIsProcessing(false);
+    }
+  };
+
+  const handlePaymentVerification = async (razorpayResponse) => {
+    try {
+      const storedPayment = localStorage.getItem('property_payment');
+      if (!storedPayment) {
+        throw new Error('Payment session not found');
+      }
+
+      const paymentData = JSON.parse(storedPayment);
+
+      // Step 3: Confirm payment with backend
+      const confirmResponse = await fetch(`${baseurl}/property/confirm-payment/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: Number(currentUserId),
+          property_id: property.property_id,
+          payment_type: "Booking-Amount",
+          razorpay_order_id: razorpayResponse.razorpay_order_id,
+          razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+          razorpay_signature: razorpayResponse.razorpay_signature
+        })
+      });
+
+      const confirmData = await confirmResponse.json();
+
+      if (!confirmResponse.ok) {
+        throw new Error(confirmData.error || "Payment verification failed");
+      }
+
+      // Payment successful
+      setPaymentStep('confirmation');
+      
+      // Clear stored payment data
+      localStorage.removeItem('property_payment');
+      
+      // Show success message
+      Swal.fire({
+        title: 'Payment Successful!',
+        html: `
+          <div style="text-align: center;">
+            <div class="text-success mb-3">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none"/>
+                <path d="M8 12l3 3 6-6" stroke="currentColor" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <p><strong>${property.property_title}</strong></p>
+            <p>Booking Amount: ${formatPrice(bookingAmount)}</p>
+            ${confirmData.document_number ? `<p class="small text-muted">Document No: ${confirmData.document_number}</p>` : ''}
+          </div>
+        `,
+        icon: 'success',
+        confirmButtonColor: '#273c75',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        onClose();
+        if (onPaymentInitiate) {
+          onPaymentInitiate();
+        }
+      });
+
+    } catch (error) {
+      console.error('Payment verification error:', error);
+      
+      Swal.fire({
+        title: 'Payment Verification Failed',
+        text: error.message || 'Failed to verify payment. Please contact support if the amount was deducted.',
+        icon: 'warning',
+        confirmButtonColor: '#273c75'
+      }).then(() => {
+        handleClose();
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleClose = () => {
+    if (!isProcessing) {
+      setPaymentStep('form');
+      hasConfirmedRef.current = false;
+      onClose();
+    }
+  };
+
+  return (
+    <div 
+      className="modal fade show d-block" 
+      style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1050 }}
+      tabIndex="-1" 
+      role="dialog"
+      onClick={handleClose}
+    >
+      <div 
+        className="modal-dialog modal-dialog-centered" 
+        role="document"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="modal-content">
+          <div className="modal-header" style={{ backgroundColor: '#273c75', color: 'white' }}>
+            <h5 className="modal-title">
+              <i className="bi bi-building me-2"></i>
+              Book Property
+            </h5>
+            <button 
+              type="button" 
+              className="btn-close btn-close-white" 
+              onClick={handleClose}
+              disabled={isProcessing}
+              aria-label="Close"
+            ></button>
+          </div>
+          
+          <div className="modal-body">
+            {paymentStep === 'form' && (
+              <div className="payment-form">
+                <h6 className="fw-bold mb-3">{property.property_title}</h6>
+                
+                <div className="mb-4">
+                  <div className="bg-light p-3 rounded">
+                    <div className="d-flex justify-content-between mb-2">
+                      <span className="text-muted">Total Property Value:</span>
+                      <span className="fw-bold">{formatPrice(totalValue)}</span>
+                    </div>
+                    
+                    <div className="d-flex justify-content-between mb-2">
+                      <span className="text-muted">Booking Amount:</span>
+                      <span className="fw-bold text-primary">{formatPrice(bookingAmount)}</span>
+                    </div>
+                    
+                    <div className="d-flex justify-content-between pt-2 border-top">
+                      <span className="text-muted">Remaining Amount:</span>
+                      <span className="fw-bold">{formatPrice(remainingAmount)}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mb-3">
+                  <div className="row g-2">
+                    <div className="col-6">
+                      <div className="bg-light p-2 rounded text-center">
+                        <small className="text-muted d-block">City</small>
+                        <span className="fw-medium">{property.city || 'N/A'}</span>
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <div className="bg-light p-2 rounded text-center">
+                        <small className="text-muted d-block">Type</small>
+                        <span className="fw-medium text-uppercase">{property.looking_to || 'N/A'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="alert alert-info small">
+                  <i className="bi bi-info-circle me-2"></i>
+                  You will be redirected to Razorpay payment gateway to complete your booking.
+                </div>
+              </div>
+            )}
+            
+            {paymentStep === 'processing' && (
+              <div className="text-center py-4">
+                <div className="spinner-border text-primary mb-3" role="status" style={{ width: '3rem', height: '3rem' }}>
+                  <span className="visually-hidden">Processing...</span>
+                </div>
+                <h6>Preparing Payment Gateway...</h6>
+                <p className="text-muted small">Please wait while we redirect you to Razorpay.</p>
+              </div>
+            )}
+            
+            {paymentStep === 'confirmation' && (
+              <div className="text-center py-4">
+                <div className="text-success mb-3">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none"/>
+                    <path d="M8 12l3 3 6-6" stroke="currentColor" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                <h5 className="mb-2">Payment Successful!</h5>
+                <p className="text-muted small mb-3">
+                  Your booking for <strong>{property.property_title}</strong> has been confirmed.
+                </p>
+                <p className="small text-muted">
+                  A confirmation email and invoice have been sent to your registered email.
+                </p>
+              </div>
+            )}
+          </div>
+          
+          <div className="modal-footer">
+            {paymentStep === 'form' && (
+              <>
+                <button 
+                  type="button" 
+                  className="btn btn-outline-secondary"
+                  onClick={handleClose}
+                  disabled={isProcessing}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="button" 
+                  className="btn"
+                  style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: 'white' }}
+                  onClick={handleInitiatePayment}
+                  disabled={isProcessing}
+                >
+                  {isProcessing ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi bi-lock-fill me-2"></i>
+                      Proceed to Payment
+                    </>
+                  )}
+                </button>
+              </>
+            )}
+            
+            {paymentStep === 'processing' && (
+              <button 
+                type="button" 
+                className="btn btn-secondary w-100"
+                disabled={true}
+              >
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Processing...
+              </button>
+            )}
+            
+            {paymentStep === 'confirmation' && (
+              <button 
+                type="button" 
+                className="btn w-100"
+                style={{ backgroundColor: '#273c75', borderColor: '#273c75', color: 'white' }}
+                onClick={handleClose}
+              >
+                <i className="bi bi-check-circle-fill me-2"></i>
+                Done
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 // ============= Commission Tooltip Component =============
@@ -4378,6 +4752,7 @@ const PropertyCard = ({
   onVerificationStatusUpdate,
   onDeleteProperty,
   commissionData,
+  onBuyNowClick,
 }) => {
   const navigate = useNavigate();
   const [isUpdating, setIsUpdating] = useState(false);
@@ -4389,6 +4764,12 @@ const PropertyCard = ({
 
   const handleViewDetails = () => {
     navigate(`/client-properties-details/${property.property_id}`);
+  };
+
+  const handleBuyNow = () => {
+    if (onBuyNowClick && property.status !== 'booked') {
+      onBuyNowClick(property);
+    }
   };
 
   const handleEditProperty = () => {
@@ -4537,7 +4918,7 @@ const PropertyCard = ({
         </div>
         {property.status && (
           <div className="position-absolute top-0 start-0 m-2">
-            <span className="badge bg-warning text-dark">
+            <span className={`badge ${property.status === 'booked' ? 'bg-danger' : 'bg-warning'} text-dark`}>
               {property.status.toUpperCase()}
             </span>
           </div>
@@ -4577,27 +4958,6 @@ const PropertyCard = ({
           </span>
         </div>
 
-        {/* PAYOUT BUTTON with Commission Tooltip - Commented out */}
-        {/* <div className="position-relative mt-2">
-          <button 
-            className="btn w-100 fw-semibold py-2 d-flex align-items-center justify-content-center gap-2"
-            style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onFocus={handleMouseEnter}
-            onBlur={handleMouseLeave}
-          >
-            <Info size={16} />
-            PAYOUT
-          </button>
-          
-          <CommissionTooltip 
-            show={showCommissionTooltip}
-            commissions={commissionData}
-            distributionCommission={distributionCommission}
-          />
-        </div> */}
-
         <button
           onClick={handleViewDetails}
           className="btn w-100 fw-semibold py-2 mt-2"
@@ -4610,16 +4970,19 @@ const PropertyCard = ({
         >
           {property.looking_to === "sell" ? "VIEW DETAILS" : "CONTACT OWNER"}
         </button>
-          <button
-         
-          className="btn w-100 fw-semibold py-2 mt-2"
+        
+        <button
+          onClick={handleBuyNow}
+          className={`btn w-100 fw-semibold py-2 mt-2 ${property.status === 'booked' ? 'btn-secondary' : ''}`}
           style={{
-             backgroundColor: '#28a745', 
-      borderColor: '#28a745', 
-      color: '#fff',
-            cursor: "pointer",
+            backgroundColor: property.status === 'booked' ? '#6c757d' : '#28a745', 
+            borderColor: property.status === 'booked' ? '#6c757d' : '#28a745', 
+            color: '#fff',
+            cursor: property.status === 'booked' ? 'not-allowed' : 'pointer',
           }}
-        >   BOOK NOW
+          disabled={property.status === 'booked'}
+        >
+          {property.status === 'booked' ? 'BOOKED' : 'BOOK NOW'}
         </button>
       </div>
     </div>
@@ -5426,6 +5789,7 @@ const PropertyGrid = ({
   onVerificationStatusUpdate,
   onDeleteProperty,
   commissionData,
+  onBuyNowClick,
 }) => {
   const getGridClasses = () => {
     switch (viewMode) {
@@ -5495,6 +5859,12 @@ const PropertyGrid = ({
               navigate(`/client-properties-details/${property.property_id}`);
             };
 
+            const handleBuyNow = () => {
+              if (onBuyNowClick && property.status !== 'booked') {
+                onBuyNowClick(property);
+              }
+            };
+
             return (
               <div className="list-group-item mb-3">
                 <div className="row g-3">
@@ -5525,7 +5895,7 @@ const PropertyGrid = ({
                         {property.property_title}
                       </h6>
                       {property.status && (
-                        <span className="badge bg-warning text-dark small">
+                        <span className={`badge ${property.status === 'booked' ? 'bg-danger' : 'bg-warning'} text-dark small`}>
                           {property.status.toUpperCase()}
                         </span>
                       )}
@@ -5574,29 +5944,7 @@ const PropertyGrid = ({
                     </div>
                   </div>
                   <div className="col-md-3 d-flex flex-column gap-2">
-                    {/* PAYOUT BUTTON for List View - Commented out */}
-                    {/* <div className="position-relative">
-                      <button 
-                        className="btn fw-semibold py-2 d-flex align-items-center justify-content-center gap-2 w-100"
-                        style={{ backgroundColor: '#28a745', borderColor: '#28a745', color: '#fff' }}
-                        onMouseEnter={handleMouseEnter}
-                        onMouseLeave={handleMouseLeave}
-                        onFocus={handleMouseEnter}
-                        onBlur={handleMouseLeave}
-                      >
-                        <Info size={14} />
-                        PAYOUT
-                      </button>
-                      
-                      <CommissionTooltip 
-                        show={showCommissionTooltip}
-                        commissions={commissionData}
-                        distributionCommission={distributionCommission}
-                      />
-                    </div> */}
-
-                   
-                      <button
+                    <button
                       onClick={handleViewDetails}
                       className="btn fw-semibold py-2"
                       style={{
@@ -5610,16 +5958,18 @@ const PropertyGrid = ({
                         ? "VIEW DETAILS"
                         : "CONTACT OWNER"}
                     </button>
-                     <button
-                      className="btn fw-semibold py-2"
+                    <button
+                      onClick={handleBuyNow}
+                      className={`btn fw-semibold py-2 ${property.status === 'booked' ? 'btn-secondary' : ''}`}
                       style={{
-                        backgroundColor: '#28a745', 
-      borderColor: '#28a745', 
-      color: '#fff',
-                        cursor: "pointer",
+                        backgroundColor: property.status === 'booked' ? '#6c757d' : '#28a745', 
+                        borderColor: property.status === 'booked' ? '#6c757d' : '#28a745', 
+                        color: '#fff',
+                        cursor: property.status === 'booked' ? 'not-allowed' : 'pointer',
                       }}
+                      disabled={property.status === 'booked'}
                     >
-                     BOOK NOW
+                      {property.status === 'booked' ? 'BOOKED' : 'BOOK NOW'}
                     </button>
                   </div>
                 </div>
@@ -5644,6 +5994,7 @@ const PropertyGrid = ({
             onVerificationStatusUpdate={onVerificationStatusUpdate}
             onDeleteProperty={onDeleteProperty}
             commissionData={commissionData}
+            onBuyNowClick={onBuyNowClick}
           />
         </div>
       ))}
@@ -5665,6 +6016,8 @@ const ClientProperties = () => {
   const [commissionData, setCommissionData] = useState([]);
   const [loadingCommissions, setLoadingCommissions] = useState(false);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -5709,6 +6062,20 @@ const ClientProperties = () => {
     setSelectedRoles([]);
     setSelectedSortOptions([]);
     setCurrentPage(1);
+  };
+
+  const handleBuyNowClick = (property) => {
+    setSelectedProperty(property);
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentModalClose = () => {
+    setShowPaymentModal(false);
+    setSelectedProperty(null);
+  };
+
+  const handlePaymentInitiate = () => {
+    fetchApprovedProperties();
   };
 
   const fetchCommissionData = useCallback(async () => {
@@ -5992,6 +6359,72 @@ const ClientProperties = () => {
     setCurrentPage(1);
   }, []);
 
+  // Confirm property payment from URL params
+  useEffect(() => {
+    const confirmPropertyPayment = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const razorpay_payment_id = urlParams.get('razorpay_payment_id');
+      const razorpay_order_id = urlParams.get('razorpay_order_id');
+      const razorpay_signature = urlParams.get('razorpay_signature');
+      
+      // Check if we have Razorpay response in URL
+      if (razorpay_payment_id && razorpay_order_id && razorpay_signature) {
+        try {
+          const storedPayment = localStorage.getItem('property_payment');
+          if (!storedPayment) {
+            console.error('No stored payment session found');
+            return;
+          }
+
+          const paymentData = JSON.parse(storedPayment);
+
+          const confirmResponse = await fetch(`${baseurl}/property/confirm-payment/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              user_id: Number(currentUserId),
+              property_id: paymentData.property_id,
+              payment_type: "Booking-Amount",
+              razorpay_order_id: razorpay_order_id,
+              razorpay_payment_id: razorpay_payment_id,
+              razorpay_signature: razorpay_signature
+            })
+          });
+
+          const confirmData = await confirmResponse.json();
+
+          if (confirmResponse.ok) {
+            Swal.fire({
+              title: "Payment Successful! 🎉",
+              text: "Property booked successfully",
+              icon: "success",
+            });
+
+            localStorage.removeItem('property_payment');
+            fetchApprovedProperties();
+          } else {
+            throw new Error(confirmData.error || "Payment verification failed");
+          }
+
+          // Clean URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+
+        } catch (err) {
+          console.error("Confirm error:", err);
+          Swal.fire({
+            title: "Payment Verification Failed",
+            text: err.message || "Failed to verify payment. Please contact support.",
+            icon: "warning"
+          });
+        }
+      }
+    };
+
+    confirmPropertyPayment();
+  }, [currentUserId, fetchApprovedProperties]);
+
   // Initial data fetch
   useEffect(() => {
     fetchRoles();
@@ -6168,6 +6601,14 @@ const ClientProperties = () => {
 
       <main className="flex-grow-1 bg-light">
         <div className="container py-4">
+          {/* Payment Modal */}
+          <PaymentModal 
+            isOpen={showPaymentModal}
+            onClose={handlePaymentModalClose}
+            property={selectedProperty}
+            onPaymentInitiate={handlePaymentInitiate}
+          />
+
           {/* Mobile Filter Modal */}
           <MobileFilterModal
             isOpen={showMobileFilters}
@@ -6267,6 +6708,7 @@ const ClientProperties = () => {
                     onVerificationStatusUpdate={handleVerificationStatusUpdate}
                     onDeleteProperty={handleDeleteProperty}
                     commissionData={commissionData}
+                    onBuyNowClick={handleBuyNowClick}
                   />
                   {renderPagination()}
                 </>
