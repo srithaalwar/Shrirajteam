@@ -4766,11 +4766,11 @@ const PropertyCard = ({
     navigate(`/client-properties-details/${property.property_id}`);
   };
 
-  const handleBuyNow = () => {
-    if (onBuyNowClick && property.status !== 'booked') {
-      onBuyNowClick(property);
-    }
-  };
+ const handleBuyNow = () => {
+  if (onBuyNowClick && property.status === 'available') {
+    onBuyNowClick(property);
+  }
+};
 
   const handleEditProperty = () => {
     navigate(`/edit-property/${property.property_id}`);
@@ -4971,19 +4971,19 @@ const PropertyCard = ({
           {property.looking_to === "sell" ? "VIEW DETAILS" : "CONTACT OWNER"}
         </button>
         
-        <button
-          onClick={handleBuyNow}
-          className={`btn w-100 fw-semibold py-2 mt-2 ${property.status === 'booked' ? 'btn-secondary' : ''}`}
-          style={{
-            backgroundColor: property.status === 'booked' ? '#6c757d' : '#28a745', 
-            borderColor: property.status === 'booked' ? '#6c757d' : '#28a745', 
-            color: '#fff',
-            cursor: property.status === 'booked' ? 'not-allowed' : 'pointer',
-          }}
-          disabled={property.status === 'booked'}
-        >
-          {property.status === 'booked' ? 'BOOKED' : 'BOOK NOW'}
-        </button>
+      <button
+  onClick={handleBuyNow}
+  className={`btn w-100 fw-semibold py-2 mt-2 ${property.status !== 'available' ? 'btn-secondary' : ''}`}
+  style={{
+    backgroundColor: property.status !== 'available' ? '#6c757d' : '#28a745', 
+    borderColor: property.status !== 'available' ? '#6c757d' : '#28a745', 
+    color: '#fff',
+    cursor: property.status !== 'available' ? 'not-allowed' : 'pointer',
+  }}
+  disabled={property.status !== 'available'}
+>
+  {property.status !== 'available' ? property.status?.toUpperCase() || 'NOT AVAILABLE' : 'BOOK NOW'}
+</button>
       </div>
     </div>
   );
@@ -5860,10 +5860,10 @@ const PropertyGrid = ({
             };
 
             const handleBuyNow = () => {
-              if (onBuyNowClick && property.status !== 'booked') {
-                onBuyNowClick(property);
-              }
-            };
+  if (onBuyNowClick && property.status === 'available') {
+    onBuyNowClick(property);
+  }
+};
 
             return (
               <div className="list-group-item mb-3">
@@ -5958,19 +5958,19 @@ const PropertyGrid = ({
                         ? "VIEW DETAILS"
                         : "CONTACT OWNER"}
                     </button>
-                    <button
-                      onClick={handleBuyNow}
-                      className={`btn fw-semibold py-2 ${property.status === 'booked' ? 'btn-secondary' : ''}`}
-                      style={{
-                        backgroundColor: property.status === 'booked' ? '#6c757d' : '#28a745', 
-                        borderColor: property.status === 'booked' ? '#6c757d' : '#28a745', 
-                        color: '#fff',
-                        cursor: property.status === 'booked' ? 'not-allowed' : 'pointer',
-                      }}
-                      disabled={property.status === 'booked'}
-                    >
-                      {property.status === 'booked' ? 'BOOKED' : 'BOOK NOW'}
-                    </button>
+                   <button
+  onClick={handleBuyNow}
+  className={`btn fw-semibold py-2 ${property.status !== 'available' ? 'btn-secondary' : ''}`}
+  style={{
+    backgroundColor: property.status !== 'available' ? '#6c757d' : '#28a745', 
+    borderColor: property.status !== 'available' ? '#6c757d' : '#28a745', 
+    color: '#fff',
+    cursor: property.status !== 'available' ? 'not-allowed' : 'pointer',
+  }}
+  disabled={property.status !== 'available'}
+>
+  {property.status !== 'available' ? property.status?.toUpperCase() || 'NOT AVAILABLE' : 'BOOK NOW'}
+</button>
                   </div>
                 </div>
               </div>
