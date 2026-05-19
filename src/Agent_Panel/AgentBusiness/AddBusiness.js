@@ -7135,26 +7135,21 @@ const AgentAddBusinessForm = ({ user, mode = 'add' }) => {
           <div className="form-section">
             <div className="form-section-content">
               <div className="row">
-                <div className="col-md-6">
+                <div className="col-md-4">
                   {renderField({
                     name: 'business_name',
                     label: 'Business Name',
                     required: true
                   })}
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                   {renderField({
                     name: 'legal_name',
                     label: 'Legal Name',
                     required: false
                   })}
                 </div>
-               
-              </div>
-
-              {/* New row for Display Order */}
-              {/* <div className="row">
-                 <div className="col-md-6">
+                 <div className="col-md-4">
                   {renderField({
                     type: 'select',
                     name: 'business_type',
@@ -7163,7 +7158,13 @@ const AgentAddBusinessForm = ({ user, mode = 'add' }) => {
                     required: true
                   })}
                 </div>
-                <div className="col-md-6">
+               
+              </div>
+
+              {/* New row for Display Order */}
+              <div className="row">
+                
+                {/* <div className="col-md-6">
                   {renderField({
                     type: 'number',
                     name: 'display_order',
@@ -7174,8 +7175,8 @@ const AgentAddBusinessForm = ({ user, mode = 'add' }) => {
                     helpText: 'Lower number displays first'
                   })}
                   <small className="form-text text-muted">Lower number displays first in listings</small>
-                </div>
-              </div> */}
+                </div> */}
+              </div>
 
               <div className="row">
                 <div className="col-md-6">
