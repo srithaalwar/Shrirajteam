@@ -2516,16 +2516,18 @@ const AgentHome = () => {
   const fetchAllCategories = async () => {
     setCategoriesLoading(true);
     try {
-      // Use lowercase 'business' as per your model choice field
+      // Use the exact endpoint from your JSON
       const res = await fetch(`${baseurl}/categories/?level=business`);
       
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
+      
+      // Extract results array from the response
       const categoriesData = data.results || data || [];
 
       const map = {};
       categoriesData.forEach((category) => {
-        // Additional safety check for level
+        // Store business level categories (already filtered by API)
         if (category.level === "business") {
           map[category.category_id] = {
             name: category.name,
@@ -2534,9 +2536,9 @@ const AgentHome = () => {
             level: category.level,
             parent: category.parent,
             icon: category.icon,
-            display_order: category.display_order,
+            display_order: category.display_order, // Store display order
             is_active: category.is_active,
-            children: category.children
+            children: category.children || []
           };
         }
       });
@@ -2568,11 +2570,26 @@ const AgentHome = () => {
   };
 
   useEffect(() => {
-    const categoriesWithBusinesses = Object.keys(groupedBusinesses).filter(
+    // Get categories that have businesses
+    let categoriesWithBusinesses = Object.keys(groupedBusinesses).filter(
       (categoryId) => groupedBusinesses[categoryId].length > 0
     );
+    
+    // Sort categories by display_order
+    categoriesWithBusinesses.sort((a, b) => {
+      // Handle uncategorized (always put at the end)
+      if (a === "uncategorized") return 1;
+      if (b === "uncategorized") return -1;
+      
+      // Get display_order from categoriesMap, default to a large number if not found
+      const orderA = categoriesMap[a]?.display_order ?? 9999;
+      const orderB = categoriesMap[b]?.display_order ?? 9999;
+      
+      return orderA - orderB;
+    });
+    
     setDisplayedCategories(categoriesWithBusinesses.slice(0, categoriesToShow));
-  }, [groupedBusinesses, categoriesToShow]);
+  }, [groupedBusinesses, categoriesMap, categoriesToShow]);
 
   // ✅ View All → show ALL products for that category (across all businesses)
   const handleViewAll = (categoryId) => {
@@ -2663,9 +2680,20 @@ const AgentHome = () => {
     );
   }
 
+  // Get all categories with businesses and sort them
   const allCategoriesWithBusinesses = Object.keys(groupedBusinesses).filter(
     (categoryId) => groupedBusinesses[categoryId].length > 0
-  );
+  ).sort((a, b) => {
+    // Handle uncategorized (always put at the end)
+    if (a === "uncategorized") return 1;
+    if (b === "uncategorized") return -1;
+    
+    // Get display_order from categoriesMap, default to a large number if not found
+    const orderA = categoriesMap[a]?.display_order ?? 9999;
+    const orderB = categoriesMap[b]?.display_order ?? 9999;
+    
+    return orderA - orderB;
+  });
 
   const hasMoreCategories =
     displayedCategories.length < allCategoriesWithBusinesses.length;
@@ -2689,11 +2717,18 @@ const AgentHome = () => {
             {displayedCategories.map((categoryId) => {
               const categoryBusinesses = groupedBusinesses[categoryId];
               const categoryInfo = categoriesMap[categoryId];
-              const categoryName =
-                categoryInfo?.name ||
-                (categoryId === "uncategorized" ? "Uncategorized" : "Businesses");
+              
+              // Get category name from the map or use fallback
+              let categoryName = "Businesses";
+              if (categoryId === "uncategorized") {
+                categoryName = "Uncategorized";
+              } else if (categoryInfo && categoryInfo.name) {
+                categoryName = categoryInfo.name;
+              } else if (!categoriesLoading && categoriesMap[categoryId]) {
+                categoryName = categoriesMap[categoryId].name;
+              }
 
-              // Show ALL businesses, not just 3
+              // Show ALL businesses for this category
               const displayBusinesses = categoryBusinesses;
               const visibility = arrowVisibility[categoryId] || { showLeft: false, showRight: true };
 
@@ -2703,7 +2738,7 @@ const AgentHome = () => {
                     <h2 className="mani-as-offer-heading">
                       {categoriesLoading ? (
                         <span className="mani-as-offer-loading-dots">
-                          Loading Category
+                          Loading Category...
                         </span>
                       ) : (
                         categoryName
@@ -2714,6 +2749,7 @@ const AgentHome = () => {
                         <button
                           onClick={() => handleViewAll(categoryId)}
                           className="mani-as-offer-viewall-btn"
+                          aria-label={`View all ${categoryName}`}
                         >
                           <span className="mani-as-viewall-circle">→</span>
                         </button>
@@ -2741,8 +2777,6 @@ const AgentHome = () => {
                       onScroll={() => checkScrollPosition(categoryId)}
                     >
                       {displayBusinesses.map((business) => {
-                        const offer = offersMap[business.offer];
-                        
                         const bannerImage = business.banner
                           ? business.banner.startsWith("http")
                             ? business.banner
