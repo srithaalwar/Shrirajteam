@@ -11329,7 +11329,7 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
           >
             BOOK NOW
           </button> */}
-          <button
+          {/* <button
             onClick={handleBuyNow}
             className={`btn w-100 fw-semibold py-2 ${property.status === 'booked' ? 'btn-secondary' : ''}`}
             style={{
@@ -11340,7 +11340,19 @@ const PropertyCard = ({ property, onVerificationStatusUpdate, onDeleteProperty, 
             disabled={property.status === 'booked'}
           >
             {property.status === 'booked' ? 'BOOKED' : 'BOOK NOW'}
-          </button>
+          </button> */}
+          <button
+  onClick={handleBuyNow}
+  className={`btn w-100 fw-semibold py-2 ${property.status !== 'available' ? 'btn-secondary' : ''}`}
+  style={{
+    backgroundColor: property.status !== 'available' ? '#6c757d' : '#28a745',
+    borderColor: property.status !== 'available' ? '#6c757d' : '#28a745',
+    color: '#fff'
+  }}
+  disabled={property.status !== 'available'}
+>
+  {property.status !== 'available' ? property.status?.toUpperCase() || 'NOT AVAILABLE' : 'BOOK NOW'}
+</button>
         </div>
       </div>
     </div>
@@ -12226,7 +12238,7 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                       >
                         BOOK NOW
                       </button> */}
-                      <button
+                      {/* <button
                         onClick={handleBuyNow}
                         className={`btn w-100 fw-semibold py-2 ${property.status === 'booked' ? 'btn-secondary' : ''}`}
                         style={{
@@ -12237,7 +12249,19 @@ const PropertyGrid = ({ properties, viewMode, onVerificationStatusUpdate, onDele
                         disabled={property.status === 'booked'}
                       >
                         {property.status === 'booked' ? 'BOOKED' : 'BOOK NOW'}
-                      </button>
+                      </button> */}
+                      <button
+  onClick={handleBuyNow}
+  className={`btn w-100 fw-semibold py-2 ${property.status !== 'available' ? 'btn-secondary' : ''}`}
+  style={{
+    backgroundColor: property.status !== 'available' ? '#6c757d' : '#28a745',
+    borderColor: property.status !== 'available' ? '#6c757d' : '#28a745',
+    color: '#fff'
+  }}
+  disabled={property.status !== 'available'}
+>
+  {property.status !== 'available' ? property.status?.toUpperCase() || 'NOT AVAILABLE' : 'BOOK NOW'}
+</button>
                     </div>
                   </div>
                 </div>
