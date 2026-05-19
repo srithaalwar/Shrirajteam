@@ -4588,11 +4588,11 @@ const fetchProducts = useCallback(async () => {
               {activeFilterCount > 0 && <span className="abpc-toolbar-badge">{activeFilterCount}</span>}
             </button>
           </div>
-          <div className="abpc-mobile-topbar">
+          {/* <div className="abpc-mobile-topbar">
             <button className="abpc-back" onClick={() => navigate(-1)}><ArrowLeft size={20} /></button>
             <h1 className="abpc-mobile-title">Categories</h1>
             <div style={{ width: 36 }} />
-          </div>
+          </div> */}
 
      
 
@@ -4635,7 +4635,7 @@ const fetchProducts = useCallback(async () => {
 
             <main className="abpc-main">
               <div className="abpc-main-header">
-                <h1 className="abpc-desktop-title">Categories</h1>
+                {/* <h1 className="abpc-desktop-title">Categories</h1> */}
                 <button className="abpc-back-desktop" onClick={() => navigate('/agent-dashboard')}>
                   <ArrowLeft size={17} /><span>Go to Dashboard</span>
                 </button>

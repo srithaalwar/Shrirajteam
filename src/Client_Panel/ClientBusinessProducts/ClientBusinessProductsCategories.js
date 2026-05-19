@@ -3284,7 +3284,7 @@ const ClientBusinessProductsCategories = () => {
         <div className="cbpc-mobile">
           <div className="cbpc-mobile-topbar">
             <button className="cbpc-back" onClick={() => navigate(-1)}><ArrowLeft size={20} /></button>
-            <h1 className="cbpc-mobile-title">categories</h1>
+            {/* <h1 className="cbpc-mobile-title">categories</h1> */}
             <div style={{ width: 36 }} />
           </div>
 
@@ -3331,7 +3331,7 @@ const ClientBusinessProductsCategories = () => {
               <button className="cbpc-back-desktop" onClick={() => navigate('/client-dashboard')}>
                 <ArrowLeft size={17} /><span>Go to Dashboard</span>
               </button>
-              <h1 className="cbpc-desktop-title">Categories</h1>
+              {/* <h1 className="cbpc-desktop-title">Categories</h1> */}
             </div>
           </div>
 
