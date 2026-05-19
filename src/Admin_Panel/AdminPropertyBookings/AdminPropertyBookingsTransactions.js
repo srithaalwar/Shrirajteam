@@ -3932,7 +3932,7 @@ function AdminPropertyBookings() {
         setPaymentFiles(prev => prev.filter((_, i) => i !== index));
     };
 
-    // Handle payment submission - Using PropertyConfirmPaymentAPIView with multiple files
+    // Handle payment submission - Using PropertyConfirmPaymentAPIView with multiple files (optional)
     const handleSubmitPayment = async () => {
         // Validate form
         if (!paymentFormData.payment_method) {
@@ -3953,14 +3953,7 @@ function AdminPropertyBookings() {
             return;
         }
 
-        if (paymentFiles.length === 0) {
-            Swal.fire({
-                icon: "error",
-                title: "Validation Error",
-                text: "Please upload at least one payment proof document",
-            });
-            return;
-        }
+        // Removed file validation - files are now optional
 
         setPaymentLoading(true);
 
@@ -3971,7 +3964,7 @@ function AdminPropertyBookings() {
             formData.append('payment_type', 'Full-Amount');
             formData.append('cash_reference', paymentFormData.cash_reference || `REF_${Date.now()}`);
             
-            // Append multiple payment proof files
+            // Append multiple payment proof files (optional - only if files exist)
             paymentFiles.forEach((file) => {
                 formData.append('payment_proofs', file);
             });
@@ -4670,7 +4663,7 @@ function AdminPropertyBookings() {
                 )}
             </div>
 
-            {/* Payment Modal - Updated for multiple file uploads */}
+            {/* Payment Modal - Updated for multiple file uploads (optional) */}
             {showPaymentModal && (
                 <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1050 }}>
                     <div className="modal-dialog modal-lg">
@@ -4791,9 +4784,9 @@ function AdminPropertyBookings() {
                                         />
                                     </div>
 
-                                    {/* Upload Multiple Payment Proofs */}
+                                    {/* Upload Multiple Payment Proofs - Optional */}
                                     <div className="mb-3">
-                                        <label className="form-label">Upload Payment Proofs / Receipts *</label>
+                                        <label className="form-label">Upload Payment Proofs / Receipts (Optional)</label>
                                         <input
                                             type="file"
                                             className="form-control"
@@ -4801,7 +4794,7 @@ function AdminPropertyBookings() {
                                             accept=".pdf,.jpg,.jpeg,.png"
                                             multiple
                                         />
-                                        <small className="text-muted">Supported formats: PDF, JPG, PNG (Max 5MB each). You can select multiple files.</small>
+                                        <small className="text-muted">Supported formats: PDF, JPG, PNG (Max 5MB each). You can select multiple files. Uploading files is optional.</small>
                                         
                                         {/* Display list of selected files */}
                                         {paymentFiles.length > 0 && (
@@ -4831,11 +4824,15 @@ function AdminPropertyBookings() {
                                         )}
                                     </div>
 
-                                    <div className="alert alert-info mt-3">
+                                    {/* <div className="alert alert-info mt-3">
                                         <strong>Note:</strong> This will process the full payment for this property booking. 
                                         The property status will be updated to "purchased" and an invoice will be generated.
-                                        Please upload all relevant payment proofs (cash receipts, bank transfer screenshots, cheque images, etc.)
-                                    </div>
+                                        {paymentFiles.length === 0 && (
+                                            <div className="mt-2 text-warning">
+                                                ⚠️ No files selected. You can proceed without uploading files, but it's recommended to upload payment proofs for record keeping.
+                                            </div>
+                                        )}
+                                    </div> */}
                                 </form>
                             </div>
                             <div className="modal-footer">
@@ -4855,7 +4852,7 @@ function AdminPropertyBookings() {
                                     type="button"
                                     className="btn btn-success"
                                     onClick={handleSubmitPayment}
-                                    disabled={paymentLoading || paymentFiles.length === 0}
+                                    disabled={paymentLoading}
                                 >
                                     {paymentLoading ? (
                                         <>
@@ -4863,7 +4860,7 @@ function AdminPropertyBookings() {
                                             Processing Payment...
                                         </>
                                     ) : (
-                                        `Confirm Full Payment (${paymentFiles.length} file${paymentFiles.length !== 1 ? 's' : ''})`
+                                        `Confirm Full Payment ${paymentFiles.length > 0 ? `(${paymentFiles.length} file${paymentFiles.length !== 1 ? 's' : ''})` : ''}`
                                     )}
                                 </button>
                             </div>
