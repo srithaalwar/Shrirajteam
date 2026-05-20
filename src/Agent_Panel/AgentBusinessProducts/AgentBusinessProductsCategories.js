@@ -4636,8 +4636,8 @@ const fetchProducts = useCallback(async () => {
             <main className="abpc-main">
               <div className="abpc-main-header">
                 {/* <h1 className="abpc-desktop-title">Categories</h1> */}
-                <button className="abpc-back-desktop" onClick={() => navigate('/agent-dashboard')}>
-                  <ArrowLeft size={17} /><span>Go to Dashboard</span>
+                <button className="abpc-back-desktop" onClick={() =>  navigate(-1)}>
+                  <ArrowLeft size={17} /><span>Back</span>
                 </button>
               </div>
               

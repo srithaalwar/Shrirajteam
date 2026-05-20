@@ -29,7 +29,7 @@ const ButtonRow = () => {
       id: 3, 
       name: 'Service', 
       icon: '⚙️', 
-      // path: '/services',
+      path: '/agent-services',
       description: 'Our services'
     },
     { 

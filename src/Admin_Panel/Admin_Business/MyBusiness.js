@@ -720,6 +720,7 @@ const AdminBusinessList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [filterCategory, setFilterCategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12);
   const [categories, setCategories] = useState([]);
@@ -862,12 +863,12 @@ const AdminBusinessList = () => {
     return <span className="badge bg-warning featured-badge">Featured</span>;
   };
 
-const getActiveBadge = (isActive) => {
+  const getActiveBadge = (isActive) => {
     if (!isActive) return <span className="badge bg-danger active-badge text-white">Inactive</span>;
     return <span className="badge bg-success active-badge text-white">Active</span>;
-};
+  };
 
-  // Filter businesses based on search and filters
+  // Filter businesses based on search, type, status, and category
   const filteredBusinesses = businesses.filter(business => {
     const matchesSearch = searchTerm === '' ||
       business.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -876,8 +877,12 @@ const getActiveBadge = (isActive) => {
 
     const matchesType = filterType === 'all' || business.business_type === filterType;
     const matchesStatus = filterStatus === 'all' || business.verification_status === filterStatus;
+    
+    const matchesCategory = filterCategory === 'all' || 
+      (business.categories && Array.isArray(business.categories) && 
+       business.categories.includes(parseInt(filterCategory)));
 
-    return matchesSearch && matchesType && matchesStatus;
+    return matchesSearch && matchesType && matchesStatus && matchesCategory;
   });
 
   // Pagination
@@ -913,7 +918,7 @@ const getActiveBadge = (isActive) => {
           confirmButtonColor: '#3085d6',
         });
 
-        fetchBusinesses(); // Refresh list
+        fetchBusinesses();
       } catch (error) {
         console.error('Error deleting business:', error);
         Swal.fire({
@@ -934,83 +939,79 @@ const getActiveBadge = (isActive) => {
     navigate(`/admin-view-business/${businessId}`);
   };
 
-  // Function to handle View Products navigation
   const handleViewProducts = (businessId) => {
     navigate(`/admin-my-products?business=${businessId}`);
   };
 
-  // Function to handle View Enquiries navigation
   const handleViewEnquiries = (businessId) => {
     navigate(`/admin-business-enquiries?business=${businessId}`);
   };
 
- const handleVerificationStatusChange = async (businessId, newStatus) => {
-  try {
-    const loadingAlert = Swal.fire({
-      title: 'Updating...',
-      text: 'Please wait while we update the verification status',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
-
-    // Change from PATCH to PUT
-    const response = await axios.put(
-      `${baseurl}/business/${businessId}/`,
-      {
-        verification_status: newStatus
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${userId}`,
-          'Content-Type': 'application/json'
+  const handleVerificationStatusChange = async (businessId, newStatus) => {
+    try {
+      const loadingAlert = Swal.fire({
+        title: 'Updating...',
+        text: 'Please wait while we update the verification status',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
         }
-      }
-    );
+      });
 
-    Swal.close();
-
-    if (response.status === 200 || response.status === 201) {
-      setBusinesses(prevBusinesses => 
-        prevBusinesses.map(business => 
-          business.business_id === businessId 
-            ? { ...business, verification_status: newStatus }
-            : business
-        )
+      const response = await axios.put(
+        `${baseurl}/business/${businessId}/`,
+        {
+          verification_status: newStatus
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${userId}`,
+            'Content-Type': 'application/json'
+          }
+        }
       );
 
+      Swal.close();
+
+      if (response.status === 200 || response.status === 201) {
+        setBusinesses(prevBusinesses => 
+          prevBusinesses.map(business => 
+            business.business_id === businessId 
+              ? { ...business, verification_status: newStatus }
+              : business
+          )
+        );
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Status Updated!',
+          text: `Verification status changed to ${getVerificationStatusLabel(newStatus)}`,
+          confirmButtonColor: '#3085d6',
+          timer: 2000,
+          timerProgressBar: true
+        });
+      }
+    } catch (error) {
+      console.error('Error updating verification status:', error);
+      
       Swal.fire({
-        icon: 'success',
-        title: 'Status Updated!',
-        text: `Verification status changed to ${getVerificationStatusLabel(newStatus)}`,
-        confirmButtonColor: '#3085d6',
-        timer: 2000,
-        timerProgressBar: true
+        icon: 'error',
+        title: 'Update Failed',
+        text: error.response?.data?.message || 'Failed to update verification status',
+        confirmButtonColor: '#d33',
       });
     }
-  } catch (error) {
-    console.error('Error updating verification status:', error);
-    
-    Swal.fire({
-      icon: 'error',
-      title: 'Update Failed',
-      text: error.response?.data?.message || 'Failed to update verification status',
-      confirmButtonColor: '#d33',
-    });
-  }
-};
-
-// Helper function to get status label
-const getVerificationStatusLabel = (status) => {
-  const statusLabels = {
-    'pending': 'Pending',
-    'verified': 'Verified',
-    'rejected': 'Rejected',
-    'suspended': 'Suspended'
   };
-  return statusLabels[status] || status;
-};
+
+  const getVerificationStatusLabel = (status) => {
+    const statusLabels = {
+      'pending': 'Pending',
+      'verified': 'Verified',
+      'rejected': 'Rejected',
+      'suspended': 'Suspended'
+    };
+    return statusLabels[status] || status;
+  };
 
   const handleAddNew = () => {
     navigate('/agent-add-business-form');
@@ -1045,7 +1046,7 @@ const getVerificationStatusLabel = (status) => {
 
         {/* Filters and Search */}
         <div className="row mb-4">
-          <div className="col-md-6">
+          <div className="col-md-4">
             <div className="input-group search-box">
               <span className="input-group-text">
                 <i className="bi bi-search"></i>
@@ -1059,11 +1060,14 @@ const getVerificationStatusLabel = (status) => {
               />
             </div>
           </div>
-          <div className="col-md-3">
+          <div className="col-md-2">
             <select
               className="form-select filter-select"
               value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
+              onChange={(e) => {
+                setFilterType(e.target.value);
+                setCurrentPage(1);
+              }}
             >
               <option value="all">All Business Types</option>
               <option value="individual">Individual</option>
@@ -1076,8 +1080,28 @@ const getVerificationStatusLabel = (status) => {
           <div className="col-md-3">
             <select
               className="form-select filter-select"
+              value={filterCategory}
+              onChange={(e) => {
+                setFilterCategory(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              <option value="all">All Categories</option>
+              {categories.map(category => (
+                <option key={category.category_id} value={category.category_id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="col-md-3">
+            <select
+              className="form-select filter-select"
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
+              onChange={(e) => {
+                setFilterStatus(e.target.value);
+                setCurrentPage(1);
+              }}
             >
               <option value="all">All Status</option>
               <option value="pending">Pending</option>
@@ -1122,7 +1146,7 @@ const getVerificationStatusLabel = (status) => {
                 <i className="bi bi-buildings-fill display-1 text-muted"></i>
                 <h3 className="mt-3">No businesses found</h3>
                 <p className="text-muted">
-                  {searchTerm || filterType !== 'all' || filterStatus !== 'all'
+                  {searchTerm || filterType !== 'all' || filterCategory !== 'all' || filterStatus !== 'all'
                     ? 'Try adjusting your search or filters'
                     : 'No businesses available'}
                 </p>
@@ -1201,6 +1225,17 @@ const getVerificationStatusLabel = (status) => {
                           <span className="info-label">Categories:</span>
                           <span className="info-value categories-value">
                             {getCategoryNames(business.categories) || 'No categories'}
+                          </span>
+                        </div>
+
+                        {/* Display Order - Added below verification status */}
+                        <div className="business-info-item">
+                          <i className="bi bi-sort-numeric-down me-2"></i>
+                          <span className="info-label">Display Order:</span>
+                          <span className="info-value">
+                            {business.display_order !== null && business.display_order !== undefined 
+                              ? business.display_order 
+                              : 'Not set'}
                           </span>
                         </div>
 

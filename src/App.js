@@ -373,7 +373,8 @@ import OrderCommission from "./Admin_Panel/Admin_Orders/Order_commission"
 import OrderDetails from "./Admin_Panel/Admin_Orders/OrderDetails";
 import BusinessEnquiries from "./Agent_Panel/AgentMyBusiness/Agent_Enquiries";
 import AdminBusinessEnquiries from "./Admin_Panel/Admin_Business/Admin_Enquiries_List/Admin_Enquiries";
-import AdminPropertyBookings from "./Admin_Panel/AdminPropertyBookings/AdminPropertyBookingsTransactions"
+import AdminPropertyBookings from "./Admin_Panel/AdminPropertyBookings/AdminPropertyBookingsTransactions";
+import AgentServices from "./Agent_Panel/Agent_Service_Providers/ServiceProviderProfile"
 function App() {
   return (
     <BrowserRouter>
@@ -564,6 +565,7 @@ function App() {
                 <Route path="/agent-dashboard" element={<AgentDashboard />} />
           <Route path="/agent-property-details" element={<AgentDashboardPropertyDetails />} />
 
+          <Route path="/agent-services" element={<AgentServices />} />
 
         <Route path="/agent-add-property" element={<AgentAddProperty />} />
         <Route path="/agent-properties" element={<AgentProperties />} />
