@@ -1228,11 +1228,11 @@ const AdminBusinessList = () => {
                           </span>
                         </div>
 
-                        {/* Display Order - Added below verification status */}
-                        <div className="business-info-item">
+                        {/* Highlighted Display Order Section */}
+                        <div className="business-info-item display-order-item">
                           <i className="bi bi-sort-numeric-down me-2"></i>
                           <span className="info-label">Display Order:</span>
-                          <span className="info-value">
+                          <span className="display-order-value">
                             {business.display_order !== null && business.display_order !== undefined 
                               ? business.display_order 
                               : 'Not set'}

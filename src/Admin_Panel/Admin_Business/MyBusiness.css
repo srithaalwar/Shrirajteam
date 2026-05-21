@@ -596,3 +596,75 @@
 .verification-status-select option[value="suspended"] {
   color: #6c757d;
 }
+
+
+/* Highlighted Display Order Styles */
+.display-order-item {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin: 8px 0;
+  transition: all 0.3s ease;
+}
+
+.display-order-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.display-order-item .info-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.display-order-item i {
+  color: #ffd700;
+  font-size: 1.1rem;
+}
+
+.display-order-value {
+  display: inline-block;
+  background: #ffd700;
+  color: #333;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-left: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* animation: pulse 2s infinite; */
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(255, 215, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
+/* If display order is "Not set" */
+.display-order-value:contains("Not set") {
+  background: #ff6b6b;
+  color: white;
+}
+
+/* Alternative simpler styling if you prefer */
+.display-order-item-simple {
+  background: #f8f9fa;
+  border-left: 4px solid #ffd700;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.display-order-value-simple {
+  font-weight: bold;
+  color: #ffd700;
+  font-size: 1.1rem;
+  margin-left: 8px;
+}
