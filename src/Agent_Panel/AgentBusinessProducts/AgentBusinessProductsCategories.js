@@ -3289,7 +3289,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { baseurl } from "../../BaseURL/BaseURL";
-import ClientNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import {
   Search, X, ChevronDown, Tag, DollarSign, ArrowLeft,
   Filter, Check, ChevronRight, SlidersHorizontal, Info, ShoppingCart
@@ -3298,6 +3298,7 @@ import "./AgentBusinessProductsCategories.css";
 import Swal from "sweetalert2";
 import axios from "axios";
 import defaultProductImage from "../../Logos/business-default-image.png";
+import Searchbar from "./SearchBar/AgentSearchBar"
 // ============= useIsMobile Hook =============
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
@@ -4573,7 +4574,7 @@ const fetchProducts = useCallback(async () => {
 
   return (
     <>
-      <ClientNavbar />
+      <AgentNavbar />
 
       {/* ======= MOBILE ======= */}
       {isMobile && (
@@ -4603,8 +4604,9 @@ const fetchProducts = useCallback(async () => {
               selectedDiscountRanges={selectedDiscountRanges} setSelectedDiscountRanges={setSelectedDiscountRanges}
               clearAll={clearAll} />
           )}
-
-          <div className="abpc-count">{sortedProducts.length} product{sortedProducts.length !== 1 ? "s" : ""}</div>
+          
+<Searchbar/> 
+         <div className="abpc-count">{sortedProducts.length} product{sortedProducts.length !== 1 ? "s" : ""}</div>
           {productSection}
           <div style={{ height: 24 }} />
 

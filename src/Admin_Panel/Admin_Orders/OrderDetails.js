@@ -1081,7 +1081,6 @@ function OrderDetails() {
                   <th>S.No.</th>
                   <th>Product</th>
                   <th>Category</th>
-                  <th>SKU</th>
                   <th>Qty</th>
                   <th>Unit Price</th>
                   <th>Line Total</th>
@@ -1092,7 +1091,6 @@ function OrderDetails() {
                   const variant = item.variant_details || {};
                   const productName = variant.sku || item.product_name || "Product";
                   const category = variant.category || item.category || "-";
-                  const sku = variant.sku || "-";
                   const unitPrice = parseFloat(item.price || 0);
                   const quantity = item.quantity || 0;
                   const lineTotal = unitPrice * quantity;
@@ -1107,7 +1105,6 @@ function OrderDetails() {
                         )}
                       </td>
                       <td>{category}</td>
-                      <td className="sku-cell">{sku}</td>
                       <td>{quantity}</td>
                       <td className="price-cell">{formatAmount(unitPrice)}</td>
                       <td className="total-cell">{formatAmount(lineTotal)}</td>

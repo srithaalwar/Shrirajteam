@@ -227,6 +227,7 @@
 @media (max-width: 768px) {
   .footer-custom {
     padding: 2rem 0 1rem;
+    display: none;
   }
   
   .footer-logo {

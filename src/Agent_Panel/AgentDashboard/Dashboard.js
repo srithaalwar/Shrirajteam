@@ -653,7 +653,7 @@ import { useNavigate } from "react-router-dom";
 import { baseurl } from "../../BaseURL/BaseURL";
 import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import "./Dashboard.css";
-
+import SearchBar from "./SearchBar/AgentSearchBar"
 // Font Awesome Icons
 import {
   faCheckCircle,
@@ -1224,6 +1224,7 @@ const AgentDashboard = () => {
   return (
     <>
       <AgentNavbar />
+      <SearchBar/>
       <div className="agent-dashboard-container">
         <div className="agent-dashboard-content">
           {loading ? (

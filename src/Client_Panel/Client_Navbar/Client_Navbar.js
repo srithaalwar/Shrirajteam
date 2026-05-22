@@ -4924,13 +4924,13 @@ const ClientNavbar = () => {
         </div>
 
         {/* Mobile Search Button */}
-        <button
+        {/* <button
           className="wn-mobile-search-btn"
           onClick={handleMobileSearchClick}
           aria-label="Search"
         >
           <FaSearch size={18} />
-        </button>
+        </button> */}
 
         <div className="wn-nav-right">
           {/* Notification Icon */}

@@ -22,7 +22,7 @@ const ButtonRow = () => {
       id: 2, 
       name: 'Business', 
       icon: '📦', 
-      path: '/agent-busineess-category',
+      path: '/agent-my-business',
       description: 'Browse our products'
     },
     { 

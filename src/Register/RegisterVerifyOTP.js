@@ -148,7 +148,7 @@ const RegisterVerifyOTP = () => {
       if (redirectedFromCart && hasCartItems) {
         navigate("/agent-add-to-cart", { replace: true });
       } else {
-        navigate("/agent-dashboard", { replace: true });
+        navigate("/agent-home", { replace: true });
       }
     } else if (role === "Client") {
       if (redirectedFromCart && hasCartItems) {
