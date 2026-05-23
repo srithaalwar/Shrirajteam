@@ -1702,93 +1702,222 @@ const AdminNavbar = () => {
   };
 
   // Mark notification as read and navigate
-  const handleNotificationItemClick = async (notification) => {
-    try {
-      const userId = localStorage.getItem("user_id");
-      if (!userId) {
-        console.error("No user_id found in localStorage");
+  // const handleNotificationItemClick = async (notification) => {
+  //   try {
+  //     const userId = localStorage.getItem("user_id");
+  //     if (!userId) {
+  //       console.error("No user_id found in localStorage");
+  //       return;
+  //     }
+      
+  //     console.log("Marking admin notification as read:", notification);
+      
+  //     await axios.post(`${baseurl}/notifications/mark-read/`, {
+  //       user_id: parseInt(userId),
+  //       notification_status_ids: [notification.notification_status_id]
+  //     });
+      
+  //     console.log("Successfully marked admin notification as read");
+      
+  //     const updatedNotifications = notifications.map(n => 
+  //       n.notification_status_id === notification.notification_status_id 
+  //         ? { ...n, is_read: true } 
+  //         : n
+  //     );
+      
+  //     setNotifications(updatedNotifications);
+      
+  //     const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+  //     setUnreadCount(newUnreadCount);
+      
+  //     setShowNotifications(false);
+      
+  //     if (notification.property !== null) {
+  //       navigate(`/admin-properties-details/${notification.property.id}`);
+  //     } else if (notification.product !== null) {
+  //       const productId = notification.product.product_id;
+  //       const variantId = notification.product.variant_id;
+        
+  //       if (productId && variantId) {
+  //         navigate(`/admin-business-product-details/${productId}/?variant=${variantId}`);
+  //       } else if (productId) {
+  //         navigate(`/admin-business-product-details/${productId}/`);
+  //       } else if (variantId) {
+  //         navigate(`/admin-product-details/${variantId}`);
+  //       } else {
+  //         fetchNotifications();
+  //       }
+  //     } else if (notification.user !== null) {
+  //       fetchNotifications();
+  //     } else if (notification.meeting) {
+  //       navigate(`/admin-meetings/${notification.meeting.id}`);
+  //     } else {
+  //       fetchNotifications();
+  //     }
+      
+  //   } catch (error) {
+  //     console.error("Error marking admin notification as read:", error);
+      
+  //     const updatedNotifications = notifications.map(n => 
+  //       n.notification_status_id === notification.notification_status_id 
+  //         ? { ...n, is_read: true } 
+  //         : n
+  //     );
+      
+  //     setNotifications(updatedNotifications);
+      
+  //     const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+  //     setUnreadCount(newUnreadCount);
+      
+  //     setShowNotifications(false);
+      
+  //     if (notification.property !== null) {
+  //       navigate(`/admin-properties-details/${notification.property.id}`);
+  //     } else if (notification.product !== null) {
+  //       const productId = notification.product.product_id;
+  //       const variantId = notification.product.variant_id;
+        
+  //       if (productId && variantId) {
+  //         navigate(`/admin-business-product-details/${productId}/?variant=${variantId}`);
+  //       } else if (productId) {
+  //         navigate(`/admin-business-product-details/${productId}/`);
+  //       } else if (variantId) {
+  //         navigate(`/admin-product-details/${variantId}`);
+  //       }
+  //     } else if (notification.meeting) {
+  //       navigate(`/admin-meetings/${notification.meeting.id}`);
+  //     }
+  //   }
+  // };
+
+  // Handle notification click
+const handleNotificationItemClick = async (notification) => {
+  try {
+    const userId = localStorage.getItem("user_id");
+    if (!userId) {
+      console.error("No user_id found in localStorage");
+      return;
+    }
+    
+    console.log("Marking admin notification as read:", notification);
+    
+    await axios.post(`${baseurl}/notifications/mark-read/`, {
+      user_id: parseInt(userId),
+      notification_status_ids: [notification.notification_status_id]
+    });
+    
+    console.log("Successfully marked admin notification as read");
+    
+    const updatedNotifications = notifications.map(n => 
+      n.notification_status_id === notification.notification_status_id 
+        ? { ...n, is_read: true } 
+        : n
+    );
+    
+    setNotifications(updatedNotifications);
+    
+    const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+    setUnreadCount(newUnreadCount);
+    
+    setShowNotifications(false);
+    
+    // Check if this is an order notification (message contains "order #")
+    const isOrderNotification = notification.message && 
+      (notification.message.toLowerCase().includes('order #') || 
+       notification.message.toLowerCase().includes('order for'));
+    
+    if (isOrderNotification) {
+      // Extract order ID from message
+      const orderMatch = notification.message.match(/order #(\d+)/i);
+      if (orderMatch && orderMatch[1]) {
+        const orderId = orderMatch[1];
+        console.log("Navigating to orders page with order ID:", orderId);
+        // Navigate to orders page with order ID as state
+        navigate('/admin-orders', { state: { highlightOrderId: parseInt(orderId) } });
         return;
       }
+    }
+    
+    // Property notifications
+    if (notification.property !== null) {
+      navigate(`/admin-properties-details/${notification.property.id}`);
+    } 
+    // Product notifications
+    else if (notification.product !== null) {
+      const productId = notification.product.product_id;
+      const variantId = notification.product.variant_id;
       
-      console.log("Marking admin notification as read:", notification);
-      
-      await axios.post(`${baseurl}/notifications/mark-read/`, {
-        user_id: parseInt(userId),
-        notification_status_ids: [notification.notification_status_id]
-      });
-      
-      console.log("Successfully marked admin notification as read");
-      
-      const updatedNotifications = notifications.map(n => 
-        n.notification_status_id === notification.notification_status_id 
-          ? { ...n, is_read: true } 
-          : n
-      );
-      
-      setNotifications(updatedNotifications);
-      
-      const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
-      setUnreadCount(newUnreadCount);
-      
-      setShowNotifications(false);
-      
-      if (notification.property !== null) {
-        navigate(`/admin-properties-details/${notification.property.id}`);
-      } else if (notification.product !== null) {
-        const productId = notification.product.product_id;
-        const variantId = notification.product.variant_id;
-        
-        if (productId && variantId) {
-          navigate(`/admin-business-product-details/${productId}/?variant=${variantId}`);
-        } else if (productId) {
-          navigate(`/admin-business-product-details/${productId}/`);
-        } else if (variantId) {
-          navigate(`/admin-product-details/${variantId}`);
-        } else {
-          fetchNotifications();
-        }
-      } else if (notification.user !== null) {
-        fetchNotifications();
-      } else if (notification.meeting) {
-        navigate(`/admin-meetings/${notification.meeting.id}`);
+      if (productId && variantId) {
+        navigate(`/admin-business-product-details/${productId}/?variant=${variantId}`);
+      } else if (productId) {
+        navigate(`/admin-business-product-details/${productId}/`);
+      } else if (variantId) {
+        navigate(`/admin-product-details/${variantId}`);
       } else {
         fetchNotifications();
       }
-      
-    } catch (error) {
-      console.error("Error marking admin notification as read:", error);
-      
-      const updatedNotifications = notifications.map(n => 
-        n.notification_status_id === notification.notification_status_id 
-          ? { ...n, is_read: true } 
-          : n
-      );
-      
-      setNotifications(updatedNotifications);
-      
-      const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
-      setUnreadCount(newUnreadCount);
-      
-      setShowNotifications(false);
-      
-      if (notification.property !== null) {
-        navigate(`/admin-properties-details/${notification.property.id}`);
-      } else if (notification.product !== null) {
-        const productId = notification.product.product_id;
-        const variantId = notification.product.variant_id;
-        
-        if (productId && variantId) {
-          navigate(`/admin-business-product-details/${productId}/?variant=${variantId}`);
-        } else if (productId) {
-          navigate(`/admin-business-product-details/${productId}/`);
-        } else if (variantId) {
-          navigate(`/admin-product-details/${variantId}`);
-        }
-      } else if (notification.meeting) {
-        navigate(`/admin-meetings/${notification.meeting.id}`);
+    } 
+    // User notifications
+    else if (notification.user !== null) {
+      // Navigate to users page or just refresh
+      fetchNotifications();
+    } 
+    // Meeting notifications
+    else if (notification.meeting) {
+      navigate(`/admin-meetings/${notification.meeting.id}`);
+    } 
+    else {
+      fetchNotifications();
+    }
+    
+  } catch (error) {
+    console.error("Error marking admin notification as read:", error);
+    
+    const updatedNotifications = notifications.map(n => 
+      n.notification_status_id === notification.notification_status_id 
+        ? { ...n, is_read: true } 
+        : n
+    );
+    
+    setNotifications(updatedNotifications);
+    
+    const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+    setUnreadCount(newUnreadCount);
+    
+    setShowNotifications(false);
+    
+    // Even if API fails, try to navigate
+    const isOrderNotification = notification.message && 
+      (notification.message.toLowerCase().includes('order #') || 
+       notification.message.toLowerCase().includes('order for'));
+    
+    if (isOrderNotification) {
+      const orderMatch = notification.message.match(/order #(\d+)/i);
+      if (orderMatch && orderMatch[1]) {
+        const orderId = orderMatch[1];
+        navigate('/admin-orders', { state: { highlightOrderId: parseInt(orderId) } });
+        return;
       }
     }
-  };
+    
+    if (notification.property !== null) {
+      navigate(`/admin-properties-details/${notification.property.id}`);
+    } else if (notification.product !== null) {
+      const productId = notification.product.product_id;
+      const variantId = notification.product.variant_id;
+      
+      if (productId && variantId) {
+        navigate(`/admin-business-product-details/${productId}/?variant=${variantId}`);
+      } else if (productId) {
+        navigate(`/admin-business-product-details/${productId}/`);
+      } else if (variantId) {
+        navigate(`/admin-product-details/${variantId}`);
+      }
+    } else if (notification.meeting) {
+      navigate(`/admin-meetings/${notification.meeting.id}`);
+    }
+  }
+};
 
   // Mark all notifications as read
   const handleMarkAllAsRead = async () => {

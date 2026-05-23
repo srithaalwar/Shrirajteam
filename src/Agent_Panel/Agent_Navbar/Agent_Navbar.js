@@ -15237,91 +15237,250 @@ const AgentNavbar = () => {
   };
 
   // Mark notification as read and navigate to property/product
-  const handleNotificationItemClick = async (notification) => {
-    try {
-      const userId = localStorage.getItem("user_id");
-      if (!userId) {
-        console.error("No user_id found in localStorage");
-        return;
-      }
+//   const handleNotificationItemClick = async (notification) => {
+//     try {
+//       const userId = localStorage.getItem("user_id");
+//       if (!userId) {
+//         console.error("No user_id found in localStorage");
+//         return;
+//       }
       
-      console.log("Marking agent notification as read:", notification);
+//       console.log("Marking agent notification as read:", notification);
       
-      await axios.post(`${baseurl}/notifications/mark-read/`, {
-        user_id: parseInt(userId),
-        notification_status_ids: [notification.notification_status_id]
-      });
+//       await axios.post(`${baseurl}/notifications/mark-read/`, {
+//         user_id: parseInt(userId),
+//         notification_status_ids: [notification.notification_status_id]
+//       });
       
-      console.log("Successfully marked agent notification as read");
+//       console.log("Successfully marked agent notification as read");
       
-      const updatedNotifications = notifications.map(n => 
-        n.notification_status_id === notification.notification_status_id 
-          ? { ...n, is_read: true } 
-          : n
-      );
+//       const updatedNotifications = notifications.map(n => 
+//         n.notification_status_id === notification.notification_status_id 
+//           ? { ...n, is_read: true } 
+//           : n
+//       );
       
-      setNotifications(updatedNotifications);
+//       setNotifications(updatedNotifications);
       
-      const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
-      setUnreadCount(newUnreadCount);
+//       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+//       setUnreadCount(newUnreadCount);
       
-      setShowNotifications(false);
+//       setShowNotifications(false);
       
-      if (notification.property !== null) {
-        navigate(`/agent-properties-details/${notification.property.id}`);
-      } else if (notification.product !== null) {
-        const productId = notification.product.product_id;
-        const variantId = notification.product.variant_id;
+//       if (notification.property !== null) {
+//         navigate(`/agent-properties-details/${notification.property.id}`);
+//       } else if (notification.product !== null) {
+//         const productId = notification.product.product_id;
+//         const variantId = notification.product.variant_id;
         
-        if (productId && variantId) {
-          navigate(`/agent-business-product-details/${productId}/?variant=${variantId}`);
-        } else if (productId) {
-          navigate(`/agent-business-product-details/${productId}/`);
-        } else if (variantId) {
-          navigate(`/agent-product-details/${variantId}`);
+//         if (productId && variantId) {
+//           navigate(`/agent-business-product-details/${productId}/?variant=${variantId}`);
+//         } else if (productId) {
+//           navigate(`/agent-business-product-details/${productId}/`);
+//         } else if (variantId) {
+//           navigate(`/agent-product-details/${variantId}`);
+//         } else {
+//           fetchNotifications();
+//         }
+//       } else if (notification.meeting && notification.meeting.id) {
+//         navigate(`/p-meetings/${notification.meeting.id}`);
+//       } else {
+//         fetchNotifications();
+//       }
+      
+//     } catch (error) {
+//       console.error("Error marking agent notification as read:", error);
+      
+//       const updatedNotifications = notifications.map(n => 
+//         n.notification_status_id === notification.notification_status_id 
+//           ? { ...n, is_read: true } 
+//           : n
+//       );
+      
+//       setNotifications(updatedNotifications);
+      
+//       const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+//       setUnreadCount(newUnreadCount);
+      
+//       setShowNotifications(false);
+      
+//       if (notification.property !== null) {
+//         navigate(`/agent-properties-details/${notification.property.id}`);
+//       } else if (notification.product !== null) {
+//         const productId = notification.product.product_id;
+//         const variantId = notification.product.variant_id;
+        
+//         if (productId && variantId) {
+//           navigate(`/agent-business-product-details/${productId}/?variant=${variantId}`);
+//         } else if (productId) {
+//           navigate(`/agent-business-product-details/${productId}/`);
+//         } else if (variantId) {
+//           navigate(`/agent-product-details/${variantId}`);
+//         }
+//       } else if (notification.meeting && notification.meeting.id) {
+//         navigate(`/p-meetings/${notification.meeting.id}`);
+//       }
+//     }
+//   };
+
+// Mark notification as read and navigate to property/product/order
+const handleNotificationItemClick = async (notification) => {
+  try {
+    const userId = localStorage.getItem("user_id");
+    if (!userId) {
+      console.error("No user_id found in localStorage");
+      return;
+    }
+    
+    console.log("Marking agent notification as read:", notification);
+    
+    await axios.post(`${baseurl}/notifications/mark-read/`, {
+      user_id: parseInt(userId),
+      notification_status_ids: [notification.notification_status_id]
+    });
+    
+    console.log("Successfully marked agent notification as read");
+    
+    const updatedNotifications = notifications.map(n => 
+      n.notification_status_id === notification.notification_status_id 
+        ? { ...n, is_read: true } 
+        : n
+    );
+    
+    setNotifications(updatedNotifications);
+    
+    const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+    setUnreadCount(newUnreadCount);
+    
+    setShowNotifications(false);
+    
+    // CHECK FOR ORDER NOTIFICATIONS FIRST
+    const message = notification.message || '';
+    const isOrderNotification = message.toLowerCase().includes('order #');
+    
+    if (isOrderNotification) {
+      // Extract order ID from message
+      const orderMatch = message.match(/order #(\d+)/i);
+      if (orderMatch && orderMatch[1]) {
+        const orderId = orderMatch[1];
+        
+        // Determine which orders page to navigate to based on message content
+        // "Your order #X has been successfully placed" -> Buyer orders (agent-my-orders)
+        // "You received a new order #X" -> Seller orders (agent-orders)
+        // "New order #X placed for" -> Seller orders (agent-orders)
+        
+        const isBuyerOrder = message.toLowerCase().includes('your order') || 
+                             message.toLowerCase().includes('successfully placed');
+        
+        const isSellerOrder = message.toLowerCase().includes('you received') || 
+                              message.toLowerCase().includes('new order');
+        
+        if (isBuyerOrder) {
+          console.log("Navigating to buyer orders page with order ID:", orderId);
+          navigate('/agent-my-orders', { state: { highlightOrderId: parseInt(orderId) } });
+          return;
+        } else if (isSellerOrder) {
+          console.log("Navigating to seller orders page with order ID:", orderId);
+          navigate('/agent-orders', { state: { highlightOrderId: parseInt(orderId) } });
+          return;
         } else {
-          fetchNotifications();
+          // Fallback - default to seller orders
+          console.log("Defaulting to seller orders page with order ID:", orderId);
+          navigate('/agent-orders', { state: { highlightOrderId: parseInt(orderId) } });
+          return;
         }
-      } else if (notification.meeting && notification.meeting.id) {
-        navigate(`/p-meetings/${notification.meeting.id}`);
+      }
+    }
+    
+    // Property notifications
+    if (notification.property !== null) {
+      navigate(`/agent-properties-details/${notification.property.id}`);
+    } 
+    // Product notifications
+    else if (notification.product !== null) {
+      const productId = notification.product.product_id;
+      const variantId = notification.product.variant_id;
+      
+      if (productId && variantId) {
+        navigate(`/agent-business-product-details/${productId}/?variant=${variantId}`);
+      } else if (productId) {
+        navigate(`/agent-business-product-details/${productId}/`);
+      } else if (variantId) {
+        navigate(`/agent-product-details/${variantId}`);
       } else {
         fetchNotifications();
       }
-      
-    } catch (error) {
-      console.error("Error marking agent notification as read:", error);
-      
-      const updatedNotifications = notifications.map(n => 
-        n.notification_status_id === notification.notification_status_id 
-          ? { ...n, is_read: true } 
-          : n
-      );
-      
-      setNotifications(updatedNotifications);
-      
-      const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
-      setUnreadCount(newUnreadCount);
-      
-      setShowNotifications(false);
-      
-      if (notification.property !== null) {
-        navigate(`/agent-properties-details/${notification.property.id}`);
-      } else if (notification.product !== null) {
-        const productId = notification.product.product_id;
-        const variantId = notification.product.variant_id;
+    } 
+    // Meeting notifications
+    else if (notification.meeting && notification.meeting.id) {
+      navigate(`/p-meetings/${notification.meeting.id}`);
+    } 
+    else {
+      fetchNotifications();
+    }
+    
+  } catch (error) {
+    console.error("Error marking agent notification as read:", error);
+    
+    const updatedNotifications = notifications.map(n => 
+      n.notification_status_id === notification.notification_status_id 
+        ? { ...n, is_read: true } 
+        : n
+    );
+    
+    setNotifications(updatedNotifications);
+    
+    const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
+    setUnreadCount(newUnreadCount);
+    
+    setShowNotifications(false);
+    
+    // Even if API fails, try to navigate for order notifications
+    const message = notification.message || '';
+    const isOrderNotification = message.toLowerCase().includes('order #');
+    
+    if (isOrderNotification) {
+      const orderMatch = message.match(/order #(\d+)/i);
+      if (orderMatch && orderMatch[1]) {
+        const orderId = orderMatch[1];
         
-        if (productId && variantId) {
-          navigate(`/agent-business-product-details/${productId}/?variant=${variantId}`);
-        } else if (productId) {
-          navigate(`/agent-business-product-details/${productId}/`);
-        } else if (variantId) {
-          navigate(`/agent-product-details/${variantId}`);
+        const isBuyerOrder = message.toLowerCase().includes('your order') || 
+                             message.toLowerCase().includes('successfully placed');
+        
+        const isSellerOrder = message.toLowerCase().includes('you received') || 
+                              message.toLowerCase().includes('new order');
+        
+        if (isBuyerOrder) {
+          navigate('/agent-my-orders', { state: { highlightOrderId: parseInt(orderId) } });
+          return;
+        } else if (isSellerOrder) {
+          navigate('/agent-orders', { state: { highlightOrderId: parseInt(orderId) } });
+          return;
+        } else {
+          navigate('/agent-orders', { state: { highlightOrderId: parseInt(orderId) } });
+          return;
         }
-      } else if (notification.meeting && notification.meeting.id) {
-        navigate(`/p-meetings/${notification.meeting.id}`);
       }
     }
-  };
+    
+    if (notification.property !== null) {
+      navigate(`/agent-properties-details/${notification.property.id}`);
+    } else if (notification.product !== null) {
+      const productId = notification.product.product_id;
+      const variantId = notification.product.variant_id;
+      
+      if (productId && variantId) {
+        navigate(`/agent-business-product-details/${productId}/?variant=${variantId}`);
+      } else if (productId) {
+        navigate(`/agent-business-product-details/${productId}/`);
+      } else if (variantId) {
+        navigate(`/agent-product-details/${variantId}`);
+      }
+    } else if (notification.meeting && notification.meeting.id) {
+      navigate(`/p-meetings/${notification.meeting.id}`);
+    }
+  }
+};
 
   // Format notification message
   const formatNotificationMessage = (notification) => {

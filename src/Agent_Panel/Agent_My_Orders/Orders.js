@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import AgentNavbar from "../Agent_Navbar/Agent_Navbar";
 import { baseurl } from '../../BaseURL/BaseURL';
@@ -28,6 +28,7 @@ import {
 function AgentMyOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -40,7 +41,8 @@ function AgentMyOrders() {
     to: ""
   });
   const navigate = useNavigate();
-  
+  const [highlightedOrderId, setHighlightedOrderId] = useState(null);
+const [scrollToOrder, setScrollToOrder] = useState(false);
   // Get user_id from localStorage
   const userId = localStorage.getItem("user_id");
 
@@ -99,6 +101,46 @@ function AgentMyOrders() {
     fetchOrders();
   }, [userId]);
 
+  // Check for highlighted order from navigation state
+useEffect(() => {
+  const navigationState = location.state || {};
+  if (navigationState.highlightOrderId) {
+    console.log("Highlighting order in My Orders:", navigationState.highlightOrderId);
+    setHighlightedOrderId(navigationState.highlightOrderId);
+    setScrollToOrder(true);
+    
+    // Auto-expand the highlighted order
+    setExpandedOrders(prev => {
+      if (!prev.includes(navigationState.highlightOrderId)) {
+        return [...prev, navigationState.highlightOrderId];
+      }
+      return prev;
+    });
+    
+    // Clear the state after using it
+    setTimeout(() => {
+      setScrollToOrder(false);
+    }, 1000);
+  }
+}, [location]);
+// Scroll to highlighted order
+useEffect(() => {
+  if (scrollToOrder && highlightedOrderId && orders.length > 0) {
+    setTimeout(() => {
+      const orderElement = document.getElementById(`order-${highlightedOrderId}`);
+      if (orderElement) {
+        orderElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+        orderElement.classList.add('order-highlight');
+        setTimeout(() => {
+          orderElement.classList.remove('order-highlight');
+        }, 3000);
+      }
+    }, 500);
+  }
+}, [scrollToOrder, highlightedOrderId, orders]);
   // Calculate tax totals for an order
   const calculateOrderTaxes = (order) => {
     if (!order.items || !Array.isArray(order.items)) {
@@ -653,7 +695,11 @@ GRAND TOTAL: ₹${(parseFloat(order.total_amount) || 0).toFixed(2)}
                   const taxes = calculateOrderTaxes(order);
                   
                   return (
-                    <div key={order.order_id || order.id} className="order-card">
+                 <div 
+  key={order.order_id || order.id} 
+  id={`order-${order.order_id || order.id}`}
+  className={`order-card ${highlightedOrderId === (order.order_id || order.id) ? 'order-highlight-init' : ''}`}
+>
                       <div 
                         className="order-summary"
                         onClick={() => toggleOrderDetails(order.order_id)}

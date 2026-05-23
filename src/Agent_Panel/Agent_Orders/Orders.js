@@ -43,7 +43,8 @@ function AgentOrders() {
   const [buyerDetails, setBuyerDetails] = useState({});
   const [loadingBuyer, setLoadingBuyer] = useState({});
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
-
+const [highlightedOrderId, setHighlightedOrderId] = useState(null);
+const [scrollToOrder, setScrollToOrder] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(); // ADD THIS
 
@@ -159,6 +160,46 @@ function AgentOrders() {
     fetchOrders();
   }, [userId]);
 
+  // Check for highlighted order from navigation state
+useEffect(() => {
+  const navigationState = location.state || {};
+  if (navigationState.highlightOrderId) {
+    console.log("Highlighting order in Seller Orders:", navigationState.highlightOrderId);
+    setHighlightedOrderId(navigationState.highlightOrderId);
+    setScrollToOrder(true);
+    
+    // Auto-expand the highlighted order
+    setExpandedOrders(prev => {
+      if (!prev.includes(navigationState.highlightOrderId)) {
+        return [...prev, navigationState.highlightOrderId];
+      }
+      return prev;
+    });
+    
+    // Clear the state after using it
+    setTimeout(() => {
+      setScrollToOrder(false);
+    }, 1000);
+  }
+}, [location]);
+// Scroll to highlighted order
+useEffect(() => {
+  if (scrollToOrder && highlightedOrderId && orders.length > 0) {
+    setTimeout(() => {
+      const orderElement = document.getElementById(`order-${highlightedOrderId}`);
+      if (orderElement) {
+        orderElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+        orderElement.classList.add('order-highlight');
+        setTimeout(() => {
+          orderElement.classList.remove('order-highlight');
+        }, 3000);
+      }
+    }, 500);
+  }
+}, [scrollToOrder, highlightedOrderId, orders]);
   const toggleOrderDetails = (orderId) => {
     if (expandedOrders.includes(orderId)) {
       setExpandedOrders(expandedOrders.filter(id => id !== orderId));
@@ -557,7 +598,11 @@ GRAND TOTAL: ₹${(parseFloat(order.total_amount) || 0).toFixed(2)}
                   const isLoadingBuyer = loadingBuyer[order.user];
                   
                   return (
-                    <div key={order.order_id || order.id} className="order-card">
+                  <div 
+  key={order.order_id || order.id} 
+  id={`order-${order.order_id || order.id}`}
+  className={`order-card ${highlightedOrderId === (order.order_id || order.id) ? 'order-highlight-init' : ''}`}
+>
                       <div className="order-summary" onClick={() => toggleOrderDetails(order.order_id)}>
                         <div className="order-info">
                           <div className="order-id">

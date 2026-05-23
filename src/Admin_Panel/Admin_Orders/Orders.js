@@ -39,7 +39,8 @@ function Orders() {
 });
   const navigate = useNavigate();
   const userId = localStorage.getItem("user_id");
-
+const [highlightedOrderId, setHighlightedOrderId] = useState(null);
+const [scrollToOrder, setScrollToOrder] = useState(false);
   // Fetch orders
   const fetchOrders = async () => {
     if (!userId) {
@@ -78,6 +79,48 @@ function Orders() {
     fetchOrders();
   }, [userId]);
 
+  // Check for highlighted order from navigation state
+useEffect(() => {
+  const navigationState = window.history.state?.usr || {};
+  if (navigationState.highlightOrderId) {
+    console.log("Highlighting order:", navigationState.highlightOrderId);
+    setHighlightedOrderId(navigationState.highlightOrderId);
+    setScrollToOrder(true);
+    
+    // Auto-expand the highlighted order
+    setExpandedOrders(prev => {
+      if (!prev.includes(navigationState.highlightOrderId)) {
+        return [...prev, navigationState.highlightOrderId];
+      }
+      return prev;
+    });
+    
+    // Clear the state after using it
+    setTimeout(() => {
+      setScrollToOrder(false);
+    }, 1000);
+  }
+}, []);
+
+// Scroll to highlighted order
+useEffect(() => {
+  if (scrollToOrder && highlightedOrderId && orders.length > 0) {
+    setTimeout(() => {
+      const orderElement = document.getElementById(`order-${highlightedOrderId}`);
+      if (orderElement) {
+        orderElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+        // Add a temporary highlight class
+        orderElement.classList.add('order-highlight');
+        setTimeout(() => {
+          orderElement.classList.remove('order-highlight');
+        }, 3000);
+      }
+    }, 500);
+  }
+}, [scrollToOrder, highlightedOrderId, orders]);
   // Toggle order details
   const toggleOrderDetails = (orderId) => {
     if (expandedOrders.includes(orderId)) {
@@ -550,8 +593,12 @@ const getFilteredAndSortedOrders = () => {
                   const itemsCount = calculateItemsCount(order);
                   const isExpanded = expandedOrders.includes(order.order_id);
                   
-                  return (
-                    <div key={order.order_id} className="order-card">
+             return (
+  <div 
+    key={order.order_id} 
+    id={`order-${order.order_id}`}
+    className={`order-card ${highlightedOrderId === order.order_id ? 'order-highlight-init' : ''}`}
+  >
                       <div 
                         className="order-summary"
                         onClick={() => toggleOrderDetails(order.order_id)}
