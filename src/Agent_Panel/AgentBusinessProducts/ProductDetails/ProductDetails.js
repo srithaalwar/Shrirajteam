@@ -307,7 +307,7 @@
 //   const [openDetails, setOpenDetails] = useState(false);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState("");
-  
+
 //   /* ================= VIDEO PLAYER STATE ================= */
 //   const [isPlaying, setIsPlaying] = useState(false);
 //   const [isMuted, setIsMuted] = useState(false);
@@ -501,7 +501,7 @@
 //               {(selectedVariant.media || []).map((media, index) => {
 //                 const mediaUrl = `${baseurl}${media.file}`;
 //                 const isSelected = selectedMedia === mediaUrl;
-                
+
 //                 return (
 //                   <div
 //                     key={index}
@@ -553,13 +553,13 @@
 //                     loop
 //                     playsInline
 //                   />
-                  
+
 //                   {/* Custom Video Controls */}
 //                   <div className="video-controls">
 //                     <button className="control-btn" onClick={togglePlay}>
 //                       {isPlaying ? <FaPause /> : <FaPlay />}
 //                     </button>
-                    
+
 //                     <div className="time-slider">
 //                       <input
 //                         type="range"
@@ -573,7 +573,7 @@
 //                         {formatTime(currentTime)} / {formatTime(duration)}
 //                       </span>
 //                     </div>
-                    
+
 //                     <div className="volume-controls">
 //                       <button className="control-btn" onClick={toggleMute}>
 //                         {isMuted || volume === 0 ? <FaVolumeMute /> : <FaVolumeUp />}
@@ -588,7 +588,7 @@
 //                         className="volume-slider"
 //                       />
 //                     </div>
-                    
+
 //                     <button className="control-btn" onClick={toggleFullscreen}>
 //                       {isFullscreen ? <FaCompress /> : <FaExpand />}
 //                     </button>
@@ -761,7 +761,7 @@
 //   const [openDetails, setOpenDetails] = useState(false);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState("");
-  
+
 //   /* ================= VIDEO PLAYER STATE ================= */
 //   const [isPlaying, setIsPlaying] = useState(false);
 //   const [isMuted, setIsMuted] = useState(false);
@@ -979,7 +979,7 @@
 //                   const mediaUrl = `${baseurl}${media.file}`;
 //                   const isSelected = selectedMedia === mediaUrl;
 //                   const type = media.media_type || "image";
-                  
+
 //                   return (
 //                     <div
 //                       key={index}
@@ -1014,7 +1014,7 @@
 //                   );
 //                 })}
 //               </div>
-              
+
 //               {/* Scroll Indicator for Desktop */}
 //               {(selectedVariant.media?.length || 0) > 5 && (
 //                 <div className="scroll-indicator">
@@ -1039,13 +1039,13 @@
 //                     loop
 //                     playsInline
 //                   />
-                  
+
 //                   {/* Custom Video Controls */}
 //                   <div className="video-controls">
 //                     <button className="control-btn" onClick={togglePlay}>
 //                       {isPlaying ? <FaPause /> : <FaPlay />}
 //                     </button>
-                    
+
 //                     <div className="time-slider">
 //                       <input
 //                         type="range"
@@ -1059,7 +1059,7 @@
 //                         {formatTime(currentTime)} / {formatTime(duration)}
 //                       </span>
 //                     </div>
-                    
+
 //                     <div className="volume-controls">
 //                       <button className="control-btn" onClick={toggleMute}>
 //                         {isMuted || volume === 0 ? <FaVolumeMute /> : <FaVolumeUp />}
@@ -1074,7 +1074,7 @@
 //                         className="volume-slider"
 //                       />
 //                     </div>
-                    
+
 //                     <button className="control-btn" onClick={toggleFullscreen}>
 //                       {isFullscreen ? <FaCompress /> : <FaExpand />}
 //                     </button>
@@ -1250,7 +1250,7 @@
 //   const [openDetails, setOpenDetails] = useState(false);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState("");
-  
+
 //   /* ================= NEW STATES FOR DYNAMIC FUNCTIONALITY ================= */
 //   const [wishlist, setWishlist] = useState([]); // Array of wishlist items
 //   const [isInWishlist, setIsInWishlist] = useState(false);
@@ -1260,7 +1260,7 @@
 //   const [cartLoading, setCartLoading] = useState(false);
 //   const [cartItemId, setCartItemId] = useState(null); // To track existing cart item ID
 //   const [cartQuantity, setCartQuantity] = useState(0); // Quantity in cart
-  
+
 //   // Get user from localStorage
 //   const userId = localStorage.getItem("user_id");
 
@@ -1332,16 +1332,16 @@
 //     const fetchWishlist = async () => {
 //       try {
 //         const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
-        
+
 //         // Check if current variant is in wishlist
 //         const wishlistItems = response.data || [];
 //         setWishlist(wishlistItems);
-        
+
 //         // Check if current variant is in wishlist
 //         const isVariantInWishlist = wishlistItems.some(
 //           item => item.variant === selectedVariant.id
 //         );
-        
+
 //         setIsInWishlist(isVariantInWishlist);
 //       } catch (error) {
 //         console.error("Error fetching wishlist:", error);
@@ -1358,19 +1358,19 @@
 //     const fetchCartItems = async () => {
 //       try {
 //         const response = await axios.get(`${baseurl}/cart/`);
-        
+
 //         // Filter cart items for current user
 //         const userCartItems = response.data.filter(
 //           item => item.user === parseInt(userId)
 //         );
-        
+
 //         setCartItems(userCartItems);
-        
+
 //         // Check if current variant is in cart
 //         const cartItem = userCartItems.find(
 //           item => item.variant === selectedVariant.id
 //         );
-        
+
 //         if (cartItem) {
 //           setIsInCart(true);
 //           setCartItemId(cartItem.id);
@@ -1398,21 +1398,21 @@
 //     if (!selectedVariant) return;
 
 //     setWishlistLoading(true);
-    
+
 //     try {
 //       if (isInWishlist) {
 //         // Find wishlist item ID to delete
 //         const wishlistItem = wishlist.find(
 //           item => item.variant === selectedVariant.id && item.user === parseInt(userId)
 //         );
-        
+
 //         if (wishlistItem) {
 //           await axios.delete(`${baseurl}/wishlist/${wishlistItem.id}/`);
 //           setIsInWishlist(false);
-          
+
 //           // Update local wishlist state
 //           setWishlist(prev => prev.filter(item => item.id !== wishlistItem.id));
-          
+
 //           alert("Removed from wishlist");
 //         }
 //       } else {
@@ -1421,12 +1421,12 @@
 //           user: parseInt(userId),
 //           variant: selectedVariant.id
 //         });
-        
+
 //         setIsInWishlist(true);
-        
+
 //         // Add new item to local wishlist state
 //         setWishlist(prev => [...prev, response.data]);
-        
+
 //         alert("Added to wishlist");
 //       }
 //     } catch (error) {
@@ -1445,14 +1445,14 @@
 //     }
 
 //     if (!selectedVariant) return;
-    
+
 //     if (qty > selectedVariant.stock) {
 //       alert(`Only ${selectedVariant.stock} items available in stock`);
 //       return;
 //     }
 
 //     setCartLoading(true);
-    
+
 //     try {
 //       if (isInCart && cartItemId) {
 //         // Update existing cart item
@@ -1461,7 +1461,7 @@
 //           variant: selectedVariant.id,
 //           quantity: qty
 //         });
-        
+
 //         setCartQuantity(qty);
 //         alert(`Cart updated to ${qty} items`);
 //       } else {
@@ -1471,14 +1471,14 @@
 //           variant: selectedVariant.id,
 //           quantity: qty
 //         });
-        
+
 //         setIsInCart(true);
 //         setCartItemId(response.data.id);
 //         setCartQuantity(qty);
-        
+
 //         // Add to local cart state
 //         setCartItems(prev => [...prev, response.data]);
-        
+
 //         alert("Added to cart successfully!");
 //       }
 //     } catch (error) {
@@ -1491,19 +1491,19 @@
 
 //   const handleRemoveFromCart = async () => {
 //     if (!userId || !cartItemId) return;
-    
+
 //     setCartLoading(true);
-    
+
 //     try {
 //       await axios.delete(`${baseurl}/cart/${cartItemId}/`);
-      
+
 //       setIsInCart(false);
 //       setCartItemId(null);
 //       setCartQuantity(0);
-      
+
 //       // Remove from local cart state
 //       setCartItems(prev => prev.filter(item => item.id !== cartItemId));
-      
+
 //       alert("Removed from cart");
 //     } catch (error) {
 //       console.error("Error removing from cart:", error);
@@ -1570,7 +1570,7 @@
 //                   );
 //                 })}
 //               </div>
-              
+
 //               {/* Scroll Indicator (only shows when there are more than 5 images) */}
 //               {(selectedVariant.media || []).length > 5 && (
 //                 <div className="scroll-indicator">
@@ -1594,7 +1594,7 @@
 //                 >
 //                   {isInWishlist ? '❤️' : '🤍'}
 //                 </div>
-                
+
 //                 {/* Share Icon */}
 //                 <div className="icon-circle" title="Share">
 //                   ↗️
@@ -1609,7 +1609,7 @@
 //               Visit the {product.brand || "Store"}
 //             </p>
 //           <div className="details-section">
-            
+
 
 //             <h1>{product.product_name}</h1>
 
@@ -1713,7 +1713,7 @@
 //             <p className="secure">
 //               Stock Available: {selectedVariant.stock}
 //             </p>
-            
+
 //             {/* Show if item is already in cart */}
 //             {isInCart && (
 //               <p className="cart-info">
@@ -1789,7 +1789,7 @@
 // import {
 //   Heart,
 //   Share2,
-  
+
 // } from "lucide-react";
 
 // const ProductDetails = () => {
@@ -1808,7 +1808,7 @@
 //   const [openDetails, setOpenDetails] = useState(false);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState("");
-  
+
 //   /* ================= NEW STATES FOR DYNAMIC FUNCTIONALITY ================= */
 //   const [wishlist, setWishlist] = useState([]); // Array of wishlist items
 //   const [isInWishlist, setIsInWishlist] = useState(false);
@@ -1818,7 +1818,7 @@
 //   const [cartLoading, setCartLoading] = useState(false);
 //   const [cartItemId, setCartItemId] = useState(null); // To track existing cart item ID
 //   const [cartQuantity, setCartQuantity] = useState(0); // Quantity in cart
-  
+
 //   // Get user from localStorage
 //   const userId = localStorage.getItem("user_id");
 
@@ -1890,16 +1890,16 @@
 //     const fetchWishlist = async () => {
 //       try {
 //         const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
-        
+
 //         // Check if current variant is in wishlist
 //         const wishlistItems = response.data || [];
 //         setWishlist(wishlistItems);
-        
+
 //         // Check if current variant is in wishlist
 //         const isVariantInWishlist = wishlistItems.some(
 //           item => item.variant === selectedVariant.id
 //         );
-        
+
 //         setIsInWishlist(isVariantInWishlist);
 //       } catch (error) {
 //         console.error("Error fetching wishlist:", error);
@@ -1916,19 +1916,19 @@
 //     const fetchCartItems = async () => {
 //       try {
 //         const response = await axios.get(`${baseurl}/cart/`);
-        
+
 //         // Filter cart items for current user
 //         const userCartItems = response.data.filter(
 //           item => item.user === parseInt(userId)
 //         );
-        
+
 //         setCartItems(userCartItems);
-        
+
 //         // Check if current variant is in cart
 //         const cartItem = userCartItems.find(
 //           item => item.variant === selectedVariant.id
 //         );
-        
+
 //         if (cartItem) {
 //           setIsInCart(true);
 //           setCartItemId(cartItem.id);
@@ -1956,21 +1956,21 @@
 //     if (!selectedVariant) return;
 
 //     setWishlistLoading(true);
-    
+
 //     try {
 //       if (isInWishlist) {
 //         // Find wishlist item ID to delete
 //         const wishlistItem = wishlist.find(
 //           item => item.variant === selectedVariant.id && item.user === parseInt(userId)
 //         );
-        
+
 //         if (wishlistItem) {
 //           await axios.delete(`${baseurl}/wishlist/${wishlistItem.id}/`);
 //           setIsInWishlist(false);
-          
+
 //           // Update local wishlist state
 //           setWishlist(prev => prev.filter(item => item.id !== wishlistItem.id));
-          
+
 //           alert("Removed from wishlist");
 //         }
 //       } else {
@@ -1979,12 +1979,12 @@
 //           user: parseInt(userId),
 //           variant: selectedVariant.id
 //         });
-        
+
 //         setIsInWishlist(true);
-        
+
 //         // Add new item to local wishlist state
 //         setWishlist(prev => [...prev, response.data]);
-        
+
 //         alert("Added to wishlist");
 //       }
 //     } catch (error) {
@@ -2003,14 +2003,14 @@
 //     }
 
 //     if (!selectedVariant) return;
-    
+
 //     if (qty > selectedVariant.stock) {
 //       alert(`Only ${selectedVariant.stock} items available in stock`);
 //       return;
 //     }
 
 //     setCartLoading(true);
-    
+
 //     try {
 //       if (isInCart && cartItemId) {
 //         // Update existing cart item
@@ -2019,7 +2019,7 @@
 //           variant: selectedVariant.id,
 //           quantity: qty
 //         });
-        
+
 //         setCartQuantity(qty);
 //         alert(`Cart updated to ${qty} items`);
 //       } else {
@@ -2029,14 +2029,14 @@
 //           variant: selectedVariant.id,
 //           quantity: qty
 //         });
-        
+
 //         setIsInCart(true);
 //         setCartItemId(response.data.id);
 //         setCartQuantity(qty);
-        
+
 //         // Add to local cart state
 //         setCartItems(prev => [...prev, response.data]);
-        
+
 //         alert("Added to cart successfully!");
 //       }
 //     } catch (error) {
@@ -2049,19 +2049,19 @@
 
 //   const handleRemoveFromCart = async () => {
 //     if (!userId || !cartItemId) return;
-    
+
 //     setCartLoading(true);
-    
+
 //     try {
 //       await axios.delete(`${baseurl}/cart/${cartItemId}/`);
-      
+
 //       setIsInCart(false);
 //       setCartItemId(null);
 //       setCartQuantity(0);
-      
+
 //       // Remove from local cart state
 //       setCartItems(prev => prev.filter(item => item.id !== cartItemId));
-      
+
 //       alert("Removed from cart");
 //     } catch (error) {
 //       console.error("Error removing from cart:", error);
@@ -2128,7 +2128,7 @@
 //                   );
 //                 })}
 //               </div>
-              
+
 //               {/* Scroll Indicator (only shows when there are more than 5 images) */}
 //               {(selectedVariant.media || []).length > 5 && (
 //                 <div className="scroll-indicator">
@@ -2141,7 +2141,7 @@
 //             <div className="main-image-box">
 //               <img src={selectedImage} alt={product.product_name} />
 //               {/* <div className="floating-icons">
-                
+
 //                 <div 
 //                   className={`icon-circle ${isInWishlist ? 'active' : ''}`}
 //                   onClick={handleWishlistToggle}
@@ -2152,8 +2152,8 @@
 //                 >
 //                   {isInWishlist ? '❤️' : '🤍'}
 //                 </div>
-                
-                
+
+
 //                 <div className="icon-circle" title="Share">
 //                   ↗️
 //                 </div>
@@ -2171,13 +2171,13 @@
 //                   <Share2 size={20} />
 //                 </div>
 //               </div>
-              
+
 //             </div>
 //           </div>
 
 //           {/* ========== MIDDLE : DETAILS ========== */}
 //           <div className="details-section product-details-section">
-            
+
 
 //             <h1>{product.product_name}</h1>
 
@@ -2281,7 +2281,7 @@
 //             <p className="secure">
 //               Stock Available: {selectedVariant.stock}
 //             </p>
-            
+
 //             {/* Show if item is already in cart */}
 //             {isInCart && (
 //               <p className="cart-info">
@@ -2370,7 +2370,7 @@
 //   const [openDetails, setOpenDetails] = useState(false);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState("");
-  
+
 //   /* ================= NEW STATES FOR DYNAMIC FUNCTIONALITY ================= */
 //   const [wishlist, setWishlist] = useState([]); // Array of wishlist items
 //   const [isInWishlist, setIsInWishlist] = useState(false);
@@ -2380,7 +2380,7 @@
 //   const [cartLoading, setCartLoading] = useState(false);
 //   const [cartItemId, setCartItemId] = useState(null); // To track existing cart item ID
 //   const [cartQuantity, setCartQuantity] = useState(0); // Quantity in cart
-  
+
 //   // Get user from localStorage
 //   const userId = localStorage.getItem("user_id");
 
@@ -2453,11 +2453,11 @@
 //       try {
 //         const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
 //         console.log("📋 Wishlist API Response:", response.data);
-        
+
 //         // Handle paginated response - get items from results array
 //         const wishlistResponse = response.data;
 //         let wishlistItems = [];
-        
+
 //         if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
 //           // Get items from results array
 //           wishlistItems = wishlistResponse.results;
@@ -2465,18 +2465,18 @@
 //           // If response is already an array
 //           wishlistItems = wishlistResponse;
 //         }
-        
+
 //         console.log("📋 Wishlist items:", wishlistItems);
 //         setWishlist(wishlistItems);
-        
+
 //         // Check if current variant is in wishlist
 //         const isVariantInWishlist = wishlistItems.some(
 //           item => item.variant === selectedVariant.id
 //         );
-        
+
 //         console.log("📋 Is variant in wishlist:", isVariantInWishlist, "for variant:", selectedVariant.id);
 //         setIsInWishlist(isVariantInWishlist);
-        
+
 //       } catch (error) {
 //         console.error("Error fetching wishlist:", error);
 //         if (error.response) {
@@ -2497,25 +2497,25 @@
 //       try {
 //         const response = await axios.get(`${baseurl}/cart/`);
 //         console.log("🛒 Cart API Response:", response.data);
-        
+
 //         // Handle paginated response - get items from results array
 //         const cartResponse = response.data;
 //         let userCartItems = [];
-        
+
 //         if (cartResponse.results && Array.isArray(cartResponse.results)) {
 //           userCartItems = cartResponse.results;
 //         } else if (Array.isArray(cartResponse)) {
 //           userCartItems = cartResponse;
 //         }
-        
+
 //         console.log("🛒 User cart items:", userCartItems);
 //         setCartItems(userCartItems);
-        
+
 //         // Check if current variant is in cart
 //         const cartItem = userCartItems.find(
 //           item => item.variant === selectedVariant.id
 //         );
-        
+
 //         if (cartItem) {
 //           setIsInCart(true);
 //           setCartItemId(cartItem.id);
@@ -2545,7 +2545,7 @@
 //     console.log("User ID:", userId);
 //     console.log("Selected Variant ID:", selectedVariant?.id);
 //     console.log("Is in wishlist:", isInWishlist);
-    
+
 //     if (!userId) {
 //       alert("Please login to add items to wishlist");
 //       return;
@@ -2557,27 +2557,27 @@
 //     }
 
 //     setWishlistLoading(true);
-    
+
 //     try {
 //       if (isInWishlist) {
 //         // Find wishlist item ID to delete
 //         console.log("Looking for wishlist item to delete...");
 //         console.log("Current wishlist:", wishlist);
-        
+
 //         const wishlistItem = wishlist.find(
 //           item => item.variant === selectedVariant.id && item.user === parseInt(userId)
 //         );
-        
+
 //         console.log("Found wishlist item to delete:", wishlistItem);
-        
+
 //         if (wishlistItem) {
 //           console.log(`Deleting wishlist item ${wishlistItem.id}`);
 //           await axios.delete(`${baseurl}/wishlist/${wishlistItem.id}/`);
 //           setIsInWishlist(false);
-          
+
 //           // Update local wishlist state
 //           setWishlist(prev => prev.filter(item => item.id !== wishlistItem.id));
-          
+
 //           console.log("✅ Removed from wishlist");
 //           alert("Removed from wishlist");
 //         } else {
@@ -2591,15 +2591,15 @@
 //           variant: selectedVariant.id
 //         };
 //         console.log("Wishlist payload:", payload);
-        
+
 //         const response = await axios.post(`${baseurl}/wishlist/`, payload);
 //         console.log("Wishlist POST response:", response.data);
-        
+
 //         setIsInWishlist(true);
-        
+
 //         // Add new item to local wishlist state
 //         setWishlist(prev => [...prev, response.data]);
-        
+
 //         console.log("✅ Added to wishlist");
 //         alert("Added to wishlist");
 //       }
@@ -2620,7 +2620,7 @@
 //     console.log("🛒 Add to cart clicked");
 //     console.log("User ID:", userId);
 //     console.log("Selected Variant ID:", selectedVariant?.id);
-    
+
 //     if (!userId) {
 //       alert("Please login to add items to cart");
 //       return;
@@ -2630,14 +2630,14 @@
 //       console.error("No selected variant");
 //       return;
 //     }
-    
+
 //     if (qty > selectedVariant.stock) {
 //       alert(`Only ${selectedVariant.stock} items available in stock`);
 //       return;
 //     }
 
 //     setCartLoading(true);
-    
+
 //     try {
 //       if (isInCart && cartItemId) {
 //         // Update existing cart item
@@ -2648,19 +2648,19 @@
 //           quantity: qty
 //         };
 //         console.log("Cart update payload:", payload);
-        
+
 //         await axios.put(`${baseurl}/cart/${cartItemId}/`, payload);
-        
+
 //         setCartQuantity(qty);
-        
+
 //         // Update local cart state
 //         setCartItems(prev => prev.map(item => 
 //           item.id === cartItemId ? { ...item, quantity: qty } : item
 //         ));
-        
+
 //         // Dispatch cart update event for navbar
 //         window.dispatchEvent(new Event('cartUpdated'));
-        
+
 //         console.log("✅ Cart updated");
 //         alert(`Cart updated to ${qty} items`);
 //       } else {
@@ -2672,20 +2672,20 @@
 //           quantity: qty
 //         };
 //         console.log("Cart POST payload:", payload);
-        
+
 //         const response = await axios.post(`${baseurl}/cart/`, payload);
 //         console.log("Cart POST response:", response.data);
-        
+
 //         setIsInCart(true);
 //         setCartItemId(response.data.id);
 //         setCartQuantity(qty);
-        
+
 //         // Add to local cart state
 //         setCartItems(prev => [...prev, response.data]);
-        
+
 //         // Dispatch cart update event for navbar
 //         window.dispatchEvent(new Event('cartUpdated'));
-        
+
 //         console.log("✅ Added to cart");
 //         alert("Added to cart successfully!");
 //       }
@@ -2703,23 +2703,23 @@
 
 //   const handleRemoveFromCart = async () => {
 //     if (!userId || !cartItemId) return;
-    
+
 //     setCartLoading(true);
-    
+
 //     try {
 //       console.log(`Removing cart item ${cartItemId}`);
 //       await axios.delete(`${baseurl}/cart/${cartItemId}/`);
-      
+
 //       setIsInCart(false);
 //       setCartItemId(null);
 //       setCartQuantity(0);
-      
+
 //       // Remove from local cart state
 //       setCartItems(prev => prev.filter(item => item.id !== cartItemId));
-      
+
 //       // Dispatch cart update event for navbar
 //       window.dispatchEvent(new Event('cartUpdated'));
-      
+
 //       alert("Removed from cart");
 //     } catch (error) {
 //       console.error("Error removing from cart:", error);
@@ -2786,7 +2786,7 @@
 //                   );
 //                 })}
 //               </div>
-              
+
 //               {/* Scroll Indicator (only shows when there are more than 5 images) */}
 //               {(selectedVariant.media || []).length > 5 && (
 //                 <div className="scroll-indicator">
@@ -2798,7 +2798,7 @@
 //             {/* Main Image */}
 //             <div className="main-image-box">
 //               <img src={selectedImage} alt={product.product_name} />
-              
+
 //               <div className="floating-icons">
 //                 {/* Wishlist Icon */}
 //                 <div 
@@ -2816,7 +2816,7 @@
 //                     fill={isInWishlist ? '#ff2e93' : 'none'} 
 //                   />
 //                 </div>
-                
+
 //                 {/* Share Icon */}
 //                 <div className="icon-circle" title="Share">
 //                   <Share2 size={20} />
@@ -2969,7 +2969,7 @@
 //             <p className="secure">
 //               Stock Available: {selectedVariant.stock}
 //             </p>
-            
+
 //             {/* Show if item is already in cart */}
 //             {isInCart && (
 //               <p className="cart-info">
@@ -3057,7 +3057,7 @@
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState("");
 //   const [showCopyAlert, setShowCopyAlert] = useState(false); // NEW: Copy alert state
-  
+
 //   /* ================= NEW STATES FOR DYNAMIC FUNCTIONALITY ================= */
 //   const [wishlist, setWishlist] = useState([]); // Array of wishlist items
 //   const [isInWishlist, setIsInWishlist] = useState(false);
@@ -3067,7 +3067,7 @@
 //   const [cartLoading, setCartLoading] = useState(false);
 //   const [cartItemId, setCartItemId] = useState(null); // To track existing cart item ID
 //   const [cartQuantity, setCartQuantity] = useState(0); // Quantity in cart
-  
+
 //   // Get user from localStorage
 //   const userId = localStorage.getItem("user_id");
 
@@ -3075,12 +3075,12 @@
 //   const handleShareClick = () => {
 //     // Construct the product URL with variant
 //     const currentUrl = `${window.location.origin}/product/${productId}/?variant=${variantId || selectedVariant?.id}`;
-    
+
 //     navigator.clipboard.writeText(currentUrl)
 //       .then(() => {
 //         // Show custom alert/notification
 //         setShowCopyAlert(true);
-        
+
 //         // Auto-hide after 3 seconds
 //         setTimeout(() => {
 //           setShowCopyAlert(false);
@@ -3176,11 +3176,11 @@
 //       try {
 //         const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
 //         console.log("📋 Wishlist API Response:", response.data);
-        
+
 //         // Handle paginated response - get items from results array
 //         const wishlistResponse = response.data;
 //         let wishlistItems = [];
-        
+
 //         if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
 //           // Get items from results array
 //           wishlistItems = wishlistResponse.results;
@@ -3188,18 +3188,18 @@
 //           // If response is already an array
 //           wishlistItems = wishlistResponse;
 //         }
-        
+
 //         console.log("📋 Wishlist items:", wishlistItems);
 //         setWishlist(wishlistItems);
-        
+
 //         // Check if current variant is in wishlist
 //         const isVariantInWishlist = wishlistItems.some(
 //           item => item.variant === selectedVariant.id
 //         );
-        
+
 //         console.log("📋 Is variant in wishlist:", isVariantInWishlist, "for variant:", selectedVariant.id);
 //         setIsInWishlist(isVariantInWishlist);
-        
+
 //       } catch (error) {
 //         console.error("Error fetching wishlist:", error);
 //         if (error.response) {
@@ -3220,25 +3220,25 @@
 //       try {
 //         const response = await axios.get(`${baseurl}/cart/`);
 //         console.log("🛒 Cart API Response:", response.data);
-        
+
 //         // Handle paginated response - get items from results array
 //         const cartResponse = response.data;
 //         let userCartItems = [];
-        
+
 //         if (cartResponse.results && Array.isArray(cartResponse.results)) {
 //           userCartItems = cartResponse.results;
 //         } else if (Array.isArray(cartResponse)) {
 //           userCartItems = cartResponse;
 //         }
-        
+
 //         console.log("🛒 User cart items:", userCartItems);
 //         setCartItems(userCartItems);
-        
+
 //         // Check if current variant is in cart
 //         const cartItem = userCartItems.find(
 //           item => item.variant === selectedVariant.id
 //         );
-        
+
 //         if (cartItem) {
 //           setIsInCart(true);
 //           setCartItemId(cartItem.id);
@@ -3268,7 +3268,7 @@
 //     console.log("User ID:", userId);
 //     console.log("Selected Variant ID:", selectedVariant?.id);
 //     console.log("Is in wishlist:", isInWishlist);
-    
+
 //     if (!userId) {
 //       alert("Please login to add items to wishlist");
 //       return;
@@ -3280,27 +3280,27 @@
 //     }
 
 //     setWishlistLoading(true);
-    
+
 //     try {
 //       if (isInWishlist) {
 //         // Find wishlist item ID to delete
 //         console.log("Looking for wishlist item to delete...");
 //         console.log("Current wishlist:", wishlist);
-        
+
 //         const wishlistItem = wishlist.find(
 //           item => item.variant === selectedVariant.id && item.user === parseInt(userId)
 //         );
-        
+
 //         console.log("Found wishlist item to delete:", wishlistItem);
-        
+
 //         if (wishlistItem) {
 //           console.log(`Deleting wishlist item ${wishlistItem.id}`);
 //           await axios.delete(`${baseurl}/wishlist/${wishlistItem.id}/`);
 //           setIsInWishlist(false);
-          
+
 //           // Update local wishlist state
 //           setWishlist(prev => prev.filter(item => item.id !== wishlistItem.id));
-          
+
 //           console.log("✅ Removed from wishlist");
 //           alert("Removed from wishlist");
 //         } else {
@@ -3314,15 +3314,15 @@
 //           variant: selectedVariant.id
 //         };
 //         console.log("Wishlist payload:", payload);
-        
+
 //         const response = await axios.post(`${baseurl}/wishlist/`, payload);
 //         console.log("Wishlist POST response:", response.data);
-        
+
 //         setIsInWishlist(true);
-        
+
 //         // Add new item to local wishlist state
 //         setWishlist(prev => [...prev, response.data]);
-        
+
 //         console.log("✅ Added to wishlist");
 //         alert("Added to wishlist");
 //       }
@@ -3343,7 +3343,7 @@
 //     console.log("🛒 Add to cart clicked");
 //     console.log("User ID:", userId);
 //     console.log("Selected Variant ID:", selectedVariant?.id);
-    
+
 //     if (!userId) {
 //       alert("Please login to add items to cart");
 //       return;
@@ -3353,14 +3353,14 @@
 //       console.error("No selected variant");
 //       return;
 //     }
-    
+
 //     if (qty > selectedVariant.stock) {
 //       alert(`Only ${selectedVariant.stock} items available in stock`);
 //       return;
 //     }
 
 //     setCartLoading(true);
-    
+
 //     try {
 //       if (isInCart && cartItemId) {
 //         // Update existing cart item
@@ -3371,19 +3371,19 @@
 //           quantity: qty
 //         };
 //         console.log("Cart update payload:", payload);
-        
+
 //         await axios.put(`${baseurl}/cart/${cartItemId}/`, payload);
-        
+
 //         setCartQuantity(qty);
-        
+
 //         // Update local cart state
 //         setCartItems(prev => prev.map(item => 
 //           item.id === cartItemId ? { ...item, quantity: qty } : item
 //         ));
-        
+
 //         // Dispatch cart update event for navbar
 //         window.dispatchEvent(new Event('cartUpdated'));
-        
+
 //         console.log("✅ Cart updated");
 //         alert(`Cart updated to ${qty} items`);
 //       } else {
@@ -3395,20 +3395,20 @@
 //           quantity: qty
 //         };
 //         console.log("Cart POST payload:", payload);
-        
+
 //         const response = await axios.post(`${baseurl}/cart/`, payload);
 //         console.log("Cart POST response:", response.data);
-        
+
 //         setIsInCart(true);
 //         setCartItemId(response.data.id);
 //         setCartQuantity(qty);
-        
+
 //         // Add to local cart state
 //         setCartItems(prev => [...prev, response.data]);
-        
+
 //         // Dispatch cart update event for navbar
 //         window.dispatchEvent(new Event('cartUpdated'));
-        
+
 //         console.log("✅ Added to cart");
 //         alert("Added to cart successfully!");
 //       }
@@ -3426,23 +3426,23 @@
 
 //   const handleRemoveFromCart = async () => {
 //     if (!userId || !cartItemId) return;
-    
+
 //     setCartLoading(true);
-    
+
 //     try {
 //       console.log(`Removing cart item ${cartItemId}`);
 //       await axios.delete(`${baseurl}/cart/${cartItemId}/`);
-      
+
 //       setIsInCart(false);
 //       setCartItemId(null);
 //       setCartQuantity(0);
-      
+
 //       // Remove from local cart state
 //       setCartItems(prev => prev.filter(item => item.id !== cartItemId));
-      
+
 //       // Dispatch cart update event for navbar
 //       window.dispatchEvent(new Event('cartUpdated'));
-      
+
 //       alert("Removed from cart");
 //     } catch (error) {
 //       console.error("Error removing from cart:", error);
@@ -3519,7 +3519,7 @@
 //                   );
 //                 })}
 //               </div>
-              
+
 //               {/* Scroll Indicator (only shows when there are more than 5 images) */}
 //               {(selectedVariant.media || []).length > 5 && (
 //                 <div className="scroll-indicator">
@@ -3531,7 +3531,7 @@
 //             {/* Main Image */}
 //             <div className="main-image-box">
 //               <img src={selectedImage} alt={product.product_name} />
-              
+
 //               <div className="floating-icons">
 //                 {/* Wishlist Icon */}
 //                 <div 
@@ -3549,7 +3549,7 @@
 //                     fill={isInWishlist ? '#ff2e93' : 'none'} 
 //                   />
 //                 </div>
-                
+
 //                 {/* Share Icon */}
 //                 <div 
 //                   className="icon-circle" 
@@ -3707,7 +3707,7 @@
 //             <p className="secure">
 //               Stock Available: {selectedVariant.stock}
 //             </p>
-            
+
 //             {/* Show if item is already in cart */}
 //             {isInCart && (
 //               <p className="cart-info">
@@ -3796,7 +3796,7 @@
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState("");
 //   const [showCopyAlert, setShowCopyAlert] = useState(false); // NEW: Copy alert state
-  
+
 //   /* ================= NEW STATES FOR DYNAMIC FUNCTIONALITY ================= */
 //   const [wishlist, setWishlist] = useState([]); // Array of wishlist items
 //   const [isInWishlist, setIsInWishlist] = useState(false);
@@ -3806,7 +3806,7 @@
 //   const [cartLoading, setCartLoading] = useState(false);
 //   const [cartItemId, setCartItemId] = useState(null); // To track existing cart item ID
 //   const [cartQuantity, setCartQuantity] = useState(0); // Quantity in cart
-  
+
 //   // Get user from localStorage
 //   const userId = localStorage.getItem("user_id");
 
@@ -3814,12 +3814,12 @@
 //   const handleShareClick = () => {
 //     // Construct the product URL with variant
 //     const currentUrl = `${window.location.origin}/product/${productId}/?variant=${variantId || selectedVariant?.id}`;
-    
+
 //     navigator.clipboard.writeText(currentUrl)
 //       .then(() => {
 //         // Show custom alert/notification
 //         setShowCopyAlert(true);
-        
+
 //         // Auto-hide after 3 seconds
 //         setTimeout(() => {
 //           setShowCopyAlert(false);
@@ -3915,11 +3915,11 @@
 //       try {
 //         const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
 //         console.log("📋 Wishlist API Response:", response.data);
-        
+
 //         // Handle paginated response - get items from results array
 //         const wishlistResponse = response.data;
 //         let wishlistItems = [];
-        
+
 //         if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
 //           // Get items from results array
 //           wishlistItems = wishlistResponse.results;
@@ -3927,18 +3927,18 @@
 //           // If response is already an array
 //           wishlistItems = wishlistResponse;
 //         }
-        
+
 //         console.log("📋 Wishlist items:", wishlistItems);
 //         setWishlist(wishlistItems);
-        
+
 //         // Check if current variant is in wishlist
 //         const isVariantInWishlist = wishlistItems.some(
 //           item => item.variant === selectedVariant.id
 //         );
-        
+
 //         console.log("📋 Is variant in wishlist:", isVariantInWishlist, "for variant:", selectedVariant.id);
 //         setIsInWishlist(isVariantInWishlist);
-        
+
 //       } catch (error) {
 //         console.error("Error fetching wishlist:", error);
 //         if (error.response) {
@@ -3960,25 +3960,25 @@
 //         // FIXED: Add user filter parameter
 //         const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
 //         console.log("🛒 Cart API Response for user", userId, ":", response.data);
-        
+
 //         // Handle paginated response - get items from results array
 //         const cartResponse = response.data;
 //         let userCartItems = [];
-        
+
 //         if (cartResponse.results && Array.isArray(cartResponse.results)) {
 //           userCartItems = cartResponse.results;
 //         } else if (Array.isArray(cartResponse)) {
 //           userCartItems = cartResponse;
 //         }
-        
+
 //         console.log("🛒 User cart items:", userCartItems);
 //         setCartItems(userCartItems);
-        
+
 //         // Check if current variant is in cart for this specific user
 //         const cartItem = userCartItems.find(
 //           item => item.variant === selectedVariant.id
 //         );
-        
+
 //         if (cartItem) {
 //           setIsInCart(true);
 //           setCartItemId(cartItem.id);
@@ -4008,7 +4008,7 @@
 //     console.log("User ID:", userId);
 //     console.log("Selected Variant ID:", selectedVariant?.id);
 //     console.log("Is in wishlist:", isInWishlist);
-    
+
 //     if (!userId) {
 //       alert("Please login to add items to wishlist");
 //       return;
@@ -4020,27 +4020,27 @@
 //     }
 
 //     setWishlistLoading(true);
-    
+
 //     try {
 //       if (isInWishlist) {
 //         // Find wishlist item ID to delete
 //         console.log("Looking for wishlist item to delete...");
 //         console.log("Current wishlist:", wishlist);
-        
+
 //         const wishlistItem = wishlist.find(
 //           item => item.variant === selectedVariant.id && item.user === parseInt(userId)
 //         );
-        
+
 //         console.log("Found wishlist item to delete:", wishlistItem);
-        
+
 //         if (wishlistItem) {
 //           console.log(`Deleting wishlist item ${wishlistItem.id}`);
 //           await axios.delete(`${baseurl}/wishlist/${wishlistItem.id}/`);
 //           setIsInWishlist(false);
-          
+
 //           // Update local wishlist state
 //           setWishlist(prev => prev.filter(item => item.id !== wishlistItem.id));
-          
+
 //           console.log("✅ Removed from wishlist");
 //           alert("Removed from wishlist");
 //         } else {
@@ -4054,15 +4054,15 @@
 //           variant: selectedVariant.id
 //         };
 //         console.log("Wishlist payload:", payload);
-        
+
 //         const response = await axios.post(`${baseurl}/wishlist/`, payload);
 //         console.log("Wishlist POST response:", response.data);
-        
+
 //         setIsInWishlist(true);
-        
+
 //         // Add new item to local wishlist state
 //         setWishlist(prev => [...prev, response.data]);
-        
+
 //         console.log("✅ Added to wishlist");
 //         alert("Added to wishlist");
 //       }
@@ -4083,7 +4083,7 @@
 //     console.log("🛒 Add to cart clicked");
 //     console.log("User ID:", userId);
 //     console.log("Selected Variant ID:", selectedVariant?.id);
-    
+
 //     if (!userId) {
 //       alert("Please login to add items to cart");
 //       return;
@@ -4093,20 +4093,20 @@
 //       console.error("No selected variant");
 //       return;
 //     }
-    
+
 //     if (qty > selectedVariant.stock) {
 //       alert(`Only ${selectedVariant.stock} items available in stock`);
 //       return;
 //     }
 
 //     setCartLoading(true);
-    
+
 //     try {
 //       // First, check if item is already in cart for THIS user
 //       const userCartItem = cartItems.find(
 //         item => item.variant === selectedVariant.id
 //       );
-      
+
 //       if (userCartItem) {
 //         // Update existing cart item
 //         console.log(`Updating cart item ${userCartItem.id} to quantity ${qty}`);
@@ -4116,20 +4116,20 @@
 //           quantity: qty
 //         };
 //         console.log("Cart update payload:", payload);
-        
+
 //         await axios.put(`${baseurl}/cart/${userCartItem.id}/`, payload);
-        
+
 //         setCartQuantity(qty);
 //         setCartItemId(userCartItem.id);
-        
+
 //         // Update local cart state
 //         setCartItems(prev => prev.map(item => 
 //           item.id === userCartItem.id ? { ...item, quantity: qty } : item
 //         ));
-        
+
 //         // Dispatch cart update event for navbar
 //         window.dispatchEvent(new Event('cartUpdated'));
-        
+
 //         console.log("✅ Cart updated");
 //         alert(`Cart updated to ${qty} items`);
 //       } else {
@@ -4141,20 +4141,20 @@
 //           quantity: qty
 //         };
 //         console.log("Cart POST payload:", payload);
-        
+
 //         const response = await axios.post(`${baseurl}/cart/`, payload);
 //         console.log("Cart POST response:", response.data);
-        
+
 //         setIsInCart(true);
 //         setCartItemId(response.data.id);
 //         setCartQuantity(qty);
-        
+
 //         // Add to local cart state
 //         setCartItems(prev => [...prev, response.data]);
-        
+
 //         // Dispatch cart update event for navbar
 //         window.dispatchEvent(new Event('cartUpdated'));
-        
+
 //         console.log("✅ Added to cart");
 //         alert("Added to cart successfully!");
 //       }
@@ -4175,25 +4175,25 @@
 //     const userCartItem = cartItems.find(
 //       item => item.variant === selectedVariant.id
 //     );
-    
+
 //     if (!userId || !userCartItem) return;
-    
+
 //     setCartLoading(true);
-    
+
 //     try {
 //       console.log(`Removing cart item ${userCartItem.id}`);
 //       await axios.delete(`${baseurl}/cart/${userCartItem.id}/`);
-      
+
 //       setIsInCart(false);
 //       setCartItemId(null);
 //       setCartQuantity(0);
-      
+
 //       // Remove from local cart state
 //       setCartItems(prev => prev.filter(item => item.id !== userCartItem.id));
-      
+
 //       // Dispatch cart update event for navbar
 //       window.dispatchEvent(new Event('cartUpdated'));
-      
+
 //       alert("Removed from cart");
 //     } catch (error) {
 //       console.error("Error removing from cart:", error);
@@ -4270,7 +4270,7 @@
 //                   );
 //                 })}
 //               </div>
-              
+
 //               {/* Scroll Indicator (only shows when there are more than 5 images) */}
 //               {(selectedVariant.media || []).length > 5 && (
 //                 <div className="scroll-indicator">
@@ -4282,7 +4282,7 @@
 //             {/* Main Image */}
 //             <div className="main-image-box">
 //               <img src={selectedImage} alt={product.product_name} />
-              
+
 //               <div className="floating-icons">
 //                 {/* Wishlist Icon */}
 //                 <div 
@@ -4300,7 +4300,7 @@
 //                     fill={isInWishlist ? '#ff2e93' : 'none'} 
 //                   />
 //                 </div>
-                
+
 //                 {/* Share Icon */}
 //                 <div 
 //                   className="icon-circle" 
@@ -4520,7 +4520,7 @@
 //                   >
 //                     {cartLoading ? 'UPDATING...' : `UPDATE CART (${cartQuantity})`}
 //                   </button>
-                  
+
 //                 </div>
 //               ) : (
 //                 <button 
@@ -4576,7 +4576,7 @@
 //             <p className="secure">
 //               Stock Available: {selectedVariant.stock}
 //             </p>
-            
+
 //             {/* Show if item is already in cart */}
 //             {isInCart && (
 //               <p className="cart-info">
@@ -4671,25 +4671,25 @@
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState("");
 //   const [showCopyAlert, setShowCopyAlert] = useState(false);
-  
+
 //   /* ================= CART STATES ================= */
 //   const [isInCart, setIsInCart] = useState(false);
 //   const [cartItemId, setCartItemId] = useState(null);
 //   const [cartQuantity, setCartQuantity] = useState(0);
 //   const [cartLoading, setCartLoading] = useState(false);
-  
+
 //   /* ================= WISHLIST STATES ================= */
 //   const [wishlist, setWishlist] = useState([]);
 //   const [isInWishlist, setIsInWishlist] = useState(false);
 //   const [wishlistLoading, setWishlistLoading] = useState(false);
-  
+
 //   // Get user from localStorage
 //   const userId = localStorage.getItem("user_id");
 
 //   /* ================= SHARE FUNCTIONALITY ================= */ 
 //   const handleShareClick = () => {
 //     const currentUrl = `${window.location.origin}/agent-business-product-details/${productId}/?variant=${variantId || selectedVariant?.id}`;
-    
+
 //     navigator.clipboard.writeText(currentUrl)
 //       .then(() => {
 //         setShowCopyAlert(true);
@@ -4785,22 +4785,22 @@
 //       try {
 //         const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
 //         console.log("🛒 Cart API Response for user", userId, ":", response.data);
-        
+
 //         const cartResponse = response.data;
 //         let userCartItems = [];
-        
+
 //         if (cartResponse.results && Array.isArray(cartResponse.results)) {
 //           userCartItems = cartResponse.results;
 //         } else if (Array.isArray(cartResponse)) {
 //           userCartItems = cartResponse;
 //         }
-        
+
 //         console.log("🛒 User cart items:", userCartItems);
-        
+
 //         const cartItem = userCartItems.find(
 //           item => item.variant === selectedVariant.id
 //         );
-        
+
 //         if (cartItem) {
 //           setIsInCart(true);
 //           setCartItemId(cartItem.id);
@@ -4830,26 +4830,26 @@
 //       try {
 //         const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
 //         console.log("📋 Wishlist API Response:", response.data);
-        
+
 //         const wishlistResponse = response.data;
 //         let wishlistItems = [];
-        
+
 //         if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
 //           wishlistItems = wishlistResponse.results;
 //         } else if (Array.isArray(wishlistResponse)) {
 //           wishlistItems = wishlistResponse;
 //         }
-        
+
 //         console.log("📋 Wishlist items:", wishlistItems);
 //         setWishlist(wishlistItems);
-        
+
 //         const isVariantInWishlist = wishlistItems.some(
 //           item => item.variant === selectedVariant.id
 //         );
-        
+
 //         console.log("📋 Is variant in wishlist:", isVariantInWishlist, "for variant:", selectedVariant.id);
 //         setIsInWishlist(isVariantInWishlist);
-        
+
 //       } catch (error) {
 //         console.error("Error fetching wishlist:", error);
 //       }
@@ -4871,7 +4871,7 @@
 //   /* ================= CART FUNCTIONS ================= */
 //   const handleAddToCart = async () => {
 //     console.log("🛒 Add to cart clicked");
-    
+
 //     if (!userId) {
 //       Swal.fire({
 //         icon: 'warning',
@@ -4887,7 +4887,7 @@
 //       console.error("No selected variant");
 //       return;
 //     }
-    
+
 //     if (selectedVariant.stock <= 0) {
 //       Swal.fire({
 //         icon: 'error',
@@ -4898,7 +4898,7 @@
 //       });
 //       return;
 //     }
-    
+
 //     if (qty > selectedVariant.stock) {
 //       Swal.fire({
 //         icon: 'error',
@@ -4911,7 +4911,7 @@
 //     }
 
 //     setCartLoading(true);
-    
+
 //     try {
 //       if (isInCart && cartItemId) {
 //         // Update existing cart item (replace quantity, not add)
@@ -4920,9 +4920,9 @@
 //           variant: selectedVariant.id,
 //           quantity: qty
 //         });
-        
+
 //         setCartQuantity(qty);
-        
+
 //         Swal.fire({
 //           icon: 'success',
 //           title: 'Cart Updated!',
@@ -4945,11 +4945,11 @@
 //           variant: selectedVariant.id,
 //           quantity: qty
 //         });
-        
+
 //         setIsInCart(true);
 //         setCartItemId(response.data.id);
 //         setCartQuantity(qty);
-        
+
 //         Swal.fire({
 //           icon: 'success',
 //           title: 'Added to Cart!',
@@ -4966,10 +4966,10 @@
 //           }
 //         });
 //       }
-      
+
 //       // Dispatch cart update event for navbar
 //       window.dispatchEvent(new Event('cartUpdated'));
-      
+
 //     } catch (error) {
 //       console.error("❌ Error updating cart:", error);
 //       Swal.fire({
@@ -4986,17 +4986,17 @@
 
 //   const handleRemoveFromCart = async () => {
 //     if (!userId || !cartItemId) return;
-    
+
 //     setCartLoading(true);
-    
+
 //     try {
 //       await axios.delete(`${baseurl}/cart/${cartItemId}/`);
-      
+
 //       setIsInCart(false);
 //       setCartItemId(null);
 //       setCartQuantity(0);
 //       setQty(1);
-      
+
 //       Swal.fire({
 //         icon: 'info',
 //         title: 'Removed from Cart',
@@ -5005,7 +5005,7 @@
 //         timer: 1500,
 //         timerProgressBar: true,
 //       });
-      
+
 //       window.dispatchEvent(new Event('cartUpdated'));
 //     } catch (error) {
 //       console.error("Error removing from cart:", error);
@@ -5042,7 +5042,7 @@
 //   /* ================= WISHLIST FUNCTIONS ================= */
 //   const handleWishlistToggle = async () => {
 //     console.log("❤️ Wishlist toggle clicked");
-    
+
 //     if (!userId) {
 //       Swal.fire({
 //         icon: 'warning',
@@ -5060,19 +5060,19 @@
 //     }
 
 //     setWishlistLoading(true);
-    
+
 //     try {
 //       if (isInWishlist) {
 //         const wishlistItem = wishlist.find(
 //           item => item.variant === selectedVariant.id && item.user === parseInt(userId)
 //         );
-        
+
 //         if (wishlistItem) {
 //           console.log(`Deleting wishlist item ${wishlistItem.id}`);
 //           await axios.delete(`${baseurl}/wishlist/${wishlistItem.id}/`);
 //           setIsInWishlist(false);
 //           setWishlist(prev => prev.filter(item => item.id !== wishlistItem.id));
-          
+
 //           Swal.fire({
 //             icon: 'success',
 //             title: 'Removed from Wishlist',
@@ -5088,13 +5088,13 @@
 //           user: parseInt(userId),
 //           variant: selectedVariant.id
 //         };
-        
+
 //         const response = await axios.post(`${baseurl}/wishlist/`, payload);
 //         console.log("Wishlist POST response:", response.data);
-        
+
 //         setIsInWishlist(true);
 //         setWishlist(prev => [...prev, response.data]);
-        
+
 //         Swal.fire({
 //           icon: 'success',
 //           title: 'Added to Wishlist',
@@ -5104,7 +5104,7 @@
 //           timerProgressBar: true,
 //         });
 //       }
-      
+
 //       window.dispatchEvent(new Event('wishlistUpdated'));
 //     } catch (error) {
 //       console.error("❌ Error toggling wishlist:", error);
@@ -5177,7 +5177,7 @@
 //                   );
 //                 })}
 //               </div>
-              
+
 //               {/* Scroll Indicator (only shows when there are more than 5 images) */}
 //               {(selectedVariant.media || []).length > 5 && (
 //                 <div className="scroll-indicator">
@@ -5189,7 +5189,7 @@
 //             {/* Main Image */}
 //             <div className="main-image-box">
 //               <img src={selectedImage} alt={product.product_name} />
-              
+
 //               <div className="floating-icons">
 //                 {/* Wishlist Icon */}
 //                 <div 
@@ -5207,8 +5207,8 @@
 //                     fill={isInWishlist ? '#ff2e93' : 'none'} 
 //                   />
 //                 </div>
-                
-                               
+
+
 //                <ShareModal
 //   productId={productId}
 //   variantId={variantId}
@@ -5398,7 +5398,7 @@
 //                 <ShoppingCart size={18} style={{ marginRight: '8px' }} />
 //                 {cartLoading ? 'PROCESSING...' : (isInCart ? 'UPDATE CART' : 'ADD TO CART')}
 //               </button>
-              
+
 //               {isInCart && (
 //                 <button 
 //                   className="cart-btn remove-cart"
@@ -5459,7 +5459,7 @@
 //             <p className="secure">
 //               Stock Available: {selectedVariant.stock}
 //             </p>
-            
+
 //             {/* Show if item is already in cart */}
 //             {isInCart && (
 //               <p className="cart-info">
@@ -5554,25 +5554,25 @@ const AgentProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showCopyAlert, setShowCopyAlert] = useState(false);
-  
+
   /* ================= CART STATES ================= */
   const [isInCart, setIsInCart] = useState(false);
   const [cartItemId, setCartItemId] = useState(null);
   const [cartQuantity, setCartQuantity] = useState(0);
   const [cartLoading, setCartLoading] = useState(false);
-  
+
   /* ================= WISHLIST STATES ================= */
   const [wishlist, setWishlist] = useState([]);
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
-  
+
   // Get user from localStorage
   const userId = localStorage.getItem("user_id");
 
-  /* ================= SHARE FUNCTIONALITY ================= */ 
+  /* ================= SHARE FUNCTIONALITY ================= */
   const handleShareClick = () => {
     const currentUrl = `${window.location.origin}/agent-business-product-details/${productId}/?variant=${variantId || selectedVariant?.id}`;
-    
+
     navigator.clipboard.writeText(currentUrl)
       .then(() => {
         setShowCopyAlert(true);
@@ -5671,22 +5671,22 @@ const AgentProductDetails = () => {
       try {
         const response = await axios.get(`${baseurl}/cart/?user=${userId}`);
         console.log("🛒 Cart API Response for user", userId, ":", response.data);
-        
+
         const cartResponse = response.data;
         let userCartItems = [];
-        
+
         if (cartResponse.results && Array.isArray(cartResponse.results)) {
           userCartItems = cartResponse.results;
         } else if (Array.isArray(cartResponse)) {
           userCartItems = cartResponse;
         }
-        
+
         console.log("🛒 User cart items:", userCartItems);
-        
+
         const cartItem = userCartItems.find(
           item => item.variant === selectedVariant.id
         );
-        
+
         if (cartItem) {
           setIsInCart(true);
           setCartItemId(cartItem.id);
@@ -5716,26 +5716,26 @@ const AgentProductDetails = () => {
       try {
         const response = await axios.get(`${baseurl}/wishlist/?user=${userId}`);
         console.log("📋 Wishlist API Response:", response.data);
-        
+
         const wishlistResponse = response.data;
         let wishlistItems = [];
-        
+
         if (wishlistResponse.results && Array.isArray(wishlistResponse.results)) {
           wishlistItems = wishlistResponse.results;
         } else if (Array.isArray(wishlistResponse)) {
           wishlistItems = wishlistResponse;
         }
-        
+
         console.log("📋 Wishlist items:", wishlistItems);
         setWishlist(wishlistItems);
-        
+
         const isVariantInWishlist = wishlistItems.some(
           item => item.variant === selectedVariant.id
         );
-        
+
         console.log("📋 Is variant in wishlist:", isVariantInWishlist, "for variant:", selectedVariant.id);
         setIsInWishlist(isVariantInWishlist);
-        
+
       } catch (error) {
         console.error("Error fetching wishlist:", error);
       }
@@ -5755,137 +5755,156 @@ const AgentProductDetails = () => {
   }, [selectedVariant]);
 
   /* ================= CART FUNCTIONS ================= */
-/* ================= CART FUNCTIONS ================= */
-const handleAddToCart = async () => {
-  console.log("🛒 Add to cart clicked");
-  
-  if (!userId) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Login Required',
-      text: 'Please login to add items to cart',
-      confirmButtonText: 'OK',
-      confirmButtonColor: '#f76f2f',
-    });
-    return;
-  }
+  /* ================= CART FUNCTIONS ================= */
+  const handleAddToCart = async () => {
+    console.log("🛒 Add to cart clicked");
 
-  if (!selectedVariant) {
-    console.error("No selected variant");
-    return;
-  }
-  
-  if (selectedVariant.stock <= 0) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Out of Stock',
-      text: 'This product is currently out of stock',
-      confirmButtonText: 'OK',
-      confirmButtonColor: '#f76f2f',
-    });
-    return;
-  }
-  
-  if (qty > selectedVariant.stock) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Insufficient Stock',
-      text: `Only ${selectedVariant.stock} units available`,
-      confirmButtonText: 'OK',
-      confirmButtonColor: '#f76f2f',
-    });
-    return;
-  }
-
-  setCartLoading(true);
-  
-  try {
-    if (isInCart && cartItemId) {
-      await axios.put(`${baseurl}/cart/${cartItemId}/`, {
-        user: parseInt(userId),
-        variant: selectedVariant.id,
-        quantity: qty
-      });
-      
-      setCartQuantity(qty);
-      
+    if (!userId) {
       Swal.fire({
-        icon: 'success',
-        title: 'Cart Updated!',
-        text: `Cart updated to ${qty} items.`,
-        showConfirmButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'View Cart',
-        cancelButtonText: 'Continue Shopping',
+        icon: 'warning',
+        title: 'Login Required',
+        text: 'Please login to add items to cart',
+        confirmButtonText: 'OK',
         confirmButtonColor: '#f76f2f',
-        cancelButtonColor: '#6c757d',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/agent-add-to-cart');
-        }
       });
-    } else {
-      const response = await axios.post(`${baseurl}/cart/`, {
-        user: parseInt(userId),
-        variant: selectedVariant.id,
-        quantity: qty
-      });
-      
-      setIsInCart(true);
-      setCartItemId(response.data.id);
-      setCartQuantity(qty);
-      
-      Swal.fire({
-        icon: 'success',
-        title: 'Added to Cart!',
-        text: `${product.product_name} has been added to your cart.`,
-        showConfirmButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'View Cart',
-        cancelButtonText: 'Continue Shopping',
-        confirmButtonColor: '#f76f2f',
-        cancelButtonColor: '#6c757d',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/agent-add-to-cart');
-        }
-      });
+      return;
     }
-    
-    window.dispatchEvent(new Event('cartUpdated'));
-    
-  } catch (error) {
-    console.error("❌ Error updating cart:", error);
-    
-    // Extract error message from backend response
-    let errorMessage = 'Failed to update cart. Please try again.';
-    
-    if (error.response) {
-      // Backend responded with error status
-      const responseData = error.response.data;
-      
-      if (responseData.error) {
-        errorMessage = responseData.error;
-      } else if (responseData.message) {
-        errorMessage = responseData.message;
-      } else if (typeof responseData === 'string') {
-        errorMessage = responseData;
-      } else if (responseData.detail) {
-        errorMessage = responseData.detail;
+
+    if (!selectedVariant) {
+      console.error("No selected variant");
+      return;
+    }
+
+    if (selectedVariant.stock <= 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Out of Stock',
+        text: 'This product is currently out of stock',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#f76f2f',
+      });
+      return;
+    }
+
+    if (qty > selectedVariant.stock) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Insufficient Stock',
+        text: `Only ${selectedVariant.stock} units available`,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#f76f2f',
+      });
+      return;
+    }
+
+    setCartLoading(true);
+
+    try {
+      if (isInCart && cartItemId) {
+        await axios.put(`${baseurl}/cart/${cartItemId}/`, {
+          user: parseInt(userId),
+          variant: selectedVariant.id,
+          quantity: qty
+        });
+
+        setCartQuantity(qty);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Cart Updated!',
+          text: `Cart updated to ${qty} items.`,
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'View Cart',
+          cancelButtonText: 'Continue Shopping',
+          confirmButtonColor: '#f76f2f',
+          cancelButtonColor: '#6c757d',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate('/agent-add-to-cart');
+          }
+        });
+      } else {
+        const response = await axios.post(`${baseurl}/cart/`, {
+          user: parseInt(userId),
+          variant: selectedVariant.id,
+          quantity: qty
+        });
+
+        setIsInCart(true);
+        setCartItemId(response.data.id);
+        setCartQuantity(qty);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Added to Cart!',
+          text: `${product.product_name} has been added to your cart.`,
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'View Cart',
+          cancelButtonText: 'Continue Shopping',
+          confirmButtonColor: '#f76f2f',
+          cancelButtonColor: '#6c757d',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate('/agent-add-to-cart');
+          }
+        });
       }
-      
-      // Check for specific stock/quantity related errors
-      if (errorMessage.toLowerCase().includes('maximum') || 
+
+      window.dispatchEvent(new Event('cartUpdated'));
+
+    } catch (error) {
+      console.error("❌ Error updating cart:", error);
+
+      // Extract error message from backend response
+      let errorMessage = 'Failed to update cart. Please try again.';
+
+      if (error.response) {
+        // Backend responded with error status
+        const responseData = error.response.data;
+
+        if (responseData.error) {
+          errorMessage = responseData.error;
+        } else if (responseData.message) {
+          errorMessage = responseData.message;
+        } else if (typeof responseData === 'string') {
+          errorMessage = responseData;
+        } else if (responseData.detail) {
+          errorMessage = responseData.detail;
+        }
+
+        // Check for specific stock/quantity related errors
+        if (errorMessage.toLowerCase().includes('maximum') ||
           errorMessage.toLowerCase().includes('limit') ||
           errorMessage.toLowerCase().includes('quantity')) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Quantity Limit Reached',
+            text: errorMessage,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#f76f2f',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: errorMessage,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#f76f2f',
+          });
+        }
+      } else if (error.request) {
+        errorMessage = 'No response from server. Please check your connection.';
         Swal.fire({
           icon: 'error',
-          title: 'Quantity Limit Reached',
+          title: 'Connection Error',
           text: errorMessage,
           confirmButtonText: 'OK',
           confirmButtonColor: '#f76f2f',
         });
       } else {
+        errorMessage = error.message || 'An unexpected error occurred.';
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -5894,17 +5913,44 @@ const handleAddToCart = async () => {
           confirmButtonColor: '#f76f2f',
         });
       }
-    } else if (error.request) {
-      errorMessage = 'No response from server. Please check your connection.';
+    } finally {
+      setCartLoading(false);
+    }
+  };
+
+  const handleRemoveFromCart = async () => {
+    if (!userId || !cartItemId) return;
+
+    setCartLoading(true);
+
+    try {
+      await axios.delete(`${baseurl}/cart/${cartItemId}/`);
+
+      setIsInCart(false);
+      setCartItemId(null);
+      setCartQuantity(0);
+      setQty(1);
+
       Swal.fire({
-        icon: 'error',
-        title: 'Connection Error',
-        text: errorMessage,
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#f76f2f',
+        icon: 'info',
+        title: 'Removed from Cart',
+        text: `${product.product_name} has been removed from your cart.`,
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
       });
-    } else {
-      errorMessage = error.message || 'An unexpected error occurred.';
+
+      window.dispatchEvent(new Event('cartUpdated'));
+    } catch (error) {
+      console.error("Error removing from cart:", error);
+
+      let errorMessage = 'Failed to remove from cart. Please try again.';
+      if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -5912,79 +5958,33 @@ const handleAddToCart = async () => {
         confirmButtonText: 'OK',
         confirmButtonColor: '#f76f2f',
       });
+    } finally {
+      setCartLoading(false);
     }
-  } finally {
-    setCartLoading(false);
-  }
-};
+  };
 
-const handleRemoveFromCart = async () => {
-  if (!userId || !cartItemId) return;
-  
-  setCartLoading(true);
-  
-  try {
-    await axios.delete(`${baseurl}/cart/${cartItemId}/`);
-    
-    setIsInCart(false);
-    setCartItemId(null);
-    setCartQuantity(0);
-    setQty(1);
-    
-    Swal.fire({
-      icon: 'info',
-      title: 'Removed from Cart',
-      text: `${product.product_name} has been removed from your cart.`,
-      showConfirmButton: false,
-      timer: 1500,
-      timerProgressBar: true,
-    });
-    
-    window.dispatchEvent(new Event('cartUpdated'));
-  } catch (error) {
-    console.error("Error removing from cart:", error);
-    
-    let errorMessage = 'Failed to remove from cart. Please try again.';
-    if (error.response?.data?.error) {
-      errorMessage = error.response.data.error;
-    } else if (error.response?.data?.message) {
-      errorMessage = error.response.data.message;
+  const handleUpdateQuantity = (newQty) => {
+    if (newQty < 1) {
+      if (isInCart) {
+        handleRemoveFromCart();
+      }
+    } else if (newQty > selectedVariant.stock) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Stock Limit Exceeded',
+        text: `Cannot add more than ${selectedVariant.stock} units`,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#f76f2f',
+      });
+    } else {
+      setQty(newQty);
     }
-    
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: errorMessage,
-      confirmButtonText: 'OK',
-      confirmButtonColor: '#f76f2f',
-    });
-  } finally {
-    setCartLoading(false);
-  }
-};
-
-const handleUpdateQuantity = (newQty) => {
-  if (newQty < 1) {
-    if (isInCart) {
-      handleRemoveFromCart();
-    }
-  } else if (newQty > selectedVariant.stock) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Stock Limit Exceeded',
-      text: `Cannot add more than ${selectedVariant.stock} units`,
-      confirmButtonText: 'OK',
-      confirmButtonColor: '#f76f2f',
-    });
-  } else {
-    setQty(newQty);
-  }
-};
+  };
 
   /* ================= WISHLIST FUNCTIONS ================= */
   const handleWishlistToggle = async () => {
     console.log("❤️ Wishlist toggle clicked");
-    
+
     if (!userId) {
       Swal.fire({
         icon: 'warning',
@@ -6002,19 +6002,19 @@ const handleUpdateQuantity = (newQty) => {
     }
 
     setWishlistLoading(true);
-    
+
     try {
       if (isInWishlist) {
         const wishlistItem = wishlist.find(
           item => item.variant === selectedVariant.id && item.user === parseInt(userId)
         );
-        
+
         if (wishlistItem) {
           console.log(`Deleting wishlist item ${wishlistItem.id}`);
           await axios.delete(`${baseurl}/wishlist/${wishlistItem.id}/`);
           setIsInWishlist(false);
           setWishlist(prev => prev.filter(item => item.id !== wishlistItem.id));
-          
+
           Swal.fire({
             icon: 'success',
             title: 'Removed from Wishlist',
@@ -6030,13 +6030,13 @@ const handleUpdateQuantity = (newQty) => {
           user: parseInt(userId),
           variant: selectedVariant.id
         };
-        
+
         const response = await axios.post(`${baseurl}/wishlist/`, payload);
         console.log("Wishlist POST response:", response.data);
-        
+
         setIsInWishlist(true);
         setWishlist(prev => [...prev, response.data]);
-        
+
         Swal.fire({
           icon: 'success',
           title: 'Added to Wishlist',
@@ -6046,7 +6046,7 @@ const handleUpdateQuantity = (newQty) => {
           timerProgressBar: true,
         });
       }
-      
+
       window.dispatchEvent(new Event('wishlistUpdated'));
     } catch (error) {
       console.error("❌ Error toggling wishlist:", error);
@@ -6117,7 +6117,7 @@ const handleUpdateQuantity = (newQty) => {
                   const mediaUrl = `${baseurl}${mediaItem.file}`;
                   const isVideo = mediaItem.media_type === 'video';
                   const isActive = selectedMedia === mediaUrl;
-                  
+
                   return (
                     <div
                       key={index}
@@ -6126,8 +6126,8 @@ const handleUpdateQuantity = (newQty) => {
                     >
                       {isVideo ? (
                         <div className="video-thumbnail">
-                          <video 
-                            src={mediaUrl} 
+                          <video
+                            src={mediaUrl}
                             className="thumbnail-video"
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           />
@@ -6142,7 +6142,7 @@ const handleUpdateQuantity = (newQty) => {
                   );
                 })}
               </div>
-              
+
               {/* Scroll Indicator */}
               {(selectedVariant.media || []).length > 5 && (
                 <div className="scroll-indicator">
@@ -6177,25 +6177,25 @@ const handleUpdateQuantity = (newQty) => {
                   <p>No media available</p>
                 </div>
               )}
-              
+
               <div className="floating-icons">
                 {/* Wishlist Icon */}
-                <div 
+                <div
                   className="icon-circle"
                   onClick={handleWishlistToggle}
-                  style={{ 
+                  style={{
                     cursor: wishlistLoading ? 'not-allowed' : 'pointer',
                     color: isInWishlist ? '#ff2e93' : '#666',
                     opacity: wishlistLoading ? 0.7 : 1
                   }}
                   title={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
                 >
-                  <Heart 
-                    size={20} 
-                    fill={isInWishlist ? '#ff2e93' : 'none'} 
+                  <Heart
+                    size={20}
+                    fill={isInWishlist ? '#ff2e93' : 'none'}
                   />
                 </div>
-                
+
                 <ShareModal
                   productId={productId}
                   variantId={variantId}
@@ -6212,33 +6212,32 @@ const handleUpdateQuantity = (newQty) => {
 
             {/* MOBILE BUY SECTION */}
             <div className="mobile-buy-box">
-              <div className="mobile-price-row">
-                <span className="mobile-price">₹{pricing.price.toFixed(2)}</span>
+              <div className="mobile-price-quantity-row">
+                <div className="mobile-price-row">
+                  <span className="mobile-price">₹{pricing.price.toFixed(2)}</span>
+                  {pricing.mrp > pricing.price && (
+                    <>
+                      <span className="mobile-mrp">₹{pricing.mrp.toFixed(2)}</span>
+                      <span className="mobile-off">{pricing.discount}% OFF</span>
+                    </>
+                  )}
+                </div>
 
-                {pricing.mrp > pricing.price && (
-                  <>
-                    <span className="mobile-mrp">₹{pricing.mrp.toFixed(2)}</span>
-                    <span className="mobile-off">{pricing.discount}% OFF</span>
-                  </>
-                )}
-              </div>
-
-              <div className="mobile-qty">
-                <button
-                  onClick={() => handleUpdateQuantity(qty - 1)}
-                  disabled={cartLoading || qty <= 1}
-                >
-                  −
-                </button>
-
-                <span>{qty}</span>
-
-                <button
-                  onClick={() => handleUpdateQuantity(qty + 1)}
-                  disabled={cartLoading || qty >= selectedVariant.stock}
-                >
-                  +
-                </button>
+                <div className="mobile-qty">
+                  <button
+                    onClick={() => handleUpdateQuantity(qty - 1)}
+                    disabled={cartLoading || qty <= 1}
+                  >
+                    −
+                  </button>
+                  <span>{qty}</span>
+                  <button
+                    onClick={() => handleUpdateQuantity(qty + 1)}
+                    disabled={cartLoading || qty >= selectedVariant.stock}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
 
               <button
@@ -6265,7 +6264,7 @@ const handleUpdateQuantity = (newQty) => {
                 </button>
               )}
 
-              <button 
+              <button
                 className={`wishlist-btn ${isInWishlist ? 'in-wishlist' : ''}`}
                 onClick={handleWishlistToggle}
                 disabled={wishlistLoading}
@@ -6294,9 +6293,9 @@ const handleUpdateQuantity = (newQty) => {
                   </>
                 ) : (
                   <>
-                    <Heart 
-                      size={16} 
-                      fill={isInWishlist ? 'white' : 'none'} 
+                    <Heart
+                      size={16}
+                      fill={isInWishlist ? 'white' : 'none'}
                       color={isInWishlist ? 'white' : '#666'}
                     />
                     {isInWishlist ? 'IN WISHLIST' : 'ADD TO WISHLIST'}
@@ -6356,15 +6355,15 @@ const handleUpdateQuantity = (newQty) => {
             {/* <p className="unit">SKU: {selectedVariant.sku}</p> */}
 
             <div className="qty">
-              <button 
-                className="qty-btn minus" 
+              <button
+                className="qty-btn minus"
                 onClick={() => handleUpdateQuantity(qty - 1)}
                 disabled={cartLoading || qty <= 1}
               >
                 −
               </button>
               <span className="qty-value">{qty}</span>
-              <button 
+              <button
                 className="qty-btn plus"
                 onClick={() => handleUpdateQuantity(qty + 1)}
                 disabled={cartLoading || qty >= selectedVariant.stock}
@@ -6375,7 +6374,7 @@ const handleUpdateQuantity = (newQty) => {
 
             {/* Cart Buttons */}
             <div className="cart-actions">
-              <button 
+              <button
                 className={`cart-btn ${isInCart ? 'update-cart' : 'add-cart'}`}
                 onClick={handleAddToCart}
                 disabled={cartLoading || selectedVariant.stock <= 0}
@@ -6384,9 +6383,9 @@ const handleUpdateQuantity = (newQty) => {
                 <ShoppingCart size={18} style={{ marginRight: '8px' }} />
                 {cartLoading ? 'PROCESSING...' : (isInCart ? 'UPDATE CART' : 'ADD TO CART')}
               </button>
-              
+
               {isInCart && (
-                <button 
+                <button
                   className="cart-btn remove-cart"
                   onClick={handleRemoveFromCart}
                   disabled={cartLoading}
@@ -6403,7 +6402,7 @@ const handleUpdateQuantity = (newQty) => {
             </div>
 
             {/* Wishlist Button */}
-            <button 
+            <button
               className={`wishlist-btn ${isInWishlist ? 'in-wishlist' : ''}`}
               onClick={handleWishlistToggle}
               disabled={wishlistLoading}
@@ -6432,9 +6431,9 @@ const handleUpdateQuantity = (newQty) => {
                 </>
               ) : (
                 <>
-                  <Heart 
-                    size={16} 
-                    fill={isInWishlist ? 'white' : 'none'} 
+                  <Heart
+                    size={16}
+                    fill={isInWishlist ? 'white' : 'none'}
                     color={isInWishlist ? 'white' : '#666'}
                   />
                   {isInWishlist ? 'IN WISHLIST' : 'ADD TO WISHLIST'}
@@ -6445,7 +6444,7 @@ const handleUpdateQuantity = (newQty) => {
             <p className="secure">
               Stock Available: {selectedVariant.stock}
             </p>
-            
+
             {/* Show if item is already in cart */}
             {isInCart && (
               <p className="cart-info">
