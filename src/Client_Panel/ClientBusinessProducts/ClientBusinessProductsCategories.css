@@ -696,14 +696,14 @@
 
   .cbpc-toolbar {
     position: fixed !important;
-    top: 108px;
+    top: 63px;
     left: 0;
     right: 0;
     z-index: 998;
   }
 
   .cbpc-mobile {
-    padding-top: 100px;
+    padding-top: 48px;
   }
 
   .cbpc-chips {

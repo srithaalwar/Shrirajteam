@@ -5849,7 +5849,7 @@ import { baseurl } from "../../../BaseURL/BaseURL";
 import { Heart, Share2, ShoppingCart } from "lucide-react";
 import Swal from "sweetalert2";
 import ShareModal from "../../../ShareModal/ShareModal";
-
+import Searchbar from "../SearchBar/ClientSearchBar"
 const ClientProductDetails = () => {
   /* ================= ROUTE PARAMS ================= */
   const { productId } = useParams();
@@ -6405,6 +6405,7 @@ const ClientProductDetails = () => {
   return (
     <>
       <ClientNavbar />
+      <Searchbar/>
       <ShopHeader businessId={product.business} />
 
       {/* Copy Alert Notification */}

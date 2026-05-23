@@ -760,7 +760,6 @@
 // export default OrderDetails;
 
 
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -786,6 +785,56 @@ function OrderDetails() {
   const [order, setOrder] = useState(null);
   const [commissions, setCommissions] = useState([]);
   const [error, setError] = useState(null);
+  const [productsCache, setProductsCache] = useState({}); // Cache for product names
+
+  // Fetch product details to get product name
+  const fetchProductName = async (productId) => {
+    // Check cache first
+    if (productsCache[productId]) {
+      return productsCache[productId];
+    }
+
+    try {
+      const response = await axios.get(`${baseurl}/products/${productId}/`, {
+        timeout: 10000
+      });
+      
+      const productName = response.data.product_name || `Product ${productId}`;
+      
+      // Update cache
+      setProductsCache(prev => ({
+        ...prev,
+        [productId]: productName
+      }));
+      
+      return productName;
+    } catch (error) {
+      console.error(`Error fetching product ${productId}:`, error);
+      return `Product ${productId}`;
+    }
+  };
+
+  // Enrich order items with product names
+  const enrichOrderWithProductNames = async (orderData) => {
+    if (!orderData?.items || orderData.items.length === 0) return orderData;
+    
+    // Collect all unique product IDs from order items
+    const productIds = new Set();
+    orderData.items.forEach(item => {
+      if (item.variant_details && item.variant_details.product) {
+        productIds.add(item.variant_details.product);
+      }
+    });
+    
+    // Fetch all product details in parallel
+    const fetchPromises = Array.from(productIds).map(productId => 
+      fetchProductName(productId)
+    );
+    
+    await Promise.all(fetchPromises);
+    
+    return orderData;
+  };
 
   // Fetch order details
   const fetchOrderDetails = async () => {
@@ -794,7 +843,11 @@ function OrderDetails() {
       
       // Fetch order details
       const orderResponse = await axios.get(`${baseurl}/orders/${orderId}/`);
-      setOrder(orderResponse.data);
+      let orderData = orderResponse.data;
+      
+      // Enrich order with product names
+      orderData = await enrichOrderWithProductNames(orderData);
+      setOrder(orderData);
       
       // Fetch commission breakdown
       const commissionResponse = await axios.get(
@@ -881,12 +934,23 @@ function OrderDetails() {
   const formatAmount = (amount) => {
     if (!amount) return "₹0";
     const num = parseFloat(amount);
+    if (isNaN(num)) return "₹0";
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(num);
+  };
+
+  // Get product name from cache or fallback
+  const getProductName = (item) => {
+    const productId = item.variant_details?.product;
+    if (productId && productsCache[productId]) {
+      return productsCache[productId];
+    }
+    // Fallback to SKU or variant ID if product name not available
+    return item.variant_details?.sku || item.product_name || `Product ${productId || 'Unknown'}`;
   };
 
   // Get total quantity
@@ -945,8 +1009,7 @@ function OrderDetails() {
       
       Products:
       ${order?.items?.map((item, index) => {
-        const variant = item.variant_details || {};
-        const productName = variant.sku || item.product_name || "Product";
+        const productName = getProductName(item);
         const quantity = item.quantity || 0;
         const price = parseFloat(item.price || 0);
         const lineTotal = price * quantity;
@@ -998,14 +1061,11 @@ function OrderDetails() {
           <button onClick={handleBack} className="back-button">
             <FaArrowLeft /> Back to Orders
           </button>
-           <div className="order-title-section">
-          <h1 className="order-title">Order {order.order_id}</h1>
-          <p className="order-date">{formatDateTime(order.created_at)}</p>
+          <div className="order-title-section">
+            <h1 className="order-title">Order {order.order_id}</h1>
+            <p className="order-date">{formatDateTime(order.created_at)}</p>
+          </div>
         </div>
-        </div>
-
-        {/* Order Title */}
-      
 
         <div className="order-details-grid">
           {/* Sale Summary Section */}
@@ -1058,13 +1118,6 @@ function OrderDetails() {
                   </span>
                 </div>
               </div>
-              {/* <div className="buyer-detail">
-                <FaUser className="detail-icon" />
-                <div>
-                  <span className="detail-label">Primary Agent:</span>
-                  <span className="detail-value">{order.agent_name || "-"}</span>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>
@@ -1088,20 +1141,29 @@ function OrderDetails() {
               </thead>
               <tbody>
                 {order.items?.map((item, index) => {
+                  const productName = getProductName(item);
                   const variant = item.variant_details || {};
-                  const productName = variant.sku || item.product_name || "Product";
                   const category = variant.category || item.category || "-";
                   const unitPrice = parseFloat(item.price || 0);
                   const quantity = item.quantity || 0;
                   const lineTotal = unitPrice * quantity;
+                  
+                  // Get product attributes if any
+                  const attributes = variant.attributes || {};
+                  const attributeString = Object.keys(attributes).length > 0 
+                    ? Object.entries(attributes).map(([key, value]) => `${key}: ${value}`).join(', ')
+                    : '';
                   
                   return (
                     <tr key={item.id}>
                       <td>{index + 1}</td>
                       <td className="product-name-cell">
                         <div className="product-name">{productName}</div>
-                        {variant.description && (
-                          <div className="product-description">{variant.description}</div>
+                        {attributeString && (
+                          <div className="product-attributes">{attributeString}</div>
+                        )}
+                        {variant.sku && (
+                          <div className="product-sku">SKU: {variant.sku}</div>
                         )}
                       </td>
                       <td>{category}</td>
@@ -1147,7 +1209,6 @@ function OrderDetails() {
                         </td>
                         <td>{commission.referral_id || commission.agent_code || "-"}</td>
                         <td className="percentage-cell">
-                          {/* <FaPercent className="percent-icon" /> */}
                           {parseFloat(commission.percentage || commission.commission_percentage || 0).toFixed(2)}%
                         </td>
                         <td className="commission-amount">

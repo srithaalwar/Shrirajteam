@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { baseurl } from "../../BaseURL/BaseURL";
 import ClientNavbar from "../../Client_Panel/Client_Navbar/Client_Navbar";
 import "./Dashboard.css";
-
+import Searchbar from "./SearchBar/ClientSearchBar"
 // Font Awesome Icons
 import {
   faCheckCircle,
@@ -208,6 +208,7 @@ const AdminDashboard = () => {
   return (
     <>
       <ClientNavbar />
+      <Searchbar/>
       <div className="dashboard-container">
         <div className="dashboard-content">
           {loading ? (

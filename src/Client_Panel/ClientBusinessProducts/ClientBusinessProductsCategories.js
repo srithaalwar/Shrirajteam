@@ -2225,7 +2225,7 @@ import "./ClientBusinessProductsCategories.css";
 import { baseurl } from "../../BaseURL/BaseURL";
 import Swal from "sweetalert2";
 import axios from "axios";
-
+import Searchbar from "./SearchBar/ClientSearchBar";
 // ============= useIsMobile Hook =============
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
@@ -3282,12 +3282,12 @@ const ClientBusinessProductsCategories = () => {
       {/* ======= MOBILE ======= */}
       {isMobile && (
         <div className="cbpc-mobile">
-          <div className="cbpc-mobile-topbar">
+          {/* <div className="cbpc-mobile-topbar">
             <button className="cbpc-back" onClick={() => navigate(-1)}><ArrowLeft size={20} /></button>
-            {/* <h1 className="cbpc-mobile-title">categories</h1> */}
+            <h1 className="cbpc-mobile-title">categories</h1>
             <div style={{ width: 36 }} />
-          </div>
-
+          </div> */}
+<Searchbar/>
           <div className="cbpc-toolbar">
             <button className="cbpc-toolbar-btn" onClick={() => setShowSortSheet(true)}>
               <span>{sortLabel}</span><ChevronDown size={14} />

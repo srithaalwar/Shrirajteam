@@ -1048,9 +1048,9 @@ const AdminBusinessList = () => {
         <div className="row mb-4">
           <div className="col-md-4">
             <div className="input-group search-box">
-              <span className="input-group-text">
+              {/* <span className="input-group-text">
                 <i className="bi bi-search"></i>
-              </span>
+              </span> */}
               <input
                 type="text"
                 className="form-control"

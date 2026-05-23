@@ -8990,7 +8990,7 @@ const ClientAddPropertyForm = ({ user, mode = 'add' }) => {
                       <button 
                         type="button" 
                         className="btn btn-secondary me-2"
-                        onClick={() => navigate('/client-properties')}
+                        onClick={() => navigate(-1)}
                         disabled={isSubmitting}
                       >
                         Cancel
