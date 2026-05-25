@@ -411,13 +411,13 @@ const ServiceProviders = () => {
                         </div>
                       </div>
 
-                      {provider.service_charges && (
+                      {/* {provider.service_charges && (
                         <div className="mt-3">
                           <span className="badge bg-success fs-6 px-3 py-2 rounded-pill">
                             ₹{parseFloat(provider.service_charges).toLocaleString('en-IN')}
                           </span>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 </div>
