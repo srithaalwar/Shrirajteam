@@ -5565,7 +5565,8 @@ const AgentProductDetails = () => {
   const [wishlist, setWishlist] = useState([]);
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
-
+const [showStickyBar, setShowStickyBar] = useState(true);
+const [lastScrollY, setLastScrollY] = useState(0);
   // Get user from localStorage
   const userId = localStorage.getItem("user_id");
 
@@ -5598,6 +5599,24 @@ const AgentProductDetails = () => {
         document.body.removeChild(textArea);
       });
   };
+
+  // Add scroll listener for sticky bar visibility
+useEffect(() => {
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      // Scrolling down - hide bar
+      setShowStickyBar(false);
+    } else {
+      // Scrolling up - show bar
+      setShowStickyBar(true);
+    }
+    setLastScrollY(currentScrollY);
+  };
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  return () => window.removeEventListener('scroll', handleScroll);
+}, [lastScrollY]);
 
   /* ================= FETCH PRODUCT ================= */
   useEffect(() => {
@@ -6303,6 +6322,55 @@ const AgentProductDetails = () => {
                 )}
               </button>
             </div>
+             <div className={`mobile-sticky-bar ${showStickyBar ? 'visible' : 'hidden'}`}>
+        <div className="sticky-bar-content">
+          <div className="sticky-price-section">
+            <span className="sticky-price">₹{pricing.price.toFixed(2)}</span>
+            {pricing.mrp > pricing.price && (
+              <span className="sticky-mrp">₹{pricing.mrp.toFixed(2)}</span>
+            )}
+          </div>
+          
+          <div className="sticky-action-section">
+            {isInCart ? (
+              <div className="sticky-quantity-control">
+                <button 
+                  className="qty-decr"
+                  onClick={() => handleUpdateQuantity(qty - 1)}
+                  disabled={cartLoading || qty <= 1}
+                >
+                  −
+                </button>
+                <span className="qty-count">{qty}</span>
+                <button 
+                  className="qty-incr"
+                  onClick={() => handleUpdateQuantity(qty + 1)}
+                  disabled={cartLoading || qty >= selectedVariant.stock}
+                >
+                  +
+                </button>
+              </div>
+            ) : (
+              <button 
+                className="sticky-add-to-cart"
+                onClick={handleAddToCart}
+                disabled={cartLoading || selectedVariant.stock <= 0}
+              >
+                {cartLoading ? 'ADDING...' : 'ADD TO CART'}
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Cart indicator badge */}
+      {isInCart && cartQuantity > 0 && (
+        <div className="mobile-cart-indicator" onClick={() => navigate('/agent-add-to-cart')}>
+          <ShoppingCart size={16} />
+          <span>{cartQuantity} Item{cartQuantity !== 1 ? 's' : ''}</span>
+        </div>
+      )}
+
 
             {/* KEY ATTRIBUTES */}
             {(product.attributes || selectedVariant?.attributes) && (

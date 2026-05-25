@@ -929,4 +929,232 @@
   }
 }
 
+/* ========== MOBILE STICKY BOTTOM BAR ========== */
+.mobile-sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  padding: 12px 16px;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+  border-top: 1px solid #eee;
+  
+}
 
+.mobile-sticky-bar.visible {
+  transform: translateY(0);
+}
+
+.mobile-sticky-bar.hidden {
+  transform: translateY(100%);
+}
+
+.sticky-bar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.sticky-price-section {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex: 1;
+}
+
+.sticky-price {
+  font-size: 22px;
+  font-weight: 700;
+  color: #000;
+}
+
+.sticky-mrp {
+  font-size: 14px;
+  text-decoration: line-through;
+  color: #999;
+}
+
+.sticky-action-section {
+  flex-shrink: 0;
+}
+
+.sticky-add-to-cart {
+  background: #243b8f;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.sticky-add-to-cart:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Quantity selector in sticky bar */
+.sticky-quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #f5f5f5;
+  border-radius: 30px;
+  padding: 4px 8px;
+}
+
+.sticky-quantity-control button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.sticky-quantity-control button:active {
+  transform: scale(0.95);
+}
+
+.sticky-quantity-control button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.sticky-quantity-control .qty-count {
+  font-size: 18px;
+  font-weight: 600;
+  min-width: 30px;
+  text-align: center;
+}
+
+/* Mobile cart indicator badge */
+.mobile-cart-indicator {
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  background: #243b8f;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 1001;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+/* Updated mobile buy box styles */
+.mobile-buy-box {
+  display: none;
+  margin-top: 15px;
+  padding: 12px 15px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+}
+
+.mobile-price-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.mobile-price {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000;
+}
+
+.mobile-mrp {
+  font-size: 13px;
+  text-decoration: line-through;
+  color: #888;
+}
+
+.mobile-off {
+  color: #28a745;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.mobile-seller-info {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.mobile-cart-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #243b8f;
+  background: #eef2ff;
+  padding: 6px 10px;
+  border-radius: 20px;
+  width: fit-content;
+}
+
+/* Update responsive breakpoint */
+@media (max-width: 768px) {
+  .buy-box {
+    display: none;
+  }
+
+  .mobile-buy-box {
+    display: block;
+  }
+  
+  /* Hide wishlist button in mobile sticky bar area */
+  .mobile-sticky-bar .wishlist-btn {
+    display: none;
+  }
+  
+  /* Add padding to body to account for sticky bar */
+  body {
+    padding-bottom: 70px;
+  }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+  .sticky-price {
+    font-size: 18px;
+  }
+  
+  .sticky-add-to-cart {
+    padding: 8px 18px;
+    font-size: 12px;
+  }
+  
+  .sticky-quantity-control button {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+  
+  .sticky-quantity-control .qty-count {
+    font-size: 16px;
+    min-width: 24px;
+  }
+}
