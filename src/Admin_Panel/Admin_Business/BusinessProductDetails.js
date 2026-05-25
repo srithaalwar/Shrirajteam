@@ -434,7 +434,7 @@ const AdminProductDetails = () => {
               )}
             </div>
 
-            <p className="unit">SKU: {selectedVariant.sku}</p>
+            {/* <p className="unit">SKU: {selectedVariant.sku}</p> */}
 
             {/* <div className="qty">
               <button 

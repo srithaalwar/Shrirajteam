@@ -1693,6 +1693,97 @@ const EditProductModal = ({ product, isOpen, onClose, onSave }) => {
   );
 };
 
+// const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete }) => {
+//   const [f, setF] = useState({ 
+//     mrp: "", 
+//     selling_price: "", 
+//     stock: "", 
+//     hsn_code: "", 
+//     is_returnable: false, 
+//     return_days: 7, 
+//     is_active: false, 
+//     product_commission: "0.00", 
+//     distribution_commission: "0.00",
+//     max_order_quantity: "",
+//     verification_status: "pending" 
+//   });
+  
+//   useEffect(() => { 
+//     if (variant) {
+//       console.log("Loading variant for edit:", {
+//         id: variant.id,
+//         sku: variant.sku,
+//         is_active: variant.is_active,
+//         is_active_type: typeof variant.is_active,
+//         max_order_quantity: variant.max_order_quantity
+//       });
+      
+//       setF({ 
+//         mrp: variant.mrp || "", 
+//         selling_price: variant.selling_price || "", 
+//         stock: variant.stock || "", 
+//         hsn_code: variant.hsn_code || "", 
+//         is_returnable: variant.is_returnable || false, 
+//         return_days: variant.return_days || 7, 
+//         is_active: variant.is_active === true, // Ensure boolean
+//         product_commission: variant.product_commission || "0.00", 
+//         distribution_commission: variant.distribution_commission || "0.00",
+//         max_order_quantity: variant.max_order_quantity || "",
+//         verification_status: variant.verification_status || "pending" 
+//       });
+//     }
+//   }, [variant]);
+  
+//   const ch = e => { 
+//     const { name, value, type, checked } = e.target; 
+//     setF(p => ({ 
+//       ...p, 
+//       [name]: type === "checkbox" ? checked : value 
+//     })); 
+//   };
+  
+//   if (!isOpen) return null;
+  
+//   return (
+//     <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+//       <div className="modal-dialog modal-lg"><div className="modal-content">
+//         <div className="modal-header"><h5 className="modal-title">Edit Variant: {variant?.sku}</h5><button className="btn-close" onClick={onClose}></button></div>
+//         <div className="modal-body"><div className="row">
+//           <div className="col-md-6 mb-3"><label className="form-label">SKU</label><input type="text" className="form-control" value={variant?.sku || ""} readOnly /></div>
+//           <div className="col-md-6 mb-3"><label className="form-label">Variant ID</label><input type="text" className="form-control" value={variant?.id || ""} readOnly /></div>
+//           <div className="col-md-6 mb-3"><label className="form-label">MRP *</label><input type="number" className="form-control" name="mrp" value={f.mrp} onChange={ch} step="0.01" min="0" required /></div>
+//           <div className="col-md-6 mb-3"><label className="form-label">Selling Price *</label><input type="number" className="form-control" name="selling_price" value={f.selling_price} onChange={ch} step="0.01" min="0" required /></div>
+//           <div className="col-md-6 mb-3"><label className="form-label">Stock *</label><input type="number" className="form-control" name="stock" value={f.stock} onChange={ch} min="0" required /></div>
+//           <div className="col-md-6 mb-3">
+//             <label className="form-label">Max Order Quantity</label>
+//             <input type="number" className="form-control" name="max_order_quantity" value={f.max_order_quantity} onChange={ch} min="1" placeholder="Leave empty for unlimited" />
+//             <small className="text-muted">Maximum quantity per order (leave empty for no limit)</small>
+//           </div>
+//           <div className="col-md-6 mb-3"><label className="form-label">HSN Code</label><input type="text" className="form-control" name="hsn_code" value={f.hsn_code} onChange={ch} /></div>
+//           <div className="col-md-6 mb-3"><label className="form-label">Return Days</label><input type="number" className="form-control" name="return_days" value={f.return_days} onChange={ch} min="0" /></div>
+//           <div className="col-md-6 mb-3"><label className="form-label d-flex align-items-center gap-1"><TrendingUp size={14} />Product Commission (₹)</label><input type="number" className="form-control" name="product_commission" value={f.product_commission} onChange={ch} step="0.01" min="0" /></div>
+//           <div className="col-md-6 mb-3"><label className="form-label d-flex align-items-center gap-1"><TrendingUp size={14} />Distribution Commission (₹)</label><input type="number" className="form-control" name="distribution_commission" value={f.distribution_commission} onChange={ch} step="0.01" min="0" /></div>
+//           <div className="col-md-6 mb-3"><label className="form-label">Verification Status</label><select className="form-select" name="verification_status" value={f.verification_status} onChange={ch}><option value="pending">Pending</option><option value="verified">Verified</option><option value="rejected">Rejected</option></select></div>
+//           {/* <div className="col-md-3 mb-3 d-flex align-items-end">
+//             <div className="form-check form-switch"><input className="form-check-input" type="checkbox" name="is_returnable" checked={f.is_returnable} onChange={ch} /><label className="form-check-label">Returnable</label></div></div>
+//           <div className="col-md-3 mb-3 d-flex align-items-end"><div className="form-check form-switch"><input className="form-check-input" type="checkbox" name="is_active" checked={f.is_active} onChange={ch} /><label className="form-check-label">Actives</label></div>
+//           </div> */}
+//           <div className="col-md-12 mb-3"><h6>Attributes</h6><pre className="bg-light p-3 rounded" style={{ fontSize: 12 }}>{JSON.stringify(variant?.attributes || {}, null, 2)}</pre></div>
+//         </div></div>
+//         <div className="modal-footer">
+//           <button className="btn btn-danger" onClick={() => { if (window.confirm(`Delete variant ${variant?.sku}?`)) onDelete(product.product_id, variant.id); }}><Trash2 size={14} /> Delete</button>
+//           <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
+//           <button className="btn btn-primary" onClick={() => {
+//             console.log("Saving variant with data:", f);
+//             onSave(product.product_id, variant.id, f);
+//           }}>Save Changes</button>
+//         </div>
+//       </div></div>
+//     </div>
+//   );
+// };
+
+
 const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete }) => {
   const [f, setF] = useState({ 
     mrp: "", 
@@ -1705,7 +1796,8 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
     product_commission: "0.00", 
     distribution_commission: "0.00",
     max_order_quantity: "",
-    verification_status: "pending" 
+    verification_status: "pending",
+    attributes: {}
   });
   
   useEffect(() => { 
@@ -1715,7 +1807,8 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
         sku: variant.sku,
         is_active: variant.is_active,
         is_active_type: typeof variant.is_active,
-        max_order_quantity: variant.max_order_quantity
+        max_order_quantity: variant.max_order_quantity,
+        attributes: variant.attributes
       });
       
       setF({ 
@@ -1729,7 +1822,8 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
         product_commission: variant.product_commission || "0.00", 
         distribution_commission: variant.distribution_commission || "0.00",
         max_order_quantity: variant.max_order_quantity || "",
-        verification_status: variant.verification_status || "pending" 
+        verification_status: variant.verification_status || "pending",
+        attributes: variant.attributes || {}
       });
     }
   }, [variant]);
@@ -1742,7 +1836,45 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
     })); 
   };
   
+  const handleAttributeChange = (key, value) => {
+    setF(prev => ({
+      ...prev,
+      attributes: {
+        ...prev.attributes,
+        [key]: value
+      }
+    }));
+  };
+  
+  const addNewAttribute = () => {
+    const key = prompt("Enter attribute name (e.g., Brand, Colour, Size):");
+    if (key && key.trim()) {
+      const value = prompt(`Enter value for ${key}:`);
+      if (value !== null) {
+        setF(prev => ({
+          ...prev,
+          attributes: {
+            ...prev.attributes,
+            [key.trim()]: value
+          }
+        }));
+      }
+    }
+  };
+  
+  const removeAttribute = (key) => {
+    if (window.confirm(`Remove attribute "${key}"?`)) {
+      setF(prev => {
+        const newAttrs = { ...prev.attributes };
+        delete newAttrs[key];
+        return { ...prev, attributes: newAttrs };
+      });
+    }
+  };
+  
   if (!isOpen) return null;
+  
+  const attributeEntries = Object.entries(f.attributes);
   
   return (
     <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
@@ -1764,11 +1896,73 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
           <div className="col-md-6 mb-3"><label className="form-label d-flex align-items-center gap-1"><TrendingUp size={14} />Product Commission (₹)</label><input type="number" className="form-control" name="product_commission" value={f.product_commission} onChange={ch} step="0.01" min="0" /></div>
           <div className="col-md-6 mb-3"><label className="form-label d-flex align-items-center gap-1"><TrendingUp size={14} />Distribution Commission (₹)</label><input type="number" className="form-control" name="distribution_commission" value={f.distribution_commission} onChange={ch} step="0.01" min="0" /></div>
           <div className="col-md-6 mb-3"><label className="form-label">Verification Status</label><select className="form-select" name="verification_status" value={f.verification_status} onChange={ch}><option value="pending">Pending</option><option value="verified">Verified</option><option value="rejected">Rejected</option></select></div>
-          {/* <div className="col-md-3 mb-3 d-flex align-items-end">
-            <div className="form-check form-switch"><input className="form-check-input" type="checkbox" name="is_returnable" checked={f.is_returnable} onChange={ch} /><label className="form-check-label">Returnable</label></div></div>
-          <div className="col-md-3 mb-3 d-flex align-items-end"><div className="form-check form-switch"><input className="form-check-input" type="checkbox" name="is_active" checked={f.is_active} onChange={ch} /><label className="form-check-label">Actives</label></div>
-          </div> */}
-          <div className="col-md-12 mb-3"><h6>Attributes</h6><pre className="bg-light p-3 rounded" style={{ fontSize: 12 }}>{JSON.stringify(variant?.attributes || {}, null, 2)}</pre></div>
+          
+          {/* Attributes Section - Editable as individual fields */}
+          <div className="col-md-12 mb-3">
+            <div className="d-flex justify-content-between align-items-center mb-2">
+              <label className="form-label fw-bold mb-0">Variant Attributes</label>
+              <button type="button" className="btn btn-sm btn-outline-primary" onClick={addNewAttribute}>
+                <Plus size={14} /> Add Attribute
+              </button>
+            </div>
+            
+            {attributeEntries.length === 0 ? (
+              <div className="alert alert-light text-center py-3 mb-0">
+                <small className="text-muted">No attributes added. Click "Add Attribute" to add custom attributes like Brand, Colour, Size, etc.</small>
+              </div>
+            ) : (
+              <div className="border rounded p-3 bg-light">
+                {attributeEntries.map(([key, value]) => (
+                  <div key={key} className="row mb-2 align-items-center">
+                    <div className="col-md-4 mb-1 mb-md-0">
+                      <input
+                        type="text"
+                        className="form-control form-control-sm"
+                        value={key}
+                        onChange={(e) => {
+                          const newKey = e.target.value;
+                          if (newKey && newKey !== key) {
+                            const newAttrs = { ...f.attributes };
+                            delete newAttrs[key];
+                            newAttrs[newKey] = value;
+                            setF(prev => ({ ...prev, attributes: newAttrs }));
+                          }
+                        }}
+                        placeholder="Attribute name"
+                      />
+                    </div>
+                    <div className="col-md-7 mb-1 mb-md-0">
+                      <input
+                        type="text"
+                        className="form-control form-control-sm"
+                        value={value}
+                        onChange={(e) => handleAttributeChange(key, e.target.value)}
+                        placeholder="Attribute value"
+                      />
+                    </div>
+                    <div className="col-md-1 text-end">
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={() => removeAttribute(key)}
+                        title="Remove attribute"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            <small className="text-muted mt-2 d-block">Add product specifications like Brand, Color, Size, Material, etc.</small>
+          </div>
+          
+          <div className="col-md-6 mb-3 d-flex align-items-end">
+            <div className="form-check form-switch"><input className="form-check-input" type="checkbox" name="is_returnable" checked={f.is_returnable} onChange={ch} /><label className="form-check-label">Returnable</label></div>
+          </div>
+          <div className="col-md-6 mb-3 d-flex align-items-end">
+            <div className="form-check form-switch"><input className="form-check-input" type="checkbox" name="is_active" checked={f.is_active} onChange={ch} /><label className="form-check-label">Active</label></div>
+          </div>
         </div></div>
         <div className="modal-footer">
           <button className="btn btn-danger" onClick={() => { if (window.confirm(`Delete variant ${variant?.sku}?`)) onDelete(product.product_id, variant.id); }}><Trash2 size={14} /> Delete</button>
@@ -1782,7 +1976,6 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
     </div>
   );
 };
-
 const AddVariantModal = ({ product, isOpen, onClose, onAdd }) => {
   const [f, setF] = useState({ 
     sku: "", 

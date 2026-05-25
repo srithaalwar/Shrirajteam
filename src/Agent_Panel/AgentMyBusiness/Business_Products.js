@@ -4599,6 +4599,252 @@ const EditProductModal = ({ product, isOpen, onClose, onSave, onDelete }) => {
   );
 };
 
+// const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete }) => {
+//   const [formData, setFormData] = useState({
+//     mrp: "",
+//     selling_price: "",
+//     stock: "",
+//     hsn_code: "",
+//     is_returnable: false,
+//     return_days: 7,
+//     is_active: "",
+//     product_commission: "",
+//     distribution_commission: "",
+//     max_order_quantity: "",
+//     verification_status: "pending"
+//   });
+
+//   useEffect(() => {
+//     if (variant) {
+//       setFormData({
+//         mrp: variant.mrp || "",
+//         selling_price: variant.selling_price || "",
+//         stock: variant.stock || "",
+//         hsn_code: variant.hsn_code || "",
+//         is_returnable: variant.is_returnable || false,
+//         return_days: variant.return_days || 7,
+//         is_active: variant.is_active || false,
+//         product_commission: variant.product_commission || "0.00",
+//         distribution_commission: variant.distribution_commission || "0.00",
+//         max_order_quantity: variant.max_order_quantity || "",
+//         verification_status: variant.verification_status || "pending"
+//       });
+//     }
+//   }, [variant]);
+
+//   const handleChange = (e) => {
+//     const { name, value, type, checked } = e.target;
+//     setFormData(prev => ({
+//       ...prev,
+//       [name]: type === 'checkbox' ? checked : value
+//     }));
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     onSave(product.product_id, variant.id, formData);
+//   };
+
+//   const handleDelete = () => {
+//     if (window.confirm(`Are you sure you want to delete variant ${variant.sku}?`)) {
+//       onDelete(product.product_id, variant.id);
+//     }
+//   };
+
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+//       <div className="modal-dialog modal-lg">
+//         <div className="modal-content">
+//           <div className="modal-header">
+//             <h5 className="modal-title">Edit Variant</h5>
+//             <button 
+//               type="button" 
+//               className="btn-close" 
+//               style={{ filter: 'brightness(0) invert(1)' }} 
+//               onClick={onClose}
+//             ></button>
+//           </div>
+//           <form onSubmit={handleSubmit}>
+//             <div className="modal-body">
+//               <div className="row">
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">SKU</label>
+//                   <input
+//                     type="text"
+//                     className="form-control"
+//                     value={variant?.sku || ""}
+//                     readOnly
+//                   />
+//                 </div>
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">Variant ID</label>
+//                   <input
+//                     type="text"
+//                     className="form-control"
+//                     value={variant?.id || ""}
+//                     readOnly
+//                   />
+//                 </div>
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">MRP *</label>
+//                   <input
+//                     type="number"
+//                     className="form-control"
+//                     name="mrp"
+//                     value={formData.mrp}
+//                     onChange={handleChange}
+//                     required
+//                     step="0.01"
+//                     min="0"
+//                   />
+//                 </div>
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">Selling Price *</label>
+//                   <input
+//                     type="number"
+//                     className="form-control"
+//                     name="selling_price"
+//                     value={formData.selling_price}
+//                     onChange={handleChange}
+//                     required
+//                     step="0.01"
+//                     min="0"
+//                   />
+//                 </div>
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">Stock *</label>
+//                   <input
+//                     type="number"
+//                     className="form-control"
+//                     name="stock"
+//                     value={formData.stock}
+//                     onChange={handleChange}
+//                     required
+//                     min="0"
+//                   />
+//                 </div>
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">Max Order Quantity</label>
+//                   <input
+//                     type="number"
+//                     className="form-control"
+//                     name="max_order_quantity"
+//                     value={formData.max_order_quantity}
+//                     onChange={handleChange}
+//                     min="1"
+//                     placeholder="Leave empty for unlimited"
+//                   />
+//                   <small className="text-muted">Maximum quantity per order (leave empty for no limit)</small>
+//                 </div>
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">HSN Code</label>
+//                   <input
+//                     type="text"
+//                     className="form-control"
+//                     name="hsn_code"
+//                     value={formData.hsn_code}
+//                     onChange={handleChange}
+//                   />
+//                 </div>
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label">Return Days</label>
+//                   <input
+//                     type="number"
+//                     className="form-control"
+//                     name="return_days"
+//                     value={formData.return_days}
+//                     onChange={handleChange}
+//                     min="0"
+//                   />
+//                 </div>
+                
+//                 {/* Commission Fields */}
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label d-flex align-items-center gap-2">
+//                     Product Commission (₹)
+//                   </label>
+//                   <input
+//                     type="number"
+//                     className="form-control"
+//                     name="product_commission"
+//                     value={formData.product_commission}
+//                     onChange={handleChange}
+//                     step="0.01"
+//                     min="0"
+//                     placeholder="0.00"
+//                   />
+//                   <small className="text-muted">Commission amount in rupees</small>
+//                 </div>
+                
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label d-flex align-items-center gap-2">
+//                     Distribution Commission (₹)
+//                   </label>
+//                   <input
+//                     type="number"
+//                     className="form-control"
+//                     name="distribution_commission"
+//                     value={formData.distribution_commission}
+//                     onChange={handleChange}
+//                     step="0.01"
+//                     min="0"
+//                     placeholder="0.00"
+//                   />
+//                   <small className="text-muted">Distribution commission in rupees</small>
+//                 </div>
+                
+//                 <div className="col-md-3 mb-3 d-flex align-items-end">
+//                   <div className="form-check form-switch">
+//                     <input
+//                       className="form-check-input"
+//                       type="checkbox"
+//                       name="is_returnable"
+//                       checked={formData.is_returnable}
+//                       onChange={handleChange}
+//                     />
+//                     <label className="form-check-label">Returnable</label>
+//                   </div>
+//                 </div>
+//                 <div className="col-md-3 mb-3 d-flex align-items-end">
+//                   <div className="form-check form-switch">
+//                     <input
+//                       className="form-check-input"
+//                       type="checkbox"
+//                       name="is_active"
+//                       checked={formData.is_active}
+//                       onChange={handleChange}
+//                     />
+//                     <label className="form-check-label">Active</label>
+//                   </div>
+//                 </div>
+//                 <div className="col-md-12 mb-3">
+//                   <h6>Attributes</h6>
+//                   <pre className="bg-light p-3 rounded">
+//                     {JSON.stringify(variant?.attributes || {}, null, 2)}
+//                   </pre>
+//                 </div>
+//               </div>
+//             </div>
+//             <div className="modal-footer">
+//               <button type="button" className="btn btn-danger" onClick={handleDelete}>
+//                 <Trash2 size={16} /> Delete Variant
+//               </button>
+//               <button type="button" className="btn btn-secondary" onClick={onClose}>
+//                 Cancel
+//               </button>
+//               <button type="submit" className="btn btn-primary">
+//                 Save Changes
+//               </button>
+//             </div>
+//           </form>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
 const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete }) => {
   const [formData, setFormData] = useState({
     mrp: "",
@@ -4607,11 +4853,12 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
     hsn_code: "",
     is_returnable: false,
     return_days: 7,
-    is_active: "",
+    is_active: false,
     product_commission: "",
     distribution_commission: "",
     max_order_quantity: "",
-    verification_status: "pending"
+    verification_status: "pending",
+    attributes: {}
   });
 
   useEffect(() => {
@@ -4627,7 +4874,8 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
         product_commission: variant.product_commission || "0.00",
         distribution_commission: variant.distribution_commission || "0.00",
         max_order_quantity: variant.max_order_quantity || "",
-        verification_status: variant.verification_status || "pending"
+        verification_status: variant.verification_status || "pending",
+        attributes: variant.attributes || {}
       });
     }
   }, [variant]);
@@ -4640,25 +4888,76 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
     }));
   };
 
+  const handleAttributeChange = (key, value) => {
+    setFormData(prev => ({
+      ...prev,
+      attributes: {
+        ...prev.attributes,
+        [key]: value
+      }
+    }));
+  };
+
+  const handleAttributeKeyChange = (oldKey, newKey) => {
+    if (newKey && newKey !== oldKey) {
+      const newAttributes = { ...formData.attributes };
+      const value = newAttributes[oldKey];
+      delete newAttributes[oldKey];
+      newAttributes[newKey] = value;
+      setFormData(prev => ({
+        ...prev,
+        attributes: newAttributes
+      }));
+    }
+  };
+
+  const addNewAttribute = () => {
+    const key = prompt("Enter attribute name (e.g., Brand, Colour, Size):");
+    if (key && key.trim()) {
+      const value = prompt(`Enter value for ${key}:`);
+      if (value !== null) {
+        setFormData(prev => ({
+          ...prev,
+          attributes: {
+            ...prev.attributes,
+            [key.trim()]: value
+          }
+        }));
+      }
+    }
+  };
+
+  const removeAttribute = (key) => {
+    if (window.confirm(`Remove attribute "${key}"?`)) {
+      setFormData(prev => {
+        const newAttrs = { ...prev.attributes };
+        delete newAttrs[key];
+        return { ...prev, attributes: newAttrs };
+      });
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(product.product_id, variant.id, formData);
   };
 
   const handleDelete = () => {
-    if (window.confirm(`Are you sure you want to delete variant ${variant.sku}?`)) {
+    if (window.confirm(`Are you sure you want to delete variant ${variant?.sku || variant?.id}?`)) {
       onDelete(product.product_id, variant.id);
     }
   };
 
   if (!isOpen) return null;
 
+  const attributeEntries = Object.entries(formData.attributes);
+
   return (
     <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Edit Variant</h5>
+            <h5 className="modal-title">Edit Variant: {variant?.sku || variant?.id}</h5>
             <button 
               type="button" 
               className="btn-close" 
@@ -4795,6 +5094,20 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
                   <small className="text-muted">Distribution commission in rupees</small>
                 </div>
                 
+                <div className="col-md-6 mb-3">
+                  <label className="form-label">Verification Status</label>
+                  <select 
+                    className="form-select" 
+                    name="verification_status" 
+                    value={formData.verification_status} 
+                    onChange={handleChange}
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="verified">Verified</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                </div>
+                
                 <div className="col-md-3 mb-3 d-flex align-items-end">
                   <div className="form-check form-switch">
                     <input
@@ -4819,11 +5132,61 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
                     <label className="form-check-label">Active</label>
                   </div>
                 </div>
+                
+                {/* Attributes Section - Editable as individual fields */}
                 <div className="col-md-12 mb-3">
-                  <h6>Attributes</h6>
-                  <pre className="bg-light p-3 rounded">
-                    {JSON.stringify(variant?.attributes || {}, null, 2)}
-                  </pre>
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <label className="form-label fw-bold mb-0">Variant Attributes</label>
+                    <button 
+                      type="button" 
+                      className="btn btn-sm btn-outline-primary" 
+                      onClick={addNewAttribute}
+                    >
+                      <Plus size={14} /> Add Attribute
+                    </button>
+                  </div>
+                  
+                  {attributeEntries.length === 0 ? (
+                    <div className="alert alert-light text-center py-3 mb-0">
+                      <small className="text-muted">No attributes added. Click "Add Attribute" to add custom attributes like Brand, Colour, Size, Material, etc.</small>
+                    </div>
+                  ) : (
+                    <div className="border rounded p-3 bg-light">
+                      {attributeEntries.map(([key, value]) => (
+                        <div key={key} className="row mb-2 align-items-center">
+                          <div className="col-md-4 mb-1 mb-md-0">
+                            <input
+                              type="text"
+                              className="form-control form-control-sm"
+                              value={key}
+                              onChange={(e) => handleAttributeKeyChange(key, e.target.value)}
+                              placeholder="Attribute name"
+                            />
+                          </div>
+                          <div className="col-md-7 mb-1 mb-md-0">
+                            <input
+                              type="text"
+                              className="form-control form-control-sm"
+                              value={value}
+                              onChange={(e) => handleAttributeChange(key, e.target.value)}
+                              placeholder="Attribute value"
+                            />
+                          </div>
+                          <div className="col-md-1 text-end">
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-danger"
+                              onClick={() => removeAttribute(key)}
+                              title="Remove attribute"
+                            >
+                              <Trash2 size={12} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <small className="text-muted mt-2 d-block">Add product specifications like Brand, Color, Size, Material, etc.</small>
                 </div>
               </div>
             </div>
@@ -4844,7 +5207,6 @@ const EditVariantModal = ({ product, variant, isOpen, onClose, onSave, onDelete 
     </div>
   );
 };
-
 const AddVariantModal = ({ product, isOpen, onClose, onAdd }) => {
   const [formData, setFormData] = useState({
     sku: "",

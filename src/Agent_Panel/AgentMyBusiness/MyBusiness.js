@@ -2661,9 +2661,7 @@ const getActiveBadge = (isActive) => {
         <div className="row mb-4">
           <div className="col-md-6">
             <div className="input-group search-box">
-              <span className="input-group-text">
-                <i className="bi bi-search"></i>
-              </span>
+             
               <input
                 type="text"
                 className="form-control"
@@ -2718,12 +2716,7 @@ const getActiveBadge = (isActive) => {
                 </div>
                 <div className="stat-label" style={{ color: "black" }}>Verified</div>
               </div>
-              {/* <div className="stat-card">
-                <div className="stat-number">
-                  {businesses.filter(b => b.is_featured).length}
-                </div>
-                <div className="stat-label" style={{ color: "black" }}>Featured</div>
-              </div> */}
+             
               <div className="stat-card">
                 <div className="stat-number">
                   {businesses.filter(b => b.verification_status === 'pending').length}
