@@ -7488,7 +7488,7 @@ function ClientCart() {
         <div className="agent-cart-header">
           <h3 className="agent-cart-title">
             <FaShoppingCart className="me-2" />
-            Shopping Cart
+             Cart
             {cartItems.length > 0 && (
               <span className="cart-count-badge">
                 {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}
@@ -7511,9 +7511,7 @@ function ClientCart() {
           <div className="agent-cart-content split-layout">
             {/* Left: Cart Items */}
             <div className="cart-items-column">
-              <div className="cart-items-header sticky-header">
-                <h3>Cart Items ({cartItems.length})</h3>
-              </div>
+             
               <div className="cart-items-list scrollable-list">
                 {cartItems.map((item) => {
                   const variant = item.variant_details;
@@ -7618,10 +7616,10 @@ function ClientCart() {
                     <span>Tax</span>
                     <span>₹{calculateTax().toFixed(2)}</span>
                   </div>
-                  <div className="summary-row shipping-row">
+                  {/* <div className="summary-row shipping-row">
                     <span>Shipping</span>
                     <span className="free-shipping">FREE</span>
-                  </div>
+                  </div> */}
                   <div className="summary-divider"></div>
                   <div className="summary-row total-row">
                     <span className="total-label">Total</span>

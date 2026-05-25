@@ -500,7 +500,7 @@
 /* Split Layout - Add after your existing agent-cart-content styles */
 .agent-cart-content.split-layout {
   display: flex;
-  gap: 24px;
+  gap: 0px;
   height: calc(100vh - 200px);
   min-height: 600px;
   /* margin-top: 20px; */

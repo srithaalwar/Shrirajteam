@@ -822,8 +822,7 @@ const WebShopHeader = ({ businessId }) => {
             </div>
 
             <div className="d-flex align-items-center gap-4 flex-wrap">
-              {/* RATINGS */}
-              <div>
+              {/* <div>
                 <small className="text-muted">Ratings</small>
                 <div className="text-warning">
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -837,7 +836,7 @@ const WebShopHeader = ({ businessId }) => {
                     />
                   ))}
                 </div>
-              </div>
+              </div> */}
 
               {/* AVAILABILITY */}
               <div className="border-start ps-3">
@@ -930,7 +929,7 @@ const WebShopHeader = ({ businessId }) => {
           {/* Mobile Info Grid */}
           <div className="mobile-info-grid">
             {/* RATINGS */}
-            <div className="mobile-info-item">
+            {/* <div className="mobile-info-item">
               <small className="text-muted d-block">Ratings</small>
               <div className="text-warning d-flex">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -945,7 +944,7 @@ const WebShopHeader = ({ businessId }) => {
                   />
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* AVAILABILITY */}
             <div className="mobile-info-item">

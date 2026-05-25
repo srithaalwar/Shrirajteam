@@ -654,7 +654,7 @@
 /* Split Layout - Add after your existing agent-cart-content styles */
 .agent-cart-content.split-layout {
   display: flex;
-  gap: 24px;
+  gap: 0px;
   height: calc(100vh - 200px);
   min-height: 600px;
   margin-top: 2px;
@@ -1667,8 +1667,86 @@
   .agent-cart-header {
     margin-bottom: 15px;
   }
-
+.agent-cart-header
   .agent-cart-title {
     font-size: 1.2rem;
+    display: none;
   }
+}
+
+
+/* Fix for agent-cart-header on mobile - puts cart count left and button right */
+@media (max-width: 768px) {
+  .agent-cart-header {
+    display: flex;
+    flex-direction: row !important;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 0;
+  }
+
+  .agent-cart-header .agent-cart-title {
+    display: flex !important;
+    align-items: center;
+    font-size: 1rem;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .agent-cart-header .agent-cart-title .me-2 {
+    margin-right: 6px;
+    font-size: 0.9rem;
+  }
+
+  .agent-cart-header .cart-count-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    margin-left: 6px;
+  }
+
+  .agent-cart-header .continue-shopping-btn {
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    white-space: nowrap;
+  }
+
+  /* Remove any previous styles that might be causing issues */
+  .agent-cart-header .continue-shopping-btn.improved {
+    margin-left: auto;
+  }
+}
+
+/* Additional fix for extra small devices */
+@media (max-width: 480px) {
+  .agent-cart-header .agent-cart-title {
+    font-size: 1rem;
+  }
+
+  .agent-cart-header .continue-shopping-btn {
+    font-size: 1rem;
+    padding: 5px 10px;
+  }
+
+  .agent-cart-header .cart-count-badge {
+    font-size: 0.65rem;
+    padding: 2px 5px;
+  }
+}
+
+/* If the button has specific styling that's causing issues */
+.continue-shopping-btn.improved {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.continue-shopping-btn.improved:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
 }

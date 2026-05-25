@@ -1671,7 +1671,7 @@ import {
 import "./SubCategories.css";
 import { baseurl } from "../BaseURL/BaseURL";
 import Swal from "sweetalert2";
-
+import Searchbar from "./SearchBar/AgentSearchBar"
 // ============= useIsMobile Hook =============
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
@@ -2434,6 +2434,7 @@ const WebsiteSubCategories = () => {
               selectedDiscountRanges={selectedDiscountRanges} setSelectedDiscountRanges={setSelectedDiscountRanges}
               clearAll={clearAll} />
           )}
+          <Searchbar/>
 
           <div className="msub-count">{filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}</div>
           {productSection}
