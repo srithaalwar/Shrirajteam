@@ -776,7 +776,8 @@ import {
   FaBox,
   FaRupeeSign,
   FaPercent,
-  FaChartLine
+  FaChartLine,
+  FaUserPlus
 } from "react-icons/fa";
 
 function OrderDetails() {
@@ -784,6 +785,7 @@ function OrderDetails() {
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [commissions, setCommissions] = useState([]);
+  const [sellerReferralCommissions, setSellerReferralCommissions] = useState([]);
   const [error, setError] = useState(null);
   const [productsCache, setProductsCache] = useState({}); // Cache for product names
 
@@ -849,11 +851,17 @@ function OrderDetails() {
       orderData = await enrichOrderWithProductNames(orderData);
       setOrder(orderData);
       
-      // Fetch commission breakdown
+      // Fetch product commission breakdown
       const commissionResponse = await axios.get(
         `${baseurl}/product-commissions/?commission_type=product_commission&order_id=${orderId}`
       );
       setCommissions(commissionResponse.data.results || []);
+      
+      // Fetch seller referral commission breakdown
+      const sellerReferralResponse = await axios.get(
+        `${baseurl}/commissions/?commission_type=seller_referral_commission&order_id=${orderId}`
+      );
+      setSellerReferralCommissions(sellerReferralResponse.data.results || []);
       
     } catch (error) {
       console.error("Error fetching order details:", error);
@@ -1016,9 +1024,14 @@ function OrderDetails() {
         return `${index + 1}. ${productName} - Qty: ${quantity} - Price: ${formatAmount(price)} - Total: ${formatAmount(lineTotal)}`;
       }).join('\n')}
       
-      Commission Breakdown:
+      Product Commission Breakdown:
       ${commissions.map((commission, index) => {
         return `${index + 1}. Level ${commission.level_no || commission.level || 1} - ${commission.agent_name || commission.agent_username || "-"} - ${commission.percentage || commission.commission_percentage || 0}% - ${formatAmount(commission.amount || commission.commission_amount || 0)}`;
+      }).join('\n')}
+      
+      Seller Referral Commission:
+      ${sellerReferralCommissions.map((commission, index) => {
+        return `${index + 1}. ${commission.agent_name || "-"} (${commission.referral_id || "-"}) - ${commission.percentage || 0}% - ${formatAmount(commission.amount || 0)}`;
       }).join('\n')}
       
       Total Amount: ${formatAmount(order?.total_amount)}
@@ -1165,7 +1178,7 @@ function OrderDetails() {
                         {variant.sku && (
                           <div className="product-sku">SKU: {variant.sku}</div>
                         )}
-                      </td>
+                       </td>
                       <td>{category}</td>
                       <td>{quantity}</td>
                       <td className="price-cell">{formatAmount(unitPrice)}</td>
@@ -1178,12 +1191,12 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* Commission Breakdown Section */}
+        {/* Product Commission Breakdown Section */}
         {commissions.length > 0 && (
           <div className="commission-section">
             <h2 className="section-title">
               <FaChartLine className="section-icon" />
-              Commission Breakdown ({commissions.length} Levels)
+              Product Commission Breakdown ({commissions.length} Levels)
             </h2>
             <div className="commission-table-wrapper">
               <table className="commission-table">
@@ -1194,6 +1207,8 @@ function OrderDetails() {
                     <th>Referral ID</th>
                     <th>Commission %</th>
                     <th>Commission Amount</th>
+                      <th>Date</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -1214,9 +1229,82 @@ function OrderDetails() {
                         <td className="commission-amount">
                           {formatAmount(commission.amount || commission.commission_amount || 0)}
                         </td>
+                         <td className="date-cell">
+                          {formatDateTime(commission.created_at) || "-"}
+                        </td>
                       </tr>
                     ))}
                 </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Seller Referral Commission Section - NEW */}
+        {sellerReferralCommissions.length > 0 && (
+          <div className="commission-section seller-referral-section">
+            <h2 className="section-title">
+              <FaUserPlus className="section-icon" />
+              Seller Referral Commission
+            </h2>
+            <div className="commission-table-wrapper">
+              <table className="commission-table">
+                <thead>
+                  <tr>
+                    <th>S.No.</th>
+                    <th>Product Name</th>
+                    <th>Agent Name</th>
+                    <th>Referral ID</th>
+                    <th>Commission %</th>
+                    <th>Commission Amount</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sellerReferralCommissions.map((commission, index) => {
+                    // Parse variant attributes for display if needed
+                    const variantAttributes = commission.variant_attributes || {};
+                    const attributeString = Object.keys(variantAttributes).length > 0
+                      ? Object.entries(variantAttributes).map(([key, value]) => `${key}: ${value}`).join(', ')
+                      : '';
+                    
+                    return (
+                      <tr key={commission.id}>
+                        <td>{index + 1}</td>
+                        <td className="product-name-cell">
+                          <div className="product-name">{commission.product_name || `Product ${commission.product || '-'}`}</div>
+                          {attributeString && (
+                            <div className="product-attributes">{attributeString}</div>
+                          )}
+                        </td>
+                        <td>
+                          <div className="agent-name">{commission.agent_name || "-"}</div>
+                        </td>
+                        <td>{commission.referral_id || "-"}</td>
+                        <td className="percentage-cell">
+                          {parseFloat(commission.percentage || 0).toFixed(2)}%
+                        </td>
+                        <td className="commission-amount">
+                          {formatAmount(commission.amount || 0)}
+                        </td>
+                        <td className="date-cell">
+                          {formatDateTime(commission.created_at) || "-"}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+                {/* <tfoot className="commission-footer">
+                  <tr>
+                    <td colSpan="5" className="footer-label">Total Seller Referral Commission:</td>
+                    <td className="footer-total">
+                      {formatAmount(
+                        sellerReferralCommissions.reduce((sum, comm) => sum + parseFloat(comm.amount || 0), 0)
+                      )}
+                    </td>
+                    <td></td>
+                  </tr>
+                </tfoot> */}
               </table>
             </div>
           </div>
