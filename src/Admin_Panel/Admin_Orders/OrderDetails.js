@@ -1122,7 +1122,7 @@ function OrderDetails() {
                   <span className="detail-value">{order.company_name || "-"}</span>
                 </div>
               </div>
-              <div className="buyer-detail">
+              {/* <div className="buyer-detail">
                 <FaTag className="detail-icon" />
                 <div>
                   <span className="detail-label">Order Status:</span>
@@ -1130,7 +1130,7 @@ function OrderDetails() {
                     {order.status || "Pending"}
                   </span>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

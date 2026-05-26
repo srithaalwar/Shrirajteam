@@ -1824,7 +1824,7 @@ function Orders() {
             />
           </div>
           
-          <div className="filter-wrapper">
+          {/* <div className="filter-wrapper">
             <FaFilter className="filter-icon" />
             <select 
               value={statusFilter}
@@ -1836,7 +1836,7 @@ function Orders() {
               <option value="paid">Paid</option>
               <option value="delivered">Delivered</option>
             </select>
-          </div>
+          </div> */}
 
           <div className="items-per-page-wrapper">
             <label>Show:</label>
@@ -1897,7 +1897,7 @@ function Orders() {
                       Commission
                       <FaSort className={`sort-icon ${sortConfig.key === 'commission' ? 'active' : ''}`} />
                     </th>
-                    <th>Status</th>
+                    {/* <th>Status</th> */}
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -1916,11 +1916,11 @@ function Orders() {
                       <td className="commission-cell">
                         {formatAmount(getTotalDistributionCommission(order.items))}
                       </td>
-                      <td>
+                      {/* <td>
                         <span className={`status-badge ${getStatusClass(order.status)}`}>
                           {order.status || "Pending"}
                         </span>
-                      </td>
+                      </td> */}
                       <td>
                         <button 
                           className="view-btn"
