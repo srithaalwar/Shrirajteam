@@ -417,6 +417,268 @@
 
 
 
+// import React, { useEffect, useState, useRef } from "react";
+// // import "./Carousel.css";
+// import { baseurl } from "../BaseURL/BaseURL";
+// import { useNavigate } from "react-router-dom";
+
+// const FootWearCarousel = ({ categorySlug = "footwear" }) => {
+//   const [businesses, setBusinesses] = useState([]);
+//   const [offersMap, setOffersMap] = useState({});
+//   const [loading, setLoading] = useState(true);
+//   const [categoryName, setCategoryName] = useState("");
+//   const [categoryLoading, setCategoryLoading] = useState(false);
+//   const [categoryId, setCategoryId] = useState(null);
+//   const [showLeftArrow, setShowLeftArrow] = useState(false);
+//   const [showRightArrow, setShowRightArrow] = useState(true);
+//   const scrollContainerRef = useRef(null);
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     fetchCategoryBySlug(categorySlug);
+//     fetchBusinessesByCategory(categorySlug);
+//     fetchOffers();
+//   }, [categorySlug]);
+
+//   // Check scroll position to show/hide arrows
+//   const checkScrollPosition = () => {
+//     if (scrollContainerRef.current) {
+//       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+//       setShowLeftArrow(scrollLeft > 20);
+//       setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 20);
+//     }
+//   };
+
+//   // Scroll functions
+//   const scrollLeft = () => {
+//     if (scrollContainerRef.current) {
+//       scrollContainerRef.current.scrollBy({
+//         left: -300,
+//         behavior: 'smooth'
+//       });
+//     }
+//   };
+
+//   const scrollRight = () => {
+//     if (scrollContainerRef.current) {
+//       scrollContainerRef.current.scrollBy({
+//         left: 300,
+//         behavior: 'smooth'
+//       });
+//     }
+//   };
+
+//   const fetchCategoryBySlug = async (slug) => {
+//     try {
+//       const res = await fetch(`${baseurl}/categories/?slug=${slug}`);
+//       if (res.ok) {
+//         const data = await res.json();
+//         if (data.results && data.results.length > 0) {
+//           const category = data.results[0];
+//           setCategoryId(category.category_id);
+//           setCategoryName(category.name || "");
+//         } else {
+//           setCategoryName("Special Offers");
+//         }
+//       }
+//     } catch (error) {
+//       console.error("Category by slug API error:", error);
+//       setCategoryName("Special Offers");
+//     }
+//   };
+
+//   const fetchBusinessesByCategory = async (slug) => {
+//     setLoading(true);
+//     setCategoryLoading(true);
+//     try {
+//       const res = await fetch(`${baseurl}/business/?category_slug=${slug}&verification_status=verified`);
+//       const data = await res.json();
+
+//       const businessesData = data.results || data || [];
+      
+//       const businessesWithBanners = businessesData.filter(business => 
+//         business.banner && business.banner.trim() !== ""
+//       );
+      
+//       // REMOVED the limit - show ALL businesses
+//       setBusinesses(businessesWithBanners);
+
+//       if (
+//         businessesData.length > 0 &&
+//         businessesData[0].categories &&
+//         businessesData[0].categories.length > 0
+//       ) {
+//         await fetchCategoryName(businessesData[0].categories[0]);
+//       }
+//     } catch (error) {
+//       console.error("Business API error:", error);
+//       setBusinesses([]);
+//     } finally {
+//       setLoading(false);
+//       setCategoryLoading(false);
+//     }
+//   };
+
+//   const fetchCategoryName = async (categoryId) => {
+//     try {
+//       const res = await fetch(`${baseurl}/categories/${categoryId}/`);
+//       if (res.ok) {
+//         const categoryData = await res.json();
+//         setCategoryName(categoryData.name || "");
+//       }
+//     } catch (error) {
+//       console.error("Category API error:", error);
+//       setCategoryName("Special Offers");
+//     }
+//   };
+
+//   const fetchOffers = async () => {
+//     try {
+//       const res = await fetch(`${baseurl}/offers/`);
+//       const data = await res.json();
+//       const map = {};
+//       (data.results || []).forEach((offer) => {
+//         map[offer.id] = offer;
+//       });
+//       setOffersMap(map);
+//     } catch (error) {
+//       console.error("Offers API error:", error);
+//     }
+//   };
+
+//   const handleViewAll = async () => {
+//     try {
+//       const res = await fetch(`${baseurl}/categories/?slug=${categorySlug}`);
+//       const data = await res.json();
+//       if (data.results && data.results.length > 0) {
+//         const categoryId = data.results[0].category_id;
+//         navigate(`/w-subcategory/${categoryId}`);
+//       } else {
+//         console.error("Category not found");
+//       }
+//     } catch (error) {
+//       console.error("Error fetching category:", error);
+//     }
+//   };
+
+//   const handleBusinessClick = async (business) => {
+//     console.log("Footwear Business clicked:", business);
+    
+//     const businessCategoryId = business.categories && business.categories.length > 0 
+//       ? business.categories[0] 
+//       : categoryId;
+    
+//     if (!businessCategoryId) {
+//       console.error("No category ID found for business");
+//       await handleViewAll();
+//       return;
+//     }
+    
+//     navigate(`/w-subcategory/${businessCategoryId}`, {
+//       state: {
+//         businessId: business.business_id,
+//         businessName: business.business_name,
+//         categoryId: businessCategoryId
+//       }
+//     });
+//   };
+
+//   // Return null if no businesses with banners
+//   if (!loading && businesses.length === 0) {
+//     return null;
+//   }
+
+//   if (loading) {
+//     return (
+//       <div className="mani-as-offer-wrapper">
+//         <div className="mani-as-offer-loading">Loading offers...</div>
+//       </div>
+//     );
+//   }
+
+//   // Show ALL businesses, not just 3
+//   const displayBusinesses = businesses;
+
+//   return (
+//     <div className="mani-as-offer-wrapper">
+//       {/* Header */}
+//       <div className="mani-as-offer-header">
+//         <h2 className="mani-as-offer-heading">
+//           {categoryLoading ? (
+//             <span className="mani-as-offer-loading-dots">Loading Category</span>
+//           ) : (
+//             categoryName || "Special Offers"
+//           )}
+//         </h2>
+//         <div className="mani-as-offer-viewall-wrap">
+//           <button onClick={handleViewAll} className="mani-as-offer-viewall-btn">
+//             <span className="mani-as-viewall-circle">→</span>
+//           </button>
+//         </div>
+//       </div>
+
+//       {/* Carousel with Arrows */}
+//       <div className="mani-as-carousel-container">
+//         {/* Left Arrow */}
+//         {showLeftArrow && (
+//           <button 
+//             className="mani-as-carousel-arrow mani-as-carousel-arrow-left"
+//             onClick={scrollLeft}
+//             aria-label="Scroll left"
+//           >
+//             ‹
+//           </button>
+//         )}
+
+//         {/* Scrollable Cards */}
+//         <div 
+//           className="mani-as-offer-cards-grid"
+//           ref={scrollContainerRef}
+//           onScroll={checkScrollPosition}
+//         >
+//           {displayBusinesses.map((business) => {
+//             const offer = offersMap[business.offer];
+            
+//             const bannerImage = business.banner?.startsWith('http') 
+//               ? business.banner 
+//               : `${baseurl}${business.banner}`;
+
+//             return (
+//               <div 
+//                 className="mani-as-offer-card-item" 
+//                 key={business.business_id}
+//                 onClick={() => handleBusinessClick(business)}
+//                 style={{ cursor: 'pointer' }}
+//               >
+//                 <div
+//                   className="mani-as-offer-card"
+//                   style={{ backgroundImage: `url(${bannerImage})` }}
+//                 >
+//                   {/* Discount Badge - Commented out */}
+//                 </div>
+//               </div> 
+//             );
+//           })}
+//         </div>
+
+//         {/* Right Arrow */}
+//         {showRightArrow && (
+//           <button 
+//             className="mani-as-carousel-arrow mani-as-carousel-arrow-right"
+//             onClick={scrollRight}
+//             aria-label="Scroll right"
+//           >
+//             ›
+//           </button>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default FootWearCarousel;
+
+
 import React, { useEffect, useState, useRef } from "react";
 // import "./Carousel.css";
 import { baseurl } from "../BaseURL/BaseURL";
@@ -426,8 +688,6 @@ const FootWearCarousel = ({ categorySlug = "footwear" }) => {
   const [businesses, setBusinesses] = useState([]);
   const [offersMap, setOffersMap] = useState({});
   const [loading, setLoading] = useState(true);
-  const [categoryName, setCategoryName] = useState("");
-  const [categoryLoading, setCategoryLoading] = useState(false);
   const [categoryId, setCategoryId] = useState(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
@@ -476,20 +736,15 @@ const FootWearCarousel = ({ categorySlug = "footwear" }) => {
         if (data.results && data.results.length > 0) {
           const category = data.results[0];
           setCategoryId(category.category_id);
-          setCategoryName(category.name || "");
-        } else {
-          setCategoryName("Special Offers");
         }
       }
     } catch (error) {
       console.error("Category by slug API error:", error);
-      setCategoryName("Special Offers");
     }
   };
 
   const fetchBusinessesByCategory = async (slug) => {
     setLoading(true);
-    setCategoryLoading(true);
     try {
       const res = await fetch(`${baseurl}/business/?category_slug=${slug}&verification_status=verified`);
       const data = await res.json();
@@ -500,35 +755,13 @@ const FootWearCarousel = ({ categorySlug = "footwear" }) => {
         business.banner && business.banner.trim() !== ""
       );
       
-      // REMOVED the limit - show ALL businesses
+      // Show ALL businesses
       setBusinesses(businessesWithBanners);
-
-      if (
-        businessesData.length > 0 &&
-        businessesData[0].categories &&
-        businessesData[0].categories.length > 0
-      ) {
-        await fetchCategoryName(businessesData[0].categories[0]);
-      }
     } catch (error) {
       console.error("Business API error:", error);
       setBusinesses([]);
     } finally {
       setLoading(false);
-      setCategoryLoading(false);
-    }
-  };
-
-  const fetchCategoryName = async (categoryId) => {
-    try {
-      const res = await fetch(`${baseurl}/categories/${categoryId}/`);
-      if (res.ok) {
-        const categoryData = await res.json();
-        setCategoryName(categoryData.name || "");
-      }
-    } catch (error) {
-      console.error("Category API error:", error);
-      setCategoryName("Special Offers");
     }
   };
 
@@ -596,19 +829,15 @@ const FootWearCarousel = ({ categorySlug = "footwear" }) => {
     );
   }
 
-  // Show ALL businesses, not just 3
+  // Show ALL businesses
   const displayBusinesses = businesses;
 
   return (
     <div className="mani-as-offer-wrapper">
-      {/* Header */}
+      {/* Header with Static Text */}
       <div className="mani-as-offer-header">
         <h2 className="mani-as-offer-heading">
-          {categoryLoading ? (
-            <span className="mani-as-offer-loading-dots">Loading Category</span>
-          ) : (
-            categoryName || "Special Offers"
-          )}
+          Footwear
         </h2>
         <div className="mani-as-offer-viewall-wrap">
           <button onClick={handleViewAll} className="mani-as-offer-viewall-btn">
