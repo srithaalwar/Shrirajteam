@@ -374,7 +374,9 @@ import OrderDetails from "./Admin_Panel/Admin_Orders/OrderDetails";
 import BusinessEnquiries from "./Agent_Panel/AgentMyBusiness/Agent_Enquiries";
 import AdminBusinessEnquiries from "./Admin_Panel/Admin_Business/Admin_Enquiries_List/Admin_Enquiries";
 import AdminPropertyBookings from "./Admin_Panel/AdminPropertyBookings/AdminPropertyBookingsTransactions";
-import AgentServices from "./Agent_Panel/Agent_Service_Providers/ServiceProviderProfile"
+import AgentServices from "./Agent_Panel/Agent_Service_Providers/ServiceProviderProfile";
+import AdminServiceBookings from "./Admin_Panel/Admin_Service_Bookings/ServiceBookings";
+import AgentServiceBookings from "./Agent_Panel/Agent_Service_bookings/AgentServiceBookings";
 function App() {
   return (
     <BrowserRouter>
@@ -457,6 +459,8 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin-properties" element={<PropertiesList />} />
          <Route path="/admin-payouts" element={<AdminPayouts />} />
+         <Route path="/admin-service-bookings" element={<AdminServiceBookings />} />
+
 
 
        <Route path="/admin-properties-details/:propertyId" element={<AdminPropertyDetails />} />
@@ -551,6 +555,7 @@ function App() {
 
 
         <Route path="/agent-my-orders" element={<AgentMyOrders />} />
+        <Route path="/agent-service-bookings" element={<AgentServiceBookings />} />
         <Route path="/agent-orders" element={<AgentOrders />} />
         <Route path="/client-orders" element={<ClientOrders />} />
 
