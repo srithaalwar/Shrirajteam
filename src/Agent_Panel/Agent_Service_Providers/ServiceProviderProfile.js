@@ -1648,7 +1648,7 @@ const ServiceProviders = () => {
                   
                   {/* Provider Details Summary */}
                   <div className="row mb-4">
-                    <div className="col-md-6">
+                    <div className="col-md-12">
                       <div className="card bg-light">
                         <div className="card-body">
                           <h6 className="card-title mb-3">Service Provider Details</h6>
@@ -1659,7 +1659,7 @@ const ServiceProviders = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="col-md-6">
+                    {/* <div className="col-md-6">
                       <div className="card bg-light">
                         <div className="card-body">
                           <h6 className="card-title mb-3">Booking Summary</h6>
@@ -1673,7 +1673,7 @@ const ServiceProviders = () => {
                           <p className="mb-0"><strong>Total Amount:</strong> <span className="text-success fw-bold">{formatCurrency(calculateTotalPrice())}</span></p>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                   
                   <form>
