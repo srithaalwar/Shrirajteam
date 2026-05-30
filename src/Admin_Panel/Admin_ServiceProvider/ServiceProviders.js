@@ -511,7 +511,7 @@ function AdminServiceProviders() {
     setUpdatingStatus(providerId);
     
     try {
-      await axios.patch(`${baseurl}/service-providers/${providerId}/`, {
+      await axios.put(`${baseurl}/service-providers/${providerId}/`, {
         verification_status: newStatus
       });
       
