@@ -11,6 +11,7 @@ function ServiceProviders() {
   const [filteredProviders, setFilteredProviders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [categories, setCategories] = useState({}); // Store categories as {id: name}
   
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,8 +20,34 @@ function ServiceProviders() {
   
   const navigate = useNavigate();
 
-  /* ================= FETCH ================= */
-  const fetchProviders = async () => {
+  /* ================= FETCH CATEGORIES ================= */
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(`${baseurl}/service-categories/`);
+      
+      // Create a mapping of category_id to category_name
+      const categoryMap = {};
+      
+      if (res.data.results) {
+        res.data.results.forEach(category => {
+          categoryMap[category.category_id] = category.category_name;
+        });
+      } else if (Array.isArray(res.data)) {
+        res.data.forEach(category => {
+          categoryMap[category.category_id] = category.category_name;
+        });
+      }
+      
+      setCategories(categoryMap);
+      return categoryMap;
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      return {};
+    }
+  };
+
+  /* ================= FETCH PROVIDERS ================= */
+  const fetchProviders = async (categoryMap = null) => {
     setLoading(true);
     try {
       // Build query parameters
@@ -50,8 +77,15 @@ function ServiceProviders() {
         count = res.data.length || 0;
       }
       
+      // Add category_name to each provider
+      const categoriesToUse = categoryMap || categories;
+      const dataWithCategoryNames = data.map(provider => ({
+        ...provider,
+        category_name_display: categoriesToUse[provider.service_category] || 'N/A'
+      }));
+      
       // Sort by provider_id in descending order (newest first)
-      const sorted = data.sort((a, b) => b.provider_id - a.provider_id);
+      const sorted = dataWithCategoryNames.sort((a, b) => b.provider_id - a.provider_id);
       setProviders(sorted);
       setFilteredProviders(sorted);
       setTotalItems(count);
@@ -67,14 +101,19 @@ function ServiceProviders() {
     setLoading(false);
   };
 
+  /* ================= INITIAL LOAD ================= */
   useEffect(() => { 
-    fetchProviders(); 
+    const loadData = async () => {
+      const categoryMap = await fetchCategories();
+      await fetchProviders(categoryMap);
+    };
+    loadData();
   }, [currentPage, itemsPerPage, searchQuery]);
 
   /* ================= SEARCH ================= */
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    setCurrentPage(1); // Reset to first page when searching
+    setCurrentPage(1);
   };
 
   /* ================= DELETE ================= */
@@ -123,7 +162,7 @@ function ServiceProviders() {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Failed to update status',
+        text: error.response?.data?.message || 'Failed to update status',
         confirmButtonColor: '#273c75'
       });
     }
@@ -249,7 +288,7 @@ function ServiceProviders() {
                     <td>{provider.mobile_number}</td>
                     <td>{provider.email || '-'}</td>
                     <td>
-                      {provider.category_name }
+                      {provider.category_name_display || '-'}
                     </td>
                     <td>{provider.experience_years ? `${provider.experience_years} yrs` : '-'}</td>
                     <td>
@@ -259,24 +298,6 @@ function ServiceProviders() {
                     </td>
                     <td className="actions">
                       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                        {/* Status Toggle Button */}
-                        {/* <button 
-                          className="status-btn"
-                          onClick={() => handleStatusChange(provider.provider_id, provider.status)}
-                          style={{
-                            padding: '4px 8px',
-                            borderRadius: '4px',
-                            border: '1px solid #273c75',
-                            background: 'transparent',
-                            color: '#273c75',
-                            fontSize: '12px',
-                            cursor: 'pointer'
-                          }}
-                          title="Toggle Status"
-                        >
-                          {provider.status === 'Approved' ? '↩️' : '✓'}
-                        </button> */}
-                        
                         {/* View Button */}
                         <button 
                           className="view-btn"
@@ -286,7 +307,8 @@ function ServiceProviders() {
                             borderRadius: '4px',
                             border: '1px solid #17a2b8',
                             background: 'transparent',
-                            color: '#17a2b8'
+                            color: '#17a2b8',
+                            cursor: 'pointer'
                           }}
                           title="View Details"
                         >
@@ -297,6 +319,15 @@ function ServiceProviders() {
                         <button 
                           className="edit-btn"
                           onClick={() => navigate(`/a-edit-service-provider/${provider.provider_id}`)}
+                          style={{
+                            padding: '4px 8px',
+                            borderRadius: '4px',
+                            border: '1px solid #ffc107',
+                            background: 'transparent',
+                            color: '#ffc107',
+                            cursor: 'pointer'
+                          }}
+                          title="Edit Provider"
                         >
                           ✏️
                         </button>
@@ -305,6 +336,15 @@ function ServiceProviders() {
                         <button 
                           className="delete-btn"
                           onClick={() => handleDelete(provider.provider_id)}
+                          style={{
+                            padding: '4px 8px',
+                            borderRadius: '4px',
+                            border: '1px solid #dc3545',
+                            background: 'transparent',
+                            color: '#dc3545',
+                            cursor: 'pointer'
+                          }}
+                          title="Delete Provider"
                         >
                           🗑️
                         </button>
