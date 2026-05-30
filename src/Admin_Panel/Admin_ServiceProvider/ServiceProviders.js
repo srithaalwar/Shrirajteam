@@ -506,30 +506,30 @@ function AdminServiceProviders() {
     });
   };
 
-  /* ================= STATUS UPDATE WITH DROPDOWN ================= */
-  const handleStatusChange = async (providerId, newStatus) => {
+  /* ================= VERIFICATION STATUS UPDATE WITH DROPDOWN ================= */
+  const handleVerificationStatusChange = async (providerId, newStatus) => {
     setUpdatingStatus(providerId);
     
     try {
       await axios.patch(`${baseurl}/service-providers/${providerId}/`, {
-        status: newStatus
+        verification_status: newStatus
       });
       
       Swal.fire({
         icon: 'success',
-        title: 'Status Updated',
-        text: `Provider status changed to ${newStatus}`,
+        title: 'Verification Status Updated',
+        text: `Provider verification status changed to ${newStatus}`,
         timer: 1500,
         showConfirmButton: false
       });
       
       fetchProviders(); // Refresh the list
     } catch (error) {
-      console.error("Error updating status:", error);
+      console.error("Error updating verification status:", error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Failed to update status',
+        text: 'Failed to update verification status',
         confirmButtonColor: '#273c75'
       });
     } finally {
@@ -577,15 +577,16 @@ function AdminServiceProviders() {
     return pageNumbers;
   };
 
-  // Get status badge class
-  const getStatusBadgeClass = (status) => {
-    switch(status) {
-      case 'Verified':
-      case 'Approved':
+  // Get verification status badge class
+  const getVerificationStatusBadgeClass = (verificationStatus) => {
+    switch(verificationStatus?.toLowerCase()) {
+      case 'verified':
         return 'badge bg-success';
-      case 'Rejected':
+      case 'rejected':
         return 'badge bg-danger';
-      case 'Pending':
+      case 'suspended':
+        return 'badge bg-secondary';
+      case 'pending':
       default:
         return 'badge bg-warning text-dark';
     }
@@ -606,7 +607,7 @@ function AdminServiceProviders() {
           <div className="search-box">
             <input
               type="text"
-              placeholder="Search by Name, Mobile, Email or Aadhaar"
+              placeholder="Search by Name, Mobile, Email, Aadhaar or Verification Status"
               value={searchQuery}
               onChange={handleSearchChange}
             />
@@ -637,7 +638,7 @@ function AdminServiceProviders() {
                 <th>Email</th>
                 <th>Category Name</th>
                 <th>Experience</th>
-                <th>Status</th>
+                <th>Verification Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -661,16 +662,17 @@ function AdminServiceProviders() {
                     <td>{provider.experience_years ? `${provider.experience_years} yrs` : '-'}</td>
                     <td>
                       <select
-                        value={provider.status || 'Pending'}
-                        onChange={(e) => handleStatusChange(provider.provider_id, e.target.value)}
+                        value={provider.verification_status || 'pending'}
+                        onChange={(e) => handleVerificationStatusChange(provider.provider_id, e.target.value)}
                         disabled={updatingStatus === provider.provider_id}
                         className="status-dropdown"
                         style={{
                           padding: '6px 12px',
                           borderRadius: '4px',
                           border: `2px solid ${
-                            provider.status === 'Verified' ? '#28a745' : 
-                            provider.status === 'Rejected' ? '#dc3545' : 
+                            provider.verification_status?.toLowerCase() === 'verified' ? '#28a745' : 
+                            provider.verification_status?.toLowerCase() === 'rejected' ? '#dc3545' : 
+                            provider.verification_status?.toLowerCase() === 'suspended' ? '#6c757d' : 
                             '#ffc107'
                           }`,
                           backgroundColor: 'white',
@@ -680,14 +682,17 @@ function AdminServiceProviders() {
                           outline: 'none'
                         }}
                       >
-                        <option value="Pending" style={{ color: '#856404', backgroundColor: '#fff3cd' }}>
+                        <option value="pending" style={{ color: '#856404', backgroundColor: '#fff3cd' }}>
                           Pending
                         </option>
-                        <option value="Verified" style={{ color: '#155724', backgroundColor: '#d4edda' }}>
+                        <option value="verified" style={{ color: '#155724', backgroundColor: '#d4edda' }}>
                            Verified
                         </option>
-                        <option value="Rejected" style={{ color: '#721c24', backgroundColor: '#f8d7da' }}>
+                        <option value="rejected" style={{ color: '#721c24', backgroundColor: '#f8d7da' }}>
                            Rejected
+                        </option>
+                        <option value="suspended" style={{ color: '#383d41', backgroundColor: '#e2e3e5' }}>
+                          Suspended
                         </option>
                       </select>
                       {updatingStatus === provider.provider_id && (

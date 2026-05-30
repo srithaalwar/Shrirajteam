@@ -1935,21 +1935,19 @@ const ServiceProviders = () => {
     }).format(amount);
   };
 
-  // Function to get status badge color
-  const getStatusBadge = (status) => {
-    switch(status?.toLowerCase()) {
-      case 'approved':
-      case 'active':
-        return { class: 'bg-success', text: 'Approved' };
+  // Function to get verification status badge color
+  const getVerificationStatusBadge = (verificationStatus) => {
+    switch(verificationStatus?.toLowerCase()) {
+      case 'verified':
+        return { class: 'bg-success', text: 'Verified' };
       case 'pending':
         return { class: 'bg-warning text-dark', text: 'Pending' };
       case 'rejected':
-      case 'inactive':
         return { class: 'bg-danger', text: 'Rejected' };
       case 'suspended':
         return { class: 'bg-secondary', text: 'Suspended' };
       default:
-        return { class: 'bg-info', text: status || 'Unknown' };
+        return { class: 'bg-info', text: verificationStatus || 'Unknown' };
     }
   };
 
@@ -1963,7 +1961,7 @@ const ServiceProviders = () => {
       provider.service_area?.toLowerCase().includes(searchTermLower) ||
       provider.city?.toLowerCase().includes(searchTermLower) ||
       provider.email?.toLowerCase().includes(searchTermLower) ||
-      provider.status?.toLowerCase().includes(searchTermLower)
+      provider.verification_status?.toLowerCase().includes(searchTermLower)
     );
   });
 
@@ -1994,6 +1992,12 @@ const ServiceProviders = () => {
   };
 
   const handleBookNow = (provider) => {
+    // Only allow booking if verification_status is 'verified'
+    if (provider.verification_status?.toLowerCase() !== 'verified') {
+      setBookingError(`Cannot book: Provider verification status is ${provider.verification_status}`);
+      return;
+    }
+    
     setSelectedProvider(provider);
     setBookingData({
       ...bookingData,
@@ -2250,7 +2254,7 @@ const ServiceProviders = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search by name, business, service, area, city, email, or status..."
+                placeholder="Search by name, business, service, area, city, email, or verification status..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{ borderRadius: '0 6px 6px 0' }}
@@ -2297,14 +2301,14 @@ const ServiceProviders = () => {
         {/* Grid Layout - 4 cards per row on desktop */}
         <div className="row g-4">
           {filteredProviders.map((provider) => {
-            const statusBadge = getStatusBadge(provider.status);
+            const verificationBadge = getVerificationStatusBadge(provider.verification_status);
             return (
               <div key={provider.provider_id} className="col-12 col-sm-6 col-lg-3">
                 <div className="card h-100 shadow-sm border-0 rounded-4 overflow-hidden hover-card">
-                  {/* Status Badge - Top Right Corner */}
+                  {/* Verification Status Badge - Top Right Corner */}
                   <div style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 1 }}>
-                    <span className={`badge ${statusBadge.class} px-3 py-2 rounded-pill fs-6`}>
-                      {statusBadge.text}
+                    <span className={`badge ${verificationBadge.class} px-3 py-2 rounded-pill fs-6`}>
+                      {verificationBadge.text}
                     </span>
                   </div>
 
@@ -2450,32 +2454,41 @@ const ServiceProviders = () => {
                         </div>
                       </div>
                     )}
-                  </div>
-
-                  {/* Footer with Service Charges and Book Now Button */}
-                  <div className="card-footer bg-white border-0 pb-3 pt-0">
+                    
+                    {/* Service Charges */}
                     {provider.service_charges && (
-                      <div className="d-flex justify-content-between align-items-center mb-2">
-                        <span className="text-muted small">Service Charges:</span>
-                        <span className="badge bg-success fs-6 px-3 py-2 rounded-pill">
-                          {formatCurrency(provider.service_charges)}
-                        </span>
+                      <div className="mb-2 d-flex align-items-start gap-2">
+                        <i className="bi bi-currency-rupee text-success fs-6 mt-1 flex-shrink-0"></i>
+                        <div className="small">
+                          <strong>Charges:</strong> {formatCurrency(provider.service_charges)} per {
+                            provider.service_charge_type === 'Per Hour' ? 'hour' : 
+                            provider.service_charge_type === 'Per Day' ? 'day' : 'contract'
+                          }
+                        </div>
                       </div>
                     )}
+                  </div>
+
+                  {/* Footer with Book Now Button */}
+                  <div className="card-footer bg-white border-0 pb-3 pt-0">
                     <button
                       className="btn btn-primary w-100 mt-2"
                       onClick={() => handleBookNow(provider)}
-                      style={{ backgroundColor: '#273c75', borderColor: '#273c75' }}
-                      disabled={provider.status?.toLowerCase() !== 'approved'}
-                      title={provider.status?.toLowerCase() !== 'approved' ? `Cannot book: Provider status is ${provider.status}` : ''}
+                      style={{ 
+                        backgroundColor: provider.verification_status?.toLowerCase() === 'verified' ? '#273c75' : '#6c757d', 
+                        borderColor: provider.verification_status?.toLowerCase() === 'verified' ? '#273c75' : '#6c757d',
+                        cursor: provider.verification_status?.toLowerCase() === 'verified' ? 'pointer' : 'not-allowed'
+                      }}
+                      disabled={provider.verification_status?.toLowerCase() !== 'verified'}
+                      title={provider.verification_status?.toLowerCase() !== 'verified' ? `Cannot book: Provider verification status is ${provider.verification_status}` : 'Book this service'}
                     >
                       <i className="bi bi-calendar-check me-2"></i>
                       Book Now
                     </button>
-                    {provider.status?.toLowerCase() !== 'approved' && (
+                    {provider.verification_status?.toLowerCase() !== 'verified' && (
                       <small className="text-muted d-block text-center mt-2">
                         <i className="bi bi-info-circle me-1"></i>
-                        Booking available for approved providers only
+                        Booking available for verified providers only
                       </small>
                     )}
                   </div>
@@ -2525,9 +2538,9 @@ const ServiceProviders = () => {
                             <div className="col-md-6">
                               <p className="mb-1"><strong>Rate:</strong> {formatCurrency(selectedProvider.service_charges)}</p>
                               <p className="mb-1">
-                                <strong>Status:</strong>{' '}
-                                <span className={`badge ${getStatusBadge(selectedProvider.status).class}`}>
-                                  {getStatusBadge(selectedProvider.status).text}
+                                <strong>Verification Status:</strong>{' '}
+                                <span className={`badge ${getVerificationStatusBadge(selectedProvider.verification_status).class}`}>
+                                  {getVerificationStatusBadge(selectedProvider.verification_status).text}
                                 </span>
                               </p>
                             </div>
