@@ -271,7 +271,7 @@ function AdminServiceProviders() {
           <div className="search-box">
             <input
               type="text"
-              placeholder="Search by Name, Mobile, Email, Aadhaar or Verification Status"
+              placeholder="Search by Name, Mobile, Email, Verification Status..."
               value={searchQuery}
               onChange={handleSearchChange}
             />

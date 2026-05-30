@@ -236,7 +236,7 @@ function ServiceProviders() {
           <div className="search-box">
             <input
               type="text"
-              placeholder="Search by Name, Mobile, Email or Aadhaar"
+              placeholder="Search by Name, Mobile, Email, Category name..."
               value={searchQuery}
               onChange={handleSearchChange}
             />
