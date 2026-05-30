@@ -1490,11 +1490,7 @@ const ServiceProviders = () => {
                       </button>
                     </div>
                     
-                    {/* Available 24/7 text for Reach Out */}
-                    <small className="text-muted d-block text-center mt-2">
-                      <i className="bi bi-clock-history me-1"></i>
-                      Available 24/7 for calls
-                    </small>
+                  
                   </div>
                 </div>
               </div>
