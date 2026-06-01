@@ -2087,6 +2087,40 @@ const AddServiceProvider = () => {
                   </div>
                 </div>
               </div>
+               <div className="row">
+                <div className="col-md-6">
+                  <div className="mb-3">
+                    <label className="admin-customer-form-label">Service Charge Type</label>
+                    <select
+                      name="service_charge_type"
+                      value={formData.service_charge_type || ''}
+                      onChange={handleChange}
+                      className="form-select customer-form-input"
+                    >
+                      <option value="">Select Charge Type</option>
+                      <option value="Per Hour">Per Hour</option>
+                      <option value="Per Day">Per Day</option>
+                      <option value="Contract">Contract</option>
+                    </select>
+                    <small className="text-muted">Select how the service charge is calculated</small>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="mb-3">
+                    <label className="admin-customer-form-label">Service Charges (₹)</label>
+                    <input
+                      type="number"
+                      name="service_charges"
+                      value={formData.service_charges}
+                      onChange={handleChange}
+                      className="form-control customer-form-input"
+                      placeholder="Enter service charges"
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+              </div>
 
               <div className="row">
                 <div className="col-md-6">
@@ -2201,40 +2235,7 @@ const AddServiceProvider = () => {
                 </div>
               </div>
 
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="admin-customer-form-label">Service Charge Type</label>
-                    <select
-                      name="service_charge_type"
-                      value={formData.service_charge_type || ''}
-                      onChange={handleChange}
-                      className="form-select customer-form-input"
-                    >
-                      <option value="">Select Charge Type</option>
-                      <option value="Per Hour">Per Hour</option>
-                      <option value="Per Day">Per Day</option>
-                      <option value="Contract">Contract</option>
-                    </select>
-                    <small className="text-muted">Select how the service charge is calculated</small>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="admin-customer-form-label">Service Charges (₹)</label>
-                    <input
-                      type="number"
-                      name="service_charges"
-                      value={formData.service_charges}
-                      onChange={handleChange}
-                      className="form-control customer-form-input"
-                      placeholder="Enter service charges"
-                      min="0"
-                      step="0.01"
-                    />
-                  </div>
-                </div>
-              </div>
+             
             </div>
           </div>
         );
