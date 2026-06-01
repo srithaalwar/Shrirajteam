@@ -251,7 +251,7 @@ function ServiceProviders() {
             }}
             onClick={() => navigate('/a-add-service-provider')}
           >
-            Add Provider
+            Add Service Provider
           </button>
         </div>
 
