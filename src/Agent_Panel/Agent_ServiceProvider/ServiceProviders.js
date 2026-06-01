@@ -1,3 +1,445 @@
+// import React, { useEffect, useState } from 'react';
+// import "./ServiceProviders.css";
+// import AdminNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+// import axios from 'axios';
+// import { useNavigate } from 'react-router-dom';
+// import { baseurl } from './../../BaseURL/BaseURL';
+// import Swal from 'sweetalert2';
+
+// function ServiceProviders() {
+//   const [providers, setProviders] = useState([]);
+//   const [filteredProviders, setFilteredProviders] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [searchQuery, setSearchQuery] = useState('');
+//   const [categories, setCategories] = useState({}); // Store categories as {id: name}
+  
+//   // Pagination states
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [itemsPerPage, setItemsPerPage] = useState(5);
+//   const [totalItems, setTotalItems] = useState(0);
+  
+//   const navigate = useNavigate();
+
+//   /* ================= FETCH CATEGORIES ================= */
+//   const fetchCategories = async () => {
+//     try {
+//       const res = await axios.get(`${baseurl}/service-categories/`);
+      
+//       // Create a mapping of category_id to category_name
+//       const categoryMap = {};
+      
+//       if (res.data.results) {
+//         res.data.results.forEach(category => {
+//           categoryMap[category.category_id] = category.category_name;
+//         });
+//       } else if (Array.isArray(res.data)) {
+//         res.data.forEach(category => {
+//           categoryMap[category.category_id] = category.category_name;
+//         });
+//       }
+      
+//       setCategories(categoryMap);
+//       return categoryMap;
+//     } catch (error) {
+//       console.error("Error fetching categories:", error);
+//       return {};
+//     }
+//   };
+
+//   /* ================= FETCH PROVIDERS ================= */
+//   const fetchProviders = async (categoryMap = null) => {
+//     setLoading(true);
+//     try {
+//       // Build query parameters
+//       const params = new URLSearchParams({
+//         page: currentPage,
+//         page_size: itemsPerPage,
+//       });
+      
+//       if (searchQuery.trim()) {
+//         params.append('search', searchQuery.trim());
+//       }
+      
+//       const res = await axios.get(`${baseurl}/service-providers/?${params.toString()}`);
+      
+//       // Handle different response formats
+//       let data = [];
+//       let count = 0;
+      
+//       if (Array.isArray(res.data)) {
+//         data = res.data;
+//         count = res.data.length;
+//       } else if (res.data.results) {
+//         data = res.data.results || [];
+//         count = res.data.count || data.length;
+//       } else {
+//         data = res.data;
+//         count = res.data.length || 0;
+//       }
+      
+//       // Add category_name to each provider
+//       const categoriesToUse = categoryMap || categories;
+//       const dataWithCategoryNames = data.map(provider => ({
+//         ...provider,
+//         category_name_display: categoriesToUse[provider.service_category] || 'N/A'
+//       }));
+      
+//       // Sort by provider_id in descending order (newest first)
+//       const sorted = dataWithCategoryNames.sort((a, b) => b.provider_id - a.provider_id);
+//       setProviders(sorted);
+//       setFilteredProviders(sorted);
+//       setTotalItems(count);
+//     } catch (error) {
+//       console.error("Error fetching service providers:", error);
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: 'Failed to load service providers',
+//         confirmButtonColor: '#273c75'
+//       });
+//     }
+//     setLoading(false);
+//   };
+
+//   /* ================= INITIAL LOAD ================= */
+//   useEffect(() => { 
+//     const loadData = async () => {
+//       const categoryMap = await fetchCategories();
+//       await fetchProviders(categoryMap);
+//     };
+//     loadData();
+//   }, [currentPage, itemsPerPage, searchQuery]);
+
+//   /* ================= SEARCH ================= */
+//   const handleSearchChange = (e) => {
+//     setSearchQuery(e.target.value);
+//     setCurrentPage(1);
+//   };
+
+//   /* ================= DELETE ================= */
+//   const handleDelete = (providerId) => {
+//     Swal.fire({
+//       title: 'Are you sure?',
+//       text: "You won't be able to revert this!",
+//       icon: 'warning',
+//       showCancelButton: true,
+//       confirmButtonColor: '#d33',
+//       cancelButtonColor: '#273c75',
+//       confirmButtonText: 'Delete',
+//       cancelButtonText: 'Cancel'
+//     }).then(result => {
+//       if (result.isConfirmed) {
+//         axios.delete(`${baseurl}/service-providers/${providerId}/`)
+//           .then(() => {
+//             Swal.fire('Deleted!', 'Service provider deleted.', 'success');
+//             fetchProviders(); // Refetch data after deletion
+//           })
+//           .catch(() => Swal.fire('Error', 'Delete failed', 'error'));
+//       }
+//     });
+//   };
+
+//   /* ================= STATUS UPDATE ================= */
+//   const handleStatusChange = async (providerId, currentStatus) => {
+//     const newStatus = currentStatus === 'Approved' ? 'Pending' : 'Approved';
+    
+//     try {
+//       await axios.patch(`${baseurl}/service-providers/${providerId}/`, {
+//         status: newStatus
+//       });
+      
+//       Swal.fire({
+//         icon: 'success',
+//         title: 'Status Updated',
+//         text: `Provider status changed to ${newStatus}`,
+//         timer: 1500,
+//         showConfirmButton: false
+//       });
+      
+//       fetchProviders(); // Refresh the list
+//     } catch (error) {
+//       console.error("Error updating status:", error);
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: error.response?.data?.message || 'Failed to update status',
+//         confirmButtonColor: '#273c75'
+//       });
+//     }
+//   };
+
+//   /* ================= PAGINATION HANDLERS ================= */
+//   const totalPages = Math.ceil(totalItems / itemsPerPage);
+//   const startIndex = (currentPage - 1) * itemsPerPage + 1;
+  
+//   const handlePageChange = (pageNumber) => {
+//     if (pageNumber >= 1 && pageNumber <= totalPages) {
+//       setCurrentPage(pageNumber);
+//     }
+//   };
+
+//   const handleItemsPerPageChange = (e) => {
+//     const value = parseInt(e.target.value);
+//     setItemsPerPage(value);
+//     setCurrentPage(1);
+//   };
+
+//   const getPageNumbers = () => {
+//     const pageNumbers = [];
+//     const maxVisiblePages = 5;
+    
+//     if (totalPages <= maxVisiblePages) {
+//       for (let i = 1; i <= totalPages; i++) {
+//         pageNumbers.push(i);
+//       }
+//     } else {
+//       let startPage = Math.max(1, currentPage - 2);
+//       let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+      
+//       if (endPage - startPage + 1 < maxVisiblePages) {
+//         startPage = Math.max(1, endPage - maxVisiblePages + 1);
+//       }
+      
+//       for (let i = startPage; i <= endPage; i++) {
+//         pageNumbers.push(i);
+//       }
+//     }
+    
+//     return pageNumbers;
+//   };
+
+//   // Get status badge class
+//   const getStatusBadgeClass = (status) => {
+//     switch(status) {
+//       case 'Approved':
+//         return 'badge bg-success';
+//       case 'Rejected':
+//         return 'badge bg-danger';
+//       case 'Pending':
+//       default:
+//         return 'badge bg-warning text-dark';
+//     }
+//   };
+
+//   return (
+//     <>
+//       <AdminNavbar />
+
+//       <div className="page-container">
+//         {/* Header */}
+//         <div className="page-header">
+//           <h2>Services</h2>
+//         </div>
+
+//         {/* Toolbar */}
+//         <div className="page-toolbar">
+//           <div className="search-box">
+//             <input
+//               type="text"
+//               placeholder="Search by Name, Mobile, Email, Category name..."
+//               value={searchQuery}
+//               onChange={handleSearchChange}
+//             />
+//           </div>
+          
+//           <button 
+//             className="primary-btn"
+//             style={{
+//               backgroundColor: '#273c75',
+//               borderColor: '#273c75',
+//               color: 'white'
+//             }}
+//             onClick={() => navigate('/a-add-service-provider')}
+//           >
+//             Add Service 
+//           </button>
+//         </div>
+
+//         {/* Table */}
+//         <div className="table-card">
+//           <table className="data-table">
+//             <thead>
+//               <tr>
+//                 <th>S.No.</th>
+//                 <th>ID</th>
+//                 <th>Full Name</th>
+//                 <th>Mobile</th>
+//                 <th>Email</th>
+//                 <th>Category Name</th>
+//                 <th>Experience</th>
+//                 <th>Status</th>
+//                 <th>Actions</th>
+//               </tr>
+//             </thead>
+
+//             <tbody>
+//               {loading ? (
+//                 <tr>
+//                   <td colSpan="9" className="no-data">
+//                     Loading...
+//                   </td>
+//                 </tr>
+//               ) : filteredProviders.length ? (
+//                 filteredProviders.map((provider, index) => (
+//                   <tr key={provider.provider_id}>
+//                     <td>{startIndex + index}</td>
+//                     <td>{provider.provider_id}</td>
+//                     <td>{provider.full_name}</td>
+//                     <td>{provider.mobile_number}</td>
+//                     <td>{provider.email || '-'}</td>
+//                     <td>
+//                       {provider.category_name_display || '-'}
+//                     </td>
+//                     <td>{provider.experience_years ? `${provider.experience_years} yrs` : '-'}</td>
+//                     <td>
+//                       <span className={getStatusBadgeClass(provider.status)}>
+//                         {provider.status}
+//                       </span>
+//                     </td>
+//                     <td className="actions">
+//                       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+//                         {/* View Button */}
+//                         <button 
+//                           className="view-btn"
+//                           onClick={() => navigate(`/a-view-service-provider/${provider.provider_id}`)}
+//                           style={{
+//                             padding: '4px 8px',
+//                             borderRadius: '4px',
+//                             border: '1px solid #17a2b8',
+//                             background: 'transparent',
+//                             color: '#17a2b8',
+//                             cursor: 'pointer'
+//                           }}
+//                           title="View Details"
+//                         >
+//                           👁️
+//                         </button>
+                        
+//                         {/* Edit Button */}
+//                         <button 
+//                           className="edit-btn"
+//                           onClick={() => navigate(`/a-edit-service-provider/${provider.provider_id}`)}
+//                           style={{
+//                             padding: '4px 8px',
+//                             borderRadius: '4px',
+//                             border: '1px solid #ffc107',
+//                             background: 'transparent',
+//                             color: '#ffc107',
+//                             cursor: 'pointer'
+//                           }}
+//                           title="Edit Provider"
+//                         >
+//                           ✏️
+//                         </button>
+                        
+//                         {/* Delete Button */}
+//                         <button 
+//                           className="delete-btn"
+//                           onClick={() => handleDelete(provider.provider_id)}
+//                           style={{
+//                             padding: '4px 8px',
+//                             borderRadius: '4px',
+//                             border: '1px solid #dc3545',
+//                             background: 'transparent',
+//                             color: '#dc3545',
+//                             cursor: 'pointer'
+//                           }}
+//                           title="Delete Provider"
+//                         >
+//                           🗑️
+//                         </button>
+//                       </div>
+//                     </td>
+//                   </tr>
+//                 ))
+//               ) : (
+//                 <tr>
+//                   <td colSpan="9" className="no-data">
+//                     No service providers found
+//                   </td>
+//                 </tr>
+//               )}
+//             </tbody>
+//           </table>
+          
+//           {/* Pagination Controls */}
+//           {totalItems > 0 && (
+//             <div className="pagination-container">
+//               {/* Items per page selector */}
+//               <div className="items-per-page">
+//                 <span>Show:</span>
+//                 <select 
+//                   value={itemsPerPage} 
+//                   onChange={handleItemsPerPageChange}
+//                 >
+//                   <option value="5">5</option>
+//                   <option value="10">10</option>
+//                   <option value="20">20</option>
+//                   <option value="50">50</option>
+//                   <option value="100">100</option>
+//                 </select>
+//                 <span>of {totalItems} items</span>
+//               </div>
+              
+//               {/* Page navigation */}
+//               <div className="pagination-controls">
+//                 <button
+//                   onClick={() => handlePageChange(1)}
+//                   disabled={currentPage === 1}
+//                 >
+//                   ««
+//                 </button>
+                
+//                 <button
+//                   onClick={() => handlePageChange(currentPage - 1)}
+//                   disabled={currentPage === 1}
+//                 >
+//                   «
+//                 </button>
+                
+//                 {getPageNumbers().map(page => (
+//                   <button
+//                     key={page}
+//                     onClick={() => handlePageChange(page)}
+//                     style={{
+//                       background: currentPage === page ? '#273c75' : 'white',
+//                       color: currentPage === page ? 'white' : '#333',
+//                       fontWeight: currentPage === page ? 'bold' : 'normal'
+//                     }}
+//                   >
+//                     {page}
+//                   </button>
+//                 ))}
+                
+//                 <button
+//                   onClick={() => handlePageChange(currentPage + 1)}
+//                   disabled={currentPage === totalPages}
+//                 >
+//                   »
+//                 </button>
+                
+//                 <button
+//                   onClick={() => handlePageChange(totalPages)}
+//                   disabled={currentPage === totalPages}
+//                 >
+//                   »»
+//                 </button>
+//               </div>
+              
+//               <div className="page-info">
+//                 Page {currentPage} of {totalPages}
+//               </div>
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </>
+//   );
+// }
+
+// export default ServiceProviders;
+
+
 import React, { useEffect, useState } from 'react';
 import "./ServiceProviders.css";
 import AdminNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
@@ -17,6 +459,9 @@ function ServiceProviders() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
+  
+  // Get current user ID from localStorage
+  const [currentUserId, setCurrentUserId] = useState(null);
   
   const navigate = useNavigate();
 
@@ -46,14 +491,21 @@ function ServiceProviders() {
     }
   };
 
-  /* ================= FETCH PROVIDERS ================= */
+  /* ================= FETCH PROVIDERS BASED ON LOGGED-IN USER ================= */
   const fetchProviders = async (categoryMap = null) => {
+    // Don't fetch if no user is logged in
+    if (!currentUserId) {
+      setLoading(false);
+      return;
+    }
+    
     setLoading(true);
     try {
-      // Build query parameters
+      // Build query parameters with user filter
       const params = new URLSearchParams({
         page: currentPage,
         page_size: itemsPerPage,
+        user: currentUserId, // Filter by logged-in user
       });
       
       if (searchQuery.trim()) {
@@ -94,21 +546,41 @@ function ServiceProviders() {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Failed to load service providers',
+        text: error.response?.data?.message || 'Failed to load service providers',
         confirmButtonColor: '#273c75'
       });
     }
     setLoading(false);
   };
 
+  /* ================= GET USER ID FROM LOCALSTORAGE ================= */
+  useEffect(() => {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Not Logged In',
+        text: 'Please login to view service providers',
+        confirmButtonColor: '#273c75'
+      }).then(() => {
+        navigate('/login');
+      });
+      setLoading(false);
+      return;
+    }
+    setCurrentUserId(parseInt(userId));
+  }, [navigate]);
+
   /* ================= INITIAL LOAD ================= */
   useEffect(() => { 
-    const loadData = async () => {
-      const categoryMap = await fetchCategories();
-      await fetchProviders(categoryMap);
-    };
-    loadData();
-  }, [currentPage, itemsPerPage, searchQuery]);
+    if (currentUserId) {
+      const loadData = async () => {
+        const categoryMap = await fetchCategories();
+        await fetchProviders(categoryMap);
+      };
+      loadData();
+    }
+  }, [currentPage, itemsPerPage, searchQuery, currentUserId]);
 
   /* ================= SEARCH ================= */
   const handleSearchChange = (e) => {
@@ -134,7 +606,10 @@ function ServiceProviders() {
             Swal.fire('Deleted!', 'Service provider deleted.', 'success');
             fetchProviders(); // Refetch data after deletion
           })
-          .catch(() => Swal.fire('Error', 'Delete failed', 'error'));
+          .catch((error) => {
+            console.error("Delete error:", error);
+            Swal.fire('Error', error.response?.data?.message || 'Delete failed', 'error');
+          });
       }
     });
   };
@@ -221,6 +696,22 @@ function ServiceProviders() {
     }
   };
 
+  // Show loading while checking user
+  if (!currentUserId && loading) {
+    return (
+      <>
+        <AdminNavbar />
+        <div className="page-container">
+          <div className="text-center py-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <AdminNavbar />
@@ -228,7 +719,8 @@ function ServiceProviders() {
       <div className="page-container">
         {/* Header */}
         <div className="page-header">
-          <h2>Service Providers</h2>
+          <h2>My Service Providers</h2>
+          <p className="text-muted">Showing providers added by you</p>
         </div>
 
         {/* Toolbar */}
@@ -251,7 +743,7 @@ function ServiceProviders() {
             }}
             onClick={() => navigate('/a-add-service-provider')}
           >
-            Add Service Provider
+            Add Service 
           </button>
         </div>
 
@@ -355,7 +847,7 @@ function ServiceProviders() {
               ) : (
                 <tr>
                   <td colSpan="9" className="no-data">
-                    No service providers found
+                    No service providers found. Click "Add Service" to create one.
                   </td>
                 </tr>
               )}

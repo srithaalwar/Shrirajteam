@@ -15752,7 +15752,7 @@ const handleNotificationItemClick = async (notification) => {
     },
     { path: "/agent-my-orders", name: "My Orders/As Buyer", icon: <FaTag /> },
     { path: "/agent-orders", name: "Orders/As Seller", icon: <FaTag /> },
-    { path: "/a-service-providers", name: "My Service Providers", icon: <FaUserTie /> },
+    { path: "/a-service-providers", name: "My Services", icon: <FaUserTie /> },
   { path: "/agent-service-bookings", name: "Service Bookings", icon: <FaUserTie /> },
     { path: "/p-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/agent-profile", name: "Profile", icon: <FaUserCircle /> },
