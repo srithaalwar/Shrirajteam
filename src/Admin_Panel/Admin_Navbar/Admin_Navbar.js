@@ -1531,7 +1531,9 @@ import {
   FaBell,
   FaPlusCircle,
   FaShoppingCart,
-  FaHeart
+  FaHeart,
+  FaConciergeBell,
+  FaMapMarkerAlt
 } from "react-icons/fa";
 
 const AdminNavbar = () => {
@@ -1700,95 +1702,6 @@ const AdminNavbar = () => {
     event.stopPropagation();
     setShowNotifications(!showNotifications);
   };
-
-  // Mark notification as read and navigate
-  // const handleNotificationItemClick = async (notification) => {
-  //   try {
-  //     const userId = localStorage.getItem("user_id");
-  //     if (!userId) {
-  //       console.error("No user_id found in localStorage");
-  //       return;
-  //     }
-      
-  //     console.log("Marking admin notification as read:", notification);
-      
-  //     await axios.post(`${baseurl}/notifications/mark-read/`, {
-  //       user_id: parseInt(userId),
-  //       notification_status_ids: [notification.notification_status_id]
-  //     });
-      
-  //     console.log("Successfully marked admin notification as read");
-      
-  //     const updatedNotifications = notifications.map(n => 
-  //       n.notification_status_id === notification.notification_status_id 
-  //         ? { ...n, is_read: true } 
-  //         : n
-  //     );
-      
-  //     setNotifications(updatedNotifications);
-      
-  //     const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
-  //     setUnreadCount(newUnreadCount);
-      
-  //     setShowNotifications(false);
-      
-  //     if (notification.property !== null) {
-  //       navigate(`/admin-properties-details/${notification.property.id}`);
-  //     } else if (notification.product !== null) {
-  //       const productId = notification.product.product_id;
-  //       const variantId = notification.product.variant_id;
-        
-  //       if (productId && variantId) {
-  //         navigate(`/admin-business-product-details/${productId}/?variant=${variantId}`);
-  //       } else if (productId) {
-  //         navigate(`/admin-business-product-details/${productId}/`);
-  //       } else if (variantId) {
-  //         navigate(`/admin-product-details/${variantId}`);
-  //       } else {
-  //         fetchNotifications();
-  //       }
-  //     } else if (notification.user !== null) {
-  //       fetchNotifications();
-  //     } else if (notification.meeting) {
-  //       navigate(`/admin-meetings/${notification.meeting.id}`);
-  //     } else {
-  //       fetchNotifications();
-  //     }
-      
-  //   } catch (error) {
-  //     console.error("Error marking admin notification as read:", error);
-      
-  //     const updatedNotifications = notifications.map(n => 
-  //       n.notification_status_id === notification.notification_status_id 
-  //         ? { ...n, is_read: true } 
-  //         : n
-  //     );
-      
-  //     setNotifications(updatedNotifications);
-      
-  //     const newUnreadCount = updatedNotifications.filter(n => !n.is_read).length;
-  //     setUnreadCount(newUnreadCount);
-      
-  //     setShowNotifications(false);
-      
-  //     if (notification.property !== null) {
-  //       navigate(`/admin-properties-details/${notification.property.id}`);
-  //     } else if (notification.product !== null) {
-  //       const productId = notification.product.product_id;
-  //       const variantId = notification.product.variant_id;
-        
-  //       if (productId && variantId) {
-  //         navigate(`/admin-business-product-details/${productId}/?variant=${variantId}`);
-  //       } else if (productId) {
-  //         navigate(`/admin-business-product-details/${productId}/`);
-  //       } else if (variantId) {
-  //         navigate(`/admin-product-details/${variantId}`);
-  //       }
-  //     } else if (notification.meeting) {
-  //       navigate(`/admin-meetings/${notification.meeting.id}`);
-  //     }
-  //   }
-  // };
 
   // Handle notification click
 const handleNotificationItemClick = async (notification) => {
@@ -2047,22 +1960,20 @@ const handleNotificationItemClick = async (notification) => {
   const businessItems = [
     { path: "/admin-business", name: "Business Listings", icon: <FaBriefcase /> },
     { path: "/tableproductcategory", name: "Product Categories", icon: <FaLayerGroup /> },
-    // { path: "/admin-orders", name: "Orders", icon: <FaShoppingCart /> }
   ];
 
   const usersItems = [
     { path: "/admin-users", name: "All Users", icon: <FaUsers /> },
     { path: "/users-subscriptions", name: "User Subscriptions", icon: <FaCreditCard /> }
   ];
-// Payouts Dropdown Items (New)
-const payoutsItems = [
-  { path: "/admin-commissionmaster", name: "Payout Master", icon: <FaDatabase /> },
-  { path: "/admin-payouts", name: "Payouts", icon: <FaDatabase /> },
-   { path: "/referral-reports", name: "Referral Distribution", icon: <FaFileAlt /> },
- { path: "/products-commission-distribution", name: "Products Distribution", icon: <FaFileAlt /> },
 
-
-];
+  // Payouts Dropdown Items
+  const payoutsItems = [
+    { path: "/admin-commissionmaster", name: "Payout Master", icon: <FaDatabase /> },
+    { path: "/admin-payouts", name: "Payouts", icon: <FaDatabase /> },
+    { path: "/referral-reports", name: "Referral Distribution", icon: <FaFileAlt /> },
+    { path: "/products-commission-distribution", name: "Products Distribution", icon: <FaFileAlt /> },
+  ];
 
   const operationsItems = [
     { path: "/admin-subscriptions", name: "Subscription Plans", icon: <FaCreditCard /> },
@@ -2070,12 +1981,18 @@ const payoutsItems = [
     { path: "/admin-trainingmaterial", name: "Training Material", icon: <FaGraduationCap /> },
     { path: "/admin-transactions", name: "Transactions", icon: <FaExchangeAlt /> },
     { path: "/admin-commissionmaster", name: "Payout Master", icon: <FaDatabase /> },
-  //  { path: "/admin-payouts", name: "Payouts", icon: <FaDatabase /> },
-
     { path: "/a-departments", name: "Departments", icon: <FaSitemap /> },
     { path: "/admin-chatbot", name: "Chat Bot", icon: <FaRobot /> },
     { path: "/admin-carousel-list", name: "Add Carousel", icon: <FaQuestionCircle /> },
     { path: "/admin-amenities-list", name: "Amenities", icon: <FaQuestionCircle /> }
+  ];
+
+  // NEW: Services Dropdown Items
+  const servicesItems = [
+    { path: "/a-service-categories", name: "Service Categories", icon: <FaCalendarAlt /> },
+    { path: "/admin-service-providers", name: "Service Providers", icon: <FaUsers /> },
+    { path: "/admin-service-bookings", name: "Service Bookings", icon: <FaClipboardList /> },
+    { path: "/admin-service-areas", name: "Service Area", icon: <FaMapMarkerAlt /> }
   ];
 
   // Helper function to render dropdown item
@@ -2119,12 +2036,14 @@ const payoutsItems = [
       icon: <FaBriefcase />,
       subMenu: businessItems,
     },
-      // Payouts Main Category (New)
-  {
-    name: "All Payouts",
-    icon: <FaMoneyBillWave />,
-    subMenu: payoutsItems,
-  },
+    
+    // Payouts Main Category
+    {
+      name: "All Payouts",
+      icon: <FaMoneyBillWave />,
+      subMenu: payoutsItems,
+    },
+    
     // Users Main Category
     {
       name: "Users",
@@ -2139,14 +2058,17 @@ const payoutsItems = [
       subMenu: operationsItems,
     },
     
+    // NEW: Services Main Category (after Operations)
+    {
+      name: "Services",
+      icon: <FaConciergeBell />,
+      subMenu: servicesItems,
+    },
+    
     // Other standalone items
-    { path: "/a-service-categories", name: "Service Categories", icon: <FaCalendarAlt /> },
-    { path: "/admin-service-providers", name: "Service Providers", icon: <FaCalendarAlt /> },
-    { path: "/admin-service-bookings", name: "Service Bookings", icon: <FaCalendarAlt /> },
     { path: "/admin-meetings", name: "Meetings", icon: <FaCalendarAlt /> },
     { path: "/a-leads", name: "Leads", icon: <FaChartLine /> },
     { path: "/admin-reports", name: "Reports", icon: <FaFileAlt /> },
-    // { path: "/referral-reports", name: "Referral Reports", icon: <FaFileAlt /> },
     { path: "/a-settings", name: "Settings", icon: <FaTag /> },
     { path: "/admin-profile", name: "Profile", icon: <FaUserCircle /> },
   ];
@@ -2202,64 +2124,34 @@ const payoutsItems = [
             )}
           </div>
           
-  {/* Payouts Dropdown (New) */}
-  <div className="wn-header-dropdown" ref={usersDropdownRef}>
-    <button 
-      className="wn-header-dropdown-btn"
-      onClick={() => setOpenUsersDropdown(!openUsersDropdown)}
-    >
-      <FaMoneyBillWave className="wn-dropdown-btn-icon" />
-      <span>All Payouts</span>
-      <FaCaretDown className="wn-dropdown-arrow" />
-    </button>
-    {openUsersDropdown && (
-      <div className="wn-header-dropdown-menu">
-        {payoutsItems.map((item, idx) => renderDropdownItem(item, idx))}
-      </div>
-    )}
-  </div>
-
-          {/* Users Dropdown */}
-          {/* <div className="wn-header-dropdown" ref={usersDropdownRef}>
+          {/* Payouts Dropdown */}
+          <div className="wn-header-dropdown" ref={usersDropdownRef}>
             <button 
               className="wn-header-dropdown-btn"
               onClick={() => setOpenUsersDropdown(!openUsersDropdown)}
             >
-              <FaUsers className="wn-dropdown-btn-icon" />
-              <span>Users</span>
+              <FaMoneyBillWave className="wn-dropdown-btn-icon" />
+              <span>All Payouts</span>
               <FaCaretDown className="wn-dropdown-arrow" />
             </button>
             {openUsersDropdown && (
               <div className="wn-header-dropdown-menu">
-                {usersItems.map((item, idx) => renderDropdownItem(item, idx))}
+                {payoutsItems.map((item, idx) => renderDropdownItem(item, idx))}
               </div>
             )}
-          </div> */}
+          </div>
 
-          {/* Operations Dropdown */}
-          {/* <div className="wn-header-dropdown" ref={operationsDropdownRef}>
-            <button 
-              className="wn-header-dropdown-btn"
-              onClick={() => setOpenOperationsDropdown(!openOperationsDropdown)}
-            >
-              <FaCogs className="wn-dropdown-btn-icon" />
-              <span>Operations</span>
-              <FaCaretDown className="wn-dropdown-arrow" />
-            </button>
-            {openOperationsDropdown && (
-              <div className="wn-header-dropdown-menu">
-                {operationsItems.map((item, idx) => renderDropdownItem(item, idx))}
-              </div>
-            )}
-          </div> */}
+          {/* Orders Link */}
           <Link to="/admin-orders" className="wn-header-direct-link">
-  <FaShoppingCart className="wn-dropdown-btn-icon" />
-  <span>Orders</span>
-</Link>
-  <Link to="/admin-commission" className="wn-header-direct-link">
-  <FaShoppingCart className="wn-dropdown-btn-icon" />
-  <span>Orders-commission</span>
-</Link>
+            <FaShoppingCart className="wn-dropdown-btn-icon" />
+            <span>Orders</span>
+          </Link>
+          
+          {/* Orders-commission Link */}
+          <Link to="/admin-commission" className="wn-header-direct-link">
+            <FaHandHoldingUsd className="wn-dropdown-btn-icon" />
+            <span>Orders-commission</span>
+          </Link>
         </div>
 
         <div className="wn-nav-right">
@@ -2268,28 +2160,18 @@ const payoutsItems = [
             ref={notificationRef}
             className="wn-notification-container"
           >
-            {/* <div 
+            <div 
               className="wn-notification-icon" 
               onClick={handleNotificationClick}
               title="Notifications"
             >
               <FaBell size={16} />
               {unreadCount > 0 && (
-                <span className="wn-notification-badge">{unreadCount}</span>
+                <span className="wn-notification-badge">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
               )}
-            </div> */}
-            <div 
-  className="wn-notification-icon" 
-  onClick={handleNotificationClick}
-  title="Notifications"
->
-  <FaBell size={16} />
-  {unreadCount > 0 && (
-    <span className="wn-notification-badge">
-      {unreadCount > 99 ? '99+' : unreadCount}
-    </span>
-  )}
-</div>
+            </div>
             
             {/* Notifications Dropdown */}
             {showNotifications && (
@@ -2336,18 +2218,6 @@ const payoutsItems = [
                     </div>
                   )}
                 </div>
-                
-                {/* {notifications.length > 0 && (
-                  <div className="wn-notifications-footer">
-                    <Link 
-                      to="/admin-notifications" 
-                      className="wn-view-all-notifications"
-                      onClick={() => setShowNotifications(false)}
-                    >
-                      View all notifications
-                    </Link>
-                  </div>
-                )} */}
               </div>
             )}
           </div>
@@ -2360,16 +2230,6 @@ const payoutsItems = [
           >
             <FaUserCircle size={24} className="wn-profile-icon" />
           </div>
-
-          {/* Logout Button - Desktop */}
-          {/* <button 
-            className="wn-logout-btn-navbar"
-            onClick={handleLogout}
-            title="Logout"
-          >
-            <FaSignOutAlt size={16} />
-            <span className="wn-logout-text-navbar">Logout</span>
-          </button> */}
         </div>
       </header>
 

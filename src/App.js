@@ -377,6 +377,9 @@ import AdminPropertyBookings from "./Admin_Panel/AdminPropertyBookings/AdminProp
 import AgentServices from "./Agent_Panel/Agent_Service_Providers/ServiceProviderProfile";
 import AdminServiceBookings from "./Admin_Panel/Admin_Service_Bookings/ServiceBookings";
 import AgentServiceBookings from "./Agent_Panel/Agent_Service_bookings/AgentServiceBookings";
+import ServiceAreas from './Admin_Panel/Admin_Service_Areas/ServiceAreas';
+import AddServiceArea from './Admin_Panel/Admin_Service_Areas/AddServiceArea';
+import EditServiceArea from './Admin_Panel/Admin_Service_Areas/EditServiceArea';
 function App() {
   return (
     <BrowserRouter>
@@ -461,7 +464,9 @@ function App() {
          <Route path="/admin-payouts" element={<AdminPayouts />} />
          <Route path="/admin-service-bookings" element={<AdminServiceBookings />} />
 
-
+<Route path="/admin-service-areas" element={<ServiceAreas />} />
+<Route path="/a-add-service-area" element={<AddServiceArea />} />
+<Route path="/a-edit-service-area/:id" element={<EditServiceArea />} />
 
        <Route path="/admin-properties-details/:propertyId" element={<AdminPropertyDetails />} />
 
