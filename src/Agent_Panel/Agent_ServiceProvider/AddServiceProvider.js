@@ -1710,7 +1710,7 @@ const AddServiceProvider = () => {
         text: 'Service Provider Added Successfully!',
         confirmButtonColor: '#3085d6',
       }).then(() => {
-        navigate("/admin-service-providers");
+        navigate("/a-add-service-provider");
       });
 
     } catch (error) {
