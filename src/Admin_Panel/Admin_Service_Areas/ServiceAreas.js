@@ -50,8 +50,8 @@ function ServiceAreas() {
         count = res.data.length || 0;
       }
       
-      // Sort by id in descending order (newest first)
-      const sorted = data.sort((a, b) => b.id - a.id);
+      // Sort by service_area_id in descending order (newest first)
+      const sorted = data.sort((a, b) => b.service_area_id - a.service_area_id);
       setAreas(sorted);
       setFilteredAreas(sorted);
       setTotalItems(count);
@@ -80,7 +80,7 @@ function ServiceAreas() {
   /* ================= TOGGLE ACTIVE STATUS ================= */
   const handleToggleStatus = async (areaId, currentStatus) => {
     try {
-      const area = areas.find(a => a.id === areaId);
+      const area = areas.find(a => a.service_area_id === areaId);
       if (!area) return;
       
       const updatedArea = {
@@ -112,26 +112,68 @@ function ServiceAreas() {
   };
 
   /* ================= DELETE ================= */
-  const handleDelete = (areaId) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#273c75',
-      confirmButtonText: 'Delete',
-      cancelButtonText: 'Cancel'
-    }).then(result => {
+  const handleDelete = async (areaId) => {
+    try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#273c75',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+      });
+
       if (result.isConfirmed) {
-        axios.delete(`${baseurl}/service-areas/${areaId}/`)
-          .then(() => {
-            Swal.fire('Deleted!', 'Service area deleted successfully.', 'success');
-            fetchAreas(); // Refetch data after deletion
-          })
-          .catch(() => Swal.fire('Error', 'Delete failed', 'error'));
+        setLoading(true);
+        
+        // Method 1: Using service_area_id in URL
+        const deleteUrl = `${baseurl}/service-areas/${areaId}/`;
+        console.log("Deleting URL:", deleteUrl);
+        
+        const response = await axios.delete(deleteUrl);
+        console.log("Delete response:", response);
+        
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted!',
+          text: 'Service area has been deleted successfully.',
+          confirmButtonColor: '#273c75',
+          timer: 2000,
+          showConfirmButton: false
+        });
+        
+        // Refresh the list
+        fetchAreas();
       }
-    });
+    } catch (error) {
+      console.error("Error deleting service area:", error);
+      console.error("Error response:", error.response);
+      console.error("Error status:", error.response?.status);
+      console.error("Error data:", error.response?.data);
+      
+      let errorMessage = 'Failed to delete service area';
+      
+      if (error.response?.status === 404) {
+        errorMessage = 'Service area not found. It may have been already deleted.';
+      } else if (error.response?.status === 400) {
+        errorMessage = error.response?.data?.detail || 'Bad request. Please check the data.';
+      } else if (error.response?.status === 500) {
+        errorMessage = 'Server error. Please try again later.';
+      } else if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      }
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Delete Failed',
+        text: errorMessage,
+        confirmButtonColor: '#273c75'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   /* ================= PAGINATION HANDLERS ================= */
@@ -176,17 +218,6 @@ function ServiceAreas() {
     }
     
     return pageNumbers;
-  };
-
-  // Format date
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-IN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
   };
 
   return (
@@ -245,23 +276,27 @@ function ServiceAreas() {
               {loading ? (
                 <tr>
                   <td colSpan="10" className="no-data">
-                    Loading...
+                    <div className="text-center">
+                      <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    </div>
                   </td>
                 </tr>
               ) : filteredAreas.length ? (
                 filteredAreas.map((area, index) => (
-                  <tr key={area.id}>
+                  <tr key={area.service_area_id}>
                     <td>{startIndex + index}</td>
-                    <td>{area.id}</td>
+                    <td>{area.service_area_id}</td>
                     <td>{area.area_name}</td>
                     <td>{area.city}</td>
                     <td>{area.state}</td>
                     <td>{area.pincode}</td>
-                    <td>{area.latitude}</td>
-                    <td>{area.longitude}</td>
+                    <td>{area.latitude || '-'}</td>
+                    <td>{area.longitude || '-'}</td>
                     <td>
                       <button
-                        onClick={() => handleToggleStatus(area.id, area.is_active)}
+                        onClick={() => handleToggleStatus(area.service_area_id, area.is_active)}
                         style={{
                           padding: '4px 12px',
                           borderRadius: '20px',
@@ -279,14 +314,14 @@ function ServiceAreas() {
                       <div style={{ display: 'flex', gap: '8px' }}>
                         <button 
                           className="edit-btn"
-                          onClick={() => navigate(`/a-edit-service-area/${area.id}`)}
+                          onClick={() => navigate(`/a-edit-service-area/${area.service_area_id}`)}
                           title="Edit"
                         >
                           ✏️
                         </button>
                         <button 
                           className="delete-btn"
-                          onClick={() => handleDelete(area.id)}
+                          onClick={() => handleDelete(area.service_area_id)}
                           title="Delete"
                         >
                           🗑️
@@ -313,7 +348,9 @@ function ServiceAreas() {
               alignItems: 'center',
               padding: '16px',
               borderTop: '1px solid #eee',
-              backgroundColor: '#f8f9fa'
+              backgroundColor: '#f8f9fa',
+              flexWrap: 'wrap',
+              gap: '10px'
             }}>
               {/* Items per page selector */}
               <div className="items-per-page" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -340,7 +377,7 @@ function ServiceAreas() {
               </div>
               
               {/* Page navigation */}
-              <div className="pagination-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div className="pagination-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                 {/* First Page */}
                 <button
                   onClick={() => handlePageChange(1)}
@@ -443,5 +480,3 @@ function ServiceAreas() {
 }
 
 export default ServiceAreas;
-
-
