@@ -179,6 +179,8 @@ const AddServiceArea = () => {
         is_active: formData.is_active
       };
 
+      console.log("Submitting payload:", payload);
+
       await axios.post(`${baseurl}/service-areas/`, payload);
 
       Swal.fire({

@@ -84,10 +84,11 @@ const EditServiceArea = () => {
           }
         }
         
+        // Fixed: Added parentheses around the logical OR operation
         setFormData({
           area_name: areaData.area_name ?? "",
           city: areaData.city ?? "",
-          state: stateCode || areaData.state ?? "",
+          state: (stateCode || areaData.state) ?? "",
           country: countryCode,
           pincode: areaData.pincode ?? "",
           latitude: areaData.latitude ?? "",
@@ -241,6 +242,8 @@ const EditServiceArea = () => {
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
         is_active: formData.is_active
       };
+
+      console.log("Submitting payload:", payload);
 
       await axios.put(`${baseurl}/service-areas/${id}/`, payload);
 
