@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import AdminNavbar from "../Admin_Navbar/Admin_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
+import { Country, State, City } from "country-state-city";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const AddServiceArea = () => {
@@ -11,14 +12,58 @@ const AddServiceArea = () => {
     area_name: "",
     city: "",
     state: "",
+    country: "IN",
     pincode: "",
     latitude: "",
     longitude: "",
     is_active: true
   });
 
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Load countries when component mounts
+  useEffect(() => {
+    const allCountries = Country.getAllCountries();
+    setCountries(allCountries);
+  }, []);
+
+  // Load states when country changes
+  useEffect(() => {
+    if (formData.country) {
+      const statesOfCountry = State.getStatesOfCountry(formData.country);
+      setStates(statesOfCountry);
+      
+      // Reset state and city when country changes
+      setFormData(prev => ({
+        ...prev,
+        state: '',
+        city: ''
+      }));
+    } else {
+      setStates([]);
+      setCities([]);
+    }
+  }, [formData.country]);
+
+  // Load cities when state changes
+  useEffect(() => {
+    if (formData.country && formData.state) {
+      const citiesOfState = City.getCitiesOfState(formData.country, formData.state);
+      setCities(citiesOfState);
+      
+      // Reset city when state changes
+      setFormData(prev => ({
+        ...prev,
+        city: ''
+      }));
+    } else {
+      setCities([]);
+    }
+  }, [formData.country, formData.state]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -38,11 +83,11 @@ const AddServiceArea = () => {
       });
       return false;
     }
-    if (!formData.city) {
+    if (!formData.country) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "City is required",
+        text: "Country is required",
         confirmButtonColor: "#273c75",
       });
       return false;
@@ -52,6 +97,15 @@ const AddServiceArea = () => {
         icon: "error",
         title: "Error",
         text: "State is required",
+        confirmButtonColor: "#273c75",
+      });
+      return false;
+    }
+    if (!formData.city) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "City is required",
         confirmButtonColor: "#273c75",
       });
       return false;
@@ -105,11 +159,20 @@ const AddServiceArea = () => {
     setLoading(true);
 
     try {
+      // Get full country name from country code
+      const selectedCountry = countries.find(c => c.isoCode === formData.country);
+      const countryName = selectedCountry ? selectedCountry.name : formData.country;
+      
+      // Get full state name from state code
+      const selectedState = states.find(s => s.isoCode === formData.state);
+      const stateName = selectedState ? selectedState.name : formData.state;
+      
       // Prepare payload - convert latitude and longitude to numbers
       const payload = {
         area_name: formData.area_name,
         city: formData.city,
-        state: formData.state,
+        state: stateName,
+        country: countryName,
         pincode: formData.pincode,
         latitude: formData.latitude ? parseFloat(formData.latitude) : null,
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
@@ -118,7 +181,6 @@ const AddServiceArea = () => {
 
       await axios.post(`${baseurl}/service-areas/`, payload);
 
-      // SUCCESS SWEETALERT
       Swal.fire({
         icon: "success",
         title: "Success",
@@ -129,7 +191,6 @@ const AddServiceArea = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
 
-      // Handle duplicate area name error
       let errorMessage = "Failed to add service area";
       if (error.response?.data?.area_name) {
         errorMessage = "Area name already exists";
@@ -139,7 +200,6 @@ const AddServiceArea = () => {
         errorMessage = "Invalid pincode format";
       }
 
-      // ERROR SWEETALERT
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -178,21 +238,26 @@ const AddServiceArea = () => {
                 />
               </div>
 
-              {/* City */}
+              {/* Country */}
               <div className="col-md-6 mb-3">
                 <label className="form-label">
-                  City <span className="text-danger">*</span>
+                  Country <span className="text-danger">*</span>
                 </label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
+                <select
+                  name="country"
+                  value={formData.country}
                   onChange={handleChange}
                   className="form-control"
-                  placeholder="Enter city (e.g., Chennai)"
                   required
                   disabled={loading}
-                />
+                >
+                  <option value="">Select Country</option>
+                  {countries.map(country => (
+                    <option key={country.isoCode} value={country.isoCode}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* State */}
@@ -200,16 +265,43 @@ const AddServiceArea = () => {
                 <label className="form-label">
                   State <span className="text-danger">*</span>
                 </label>
-                <input
-                  type="text"
+                <select
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
                   className="form-control"
-                  placeholder="Enter state (e.g., Tamil Nadu)"
                   required
-                  disabled={loading}
-                />
+                  disabled={loading || !formData.country}
+                >
+                  <option value="">Select State</option>
+                  {states.map(state => (
+                    <option key={state.isoCode} value={state.isoCode}>
+                      {state.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* City */}
+              <div className="col-md-6 mb-3">
+                <label className="form-label">
+                  City <span className="text-danger">*</span>
+                </label>
+                <select
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                  disabled={loading || !formData.state}
+                >
+                  <option value="">Select City</option>
+                  {cities.map(city => (
+                    <option key={city.name} value={city.name}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Pincode */}

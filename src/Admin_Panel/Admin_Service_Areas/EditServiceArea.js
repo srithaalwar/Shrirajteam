@@ -4,6 +4,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import AdminNavbar from "../Admin_Navbar/Admin_Navbar";
 import { baseurl } from "../../BaseURL/BaseURL";
+import { Country, State, City } from "country-state-city";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const EditServiceArea = () => {
@@ -14,27 +15,84 @@ const EditServiceArea = () => {
     area_name: "",
     city: "",
     state: "",
+    country: "IN",
     pincode: "",
     latitude: "",
     longitude: "",
     is_active: true
   });
 
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
+
+  // Load countries when component mounts
+  useEffect(() => {
+    const allCountries = Country.getAllCountries();
+    setCountries(allCountries);
+  }, []);
+
+  // Load states when country changes
+  useEffect(() => {
+    if (formData.country) {
+      const statesOfCountry = State.getStatesOfCountry(formData.country);
+      setStates(statesOfCountry);
+    } else {
+      setStates([]);
+      setCities([]);
+    }
+  }, [formData.country]);
+
+  // Load cities when state changes
+  useEffect(() => {
+    if (formData.country && formData.state) {
+      const citiesOfState = City.getCitiesOfState(formData.country, formData.state);
+      setCities(citiesOfState);
+    } else {
+      setCities([]);
+    }
+  }, [formData.country, formData.state]);
 
   useEffect(() => {
     const fetchArea = async () => {
       try {
         const res = await axios.get(`${baseurl}/service-areas/${id}/`);
+        const areaData = res.data;
+        
+        // Find country code from country name
+        let countryCode = "IN";
+        if (areaData.country) {
+          const foundCountry = countries.find(c => 
+            c.name.toLowerCase() === areaData.country.toLowerCase()
+          );
+          if (foundCountry) {
+            countryCode = foundCountry.isoCode;
+          }
+        }
+        
+        // Find state code from state name
+        let stateCode = "";
+        if (areaData.state && countryCode) {
+          const statesOfCountry = State.getStatesOfCountry(countryCode);
+          const foundState = statesOfCountry.find(s => 
+            s.name.toLowerCase() === areaData.state.toLowerCase()
+          );
+          if (foundState) {
+            stateCode = foundState.isoCode;
+          }
+        }
+        
         setFormData({
-          area_name: res.data.area_name ?? "",
-          city: res.data.city ?? "",
-          state: res.data.state ?? "",
-          pincode: res.data.pincode ?? "",
-          latitude: res.data.latitude ?? "",
-          longitude: res.data.longitude ?? "",
-          is_active: res.data.is_active ?? true
+          area_name: areaData.area_name ?? "",
+          city: areaData.city ?? "",
+          state: stateCode || areaData.state ?? "",
+          country: countryCode,
+          pincode: areaData.pincode ?? "",
+          latitude: areaData.latitude ?? "",
+          longitude: areaData.longitude ?? "",
+          is_active: areaData.is_active ?? true
         });
       } catch (error) {
         console.error("Failed to load area:", error);
@@ -49,15 +107,33 @@ const EditServiceArea = () => {
       }
     };
 
-    fetchArea();
-  }, [id, navigate]);
+    if (countries.length > 0) {
+      fetchArea();
+    }
+  }, [id, navigate, countries]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({ 
-      ...formData, 
-      [name]: type === 'checkbox' ? checked : value 
-    });
+    
+    if (name === 'country') {
+      setFormData({ 
+        ...formData, 
+        country: value,
+        state: '',
+        city: ''
+      });
+    } else if (name === 'state') {
+      setFormData({ 
+        ...formData, 
+        state: value,
+        city: ''
+      });
+    } else {
+      setFormData({ 
+        ...formData, 
+        [name]: type === 'checkbox' ? checked : value 
+      });
+    }
   };
 
   const validateForm = () => {
@@ -70,11 +146,11 @@ const EditServiceArea = () => {
       });
       return false;
     }
-    if (!formData.city) {
+    if (!formData.country) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "City is required",
+        text: "Country is required",
         confirmButtonColor: "#273c75",
       });
       return false;
@@ -84,6 +160,15 @@ const EditServiceArea = () => {
         icon: "error",
         title: "Error",
         text: "State is required",
+        confirmButtonColor: "#273c75",
+      });
+      return false;
+    }
+    if (!formData.city) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "City is required",
         confirmButtonColor: "#273c75",
       });
       return false;
@@ -137,11 +222,20 @@ const EditServiceArea = () => {
     setLoading(true);
 
     try {
+      // Get full country name from country code
+      const selectedCountry = countries.find(c => c.isoCode === formData.country);
+      const countryName = selectedCountry ? selectedCountry.name : formData.country;
+      
+      // Get full state name from state code
+      const selectedState = states.find(s => s.isoCode === formData.state);
+      const stateName = selectedState ? selectedState.name : formData.state;
+      
       // Prepare payload - convert latitude and longitude to numbers
       const payload = {
         area_name: formData.area_name,
         city: formData.city,
-        state: formData.state,
+        state: stateName,
+        country: countryName,
         pincode: formData.pincode,
         latitude: formData.latitude ? parseFloat(formData.latitude) : null,
         longitude: formData.longitude ? parseFloat(formData.longitude) : null,
@@ -150,7 +244,6 @@ const EditServiceArea = () => {
 
       await axios.put(`${baseurl}/service-areas/${id}/`, payload);
 
-      // SUCCESS SWEETALERT
       Swal.fire({
         icon: "success",
         title: "Updated!",
@@ -161,7 +254,6 @@ const EditServiceArea = () => {
     } catch (error) {
       console.error("Failed to update:", error);
 
-      // Handle duplicate area name error
       let errorMessage = "Failed to update service area";
       if (error.response?.data?.area_name) {
         errorMessage = "Area name already exists";
@@ -222,21 +314,26 @@ const EditServiceArea = () => {
                 />
               </div>
 
-              {/* City */}
+              {/* Country */}
               <div className="col-md-6 mb-3">
                 <label className="form-label">
-                  City <span className="text-danger">*</span>
+                  Country <span className="text-danger">*</span>
                 </label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
+                <select
+                  name="country"
+                  value={formData.country}
                   onChange={handleChange}
                   className="form-control"
-                  placeholder="Enter city"
                   required
                   disabled={loading}
-                />
+                >
+                  <option value="">Select Country</option>
+                  {countries.map(country => (
+                    <option key={country.isoCode} value={country.isoCode}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* State */}
@@ -244,16 +341,43 @@ const EditServiceArea = () => {
                 <label className="form-label">
                   State <span className="text-danger">*</span>
                 </label>
-                <input
-                  type="text"
+                <select
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
                   className="form-control"
-                  placeholder="Enter state"
                   required
-                  disabled={loading}
-                />
+                  disabled={loading || !formData.country}
+                >
+                  <option value="">Select State</option>
+                  {states.map(state => (
+                    <option key={state.isoCode} value={state.isoCode}>
+                      {state.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* City */}
+              <div className="col-md-6 mb-3">
+                <label className="form-label">
+                  City <span className="text-danger">*</span>
+                </label>
+                <select
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                  disabled={loading || !formData.state}
+                >
+                  <option value="">Select City</option>
+                  {cities.map(city => (
+                    <option key={city.name} value={city.name}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Pincode */}
