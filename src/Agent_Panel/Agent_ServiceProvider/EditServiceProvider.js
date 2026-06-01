@@ -1002,7 +1002,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { baseurl } from '../../BaseURL/BaseURL';
-import AdminNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import { Country, State, City } from "country-state-city";
 
 const EditServiceProvider = () => {
@@ -1358,7 +1358,7 @@ const EditServiceProvider = () => {
   if (loading) {
     return (
       <>
-        <AdminNavbar />
+        <AgentNavbar />
         <div className="container text-center py-5">
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Loading...</span>
@@ -1945,7 +1945,7 @@ const EditServiceProvider = () => {
 
   return (
     <>
-      <AdminNavbar />
+      <AgentNavbar />
       <div className="container-fluid admin-add-property-main-div">
         <div className="row">
           <div className="col-12">

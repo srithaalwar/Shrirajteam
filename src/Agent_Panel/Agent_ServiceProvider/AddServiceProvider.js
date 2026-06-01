@@ -1201,7 +1201,7 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { baseurl } from '../../BaseURL/BaseURL';
-import AdminNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import { Country, State, City } from "country-state-city";
 
 const AddServiceProvider = () => {
@@ -1758,7 +1758,7 @@ const AddServiceProvider = () => {
   if (!userId) {
     return (
       <>
-        <AdminNavbar />
+        <AgentNavbar />
         <div className="container-fluid admin-add-property-main-div">
           <div className="row">
             <div className="col-12">
@@ -2208,8 +2208,7 @@ const AddServiceProvider = () => {
                                 onChange={() => handleServiceAreaChange(area.service_area_id || area.id)}
                               />
                               <label className="form-check-label" htmlFor={`area_${area.service_area_id || area.id}`}>
-                                <strong>{area.area_name}</strong> - {area.city}, {area.state} 
-                                {area.pincode && <span className="text-muted ms-1">({area.pincode})</span>}
+                                <strong>{area.area_name}</strong> - {area.city}, {area.state} , {area.pincode} 
                               </label>
                             </div>
                           ))
@@ -2430,7 +2429,7 @@ const AddServiceProvider = () => {
 
   return (
     <>
-      <AdminNavbar />
+      <AgentNavbar />
       <div className="container-fluid admin-add-property-main-div">
         <div className="row">
           <div className="col-12">
@@ -2441,7 +2440,7 @@ const AddServiceProvider = () => {
                   <button 
                     type="button" 
                     className="btn btn-secondary me-2"
-                    onClick={() => navigate('/admin-service-providers')}
+                    onClick={() => navigate(-1)}
                     disabled={isSubmitting}
                   >
                     Cancel
