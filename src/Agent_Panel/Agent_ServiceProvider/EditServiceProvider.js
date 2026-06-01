@@ -280,7 +280,7 @@ const EditServiceProvider = () => {
           text: 'Failed to load service provider details',
           confirmButtonColor: '#d33',
         }).then(() => {
-          navigate('/admin-service-providers');
+          navigate('/a-service-providers');
         });
       } finally {
         setLoading(false);
@@ -557,7 +557,7 @@ const EditServiceProvider = () => {
         text: 'Service Provider Updated Successfully!',
         confirmButtonColor: '#3085d6',
       }).then(() => {
-        navigate('/admin-service-providers');
+        navigate('/a-service-providers');
       });
 
     } catch (error) {
@@ -921,7 +921,40 @@ const EditServiceProvider = () => {
                   </div>
                 </div>
               </div>
-
+     <div className="row">
+                <div className="col-md-6">
+                  <div className="mb-3">
+                    <label className="admin-customer-form-label">Service Charge Type</label>
+                    <select
+                      name="service_charge_type"
+                      value={formData.service_charge_type || ''}
+                      onChange={handleChange}
+                      className="form-select customer-form-input"
+                    >
+                      <option value="">Select Charge Type</option>
+                      <option value="Per Hour">Per Hour</option>
+                      <option value="Per Day">Per Day</option>
+                      <option value="Contract">Contract</option>
+                    </select>
+                    <small className="text-muted">Select how the service charge is calculated</small>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="mb-3">
+                    <label className="admin-customer-form-label">Service Charges (₹)</label>
+                    <input
+                      type="number"
+                      name="service_charges"
+                      value={formData.service_charges || ''}
+                      onChange={handleChange}
+                      className="form-control customer-form-input"
+                      placeholder="Enter service charges"
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+              </div>
               <div className="row">
                 <div className="col-md-6">
                   <div className="mb-3">
@@ -1035,40 +1068,7 @@ const EditServiceProvider = () => {
                 </div>
               </div>
 
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="admin-customer-form-label">Service Charge Type</label>
-                    <select
-                      name="service_charge_type"
-                      value={formData.service_charge_type || ''}
-                      onChange={handleChange}
-                      className="form-select customer-form-input"
-                    >
-                      <option value="">Select Charge Type</option>
-                      <option value="Per Hour">Per Hour</option>
-                      <option value="Per Day">Per Day</option>
-                      <option value="Contract">Contract</option>
-                    </select>
-                    <small className="text-muted">Select how the service charge is calculated</small>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="admin-customer-form-label">Service Charges (₹)</label>
-                    <input
-                      type="number"
-                      name="service_charges"
-                      value={formData.service_charges || ''}
-                      onChange={handleChange}
-                      className="form-control customer-form-input"
-                      placeholder="Enter service charges"
-                      min="0"
-                      step="0.01"
-                    />
-                  </div>
-                </div>
-              </div>
+         
             </div>
           </div>
         );
@@ -1283,7 +1283,7 @@ const EditServiceProvider = () => {
                   <button 
                     type="button" 
                     className="btn btn-secondary me-2"
-                    onClick={() => navigate('/admin-service-providers')}
+                    onClick={() => navigate(-1)}
                     disabled={isSubmitting}
                   >
                     Cancel
