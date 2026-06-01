@@ -377,6 +377,8 @@ import AdminPropertyBookings from "./Admin_Panel/AdminPropertyBookings/AdminProp
 import AgentServices from "./Agent_Panel/Agent_Service_Providers/ServiceProviderProfile";
 import AdminServiceBookings from "./Admin_Panel/Admin_Service_Bookings/ServiceBookings";
 import AgentServiceBookings from "./Agent_Panel/Agent_Service_bookings/AgentServiceBookings";
+import AgentMyServiceBookings from "./Agent_Panel/Agent_Service_bookings/agent-my-service-bookings";
+
 import ServiceAreas from './Admin_Panel/Admin_Service_Areas/ServiceAreas';
 import AddServiceArea from './Admin_Panel/Admin_Service_Areas/AddServiceArea';
 import EditServiceArea from './Admin_Panel/Admin_Service_Areas/EditServiceArea';
@@ -561,6 +563,8 @@ function App() {
 
         <Route path="/agent-my-orders" element={<AgentMyOrders />} />
         <Route path="/agent-service-bookings" element={<AgentServiceBookings />} />
+                <Route path="/agent-my-service-bookings" element={<AgentMyServiceBookings />} />
+
         <Route path="/agent-orders" element={<AgentOrders />} />
         <Route path="/client-orders" element={<ClientOrders />} />
 
