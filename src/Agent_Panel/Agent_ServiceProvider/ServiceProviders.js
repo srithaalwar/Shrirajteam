@@ -442,7 +442,7 @@
 
 import React, { useEffect, useState } from 'react';
 import "./ServiceProviders.css";
-import AdminNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
+import AgentNavbar from "../../Agent_Panel/Agent_Navbar/Agent_Navbar";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { baseurl } from './../../BaseURL/BaseURL';
@@ -700,7 +700,7 @@ function ServiceProviders() {
   if (!currentUserId && loading) {
     return (
       <>
-        <AdminNavbar />
+        <AgentNavbar />
         <div className="page-container">
           <div className="text-center py-5">
             <div className="spinner-border text-primary" role="status">
@@ -714,13 +714,13 @@ function ServiceProviders() {
 
   return (
     <>
-      <AdminNavbar />
+      <AgentNavbar />
 
       <div className="page-container">
         {/* Header */}
         <div className="page-header">
-          <h2>My Service Providers</h2>
-          <p className="text-muted">Showing providers added by you</p>
+          <h2>My Services </h2>
+          {/* <p className="text-muted">Showing providers added by you</p> */}
         </div>
 
         {/* Toolbar */}

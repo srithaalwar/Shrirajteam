@@ -1,7 +1,3 @@
-
-
-
-
 // import React, { useEffect, useState } from 'react';
 // // import "./AgentServiceBookings.css"; 
 // import AgentNavbar from "./../Agent_Navbar/Agent_Navbar"; 
@@ -15,6 +11,7 @@
 //   const [filteredBookings, setFilteredBookings] = useState([]);
 //   const [loading, setLoading] = useState(true);
 //   const [searchQuery, setSearchQuery] = useState('');
+//   const [categories, setCategories] = useState({}); // Store categories mapping
   
 //   // Pagination states
 //   const [currentPage, setCurrentPage] = useState(1);
@@ -26,7 +23,50 @@
   
 //   const navigate = useNavigate();
 
-//   /* ================= FORMATTING FUNCTIONS (MUST BE DEFINED FIRST) ================= */
+//   // Booking status options from backend model
+//   const BOOKING_STATUS_OPTIONS = [
+//     'Pending',
+//     'Accepted',
+//     'Rejected',
+//     'Completed',
+//     'Cancelled'
+//   ];
+
+//   // Payment status options from backend model
+//   const PAYMENT_STATUS_OPTIONS = [
+//     'Pending',
+//     'Paid',
+//     'Failed',
+//     'Refunded'
+//   ];
+
+//   /* ================= FETCH CATEGORIES ================= */
+//   const fetchCategories = async () => {
+//     try {
+//       const res = await axios.get(`${baseurl}/service-categories/`);
+      
+//       // Create a mapping of category_id to category_name
+//       const categoryMap = {};
+      
+//       if (res.data.results) {
+//         res.data.results.forEach(category => {
+//           categoryMap[category.category_id] = category.category_name;
+//         });
+//       } else if (Array.isArray(res.data)) {
+//         res.data.forEach(category => {
+//           categoryMap[category.category_id] = category.category_name;
+//         });
+//       }
+      
+//       setCategories(categoryMap);
+//       return categoryMap;
+//     } catch (error) {
+//       console.error("Error fetching categories:", error);
+//       return {};
+//     }
+//   };
+
+//   /* ================= FORMATTING FUNCTIONS ================= */
 //   // Format only date (without time)
 //   const formatDateOnly = (dateString) => {
 //     if (!dateString) return 'N/A';
@@ -84,8 +124,10 @@
 //     const statusLower = status?.toLowerCase();
 //     if (statusLower === 'pending') {
 //       return { backgroundColor: '#fff3cd', color: '#856404', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
-//     } else if (statusLower === 'confirmed') {
+//     } else if (statusLower === 'accepted') {
 //       return { backgroundColor: '#d4edda', color: '#155724', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+//     } else if (statusLower === 'rejected') {
+//       return { backgroundColor: '#f8d7da', color: '#721c24', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
 //     } else if (statusLower === 'completed') {
 //       return { backgroundColor: '#cce5ff', color: '#004085', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
 //     } else if (statusLower === 'cancelled') {
@@ -98,12 +140,22 @@
 //     const statusLower = status?.toLowerCase();
 //     if (statusLower === 'pending') {
 //       return { backgroundColor: '#fff3cd', color: '#856404', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
-//     } else if (statusLower === 'paid' || statusLower === 'completed') {
+//     } else if (statusLower === 'paid') {
 //       return { backgroundColor: '#d4edda', color: '#155724', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
 //     } else if (statusLower === 'failed') {
 //       return { backgroundColor: '#f8d7da', color: '#721c24', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+//     } else if (statusLower === 'refunded') {
+//       return { backgroundColor: '#e2e3e5', color: '#383d41', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
 //     }
 //     return { backgroundColor: '#e2e3e5', color: '#383d41', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+//   };
+
+//   const getServiceChargeTypeLabel = (type) => {
+//     if (!type) return '-';
+//     if (type === 'Per Hour') return 'Per Hour';
+//     if (type === 'Per Day') return 'Per Day';
+//     if (type === 'Contract') return 'Contract';
+//     return type;
 //   };
 
 //   /* ================= GET LOGGED-IN USER ID ================= */
@@ -160,7 +212,6 @@
     
 //     if (userIdFromStorage) {
 //       setUserId(userIdFromStorage);
-//       setLoading(false); // Set loading to false after getting user ID
 //     } else {
 //       console.warn('No user ID found in localStorage');
 //       setLoading(false); // Stop loading even if no user ID
@@ -208,10 +259,16 @@
 //         count = res.data.length || 0;
 //       }
       
-//       console.log('Processed data:', data);
+//       // Add category name to each booking
+//       const dataWithCategoryNames = data.map(booking => ({
+//         ...booking,
+//         category_name: categories[booking.service_category] || 'Unknown Category'
+//       }));
+      
+//       console.log('Processed data with categories:', dataWithCategoryNames);
       
 //       // Sort by booking_id in descending order (newest first)
-//       const sorted = data.sort((a, b) => b.booking_id - a.booking_id);
+//       const sorted = dataWithCategoryNames.sort((a, b) => b.booking_id - a.booking_id);
 //       setBookings(sorted);
 //       setFilteredBookings(sorted);
 //       setTotalItems(count);
@@ -228,11 +285,21 @@
 //     }
 //   };
 
+//   /* ================= INITIAL LOAD ================= */
+//   useEffect(() => {
+//     const loadData = async () => {
+//       if (userId) {
+//         await fetchCategories();
+//       }
+//     };
+//     loadData();
+//   }, [userId]);
+
 //   useEffect(() => { 
-//     if (userId) {
+//     if (userId && Object.keys(categories).length > 0) {
 //       fetchBookings();
 //     }
-//   }, [currentPage, itemsPerPage, searchQuery, userId]);
+//   }, [currentPage, itemsPerPage, searchQuery, userId, categories]);
 
 //   /* ================= SEARCH ================= */
 //   const handleSearchChange = (e) => {
@@ -241,21 +308,37 @@
 //   };
 
 //   /* ================= UPDATE BOOKING STATUS ================= */
-//   const handleUpdateStatus = async (bookingId, newStatus) => {
+//   const handleUpdateBookingStatus = async (bookingId, newStatus) => {
 //     try {
 //       const response = await axios.patch(`${baseurl}/service-bookings/${bookingId}/`, {
 //         booking_status: newStatus
 //       });
       
 //       if (response.status === 200 || response.status === 202) {
+//         // Update local state
+//         setBookings(prevBookings => 
+//           prevBookings.map(booking => 
+//             booking.booking_id === bookingId 
+//               ? { ...booking, booking_status: newStatus }
+//               : booking
+//           )
+//         );
+//         setFilteredBookings(prevFiltered => 
+//           prevFiltered.map(booking => 
+//             booking.booking_id === bookingId 
+//               ? { ...booking, booking_status: newStatus }
+//               : booking
+//           )
+//         );
+        
 //         Swal.fire({
 //           icon: 'success',
 //           title: 'Updated!',
 //           text: `Booking status updated to ${newStatus}`,
 //           confirmButtonColor: '#273c75',
-//           timer: 2000
+//           timer: 2000,
+//           showConfirmButton: false
 //         });
-//         fetchBookings();
 //       }
 //     } catch (error) {
 //       console.error("Error updating booking status:", error);
@@ -268,58 +351,48 @@
 //     }
 //   };
 
-//   /* ================= CANCEL BOOKING ================= */
-//   const handleCancelBooking = (bookingId) => {
-//     Swal.fire({
-//       title: 'Cancel Booking?',
-//       text: "Are you sure you want to cancel this booking? This action cannot be undone.",
-//       icon: 'warning',
-//       showCancelButton: true,
-//       confirmButtonColor: '#d33',
-//       cancelButtonColor: '#273c75',
-//       confirmButtonText: 'Yes, Cancel Booking',
-//       cancelButtonText: 'No, Keep It'
-//     }).then(result => {
-//       if (result.isConfirmed) {
-//         handleUpdateStatus(bookingId, 'Cancelled');
+//   /* ================= UPDATE PAYMENT STATUS ================= */
+//   const handleUpdatePaymentStatus = async (bookingId, newStatus) => {
+//     try {
+//       const response = await axios.patch(`${baseurl}/service-bookings/${bookingId}/`, {
+//         payment_status: newStatus
+//       });
+      
+//       if (response.status === 200 || response.status === 202) {
+//         // Update local state
+//         setBookings(prevBookings => 
+//           prevBookings.map(booking => 
+//             booking.booking_id === bookingId 
+//               ? { ...booking, payment_status: newStatus }
+//               : booking
+//           )
+//         );
+//         setFilteredBookings(prevFiltered => 
+//           prevFiltered.map(booking => 
+//             booking.booking_id === bookingId 
+//               ? { ...booking, payment_status: newStatus }
+//               : booking
+//           )
+//         );
+        
+//         Swal.fire({
+//           icon: 'success',
+//           title: 'Updated!',
+//           text: `Payment status updated to ${newStatus}`,
+//           confirmButtonColor: '#273c75',
+//           timer: 2000,
+//           showConfirmButton: false
+//         });
 //       }
-//     });
-//   };
-
-//   /* ================= CONFIRM BOOKING ================= */
-//   const handleConfirmBooking = (bookingId) => {
-//     Swal.fire({
-//       title: 'Confirm Booking?',
-//       text: "Are you sure you want to confirm this booking?",
-//       icon: 'question',
-//       showCancelButton: true,
-//       confirmButtonColor: '#28a745',
-//       cancelButtonColor: '#273c75',
-//       confirmButtonText: 'Yes, Confirm',
-//       cancelButtonText: 'No'
-//     }).then(result => {
-//       if (result.isConfirmed) {
-//         handleUpdateStatus(bookingId, 'Confirmed');
-//       }
-//     });
-//   };
-
-//   /* ================= COMPLETE BOOKING ================= */
-//   const handleCompleteBooking = (bookingId) => {
-//     Swal.fire({
-//       title: 'Complete Booking?',
-//       text: "Mark this booking as completed?",
-//       icon: 'question',
-//       showCancelButton: true,
-//       confirmButtonColor: '#28a745',
-//       cancelButtonColor: '#273c75',
-//       confirmButtonText: 'Yes, Complete',
-//       cancelButtonText: 'No'
-//     }).then(result => {
-//       if (result.isConfirmed) {
-//         handleUpdateStatus(bookingId, 'Completed');
-//       }
-//     });
+//     } catch (error) {
+//       console.error("Error updating payment status:", error);
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Update Failed',
+//         text: error.response?.data?.message || 'Could not update payment status. Please try again.',
+//         confirmButtonColor: '#273c75'
+//       });
+//     }
 //   };
 
 //   /* ================= PAGINATION HANDLERS ================= */
@@ -360,96 +433,6 @@
 //     }
     
 //     return pageNumbers;
-//   };
-
-//   // Get action buttons based on booking status
-//   const getActionButtons = (booking) => {
-//     const status = booking.booking_status?.toLowerCase();
-    
-//     if (status === 'pending') {
-//       return (
-//         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-//           <button 
-//             className="confirm-btn"
-//             onClick={() => handleConfirmBooking(booking.booking_id)}
-//             style={{
-//               padding: '6px 12px',
-//               backgroundColor: '#28a745',
-//               color: 'white',
-//               border: 'none',
-//               borderRadius: '4px',
-//               cursor: 'pointer',
-//               fontSize: '12px'
-//             }}
-//           >
-//             Confirm
-//           </button>
-//           <button 
-//             className="cancel-btn"
-//             onClick={() => handleCancelBooking(booking.booking_id)}
-//             style={{
-//               padding: '6px 12px',
-//               backgroundColor: '#dc3545',
-//               color: 'white',
-//               border: 'none',
-//               borderRadius: '4px',
-//               cursor: 'pointer',
-//               fontSize: '12px'
-//             }}
-//           >
-//             Cancel
-//           </button>
-//         </div>
-//       );
-//     } else if (status === 'confirmed') {
-//       return (
-//         <div style={{ display: 'flex', gap: '8px' }}>
-//           <button 
-//             className="complete-btn"
-//             onClick={() => handleCompleteBooking(booking.booking_id)}
-//             style={{
-//               padding: '6px 12px',
-//               backgroundColor: '#17a2b8',
-//               color: 'white',
-//               border: 'none',
-//               borderRadius: '4px',
-//               cursor: 'pointer',
-//               fontSize: '12px'
-//             }}
-//           >
-//             Mark Complete
-//           </button>
-//           <button 
-//             className="cancel-btn"
-//             onClick={() => handleCancelBooking(booking.booking_id)}
-//             style={{
-//               padding: '6px 12px',
-//               backgroundColor: '#dc3545',
-//               color: 'white',
-//               border: 'none',
-//               borderRadius: '4px',
-//               cursor: 'pointer',
-//               fontSize: '12px'
-//             }}
-//           >
-//             Cancel
-//           </button>
-//         </div>
-//       );
-//     } else if (status === 'completed') {
-//       return (
-//         <span style={{ color: '#28a745', fontSize: '12px', fontWeight: '500' }}>
-//           ✓ Completed
-//         </span>
-//       );
-//     } else if (status === 'cancelled') {
-//       return (
-//         <span style={{ color: '#dc3545', fontSize: '12px', fontWeight: '500' }}>
-//           ✗ Cancelled
-//         </span>
-//       );
-//     }
-//     return null;
 //   };
 
 //   // Show loading state while fetching userId or bookings
@@ -494,13 +477,13 @@
 //   }
 
 //   return (
-//     <>
+//     <div>
 //       <AgentNavbar />
 
 //       <div className="page-container">
 //         {/* Header */}
 //         <div className="page-header">
-//           <h2>My Service Bookings</h2>
+//           <h2>Service Bookings</h2>
 //           <p className="text-muted">User ID: {userId}</p>
 //         </div>
 
@@ -509,7 +492,7 @@
 //           <div className="search-box">
 //             <input
 //               type="text"
-//               placeholder="Search by Booking ID, Address or Notes..."
+//               placeholder="Search by Booking ID, Category, Address or Notes..."
 //               value={searchQuery}
 //               onChange={handleSearchChange}
 //               style={{
@@ -541,23 +524,24 @@
 //               }}>
 //                 <th style={{ padding: '12px', textAlign: 'left' }}>S.No.</th>
 //                 <th style={{ padding: '12px', textAlign: 'left' }}>Booking ID</th>
+//                 <th style={{ padding: '12px', textAlign: 'left' }}>Service Category</th>
+//                 <th style={{ padding: '12px', textAlign: 'left' }}>Charge Type</th>
 //                 <th style={{ padding: '12px', textAlign: 'left' }}>Booking Date</th>
 //                 <th style={{ padding: '12px', textAlign: 'left' }}>Service Start</th>
 //                 <th style={{ padding: '12px', textAlign: 'left' }}>Service End</th>
-//                 <th style={{ padding: '12px', textAlign: 'left' }}>Hours/Days</th>
+//                 <th style={{ padding: '12px', textAlign: 'left' }}>Duration</th>
 //                 <th style={{ padding: '12px', textAlign: 'left' }}>Total Amount</th>
 //                 <th style={{ padding: '12px', textAlign: 'left' }}>Address</th>
 //                 <th style={{ padding: '12px', textAlign: 'left' }}>Notes</th>
 //                 <th style={{ padding: '12px', textAlign: 'left' }}>Booking Status</th>
 //                 <th style={{ padding: '12px', textAlign: 'left' }}>Payment Status</th>
-//                 <th style={{ padding: '12px', textAlign: 'left' }}>Actions</th>
 //               </tr>
 //             </thead>
 
 //             <tbody>
 //               {loading ? (
 //                 <tr>
-//                   <td colSpan="12" style={{ textAlign: 'center', padding: '40px' }}>
+//                   <td colSpan="13" style={{ textAlign: 'center', padding: '40px' }}>
 //                     <div className="spinner-border text-primary" role="status">
 //                       <span className="visually-hidden">Loading...</span>
 //                     </div>
@@ -571,44 +555,103 @@
 //                   }}>
 //                     <td style={{ padding: '12px' }}>{startIndex + index}</td>
 //                     <td style={{ padding: '12px' }}>#{booking.booking_id}</td>
+//                     <td style={{ padding: '12px' }}>
+//                       <span style={{
+//                         backgroundColor: '#e8f4f8',
+//                         color: '#0c5460',
+//                         padding: '4px 8px',
+//                         borderRadius: '4px',
+//                         fontSize: '12px',
+//                         fontWeight: '500'
+//                       }}>
+//                         {booking.category_name}
+//                       </span>
+//                     </td>
+//                     <td style={{ padding: '12px' }}>
+//                       <span style={{
+//                         backgroundColor: '#fff3cd',
+//                         color: '#856404',
+//                         padding: '4px 8px',
+//                         borderRadius: '4px',
+//                         fontSize: '12px'
+//                       }}>
+//                         {getServiceChargeTypeLabel(booking.service_charge_type)}
+//                       </span>
+//                     </td>
 //                     <td style={{ padding: '12px' }}>{formatDateTime(booking.booking_date)}</td>
 //                     <td style={{ padding: '12px' }}>{formatDateOnly(booking.service_start_date)}</td>
 //                     <td style={{ padding: '12px' }}>{formatDateOnly(booking.service_end_date)}</td>
 //                     <td style={{ padding: '12px' }}>
-//                       {booking.number_of_hours ? `${booking.number_of_hours} hrs` : 
-//                        booking.number_of_days ? `${booking.number_of_days} days` : '-'}
+//                       {booking.number_of_hours ? `${booking.number_of_hours} hour(s)` : 
+//                        booking.number_of_days ? `${booking.number_of_days} day(s)` : '-'}
 //                     </td>
-//                     <td style={{ padding: '12px', fontWeight: 'bold' }}>{formatCurrency(booking.total_amount)}</td>
-//                     <td style={{ padding: '12px' }}>{booking.address || '-'}</td>
-//                     <td style={{ padding: '12px', maxWidth: '200px', wordBreak: 'break-word' }}>
+//                     <td style={{ padding: '12px', fontWeight: 'bold', color: '#28a745' }}>
+//                       {formatCurrency(booking.total_amount)}
+//                     </td>
+//                     <td style={{ padding: '12px', maxWidth: '150px', wordBreak: 'break-word' }}>
+//                       {booking.address || '-'}
+//                     </td>
+//                     <td style={{ padding: '12px', maxWidth: '150px', wordBreak: 'break-word' }}>
 //                       {booking.booking_notes || '-'}
 //                     </td>
 //                     <td style={{ padding: '12px' }}>
-//                       <span style={getStatusBadgeStyle(booking.booking_status)}>
-//                         {booking.booking_status || 'N/A'}
-//                       </span>
+//                       <select
+//                         value={booking.booking_status || 'Pending'}
+//                         onChange={(e) => handleUpdateBookingStatus(booking.booking_id, e.target.value)}
+//                         style={{
+//                           padding: '6px 10px',
+//                           borderRadius: '4px',
+//                           border: `1px solid ${getStatusBadgeStyle(booking.booking_status).backgroundColor}`,
+//                           backgroundColor: getStatusBadgeStyle(booking.booking_status).backgroundColor,
+//                           color: getStatusBadgeStyle(booking.booking_status).color,
+//                           fontSize: '12px',
+//                           fontWeight: '500',
+//                           cursor: 'pointer',
+//                           outline: 'none'
+//                         }}
+//                       >
+//                         {BOOKING_STATUS_OPTIONS.map(status => (
+//                           <option key={status} value={status} style={{ backgroundColor: 'white', color: '#333' }}>
+//                             {status}
+//                           </option>
+//                         ))}
+//                       </select>
 //                     </td>
 //                     <td style={{ padding: '12px' }}>
-//                       <span style={getPaymentBadgeStyle(booking.payment_status)}>
-//                         {booking.payment_status || 'N/A'}
-//                       </span>
-//                     </td>
-//                     <td style={{ padding: '12px' }}>
-//                       {getActionButtons(booking)}
+//                       <select
+//                         value={booking.payment_status || 'Pending'}
+//                         onChange={(e) => handleUpdatePaymentStatus(booking.booking_id, e.target.value)}
+//                         style={{
+//                           padding: '6px 10px',
+//                           borderRadius: '4px',
+//                           border: `1px solid ${getPaymentBadgeStyle(booking.payment_status).backgroundColor}`,
+//                           backgroundColor: getPaymentBadgeStyle(booking.payment_status).backgroundColor,
+//                           color: getPaymentBadgeStyle(booking.payment_status).color,
+//                           fontSize: '12px',
+//                           fontWeight: '500',
+//                           cursor: 'pointer',
+//                           outline: 'none'
+//                         }}
+//                       >
+//                         {PAYMENT_STATUS_OPTIONS.map(status => (
+//                           <option key={status} value={status} style={{ backgroundColor: 'white', color: '#333' }}>
+//                             {status}
+//                           </option>
+//                         ))}
+//                       </select>
 //                     </td>
 //                   </tr>
 //                 ))
 //               ) : (
 //                 <tr>
-//                   <td colSpan="12" style={{ textAlign: 'center', padding: '40px' }}>
+//                   <td colSpan="13" style={{ textAlign: 'center', padding: '40px' }}>
 //                     <i className="bi bi-calendar-x" style={{ fontSize: '48px', color: '#ccc' }}></i>
 //                     <p className="mt-2">No service bookings found</p>
-//                     <p className="text-muted small">You haven't made any bookings yet.</p>
 //                   </td>
 //                 </tr>
 //               )}
 //             </tbody>
-//           </table>
+//            </table>
           
 //           {/* Pagination Controls */}
 //           {totalItems > 0 && (
@@ -618,7 +661,9 @@
 //               alignItems: 'center',
 //               padding: '16px',
 //               borderTop: '1px solid #eee',
-//               backgroundColor: '#f8f9fa'
+//               backgroundColor: '#f8f9fa',
+//               flexWrap: 'wrap',
+//               gap: '10px'
 //             }}>
 //               <div className="items-per-page" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
 //                 <span style={{ fontSize: '14px', color: '#666' }}>Show:</span>
@@ -642,7 +687,7 @@
 //                 </span>
 //               </div>
               
-//               <div className="pagination-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+//               <div className="pagination-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
 //                 <button
 //                   onClick={() => handlePageChange(1)}
 //                   disabled={currentPage === 1}
@@ -734,11 +779,12 @@
 //           )}
 //         </div>
 //       </div>
-//     </>
+//     </div>
 //   );
 // }
 
 // export default AgentServiceBookings;
+
 
 
 import React, { useEffect, useState } from 'react';
@@ -761,10 +807,27 @@ function AgentServiceBookings() {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
   
-  // Get logged-in user ID from localStorage
-  const [userId, setUserId] = useState(null);
+  // Get logged-in user ID from localStorage (this will be the provider ID)
+  const [providerId, setProviderId] = useState(null);
   
   const navigate = useNavigate();
+
+  // Booking status options from backend model
+  const BOOKING_STATUS_OPTIONS = [
+    'Pending',
+    'Accepted',
+    'Rejected',
+    'Completed',
+    'Cancelled'
+  ];
+
+  // Payment status options from backend model
+  const PAYMENT_STATUS_OPTIONS = [
+    'Pending',
+    'Paid',
+    'Failed',
+    'Refunded'
+  ];
 
   /* ================= FETCH CATEGORIES ================= */
   const fetchCategories = async () => {
@@ -850,8 +913,10 @@ function AgentServiceBookings() {
     const statusLower = status?.toLowerCase();
     if (statusLower === 'pending') {
       return { backgroundColor: '#fff3cd', color: '#856404', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
-    } else if (statusLower === 'confirmed') {
+    } else if (statusLower === 'accepted') {
       return { backgroundColor: '#d4edda', color: '#155724', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+    } else if (statusLower === 'rejected') {
+      return { backgroundColor: '#f8d7da', color: '#721c24', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
     } else if (statusLower === 'completed') {
       return { backgroundColor: '#cce5ff', color: '#004085', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
     } else if (statusLower === 'cancelled') {
@@ -864,10 +929,12 @@ function AgentServiceBookings() {
     const statusLower = status?.toLowerCase();
     if (statusLower === 'pending') {
       return { backgroundColor: '#fff3cd', color: '#856404', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
-    } else if (statusLower === 'paid' || statusLower === 'completed') {
+    } else if (statusLower === 'paid') {
       return { backgroundColor: '#d4edda', color: '#155724', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
     } else if (statusLower === 'failed') {
       return { backgroundColor: '#f8d7da', color: '#721c24', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+    } else if (statusLower === 'refunded') {
+      return { backgroundColor: '#e2e3e5', color: '#383d41', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
     }
     return { backgroundColor: '#e2e3e5', color: '#383d41', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
   };
@@ -880,78 +947,101 @@ function AgentServiceBookings() {
     return type;
   };
 
-  /* ================= GET LOGGED-IN USER ID ================= */
+  /* ================= GET LOGGED-IN PROVIDER ID ================= */
   useEffect(() => {
-    // Try multiple ways to get user ID from localStorage
-    let userIdFromStorage = null;
+    // Try multiple ways to get provider ID from localStorage
+    let providerIdFromStorage = null;
     
-    // Method 1: Check for 'user_id' directly
-    const directUserId = localStorage.getItem('user_id');
-    if (directUserId) {
-      userIdFromStorage = parseInt(directUserId);
-      console.log('Found user_id directly:', userIdFromStorage);
+    // Method 1: Check for 'provider_user_id' directly
+    const directProviderId = localStorage.getItem('provider_user_id');
+    if (directProviderId) {
+      providerIdFromStorage = parseInt(directProviderId);
+      console.log('Found provider_user_id directly:', providerIdFromStorage);
     }
     
-    // Method 2: Check for 'user' object
-    if (!userIdFromStorage) {
-      const storedUser = localStorage.getItem('user');
-      console.log('Stored user from localStorage:', storedUser);
+    // Method 2: Check for 'user_id' (if provider is logged in as user)
+    if (!providerIdFromStorage) {
+      const directUserId = localStorage.getItem('user_id');
+      if (directUserId) {
+        providerIdFromStorage = parseInt(directUserId);
+        console.log('Found user_id as provider ID:', providerIdFromStorage);
+      }
+    }
+    
+    // Method 3: Check for 'provider' object
+    if (!providerIdFromStorage) {
+      const storedProvider = localStorage.getItem('provider');
+      console.log('Stored provider from localStorage:', storedProvider);
       
+      if (storedProvider) {
+        try {
+          const providerData = JSON.parse(storedProvider);
+          // Try different possible field names
+          providerIdFromStorage = providerData.id || providerData.provider_id || providerData.user_id || providerData.pk;
+          console.log('Extracted provider ID from provider object:', providerIdFromStorage);
+        } catch (error) {
+          console.error("Error parsing provider data:", error);
+        }
+      }
+    }
+    
+    // Method 4: Check for 'user' object (if provider is stored as user)
+    if (!providerIdFromStorage) {
+      const storedUser = localStorage.getItem('user');
       if (storedUser) {
         try {
           const userData = JSON.parse(storedUser);
-          // Try different possible field names
-          userIdFromStorage = userData.id || userData.user_id || userData.pk;
-          console.log('Extracted user ID from user object:', userIdFromStorage);
+          providerIdFromStorage = userData.id || userData.user_id || userData.pk;
+          console.log('Extracted provider ID from user object:', providerIdFromStorage);
         } catch (error) {
           console.error("Error parsing user data:", error);
         }
       }
     }
     
-    // Method 3: Check for 'userId' key
-    if (!userIdFromStorage) {
+    // Method 5: Check for 'userId' key
+    if (!providerIdFromStorage) {
       const userIdKey = localStorage.getItem('userId');
       if (userIdKey) {
-        userIdFromStorage = parseInt(userIdKey);
-        console.log('Found userId from separate key:', userIdFromStorage);
+        providerIdFromStorage = parseInt(userIdKey);
+        console.log('Found userId from separate key:', providerIdFromStorage);
       }
     }
     
-    // Method 4: Check for 'userData' object
-    if (!userIdFromStorage) {
+    // Method 6: Check for 'userData' object
+    if (!providerIdFromStorage) {
       const userDataStr = localStorage.getItem('userData');
       if (userDataStr) {
         try {
           const userData = JSON.parse(userDataStr);
-          userIdFromStorage = userData.id || userData.user_id;
-          console.log('Extracted user ID from userData:', userIdFromStorage);
+          providerIdFromStorage = userData.id || userData.user_id;
+          console.log('Extracted provider ID from userData:', providerIdFromStorage);
         } catch (error) {
           console.error("Error parsing userData:", error);
         }
       }
     }
     
-    if (userIdFromStorage) {
-      setUserId(userIdFromStorage);
+    if (providerIdFromStorage) {
+      setProviderId(providerIdFromStorage);
     } else {
-      console.warn('No user ID found in localStorage');
-      setLoading(false); // Stop loading even if no user ID
+      console.warn('No provider ID found in localStorage');
+      setLoading(false); // Stop loading even if no provider ID
     }
   }, []);
 
-  /* ================= FETCH BOOKINGS FOR SPECIFIC USER ================= */
+  /* ================= FETCH BOOKINGS FOR SPECIFIC PROVIDER ================= */
   const fetchBookings = async () => {
-    if (!userId) {
-      console.log('No userId available, skipping fetch');
+    if (!providerId) {
+      console.log('No providerId available, skipping fetch');
       return;
     }
     
     setLoading(true);
     try {
-      // Build query parameters with user filter
+      // Build query parameters with provider_user_id filter
       const params = new URLSearchParams({
-        user: userId,
+        provider_user_id: providerId,
         page: currentPage,
         page_size: itemsPerPage,
       });
@@ -960,7 +1050,7 @@ function AgentServiceBookings() {
         params.append('search', searchQuery.trim());
       }
       
-      console.log('Fetching bookings for user:', userId);
+      console.log('Fetching bookings for provider ID:', providerId);
       console.log('Fetching bookings with params:', params.toString());
       
       const res = await axios.get(`${baseurl}/service-bookings/?${params.toString()}`);
@@ -995,11 +1085,11 @@ function AgentServiceBookings() {
       setFilteredBookings(sorted);
       setTotalItems(count);
     } catch (error) {
-      console.error("Error fetching agent service bookings:", error);
+      console.error("Error fetching provider service bookings:", error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: error.response?.data?.message || 'Failed to load your service bookings',
+        text: error.response?.data?.message || 'Failed to load service bookings',
         confirmButtonColor: '#273c75'
       });
     } finally {
@@ -1010,18 +1100,18 @@ function AgentServiceBookings() {
   /* ================= INITIAL LOAD ================= */
   useEffect(() => {
     const loadData = async () => {
-      if (userId) {
+      if (providerId) {
         await fetchCategories();
       }
     };
     loadData();
-  }, [userId]);
+  }, [providerId]);
 
   useEffect(() => { 
-    if (userId && Object.keys(categories).length > 0) {
+    if (providerId && Object.keys(categories).length > 0) {
       fetchBookings();
     }
-  }, [currentPage, itemsPerPage, searchQuery, userId, categories]);
+  }, [currentPage, itemsPerPage, searchQuery, providerId, categories]);
 
   /* ================= SEARCH ================= */
   const handleSearchChange = (e) => {
@@ -1030,21 +1120,37 @@ function AgentServiceBookings() {
   };
 
   /* ================= UPDATE BOOKING STATUS ================= */
-  const handleUpdateStatus = async (bookingId, newStatus) => {
+  const handleUpdateBookingStatus = async (bookingId, newStatus) => {
     try {
       const response = await axios.patch(`${baseurl}/service-bookings/${bookingId}/`, {
         booking_status: newStatus
       });
       
       if (response.status === 200 || response.status === 202) {
+        // Update local state
+        setBookings(prevBookings => 
+          prevBookings.map(booking => 
+            booking.booking_id === bookingId 
+              ? { ...booking, booking_status: newStatus }
+              : booking
+          )
+        );
+        setFilteredBookings(prevFiltered => 
+          prevFiltered.map(booking => 
+            booking.booking_id === bookingId 
+              ? { ...booking, booking_status: newStatus }
+              : booking
+          )
+        );
+        
         Swal.fire({
           icon: 'success',
           title: 'Updated!',
           text: `Booking status updated to ${newStatus}`,
           confirmButtonColor: '#273c75',
-          timer: 2000
+          timer: 2000,
+          showConfirmButton: false
         });
-        fetchBookings();
       }
     } catch (error) {
       console.error("Error updating booking status:", error);
@@ -1057,58 +1163,48 @@ function AgentServiceBookings() {
     }
   };
 
-  /* ================= CANCEL BOOKING ================= */
-  const handleCancelBooking = (bookingId) => {
-    Swal.fire({
-      title: 'Cancel Booking?',
-      text: "Are you sure you want to cancel this booking? This action cannot be undone.",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#273c75',
-      confirmButtonText: 'Yes, Cancel Booking',
-      cancelButtonText: 'No, Keep It'
-    }).then(result => {
-      if (result.isConfirmed) {
-        handleUpdateStatus(bookingId, 'Cancelled');
+  /* ================= UPDATE PAYMENT STATUS ================= */
+  const handleUpdatePaymentStatus = async (bookingId, newStatus) => {
+    try {
+      const response = await axios.patch(`${baseurl}/service-bookings/${bookingId}/`, {
+        payment_status: newStatus
+      });
+      
+      if (response.status === 200 || response.status === 202) {
+        // Update local state
+        setBookings(prevBookings => 
+          prevBookings.map(booking => 
+            booking.booking_id === bookingId 
+              ? { ...booking, payment_status: newStatus }
+              : booking
+          )
+        );
+        setFilteredBookings(prevFiltered => 
+          prevFiltered.map(booking => 
+            booking.booking_id === bookingId 
+              ? { ...booking, payment_status: newStatus }
+              : booking
+          )
+        );
+        
+        Swal.fire({
+          icon: 'success',
+          title: 'Updated!',
+          text: `Payment status updated to ${newStatus}`,
+          confirmButtonColor: '#273c75',
+          timer: 2000,
+          showConfirmButton: false
+        });
       }
-    });
-  };
-
-  /* ================= CONFIRM BOOKING ================= */
-  const handleConfirmBooking = (bookingId) => {
-    Swal.fire({
-      title: 'Confirm Booking?',
-      text: "Are you sure you want to confirm this booking?",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#28a745',
-      cancelButtonColor: '#273c75',
-      confirmButtonText: 'Yes, Confirm',
-      cancelButtonText: 'No'
-    }).then(result => {
-      if (result.isConfirmed) {
-        handleUpdateStatus(bookingId, 'Confirmed');
-      }
-    });
-  };
-
-  /* ================= COMPLETE BOOKING ================= */
-  const handleCompleteBooking = (bookingId) => {
-    Swal.fire({
-      title: 'Complete Booking?',
-      text: "Mark this booking as completed?",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#28a745',
-      cancelButtonColor: '#273c75',
-      confirmButtonText: 'Yes, Complete',
-      cancelButtonText: 'No'
-    }).then(result => {
-      if (result.isConfirmed) {
-        handleUpdateStatus(bookingId, 'Completed');
-      }
-    });
+    } catch (error) {
+      console.error("Error updating payment status:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: error.response?.data?.message || 'Could not update payment status. Please try again.',
+        confirmButtonColor: '#273c75'
+      });
+    }
   };
 
   /* ================= PAGINATION HANDLERS ================= */
@@ -1151,98 +1247,8 @@ function AgentServiceBookings() {
     return pageNumbers;
   };
 
-  // Get action buttons based on booking status
-  const getActionButtons = (booking) => {
-    const status = booking.booking_status?.toLowerCase();
-    
-    if (status === 'pending') {
-      return (
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          <button 
-            className="confirm-btn"
-            onClick={() => handleConfirmBooking(booking.booking_id)}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-          >
-            Confirm
-          </button>
-          <button 
-            className="cancel-btn"
-            onClick={() => handleCancelBooking(booking.booking_id)}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-          >
-            Cancel
-          </button>
-        </div>
-      );
-    } else if (status === 'confirmed') {
-      return (
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button 
-            className="complete-btn"
-            onClick={() => handleCompleteBooking(booking.booking_id)}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#17a2b8',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-          >
-            Mark Complete
-          </button>
-          <button 
-            className="cancel-btn"
-            onClick={() => handleCancelBooking(booking.booking_id)}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-          >
-            Cancel
-          </button>
-        </div>
-      );
-    } else if (status === 'completed') {
-      return (
-        <span style={{ color: '#28a745', fontSize: '12px', fontWeight: '500' }}>
-          ✓ Completed
-        </span>
-      );
-    } else if (status === 'cancelled') {
-      return (
-        <span style={{ color: '#dc3545', fontSize: '12px', fontWeight: '500' }}>
-          ✗ Cancelled
-        </span>
-      );
-    }
-    return null;
-  };
-
-  // Show loading state while fetching userId or bookings
-  if (loading && !userId) {
+  // Show loading state while fetching providerId or bookings
+  if (loading && !providerId) {
     return (
       <>
         <AgentNavbar />
@@ -1250,19 +1256,19 @@ function AgentServiceBookings() {
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
-          <p className="mt-3">Loading user information...</p>
+          <p className="mt-3">Loading provider information...</p>
         </div>
       </>
     );
   }
 
-  if (!userId && !loading) {
+  if (!providerId && !loading) {
     return (
       <>
         <AgentNavbar />
         <div className="page-container" style={{ textAlign: 'center', padding: '50px' }}>
           <i className="bi bi-exclamation-triangle-fill" style={{ fontSize: '48px', color: '#ffc107' }}></i>
-          <h3 className="mt-3">Unable to load user information</h3>
+          <h3 className="mt-3">Unable to load provider information</h3>
           <p className="text-muted">Please log in again to access your bookings.</p>
           <button 
             onClick={() => navigate('/login')}
@@ -1283,14 +1289,14 @@ function AgentServiceBookings() {
   }
 
   return (
-    <>
+    <div>
       <AgentNavbar />
 
       <div className="page-container">
         {/* Header */}
         <div className="page-header">
-          <h2>My Service Bookings</h2>
-          <p className="text-muted">User ID: {userId}</p>
+          <h2>Service Bookings</h2>
+          <p className="text-muted">Provider ID: {providerId}</p>
         </div>
 
         {/* Toolbar */}
@@ -1330,6 +1336,7 @@ function AgentServiceBookings() {
               }}>
                 <th style={{ padding: '12px', textAlign: 'left' }}>S.No.</th>
                 <th style={{ padding: '12px', textAlign: 'left' }}>Booking ID</th>
+                <th style={{ padding: '12px', textAlign: 'left' }}>Customer Name</th>
                 <th style={{ padding: '12px', textAlign: 'left' }}>Service Category</th>
                 <th style={{ padding: '12px', textAlign: 'left' }}>Charge Type</th>
                 <th style={{ padding: '12px', textAlign: 'left' }}>Booking Date</th>
@@ -1341,7 +1348,6 @@ function AgentServiceBookings() {
                 <th style={{ padding: '12px', textAlign: 'left' }}>Notes</th>
                 <th style={{ padding: '12px', textAlign: 'left' }}>Booking Status</th>
                 <th style={{ padding: '12px', textAlign: 'left' }}>Payment Status</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Actions</th>
               </tr>
             </thead>
 
@@ -1362,6 +1368,9 @@ function AgentServiceBookings() {
                   }}>
                     <td style={{ padding: '12px' }}>{startIndex + index}</td>
                     <td style={{ padding: '12px' }}>#{booking.booking_id}</td>
+                    <td style={{ padding: '12px' }}>
+                      {booking.user?.username || booking.user?.email || `User ID: ${booking.user}` || '-'}
+                    </td>
                     <td style={{ padding: '12px' }}>
                       <span style={{
                         backgroundColor: '#e8f4f8',
@@ -1402,26 +1411,59 @@ function AgentServiceBookings() {
                       {booking.booking_notes || '-'}
                     </td>
                     <td style={{ padding: '12px' }}>
-                      <span style={getStatusBadgeStyle(booking.booking_status)}>
-                        {booking.booking_status || 'N/A'}
-                      </span>
+                      <select
+                        value={booking.booking_status || 'Pending'}
+                        onChange={(e) => handleUpdateBookingStatus(booking.booking_id, e.target.value)}
+                        style={{
+                          padding: '6px 10px',
+                          borderRadius: '4px',
+                          border: `1px solid ${getStatusBadgeStyle(booking.booking_status).backgroundColor}`,
+                          backgroundColor: getStatusBadgeStyle(booking.booking_status).backgroundColor,
+                          color: getStatusBadgeStyle(booking.booking_status).color,
+                          fontSize: '12px',
+                          fontWeight: '500',
+                          cursor: 'pointer',
+                          outline: 'none'
+                        }}
+                      >
+                        {BOOKING_STATUS_OPTIONS.map(status => (
+                          <option key={status} value={status} style={{ backgroundColor: 'white', color: '#333' }}>
+                            {status}
+                          </option>
+                        ))}
+                      </select>
                     </td>
                     <td style={{ padding: '12px' }}>
-                      <span style={getPaymentBadgeStyle(booking.payment_status)}>
-                        {booking.payment_status || 'N/A'}
-                      </span>
+                      <select
+                        value={booking.payment_status || 'Pending'}
+                        onChange={(e) => handleUpdatePaymentStatus(booking.booking_id, e.target.value)}
+                        style={{
+                          padding: '6px 10px',
+                          borderRadius: '4px',
+                          border: `1px solid ${getPaymentBadgeStyle(booking.payment_status).backgroundColor}`,
+                          backgroundColor: getPaymentBadgeStyle(booking.payment_status).backgroundColor,
+                          color: getPaymentBadgeStyle(booking.payment_status).color,
+                          fontSize: '12px',
+                          fontWeight: '500',
+                          cursor: 'pointer',
+                          outline: 'none'
+                        }}
+                      >
+                        {PAYMENT_STATUS_OPTIONS.map(status => (
+                          <option key={status} value={status} style={{ backgroundColor: 'white', color: '#333' }}>
+                            {status}
+                          </option>
+                        ))}
+                      </select>
                     </td>
-                    <td style={{ padding: '12px' }}>
-                      {getActionButtons(booking)}
-                    </td>
-                   </tr>
+                  </tr>
                 ))
               ) : (
                 <tr>
                   <td colSpan="14" style={{ textAlign: 'center', padding: '40px' }}>
                     <i className="bi bi-calendar-x" style={{ fontSize: '48px', color: '#ccc' }}></i>
                     <p className="mt-2">No service bookings found</p>
-                    <p className="text-muted small">You haven't made any bookings yet.</p>
+                    <p className="text-muted small">No bookings have been made for your services yet.</p>
                   </td>
                 </tr>
               )}
@@ -1554,7 +1596,7 @@ function AgentServiceBookings() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
