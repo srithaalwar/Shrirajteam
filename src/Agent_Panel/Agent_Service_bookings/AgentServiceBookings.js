@@ -786,9 +786,8 @@
 // export default AgentServiceBookings;
 
 
-
 import React, { useEffect, useState } from 'react';
-// import "./AgentServiceBookings.css"; 
+import "./AgentServiceBookings.css"; 
 import AgentNavbar from "./../Agent_Navbar/Agent_Navbar"; 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -912,31 +911,31 @@ function AgentServiceBookings() {
   const getStatusBadgeStyle = (status) => {
     const statusLower = status?.toLowerCase();
     if (statusLower === 'pending') {
-      return { backgroundColor: '#fff3cd', color: '#856404', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+      return { backgroundColor: '#fff3cd', color: '#856404' };
     } else if (statusLower === 'accepted') {
-      return { backgroundColor: '#d4edda', color: '#155724', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+      return { backgroundColor: '#d4edda', color: '#155724' };
     } else if (statusLower === 'rejected') {
-      return { backgroundColor: '#f8d7da', color: '#721c24', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+      return { backgroundColor: '#f8d7da', color: '#721c24' };
     } else if (statusLower === 'completed') {
-      return { backgroundColor: '#cce5ff', color: '#004085', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+      return { backgroundColor: '#cce5ff', color: '#004085' };
     } else if (statusLower === 'cancelled') {
-      return { backgroundColor: '#f8d7da', color: '#721c24', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+      return { backgroundColor: '#f8d7da', color: '#721c24' };
     }
-    return { backgroundColor: '#e2e3e5', color: '#383d41', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+    return { backgroundColor: '#e2e3e5', color: '#383d41' };
   };
 
   const getPaymentBadgeStyle = (status) => {
     const statusLower = status?.toLowerCase();
     if (statusLower === 'pending') {
-      return { backgroundColor: '#fff3cd', color: '#856404', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+      return { backgroundColor: '#fff3cd', color: '#856404' };
     } else if (statusLower === 'paid') {
-      return { backgroundColor: '#d4edda', color: '#155724', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+      return { backgroundColor: '#d4edda', color: '#155724' };
     } else if (statusLower === 'failed') {
-      return { backgroundColor: '#f8d7da', color: '#721c24', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+      return { backgroundColor: '#f8d7da', color: '#721c24' };
     } else if (statusLower === 'refunded') {
-      return { backgroundColor: '#e2e3e5', color: '#383d41', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+      return { backgroundColor: '#e2e3e5', color: '#383d41' };
     }
-    return { backgroundColor: '#e2e3e5', color: '#383d41', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '500', display: 'inline-block' };
+    return { backgroundColor: '#e2e3e5', color: '#383d41' };
   };
 
   const getServiceChargeTypeLabel = (type) => {
@@ -1318,37 +1317,42 @@ function AgentServiceBookings() {
           </div>
         </div>
 
-        {/* Table */}
+        {/* Scrollable Table Container - FIXED */}
         <div className="table-card" style={{
           backgroundColor: 'white',
           borderRadius: '8px',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          overflow: 'auto'
+          overflowX: 'auto',
+          overflowY: 'auto',
+          maxWidth: '100%',
+          position: 'relative'
         }}>
           <table className="data-table" style={{
             width: '100%',
-            borderCollapse: 'collapse'
+            borderCollapse: 'collapse',
+            minWidth: '1400px', // Ensures horizontal scroll on smaller screens
+            tableLayout: 'auto'
           }}>
             <thead>
               <tr style={{
                 backgroundColor: '#f8f9fa',
                 borderBottom: '2px solid #dee2e6'
               }}>
-                <th style={{ padding: '12px', textAlign: 'left' }}>S.No.</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Booking ID</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Customer Name</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Service Category</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Charge Type</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Booking Date</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Service Start</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Service End</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Duration</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Total Amount</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Address</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Notes</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Booking Status</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Payment Status</th>
-              </tr>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>S.No.</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Booking ID</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Customer Name</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Service Category</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Charge Type</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Booking Date</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Service Start</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Service End</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Duration</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Total Amount</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Address</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Notes</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Booking Status</th>
+                <th style={{ padding: '12px', textAlign: 'left', whiteSpace: 'nowrap' }}>Payment Status</th>
+               </tr>
             </thead>
 
             <tbody>
@@ -1359,58 +1363,60 @@ function AgentServiceBookings() {
                       <span className="visually-hidden">Loading...</span>
                     </div>
                     <p className="mt-2">Loading bookings...</p>
-                  </td>
-                </tr>
+                   </td>
+                 </tr>
               ) : filteredBookings.length ? (
                 filteredBookings.map((booking, index) => (
                   <tr key={booking.booking_id} style={{
                     borderBottom: '1px solid #dee2e6'
                   }}>
-                    <td style={{ padding: '12px' }}>{startIndex + index}</td>
-                    <td style={{ padding: '12px' }}>#{booking.booking_id}</td>
-                    <td style={{ padding: '12px' }}>
+                    <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>{startIndex + index}</td>
+                    <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>#{booking.booking_id}</td>
+                    <td style={{ padding: '12px', minWidth: '120px', wordBreak: 'break-word' }}>
                       {booking.user?.username || booking.user?.email || `User ID: ${booking.user}` || '-'}
                     </td>
-                    <td style={{ padding: '12px' }}>
+                    <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>
                       <span style={{
                         backgroundColor: '#e8f4f8',
                         color: '#0c5460',
                         padding: '4px 8px',
                         borderRadius: '4px',
                         fontSize: '12px',
-                        fontWeight: '500'
+                        fontWeight: '500',
+                        whiteSpace: 'nowrap'
                       }}>
                         {booking.category_name}
                       </span>
                     </td>
-                    <td style={{ padding: '12px' }}>
+                    <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>
                       <span style={{
                         backgroundColor: '#fff3cd',
                         color: '#856404',
                         padding: '4px 8px',
                         borderRadius: '4px',
-                        fontSize: '12px'
+                        fontSize: '12px',
+                        whiteSpace: 'nowrap'
                       }}>
                         {getServiceChargeTypeLabel(booking.service_charge_type)}
                       </span>
                     </td>
-                    <td style={{ padding: '12px' }}>{formatDateTime(booking.booking_date)}</td>
-                    <td style={{ padding: '12px' }}>{formatDateOnly(booking.service_start_date)}</td>
-                    <td style={{ padding: '12px' }}>{formatDateOnly(booking.service_end_date)}</td>
-                    <td style={{ padding: '12px' }}>
+                    <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>{formatDateTime(booking.booking_date)}</td>
+                    <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>{formatDateOnly(booking.service_start_date)}</td>
+                    <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>{formatDateOnly(booking.service_end_date)}</td>
+                    <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>
                       {booking.number_of_hours ? `${booking.number_of_hours} hour(s)` : 
                        booking.number_of_days ? `${booking.number_of_days} day(s)` : '-'}
                     </td>
-                    <td style={{ padding: '12px', fontWeight: 'bold', color: '#28a745' }}>
+                    <td style={{ padding: '12px', whiteSpace: 'nowrap', fontWeight: 'bold', color: '#28a745' }}>
                       {formatCurrency(booking.total_amount)}
                     </td>
-                    <td style={{ padding: '12px', maxWidth: '150px', wordBreak: 'break-word' }}>
+                    <td style={{ padding: '12px', minWidth: '200px', maxWidth: '250px', wordBreak: 'break-word' }}>
                       {booking.address || '-'}
                     </td>
-                    <td style={{ padding: '12px', maxWidth: '150px', wordBreak: 'break-word' }}>
+                    <td style={{ padding: '12px', minWidth: '150px', maxWidth: '200px', wordBreak: 'break-word' }}>
                       {booking.booking_notes || '-'}
                     </td>
-                    <td style={{ padding: '12px' }}>
+                    <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>
                       <select
                         value={booking.booking_status || 'Pending'}
                         onChange={(e) => handleUpdateBookingStatus(booking.booking_id, e.target.value)}
@@ -1423,7 +1429,8 @@ function AgentServiceBookings() {
                           fontSize: '12px',
                           fontWeight: '500',
                           cursor: 'pointer',
-                          outline: 'none'
+                          outline: 'none',
+                          width: '110px'
                         }}
                       >
                         {BOOKING_STATUS_OPTIONS.map(status => (
@@ -1433,7 +1440,7 @@ function AgentServiceBookings() {
                         ))}
                       </select>
                     </td>
-                    <td style={{ padding: '12px' }}>
+                    <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>
                       <select
                         value={booking.payment_status || 'Pending'}
                         onChange={(e) => handleUpdatePaymentStatus(booking.booking_id, e.target.value)}
@@ -1446,7 +1453,8 @@ function AgentServiceBookings() {
                           fontSize: '12px',
                           fontWeight: '500',
                           cursor: 'pointer',
-                          outline: 'none'
+                          outline: 'none',
+                          width: '100px'
                         }}
                       >
                         {PAYMENT_STATUS_OPTIONS.map(status => (
@@ -1456,7 +1464,7 @@ function AgentServiceBookings() {
                         ))}
                       </select>
                     </td>
-                  </tr>
+                   </tr>
                 ))
               ) : (
                 <tr>
@@ -1464,8 +1472,8 @@ function AgentServiceBookings() {
                     <i className="bi bi-calendar-x" style={{ fontSize: '48px', color: '#ccc' }}></i>
                     <p className="mt-2">No service bookings found</p>
                     <p className="text-muted small">No bookings have been made for your services yet.</p>
-                  </td>
-                </tr>
+                   </td>
+                 </tr>
               )}
             </tbody>
           </table>
