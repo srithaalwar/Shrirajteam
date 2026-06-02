@@ -1413,9 +1413,23 @@ function AgentServiceBookings() {
                     <td style={{ padding: '12px', minWidth: '200px', maxWidth: '250px', wordBreak: 'break-word' }}>
                       {booking.address || '-'}
                     </td>
-                    <td style={{ padding: '12px', minWidth: '150px', maxWidth: '200px', wordBreak: 'break-word' }}>
-                      {booking.booking_notes || '-'}
-                    </td>
+                   <td style={{ 
+  padding: '12px', 
+  minWidth: '150px', 
+  maxWidth: '200px', 
+  wordBreak: 'break-word',
+  whiteSpace: 'normal',
+  overflowWrap: 'break-word'
+}}>
+  <div style={{ 
+    maxHeight: '80px', 
+    overflowY: 'auto',
+    wordBreak: 'break-word',
+    whiteSpace: 'normal'
+  }}>
+    {booking.booking_notes || '-'}
+  </div>
+</td>
                     <td style={{ padding: '12px', whiteSpace: 'nowrap' }}>
                       <select
                         value={booking.booking_status || 'Pending'}
