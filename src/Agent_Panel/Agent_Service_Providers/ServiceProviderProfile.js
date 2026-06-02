@@ -2760,7 +2760,7 @@ const ServiceProviders = () => {
   const getVerificationStatusBadge = (verificationStatus) => {
     switch(verificationStatus?.toLowerCase()) {
       case 'verified':
-        return { class: 'bg-success', text: 'Verified' };
+        return { class: 'bg-success text-white', text: 'Verified' };
       case 'pending':
         return { class: 'bg-warning text-dark', text: 'Pending' };
       case 'rejected':

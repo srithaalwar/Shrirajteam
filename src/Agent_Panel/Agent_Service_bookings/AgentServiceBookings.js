@@ -1121,7 +1121,7 @@ function AgentServiceBookings() {
   /* ================= UPDATE BOOKING STATUS ================= */
   const handleUpdateBookingStatus = async (bookingId, newStatus) => {
     try {
-      const response = await axios.patch(`${baseurl}/service-bookings/${bookingId}/`, {
+      const response = await axios.put(`${baseurl}/service-bookings/${bookingId}/`, {
         booking_status: newStatus
       });
       
@@ -1165,7 +1165,7 @@ function AgentServiceBookings() {
   /* ================= UPDATE PAYMENT STATUS ================= */
   const handleUpdatePaymentStatus = async (bookingId, newStatus) => {
     try {
-      const response = await axios.patch(`${baseurl}/service-bookings/${bookingId}/`, {
+      const response = await axios.put(`${baseurl}/service-bookings/${bookingId}/`, {
         payment_status: newStatus
       });
       
