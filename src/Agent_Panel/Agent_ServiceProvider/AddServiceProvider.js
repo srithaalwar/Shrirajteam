@@ -110,8 +110,8 @@ const AddServiceProvider = () => {
     experience_certificate: null,
 
     // Status
-    status: 'Approved',
-    verification_status: 'verified',
+    status: '',
+    verification_status: '',
     user: userId ? parseInt(userId) : null
   });
 

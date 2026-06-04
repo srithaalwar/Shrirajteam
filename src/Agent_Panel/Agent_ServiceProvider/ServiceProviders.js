@@ -501,12 +501,9 @@ function ServiceProviders() {
     
     setLoading(true);
     try {
-      // Build query parameters with user filter
-      const params = new URLSearchParams({
-        page: currentPage,
-        page_size: itemsPerPage,
-        user: currentUserId, // Filter by logged-in user
-      });
+      // Build query parameters with ONLY user filter (NO pagination params)
+      const params = new URLSearchParams();
+      params.append('user', currentUserId); // Filter by logged-in user
       
       if (searchQuery.trim()) {
         params.append('search', searchQuery.trim());
@@ -516,17 +513,13 @@ function ServiceProviders() {
       
       // Handle different response formats
       let data = [];
-      let count = 0;
       
       if (Array.isArray(res.data)) {
         data = res.data;
-        count = res.data.length;
       } else if (res.data.results) {
         data = res.data.results || [];
-        count = res.data.count || data.length;
       } else {
         data = res.data;
-        count = res.data.length || 0;
       }
       
       // Add category_name to each provider
@@ -540,7 +533,7 @@ function ServiceProviders() {
       const sorted = dataWithCategoryNames.sort((a, b) => b.provider_id - a.provider_id);
       setProviders(sorted);
       setFilteredProviders(sorted);
-      setTotalItems(count);
+      setTotalItems(sorted.length);
     } catch (error) {
       console.error("Error fetching service providers:", error);
       Swal.fire({
@@ -580,7 +573,7 @@ function ServiceProviders() {
       };
       loadData();
     }
-  }, [currentPage, itemsPerPage, searchQuery, currentUserId]);
+  }, [searchQuery, currentUserId]); // Only refetch when search or user changes
 
   /* ================= SEARCH ================= */
   const handleSearchChange = (e) => {
@@ -619,7 +612,7 @@ function ServiceProviders() {
     const newStatus = currentStatus === 'Approved' ? 'Pending' : 'Approved';
     
     try {
-      await axios.patch(`${baseurl}/service-providers/${providerId}/`, {
+      await axios.put(`${baseurl}/service-providers/${providerId}/`, {
         status: newStatus
       });
       
@@ -646,6 +639,13 @@ function ServiceProviders() {
   /* ================= PAGINATION HANDLERS ================= */
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage + 1;
+  
+  // Get current page data (frontend pagination)
+  const getCurrentPageData = () => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return filteredProviders.slice(start, end);
+  };
   
   const handlePageChange = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
@@ -719,7 +719,7 @@ function ServiceProviders() {
       <div className="page-container">
         {/* Header */}
         <div className="page-header">
-          <h2>My Services </h2>
+          <h2>My Services</h2>
           {/* <p className="text-muted">Showing providers added by you</p> */}
         </div>
 
@@ -772,7 +772,7 @@ function ServiceProviders() {
                   </td>
                 </tr>
               ) : filteredProviders.length ? (
-                filteredProviders.map((provider, index) => (
+                getCurrentPageData().map((provider, index) => (
                   <tr key={provider.provider_id}>
                     <td>{startIndex + index}</td>
                     <td>{provider.provider_id}</td>
@@ -785,7 +785,7 @@ function ServiceProviders() {
                     <td>{provider.experience_years ? `${provider.experience_years} yrs` : '-'}</td>
                     <td>
                       <span className={getStatusBadgeClass(provider.status)}>
-                        {provider.status}
+                        {provider.verification_status}
                       </span>
                     </td>
                     <td className="actions">
