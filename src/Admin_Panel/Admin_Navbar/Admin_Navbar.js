@@ -2037,6 +2037,20 @@ const handleNotificationItemClick = async (notification) => {
       subMenu: businessItems,
     },
     
+    // ====== ADDED: Orders (Standalone) ======
+    { 
+      path: "/admin-orders", 
+      name: "Orders", 
+      icon: <FaShoppingCart /> 
+    },
+    
+    // ====== ADDED: Orders-commission (Standalone) ======
+    { 
+      path: "/admin-commission", 
+      name: "Orders-commission", 
+      icon: <FaHandHoldingUsd /> 
+    },
+    
     // Payouts Main Category
     {
       name: "All Payouts",
